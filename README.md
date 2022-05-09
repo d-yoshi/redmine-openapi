@@ -11,30 +11,30 @@ These yaml files are created by my human scraping and experimentation with Redmi
 
 You can feel the warmth of manual labor.
 
-Resource | State of progress
--- | --
-Issues | **Done**
-Projects | **Done**
-Project Memberships | **Done**
-Users | **Done**
-Time Entries | **Done**
-News | Todo
-Issue Relations | Todo
-Versions | Todo
-Wiki Pages | Todo
-Queries | Todo
-Attachements | Todo
-Issue Statuses | **Done**
-Trackers | In Progress
-Enumerations | Todo
-Issue Categories | Todo
-Roles | Todo
-Groups | **Done**
-Custom Fields | Todo
-Search | Todo
-Files | Todo
-My account | **Done**
-Journals | Todo
+| Resource            | State of progress |
+| ------------------- | ----------------- |
+| Issues              | **Done**          |
+| Projects            | **Done**          |
+| Project Memberships | **Done**          |
+| Users               | **Done**          |
+| Time Entries        | **Done**          |
+| News                | Todo              |
+| Issue Relations     | Todo              |
+| Versions            | Todo              |
+| Wiki Pages          | Todo              |
+| Queries             | Todo              |
+| Attachements        | Todo              |
+| Issue Statuses      | **Done**          |
+| Trackers            | In Progress       |
+| Enumerations        | Todo              |
+| Issue Categories    | Todo              |
+| Roles               | Todo              |
+| Groups              | **Done**          |
+| Custom Fields       | Todo              |
+| Search              | Todo              |
+| Files               | Todo              |
+| My account          | **Done**          |
+| Journals            | Todo              |
 
 ## How to bundle into one YAML file
 

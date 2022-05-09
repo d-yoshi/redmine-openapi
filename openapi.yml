@@ -2,19 +2,14 @@ openapi: 3.0.3
 
 info:
   title: Redmine API
-  description: Redmine exposes some of its data through a REST API. This API provides access and basic CRUD operations (create, update, delete) for the resources described below. The API supports both XML and JSON formats.
   version: 5.0.0
 
 externalDocs:
-  description: Redmine API
   url: https://www.redmine.org/projects/redmine/wiki/Rest_api
 
 security:
   - BasicAuth: []
   - ApiKeyAuth: []
-
-servers:
-  - url: http://localhost:3000
 
 paths:
   "/issues.{format}":
