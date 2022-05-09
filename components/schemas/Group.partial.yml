@@ -6,12 +6,7 @@ properties:
       users:
         type: array
         items:
-          type: object
-          properties:
-            id:
-              type: integer
-            name:
-              type: string
+          $ref: ./IdName.yml
       memberships:
         type: array
         items:
@@ -20,18 +15,8 @@ properties:
             id:
               type: integer
             project:
-              type: object
-              properties:
-                id:
-                  type: integer
-                name:
-                  type: string
+              $ref: ./IdName.yml
             roles:
               type: array
               items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
+                $ref: ./IdName.yml
