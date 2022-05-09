@@ -28,6 +28,12 @@ TimeEntry:
 TimeEntries:
   $ref: ./schemas/TimeEntries.yml
 
+IssueStatus:
+  $ref: ./schemas/IssueStatus.yml
+
+IssueStatuses:
+  $ref: ./schemas/IssueStatuses.yml
+
 Group:
   $ref: ./schemas/Group.yml
 

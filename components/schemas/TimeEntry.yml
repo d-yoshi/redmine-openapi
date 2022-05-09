@@ -10,9 +10,7 @@ properties:
       id:
         type: integer
   user:
-    type: object
-    properties:
-      $ref: ./IdName.yml
+    $ref: ./IdName.yml
   activity:
     $ref: ./IdName.yml
   hours:
