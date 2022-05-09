@@ -1,0 +1,11 @@
+put:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  responses:
+    204:
+      description: ""

@@ -41,6 +41,12 @@ paths:
   "/projects/{project_id}/memberships.{format}":
     $ref: ./paths/projects.project_id.memberships.yml
 
+  "/projects/{project_id}/archive.{format}":
+    $ref: ./paths/projects.project_id.archive.yml
+
+  "/projects/{project_id}/unarchive.{format}":
+    $ref: ./paths/projects.project_id.unarchive.yml
+
   "/memberships/{membership_id}.{format}":
     $ref: ./paths/memberships.membership_id.yml
 
