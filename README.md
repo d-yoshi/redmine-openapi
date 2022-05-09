@@ -25,12 +25,12 @@ You can feel the warmth of manual labor.
 | Queries             | Todo              |
 | Attachements        | Todo              |
 | Issue Statuses      | **Done**          |
-| Trackers            | In Progress       |
+| Trackers            | **Done**          |
 | Enumerations        | Todo              |
 | Issue Categories    | Todo              |
-| Roles               | Todo              |
+| Roles               | In Progress       |
 | Groups              | **Done**          |
-| Custom Fields       | Todo              |
+| Custom Fields       | In Progress       |
 | Search              | Todo              |
 | Files               | Todo              |
 | My account          | **Done**          |
