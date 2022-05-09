@@ -12,7 +12,14 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Groups.yml
+            type: object
+            required:
+              - groups
+            properties:
+              groups:
+                type: array
+                items:
+                  $ref: ../components/schemas/Group.yml
 
 post:
   tags:
@@ -37,7 +44,6 @@ post:
                   type: array
                   items:
                     type: string
-
   responses:
     201:
       description: ""

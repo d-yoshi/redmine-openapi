@@ -13,7 +13,10 @@ get:
       in: query
       schema:
         type: string
-    - $ref: ../components/parameters/query/group_id.yml
+    - name: group_id
+      in: query
+      schema:
+        type: integer
   responses:
     200:
       description: ""
@@ -21,7 +24,23 @@ get:
         application/json:
           schema:
             allOf:
-              - $ref: ../components/schemas/Users.yml
+              - type: object
+                required:
+                  - users
+                  - total_count
+                  - offset
+                  - limit
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: ../components/schemas/User.yml
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
               - type: object
                 properties:
                   users:
@@ -40,13 +59,6 @@ get:
                                 type: array
                                 items:
                                   $ref: ../components/schemas/IdName.yml
-              - type: object
-                properties:
-                  users:
-                    type: array
-                    items:
-                      type: object
-                      properties:
                         groups:
                           $ref: ../components/schemas/IdName.yml
 
@@ -62,9 +74,17 @@ post:
       application/json:
         schema:
           type: object
+          required:
+            - user
           properties:
             user:
               type: object
+              required:
+                - login
+                - password
+                - firstname
+                - lastname
+                - mail
               properties:
                 login:
                   type: string
@@ -84,14 +104,6 @@ post:
                   type: boolean
                 generate_password:
                   type: boolean
-              required:
-                - login
-                - password
-                - firstname
-                - lastname
-                - mail
-          required:
-            - user
   responses:
     201:
       description: ""

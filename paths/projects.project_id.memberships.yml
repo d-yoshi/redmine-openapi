@@ -12,7 +12,24 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Memberships.yml
+            type: object
+            required:
+              - memberships
+              - total_count
+              - offset
+              - limit
+            properties:
+              memberships:
+                type: array
+                items:
+                  $ref: ../components/schemas/Membership.yml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+
 
 post:
   tags:
@@ -27,9 +44,14 @@ post:
       application/json:
         schema:
           type: object
+          required:
+            - membership
           properties:
             membership:
               type: object
+              required:
+                - user_id
+                - role_ids
               properties:
                 user_id:
                   type: integer
@@ -37,11 +59,7 @@ post:
                   type: array
                   items:
                     type: integer
-              required:
-                - user_id
-                - role_ids
-          required:
-            - membership
+
   responses:
     201:
       description: ""
@@ -49,8 +67,8 @@ post:
         application/json:
           schema:
             type: object
+            required:
+              - membership
             properties:
               membership:
                 $ref: ../components/schemas/Membership.yml
-            required:
-              - membership

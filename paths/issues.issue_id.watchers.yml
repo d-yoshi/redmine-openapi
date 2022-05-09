@@ -12,11 +12,12 @@ post:
       application/json:
         schema:
           type: object
+          required:
+            - user_id
           properties:
             user_id:
               type: string
-          required:
-            - user_id
+
   responses:
     204:
       description: ""

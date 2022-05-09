@@ -1,4 +1,9 @@
 type: object
+required:
+  - id
+  - project
+  - user
+  - roles
 properties:
   id:
     type: integer
@@ -10,8 +15,3 @@ properties:
     type: array
     items:
       $ref: ./IdName.yml
-required:
-  - id
-  - project
-  - user
-  - roles

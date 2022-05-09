@@ -8,7 +8,10 @@ get:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/limit.yml
-    - $ref: ../components/parameters/query/sort.yml
+    - name: sort
+      in: query
+      schema:
+        type: string
     - name: include
       in: query
       schema:
@@ -16,7 +19,10 @@ get:
         enum:
           - attachments
           - relations
-    - $ref: ../components/parameters/query/issue_id.yml
+    - name: issue_id
+      in: query
+      schema:
+        type: string
     - name: project_id
       in: query
       schema:
@@ -25,7 +31,10 @@ get:
       in: query
       schema:
         type: string
-    - $ref: ../components/parameters/query/tracker_id.yml
+    - name: tracker_id
+      in: query
+      schema:
+        type: integer
     - name: status_id
       in: query
       schema:
@@ -48,7 +57,25 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Issues.yml
+            type: object
+            required:
+              - issues
+              - total_count
+              - offset
+              - limit
+            properties:
+              issues:
+                type: array
+                items:
+                  allOf:
+                    - $ref: ../components/schemas/Issue.yml
+                    - $ref: ../components/schemas/Issue.partial.yml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
 
 post:
   tags:
@@ -63,9 +90,14 @@ post:
       application/json:
         schema:
           type: object
+          required:
+            - issue
           properties:
             issue:
               type: object
+              required:
+                - project_id
+                - subject
               properties:
                 project_id:
                   type: integer
@@ -95,11 +127,6 @@ post:
                   type: boolean
                 estimated_hours:
                   type: string
-              required:
-                - project_id
-                - subject
-          required:
-            - issue
   responses:
     201:
       description: ""
@@ -107,8 +134,8 @@ post:
         application/json:
           schema:
             type: object
+            required:
+              - issue
             properties:
               issue:
                 $ref: ../components/schemas/Issue.yml
-            required:
-              - issue

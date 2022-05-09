@@ -1,8 +1,8 @@
 allOf:
   - $ref: ./IdName.yml
   - type: object
+    required:
+      - is_closed
     properties:
       is_closed:
         type: boolean
-    required:
-      - is_closed

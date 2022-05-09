@@ -76,8 +76,6 @@ put:
                     type: string
                   example:
                     1: VALUE
-          required:
-            - project
   responses:
     204:
       description: ""

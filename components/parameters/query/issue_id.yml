@@ -1,4 +1,0 @@
-name: issue_id
-in: query
-schema:
-  type: string

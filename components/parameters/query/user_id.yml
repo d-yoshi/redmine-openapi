@@ -1,4 +1,0 @@
-name: user_id
-in: query
-schema:
-  type: integer

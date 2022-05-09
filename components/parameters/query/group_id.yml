@@ -1,4 +1,0 @@
-name: group_id
-in: query
-schema:
-  type: integer

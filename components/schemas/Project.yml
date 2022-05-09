@@ -1,4 +1,14 @@
 type: object
+required:
+  - id
+  - name
+  - identifier
+  - description
+  - status
+  - is_public
+  - inherit_members
+  - created_on
+  - updated_on
 properties:
   id:
     type: integer
@@ -29,13 +39,3 @@ properties:
   updated_on:
     type: string
     format: date-time
-required:
-  - id
-  - name
-  - identifier
-  - description
-  - status
-  - is_public
-  - inherit_members
-  - created_on
-  - updated_on

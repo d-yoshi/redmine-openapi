@@ -59,8 +59,6 @@ put:
                   type: boolean
                 admin:
                   type: boolean
-          required:
-            - user
   responses:
     204:
       description: ""

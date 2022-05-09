@@ -39,6 +39,8 @@ put:
       application/json:
         schema:
           type: object
+          required:
+            - user
           properties:
             user:
               type: object
@@ -63,8 +65,6 @@ put:
                   type: boolean
                 admin:
                   type: boolean
-          required:
-            - user
   responses:
     204:
       description: ""

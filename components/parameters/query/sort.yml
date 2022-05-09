@@ -1,4 +1,0 @@
-name: sort
-in: query
-schema:
-  type: string

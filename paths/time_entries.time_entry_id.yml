@@ -32,6 +32,9 @@ put:
           properties:
             time_entry:
               type: object
+              required:
+                - issue_id
+                - hours
               properties:
                 hours:
                   type: integer
@@ -46,11 +49,6 @@ put:
                   type: string
                 user_id:
                   type: integer
-              required:
-                - issue_id
-                - hours
-          required:
-            - time_entry
   responses:
     204:
       description: ""

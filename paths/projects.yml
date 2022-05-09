@@ -20,7 +20,23 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Projects.yml
+            type: object
+            required:
+              - projects
+              - total_count
+              - offset
+              - limit
+            properties:
+              projects:
+                type: array
+                items:
+                  $ref: ../components/schemas/Project.yml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
 
 post:
   tags:
@@ -35,9 +51,14 @@ post:
       application/json:
         schema:
           type: object
+          required:
+            - project
           properties:
             project:
               type: object
+              required:
+                - name
+                - identifier
               properties:
                 name:
                   type: string
@@ -75,11 +96,6 @@ post:
                     type: string
                   example:
                     1: VALUE
-              required:
-                - name
-                - identifier
-          required:
-            - project
   responses:
     201:
       description: ""

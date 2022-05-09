@@ -1,4 +1,15 @@
 type: object
+required:
+  - id
+  - project
+  - issue
+  - user
+  - activity
+  - hours
+  - comments
+  - spent_on
+  - created_on
+  - updated_on
 properties:
   id:
     type: integer
@@ -26,14 +37,3 @@ properties:
   updated_on:
     type: string
     format: date-time
-required:
-  - id
-  - project
-  - issue
-  - user
-  - activity
-  - hours
-  - comments
-  - spent_on
-  - created_on
-  - updated_on

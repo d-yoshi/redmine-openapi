@@ -14,11 +14,11 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - membership
             properties:
               membership:
                 $ref: ../components/schemas/Membership.yml
-            required:
-              - membership
 
 put:
   tags:

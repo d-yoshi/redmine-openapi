@@ -1,4 +1,16 @@
 type: object
+required:
+  - id
+  - login
+  - admin
+  - firstname
+  - lastname
+  - mail
+  - created_on
+  - updated_on
+  - last_login_on
+  - passwd_changed_on
+  - twofa_scheme
 properties:
   id:
     type: integer
@@ -30,15 +42,3 @@ properties:
   twofa_scheme:
     type: object
     nullable: true
-required:
-  - id
-  - login
-  - admin
-  - firstname
-  - lastname
-  - mail
-  - created_on
-  - updated_on
-  - last_login_on
-  - passwd_changed_on
-  - twofa_scheme

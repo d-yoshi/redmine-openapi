@@ -1,4 +1,24 @@
 type: object
+required:
+  - id
+  - project
+  - tracker
+  - status
+  - priority
+  - author
+  - subject
+  - description
+  - start_date
+  - due_date
+  - done_ratio
+  - is_private
+  - estimated_hours
+  - total_estimated_hours
+  - spent_hours
+  - total_spent_hours
+  - created_on
+  - updated_on
+  - closed_on
 properties:
   id:
     type: integer
@@ -51,23 +71,3 @@ properties:
     type: string
     format: date-time
     nullable: true
-required:
-  - id
-  - project
-  - tracker
-  - status
-  - priority
-  - author
-  - subject
-  - description
-  - start_date
-  - due_date
-  - done_ratio
-  - is_private
-  - estimated_hours
-  - total_estimated_hours
-  - spent_hours
-  - total_spent_hours
-  - created_on
-  - updated_on
-  - closed_on

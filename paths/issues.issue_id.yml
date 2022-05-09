@@ -26,11 +26,11 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - issue
             properties:
               issue:
                 $ref: ../components/schemas/Issue.yml
-            required:
-              - issue
 
 put:
   tags:
@@ -45,8 +45,6 @@ put:
     content:
       application/json:
         schema:
-          required:
-            - issue
           type: object
           properties:
             issue:

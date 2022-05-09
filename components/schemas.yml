@@ -10,9 +10,6 @@ IssuePartial:
 Project:
   $ref: ./schemas/Project.yml
 
-Projects:
-  $ref: ./schemas/Projects.yml
-
 User:
   $ref: ./schemas/User.yml
 
@@ -25,9 +22,6 @@ Membersip:
 TimeEntry:
   $ref: ./schemas/TimeEntry.yml
 
-TimeEntries:
-  $ref: ./schemas/TimeEntries.yml
-
 IssueStatus:
   $ref: ./schemas/IssueStatus.yml
 
@@ -36,12 +30,6 @@ IssueStatuses:
 
 Group:
   $ref: ./schemas/Group.yml
-
-GroupPartial:
-  $ref: ./schemas/Group.partial.yml
-
-Groups:
-  $ref: ./schemas/Groups.yml
 
 Errors:
   $ref: ./schemas/Errors.yml

@@ -22,7 +22,35 @@ get:
           schema:
             allOf:
               - $ref: ../components/schemas/Group.yml
-              - $ref: ../components/schemas/Group.partial.yml
+              - type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      users:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            $ref: ../components/schemas/IdName.yml
+                      memberships:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            project:
+                              type: object
+                              properties:
+                                $ref: ../components/schemas/IdName.yml
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  $ref: ../components/schemas/IdName.yml
+
 
 put:
   tags:
