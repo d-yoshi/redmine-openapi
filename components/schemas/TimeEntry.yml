@@ -1,0 +1,43 @@
+type: object
+properties:
+  id:
+    type: integer
+  project:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  issue:
+    type: object
+    properties:
+      id:
+        type: integer
+  user:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  activity:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  hours:
+    type: number
+  comments:
+    type: string
+  spent_on:
+    type: string
+    format: date
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time

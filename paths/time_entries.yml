@@ -12,9 +12,14 @@ get:
       in: query
       schema:
         type: string
+        format: date
   responses:
     200:
       description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/TimeEntries.yml
 
 post:
   tags:
@@ -37,6 +42,7 @@ post:
                   type: integer
                 spent_on:
                   type: string
+                  format: date
                 activity_id:
                   type: integer
                 comments:
@@ -49,6 +55,10 @@ post:
   responses:
     201:
       description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/TimeEntry.yml
     422:
       description: ""
       content:

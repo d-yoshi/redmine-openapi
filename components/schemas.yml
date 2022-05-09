@@ -12,3 +12,12 @@ Project:
 
 User:
   $ref: ./schemas/User.yml
+
+UserPartial:
+  $ref: ./schemas/User.partial.yml
+
+Membersip:
+  $ref: ./schemas/Membership.yml
+
+TimeEntry:
+  $ref: ./schemas/Membership.yml
