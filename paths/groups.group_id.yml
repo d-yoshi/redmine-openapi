@@ -30,9 +30,7 @@ get:
                       users:
                         type: array
                         items:
-                          type: object
-                          properties:
-                            $ref: ../components/schemas/IdName.yml
+                          $ref: ../components/schemas/IdName.yml
                       memberships:
                         type: array
                         items:
@@ -41,14 +39,11 @@ get:
                             id:
                               type: integer
                             project:
-                              type: object
-                              properties:
-                                $ref: ../components/schemas/IdName.yml
+                              $ref: ../components/schemas/IdName.yml
                             roles:
                               type: array
                               items:
                                 $ref: ../components/schemas/IdName.yml
-
 
 put:
   tags:

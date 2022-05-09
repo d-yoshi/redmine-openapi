@@ -1,6 +1,4 @@
 type: object
 properties:
   group:
-    type: object
-    properties:
-      $ref: ./IdName.yml
+    $ref: ./IdName.yml
