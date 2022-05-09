@@ -1,0 +1,69 @@
+get:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET-2
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/group_id.yml
+    - name: include
+      in: query
+      schema:
+        type: string
+        enum:
+          - users
+          - memberships
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../components/schemas/Group.yml
+              - $ref: ../components/schemas/Group.partial.yml
+
+put:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#PUT
+  summary: PUT
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/group_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            group:
+              type: object
+              properties:
+                name:
+                  type: string
+                user_ids:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+  responses:
+    204:
+      description: ""
+
+delete:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE
+  summary: DELETE
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/group_id.yml
+  responses:
+    204:
+      description: ""

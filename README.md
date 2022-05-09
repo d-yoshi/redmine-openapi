@@ -25,11 +25,11 @@ Wiki Pages | Todo
 Queries | Todo
 Attachements | Todo
 Issue Statuses | **Done**
-Trackers | Todo
+Trackers | In Progress
 Enumerations | Todo
 Issue Categories | Todo
 Roles | Todo
-Groups | In Progress
+Groups | **Done**
 Custom Fields | Todo
 Search | Todo
 Files | Todo

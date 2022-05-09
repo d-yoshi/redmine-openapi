@@ -1,0 +1,37 @@
+type: object
+properties:
+  group:
+    type: object
+    properties:
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+      memberships:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            project:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+            roles:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string

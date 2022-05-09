@@ -1,0 +1,8 @@
+type: object
+properties:
+  groups:
+    type: array
+    items:
+      $ref: "./Group.yml"
+required:
+  - groups

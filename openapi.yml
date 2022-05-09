@@ -65,6 +65,18 @@ paths:
   "/time_entries/{time_entry_id}.{format}":
     $ref: ./paths/time_entries.time_entry_id.yml
 
+  "/groups.{format}":
+    $ref: ./paths/groups.yml
+
+  "/groups/{group_id}.{format}":
+    $ref: ./paths/groups.group_id.yml
+
+  "/groups/{group_id}/users.{format}":
+    $ref: ./paths/groups.group_id.users.yml
+
+  "/groups/{group_id}/users/{user_id}.{format}":
+    $ref: ./paths/groups.group_id.users.user_id.yml
+
   "/my/account.{format}":
     $ref: ./paths/my_account.yml
 
