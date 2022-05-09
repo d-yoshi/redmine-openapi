@@ -33,7 +33,7 @@ Groups | In Progress
 Custom Fields | Todo
 Search | Todo
 Files | Todo
-My account | In Progress
+My account | **Done**
 Journals | Todo
 
 ## How to bundle into one YAML file
