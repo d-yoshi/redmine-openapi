@@ -110,9 +110,12 @@ post:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: ../components/schemas/User.yml
-              - $ref: ../components/schemas/User.partial.yml
+            type: object
+            properties:
+              user:
+                allOf:
+                  - $ref: ../components/schemas/User.yml
+                  - $ref: ../components/schemas/User.partial.yml
     422:
       description: ""
       content:
