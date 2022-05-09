@@ -1,26 +1,26 @@
-path_format:
+format:
   $ref: ./parameters/path/format.yml
 
-path_issue_id:
+issue_id:
   $ref: ./parameters/path/issue_id.yml
 
-path_membership_id:
+membership_id:
   $ref: ./parameters/path/membership_id.yml
 
-path_project_id:
+project_id:
   $ref: ./parameters/path/project_id.yml
 
-path_time_entry_id:
+time_entry_id:
   $ref: ./parameters/path/time_entry_id.yml
 
-path_user_id:
+user_id:
   $ref: ./parameters/path/user_id.yml
 
-path_group_id:
+group_id:
   $ref: ./parameters/path/group_id.yml
 
-query_limit:
+limit:
   $ref: ./parameters/query/limit.yml
 
-query_offset:
+offset:
   $ref: ./parameters/query/offset.yml
