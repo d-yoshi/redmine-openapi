@@ -12,9 +12,4 @@ get:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              issue_statuses:
-                $ref: ../components/schemas/IssueStatuses.yml
-            required:
-              - issue_statuses
+            $ref: ../components/schemas/IssueStatuses.yml
