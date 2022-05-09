@@ -25,12 +25,19 @@ get:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - issue
-            properties:
-              issue:
-                $ref: ../components/schemas/Issue.yml
+            allOf:
+              - type: object
+                required:
+                  - issue
+                properties:
+                  issue:
+                    $ref: ../components/schemas/Issue.yml
+              - type: object
+                required:
+                  - issue
+                properties:
+                  issue:
+                    $ref: ../components/schemas/Issue.partial.yml
 
 put:
   tags:
