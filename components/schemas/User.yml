@@ -25,28 +25,5 @@ properties:
     format: date-time
   twofa_scheme:
     type: object
-  api_key:
-    type: string
-  status:
-    type: integer
-  custom_fields:
-    type: array
-    items:
-      $ref: ./IdName.yml
-  memberships:
-    type: array
-    items:
-      type: object
-      properties:
-        project:
-          type: string
-        roles:
-          type: array
-          items:
-            $ref: ./IdName.yml
   admin:
     type: boolean
-  groups:
-    type: array
-    items:
-      $ref: ./IdName.yml

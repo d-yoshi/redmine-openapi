@@ -1,0 +1,6 @@
+type: object
+properties:
+  api_key:
+    type: string
+  status:
+    type: integer

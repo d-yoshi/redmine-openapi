@@ -1,0 +1,17 @@
+type: object
+properties:
+  users:
+    type: array
+    items:
+      $ref: "./User.yml"
+  total_count:
+    type: integer
+  offset:
+    type: integer
+  limit:
+    type: integer
+required:
+  - users
+  - total_count
+  - offset
+  - limit

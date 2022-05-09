@@ -15,6 +15,38 @@ get:
   responses:
     200:
       description: ""
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../components/schemas/Users.yml
+              - type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        memberships:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              project:
+                                type: string
+                              roles:
+                                type: array
+                                items:
+                                  $ref: ../components/schemas/IdName.yml
+              - type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        groups:
+                          $ref: ../components/schemas/IdName.yml
 
 post:
   tags:
@@ -59,6 +91,12 @@ post:
   responses:
     201:
       description: ""
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../components/schemas/User.yml
+              - $ref: ../components/schemas/User.partial.yml
     422:
       description: ""
       content:

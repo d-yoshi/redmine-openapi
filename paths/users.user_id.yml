@@ -11,6 +11,18 @@ get:
   responses:
     200:
       description: ""
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../components/schemas/User.yml
+              - $ref: ../components/schemas/User.partial.yml
+              - type: object
+                properties:
+                  custom_fields:
+                    type: array
+                    items:
+                      $ref: ../components/schemas/IdName.yml
 
 put:
   tags:
@@ -45,8 +57,8 @@ put:
                   type: boolean
                 generate_password:
                   type: boolean
-            admin:
-              type: boolean
+                admin:
+                  type: boolean
           required:
             - user
   responses:
