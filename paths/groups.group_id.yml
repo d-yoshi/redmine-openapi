@@ -47,10 +47,7 @@ put:
                 user_ids:
                   type: array
                   items:
-                    type: object
-                    properties:
-                      user_id:
-                        type: string
+                    type: string
   responses:
     204:
       description: ""
