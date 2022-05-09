@@ -16,6 +16,9 @@ path_time_entry_id:
 path_user_id:
   $ref: ./parameters/path/user_id.yml
 
+path_group_id:
+  $ref: ./parameters/path/group_id.yml
+
 query_group_id:
   $ref: ./parameters/query/group_id.yml
 

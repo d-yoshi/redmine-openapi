@@ -23,10 +23,16 @@ Membersip:
   $ref: ./schemas/Membership.yml
 
 TimeEntry:
-  $ref: ./schemas/Membership.yml
+  $ref: ./schemas/TimeEntry.yml
+
+TimeEntries:
+  $ref: ./schemas/TimeEntries.yml
 
 Group:
   $ref: ./schemas/Group.yml
+
+GroupPartial:
+  $ref: ./schemas/Group.partial.yml
 
 Groups:
   $ref: ./schemas/Groups.yml
