@@ -72,6 +72,9 @@ paths:
   "/groups/{group_id}/users/{user_id}.{format}":
     $ref: ./paths/groups.group_id.users.user_id.yml
 
+  "/trackers.{format}":
+    $ref: ./paths/trackers.yml
+
   "/my/account.{format}":
     $ref: ./paths/my_account.yml
 

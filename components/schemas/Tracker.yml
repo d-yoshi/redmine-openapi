@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  default_status:
+    $ref: ./IdName.yml
+  description:
+    type: string
+    nullable: true
+  enabled_standard_fields:
+    type: array
+    items:
+      type: string

@@ -31,5 +31,11 @@ IssueStatuses:
 Group:
   $ref: ./schemas/Group.yml
 
+Tracker:
+  $ref: ./schemas/Tracker.yml
+
+Trackers:
+  $ref: ./schemas/Trackers.yml
+
 Errors:
   $ref: ./schemas/Errors.yml
