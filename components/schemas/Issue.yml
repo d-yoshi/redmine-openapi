@@ -46,6 +46,8 @@ properties:
   closed_on:
     type: string
     format: date-time
+  is_private:
+    type: boolean
 required:
   - id
   - project
@@ -55,3 +57,4 @@ required:
   - author
   - subject
   - done_ratio
+  - is_private
