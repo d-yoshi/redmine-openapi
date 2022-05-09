@@ -7,15 +7,12 @@ properties:
   tracker:
     $ref: ./IdName.yml
   status:
-    allOf:
-      - $ref: ./IdName.yml
-      - type: object
-        properties:
-          is_closed:
-            type: string
+    $ref: ./IssueStatuses.yml
   priority:
     $ref: ./IdName.yml
   author:
+    $ref: ./IdName.yml
+  assigned_to:
     $ref: ./IdName.yml
   category:
     $ref: ./IdName.yml
@@ -23,19 +20,26 @@ properties:
     type: string
   description:
     type: string
+    nullable: true
   start_date:
     type: string
+    nullable: true
   due_date:
     type: string
+    nullable: true
   done_ratio:
     type: integer
+  is_private:
+    type: boolean
   estimated_hours:
     type: number
+    nullable: true
   total_estimated_hours:
     type: number
+    nullable: true
   spent_hours:
     type: number
-  total_spen_hours:
+  total_spent_hours:
     type: number
   created_on:
     type: string
@@ -46,8 +50,7 @@ properties:
   closed_on:
     type: string
     format: date-time
-  is_private:
-    type: boolean
+    nullable: true
 required:
   - id
   - project
@@ -56,5 +59,15 @@ required:
   - priority
   - author
   - subject
+  - description
+  - start_date
+  - due_date
   - done_ratio
   - is_private
+  - estimated_hours
+  - total_estimated_hours
+  - spent_hours
+  - total_spent_hours
+  - created_on
+  - updated_on
+  - closed_on

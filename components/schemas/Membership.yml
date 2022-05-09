@@ -10,3 +10,8 @@ properties:
     type: array
     items:
       $ref: ./IdName.yml
+required:
+  - id
+  - project
+  - user
+  - roles

@@ -4,6 +4,8 @@ properties:
     type: integer
   login:
     type: string
+  admin:
+    type: boolean
   firstname:
     type: string
   lastname:
@@ -20,10 +22,23 @@ properties:
   last_login_on:
     type: string
     format: date-time
+    nullable: true
   passwd_changed_on:
     type: string
     format: date-time
+    nullable: true
   twofa_scheme:
     type: object
-  admin:
-    type: boolean
+    nullable: true
+required:
+  - id
+  - login
+  - admin
+  - firstname
+  - lastname
+  - mail
+  - created_on
+  - updated_on
+  - last_login_on
+  - passwd_changed_on
+  - twofa_scheme

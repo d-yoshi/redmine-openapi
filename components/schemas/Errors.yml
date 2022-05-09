@@ -3,3 +3,5 @@ properties:
   errors:
     items:
       type: string
+required:
+  - errors

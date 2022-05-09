@@ -1,6 +1,8 @@
-allOf:
-  - $ref: ./IdName.yml
-  - type: object
-    properties:
-      is_closed:
-        type: boolean
+type: object
+properties:
+  issue_statuses:
+    type: array
+    items:
+      $ref: "./IssueStatus.yml"
+required:
+  - issue_statuses

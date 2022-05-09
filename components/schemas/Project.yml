@@ -8,14 +8,21 @@ properties:
     type: integer
   description:
     type: integer
+    nullable: true
   homepage:
     type: string
+  parent_id:
+    type: integer
   status:
     type: integer
   is_public:
     type: boolean
   inherit_members:
     type: boolean
+  enabled_modules:
+    type: array
+    items:
+      $ref: ./IdName.yml
   created_on:
     type: string
     format: date-time
@@ -25,4 +32,10 @@ properties:
 required:
   - id
   - name
+  - identifier
+  - description
+  - status
   - is_public
+  - inherit_members
+  - created_on
+  - updated_on
