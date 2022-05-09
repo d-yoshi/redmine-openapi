@@ -22,7 +22,24 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Project.yml
+            allOf:
+              - type: object
+                required:
+                  - project
+                properties:
+                  project:
+                    $ref: ../components/schemas/Project.yml
+              - type: object
+                required:
+                  - project
+                properties:
+                  project:
+                    type: object
+                    properties:
+                      time_entry_activities:
+                        type: array
+                        items:
+                          $ref: ../components/schemas/IdName.yml
 
 put:
   tags:

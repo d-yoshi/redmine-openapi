@@ -29,6 +29,14 @@ properties:
     type: boolean
   inherit_members:
     type: boolean
+  trackers:
+    type: array
+    items:
+      $ref: ./IdName.yml
+  issue_categories:
+    type: array
+    items:
+      $ref: ./IdName.yml
   enabled_modules:
     type: array
     items:
