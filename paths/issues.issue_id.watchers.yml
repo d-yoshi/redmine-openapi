@@ -1,6 +1,8 @@
 post:
   tags:
     - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
   summary: Adding a watcher
   parameters:
     - $ref: ../components/parameters/path/format.yml

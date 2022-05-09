@@ -1,6 +1,4 @@
 name: group_id
 in: query
-description: |
-  get only users who are members of the given group
 schema:
   type: integer

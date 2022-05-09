@@ -1,6 +1,8 @@
 get:
   tags:
     - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries
   summary: Listing time entries
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -24,6 +26,8 @@ get:
 post:
   tags:
     - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
   summary: Creating a time entry
   parameters:
     - $ref: ../components/parameters/path/format.yml

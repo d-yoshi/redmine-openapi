@@ -1,6 +1,8 @@
 get:
   tags:
     - Users
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/user_id.yml
@@ -27,6 +29,8 @@ get:
 put:
   tags:
     - Users
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#PUT
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/user_id.yml
@@ -74,6 +78,8 @@ put:
 delete:
   tags:
     - Users
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#DELETE
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/user_id.yml

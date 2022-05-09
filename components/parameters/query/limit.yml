@@ -1,6 +1,4 @@
 name: limit
 in: query
-description: |
-  number of issues per page (optional)
 schema:
   type: integer

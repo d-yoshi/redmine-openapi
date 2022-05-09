@@ -1,6 +1,8 @@
 get:
   tags:
     - My account
+  externalDocs:
+    url: 
   summary: GET
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -10,6 +12,8 @@ get:
 put:
   tags:
     - My account
+  externalDocs:
+    url: 
   summary: PUT
   parameters:
     - $ref: ../components/parameters/path/format.yml

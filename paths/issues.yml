@@ -1,6 +1,8 @@
 get:
   tags:
     - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
   summary: Listing issues
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -51,6 +53,8 @@ get:
 post:
   tags:
     - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
   summary: Creating an issue
   parameters:
     - $ref: ../components/parameters/path/format.yml

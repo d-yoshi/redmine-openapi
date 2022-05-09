@@ -1,6 +1,8 @@
 get:
   tags:
     - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2
   parameters:
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/membership_id.yml
@@ -21,6 +23,8 @@ get:
 put:
   tags:
     - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
   parameters:
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/membership_id.yml
@@ -38,6 +42,8 @@ put:
 delete:
   tags:
     - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE
   parameters:
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/membership_id.yml

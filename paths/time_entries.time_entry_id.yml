@@ -1,6 +1,8 @@
 get:
   tags:
     - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry
   summary: Updating a time entry
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -16,6 +18,8 @@ get:
 put:
   tags:
     - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Updating-a-time-entry
   summary: Updating a time entry
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -60,6 +64,8 @@ put:
 delete:
   tags:
     - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Deleting-a-time-entry
   summary: Deleting a time entry
   parameters:
     - $ref: ../components/parameters/path/format.yml

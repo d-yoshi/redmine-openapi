@@ -1,6 +1,8 @@
 get:
   tags:
     - Issue Statuses
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET
   summary: Returns possible Status Values for Issues
   parameters:
     - $ref: ../components/parameters/path/format.yml

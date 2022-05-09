@@ -1,6 +1,8 @@
 get:
   tags:
     - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Showing-an-issue
   summary: Showing an issue
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -32,6 +34,8 @@ get:
 put:
   tags:
     - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
   summary: Updating an issue
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -86,6 +90,8 @@ put:
 delete:
   tags:
     - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Deleting-an-issue
   summary: Deleting an issue
   parameters:
     - $ref: ../components/parameters/path/format.yml

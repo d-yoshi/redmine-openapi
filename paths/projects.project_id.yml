@@ -1,6 +1,8 @@
 get:
   tags:
     - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project
   summary: Showing a project
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -25,6 +27,8 @@ get:
 put:
   tags:
     - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
   summary: Updating a project
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -81,6 +85,8 @@ put:
 delete:
   tags:
     - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
   summary: Deleting a project
   parameters:
     - $ref: ../components/parameters/path/format.yml

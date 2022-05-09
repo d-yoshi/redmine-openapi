@@ -1,6 +1,4 @@
 name: issue_id
 in: query
-description: |
-  get issue with the given id or multiple issues by id using ',' to separate id.
 schema:
   type: string

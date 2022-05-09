@@ -1,6 +1,8 @@
 get:
   tags:
     - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -15,6 +17,8 @@ get:
 post:
   tags:
     - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
