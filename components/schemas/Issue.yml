@@ -1,0 +1,57 @@
+type: object
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./IdName.yml
+  tracker:
+    $ref: ./IdName.yml
+  status:
+    allOf:
+      - $ref: ./IdName.yml
+      - type: object
+        properties:
+          is_closed:
+            type: string
+  priority:
+    $ref: ./IdName.yml
+  author:
+    $ref: ./IdName.yml
+  category:
+    $ref: ./IdName.yml
+  subject:
+    type: string
+  description:
+    type: string
+  start_date:
+    type: string
+  due_date:
+    type: string
+  done_ratio:
+    type: integer
+  estimated_hours:
+    type: number
+  total_estimated_hours:
+    type: number
+  spent_hours:
+    type: number
+  total_spen_hours:
+    type: number
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time
+  closed_on:
+    type: string
+    format: date-time
+required:
+  - id
+  - project
+  - tracker
+  - status
+  - priority
+  - author
+  - subject
+  - done_ratio

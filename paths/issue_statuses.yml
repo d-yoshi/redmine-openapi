@@ -1,0 +1,18 @@
+get:
+  tags:
+    - Issue Statuses
+  summary: Returns possible Status Values for Issues
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              issue_statuses:
+                $ref: ../components/schemas/IssueStatuses.yml
+            required:
+              - issue_statuses

@@ -1,0 +1,90 @@
+get:
+  tags:
+    - Projects
+  summary: Showing a project
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+    - name: include
+      in: query
+      schema:
+        type: string
+        enum:
+          - trackers
+          - issue_categories
+          - enabled_modules
+          - time_entry_activities
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Project.yml
+
+put:
+  tags:
+    - Projects
+  summary: Updating a project
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            project:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                homepage:
+                  type: string
+                is_public:
+                  type: boolean
+                parent_id:
+                  type: integer
+                inherit_members:
+                  type: boolean
+                default_assigned_to_id:
+                  type: string
+                default_version_id:
+                  type: string
+                tracker_ids:
+                  type: array
+                  items:
+                    type: number
+                enabled_module_names:
+                  type: array
+                  items:
+                    type: string
+                issue_custom_field_ids:
+                  type: array
+                  items:
+                    type: integer
+                custom_field_values:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    1: VALUE
+          required:
+            - project
+  responses:
+    204:
+      description: ""
+
+delete:
+  tags:
+    - Projects
+  summary: Deleting a project
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  responses:
+    204:
+      description: ""

@@ -1,0 +1,17 @@
+type: object
+properties:
+  memberships:
+    type: array
+    items:
+      $ref: "./Membership.yml"
+  total_count:
+    type: integer
+  offset:
+    type: integer
+  limit:
+    type: integer
+required:
+  - memberships
+  - total_count
+  - offset
+  - limit

@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: integer
+  login:
+    type: string
+  firstname:
+    type: string
+  lastname:
+    type: string
+  mail:
+    type: string
+    format: date-time
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time
+  last_login_on:
+    type: string
+    format: date-time
+  passwd_changed_on:
+    type: string
+    format: date-time
+  twofa_scheme:
+    type: object
+  api_key:
+    type: string
+  status:
+    type: integer
+  custom_fields:
+    type: array
+    items:
+      $ref: ./IdName.yml
+  memberships:
+    type: array
+    items:
+      type: object
+      properties:
+        project:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: ./IdName.yml
+  admin:
+    type: boolean
+  groups:
+    type: array
+    items:
+      $ref: ./IdName.yml

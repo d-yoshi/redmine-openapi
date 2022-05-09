@@ -1,0 +1,41 @@
+path_format:
+  $ref: ./parameters/path/format.yml
+
+path_issue_id:
+  $ref: ./parameters/path/issue_id.yml
+
+path_membership_id:
+  $ref: ./parameters/path/membership_id.yml
+
+path_project_id:
+  $ref: ./parameters/path/project_id.yml
+
+path_time_entry_id:
+  $ref: ./parameters/path/time_entry_id.yml
+
+path_user_id:
+  $ref: ./parameters/path/user_id.yml
+
+query_group_id:
+  $ref: ./parameters/query/group_id.yml
+
+query_issue_id:
+  $ref: ./parameters/query/issue_id.yml
+
+query_limit:
+  $ref: ./parameters/query/limit.yml
+
+query_offset:
+  $ref: ./parameters/query/offset.yml
+
+query_project_id:
+  $ref: ./parameters/query/project_id.yml
+
+query_sort:
+  $ref: ./parameters/query/sort.yml
+
+query_tracker_id:
+  $ref: ./parameters/query/tracker_id.yml
+
+query_user_id:
+  $ref: ./parameters/query/user_id.yml

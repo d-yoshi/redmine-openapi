@@ -1,0 +1,6 @@
+name: offset
+in: query
+description: |
+  skip this number of issues in response (optional)
+schema:
+  type: integer

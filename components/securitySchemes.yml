@@ -1,0 +1,8 @@
+BasicAuth:
+  type: http
+  scheme: basic
+
+ApiKeyAuth:
+  type: apiKey
+  in: header
+  name: X-Redmine-API-Key

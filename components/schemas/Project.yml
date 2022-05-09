@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: integer
+  name:
+    type: integer
+  identifier:
+    type: integer
+  description:
+    type: integer
+  homepage:
+    type: string
+  status:
+    type: integer
+  is_public:
+    type: boolean
+  inherit_members:
+    type: boolean
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time
+required:
+  - id
+  - name
+  - is_public

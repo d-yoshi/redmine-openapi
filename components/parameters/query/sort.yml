@@ -1,0 +1,6 @@
+name: sort
+in: query
+description: |
+  "column to sort with. Append :desc to invert the order."
+schema:
+  type: string

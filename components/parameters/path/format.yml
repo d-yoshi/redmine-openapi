@@ -1,0 +1,8 @@
+name: format
+in: path
+required: true
+schema:
+  type: string
+  enum:
+    - json
+    - xml

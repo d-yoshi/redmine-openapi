@@ -1,0 +1,14 @@
+IdName:
+  $ref: ./schemas/IdName.yml
+
+Issue:
+  $ref: ./schemas/Issue.yml
+
+IssuePartial:
+  $ref: ./schemas/Issue.partial.yml
+
+Project:
+  $ref: ./schemas/Project.yml
+
+User:
+  $ref: ./schemas/User.yml

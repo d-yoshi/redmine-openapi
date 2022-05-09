@@ -1,0 +1,110 @@
+get:
+  tags:
+    - Issues
+  summary: Listing issues
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/query/offset.yml
+    - $ref: ../components/parameters/query/limit.yml
+    - $ref: ../components/parameters/query/sort.yml
+    - name: include
+      in: query
+      schema:
+        type: string
+        enum:
+          - attachments
+          - relations
+    - $ref: ../components/parameters/query/issue_id.yml
+    - name: project_id
+      in: query
+      schema:
+        type: string
+    - name: subproject_id
+      in: query
+      schema:
+        type: string
+    - $ref: ../components/parameters/query/tracker_id.yml
+    - name: status_id
+      in: query
+      schema:
+        type: string
+    - name: assigned_to_id
+      in: query
+      schema:
+        type: string
+    - name: parent_id
+      in: query
+      schema:
+        type: string
+    - name: cf_x
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Issues.yml
+
+post:
+  tags:
+    - Issues
+  summary: Creating an issue
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            issue:
+              type: object
+              properties:
+                project_id:
+                  type: integer
+                tracker_id:
+                  type: integer
+                status_id:
+                  type: integer
+                priority_id:
+                  type: integer
+                subject:
+                  type: string
+                description:
+                  type: string
+                category_id:
+                  type: integer
+                fixed_version_id:
+                  type: string
+                assigned_to_id:
+                  type: string
+                parent_issue_id:
+                  type: string
+                custom_fields:
+                  type: string
+                watcher_user_ids:
+                  type: string
+                is_private:
+                  type: boolean
+                estimated_hours:
+                  type: string
+              required:
+                - project_id
+                - subject
+          required:
+            - issue
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              issue:
+                $ref: ../components/schemas/Issue.yml
+            required:
+              - issue

@@ -1,0 +1,12 @@
+get:
+  tags:
+    - Users
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - name: include
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: ""

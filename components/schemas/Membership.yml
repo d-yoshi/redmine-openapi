@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: integer
+  project:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  user:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  roles:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string

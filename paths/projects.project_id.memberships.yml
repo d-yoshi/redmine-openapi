@@ -1,0 +1,52 @@
+get:
+  tags:
+    - Project Memberships
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Memberships.yml
+
+post:
+  tags:
+    - Project Memberships
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            membership:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - user_id
+                - role_ids
+          required:
+            - membership
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              membership:
+                $ref: ../components/schemas/Membership.yml
+            required:
+              - membership

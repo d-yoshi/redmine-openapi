@@ -1,0 +1,70 @@
+get:
+  tags:
+    - Users
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/user_id.yml
+    - name: include
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: ""
+
+put:
+  tags:
+    - Users
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/user_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                mail:
+                  type: string
+                auth_source_id:
+                  type: integer
+                mail_notification:
+                  type: boolean
+                must_change_passwd:
+                  type: boolean
+                generate_password:
+                  type: boolean
+            admin:
+              type: boolean
+          required:
+            - user
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml
+
+delete:
+  tags:
+    - Users
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/user_id.yml
+  responses:
+    204:
+      description: ""

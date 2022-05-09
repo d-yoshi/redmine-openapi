@@ -1,0 +1,76 @@
+openapi: 3.0.3
+
+info:
+  title: Redmine API
+  description: Redmine exposes some of its data through a REST API. This API provides access and basic CRUD operations (create, update, delete) for the resources described below. The API supports both XML and JSON formats.
+  version: 5.0.0
+
+externalDocs:
+  description: Redmine API
+  url: https://www.redmine.org/projects/redmine/wiki/Rest_api
+
+security:
+  - BasicAuth: []
+  - ApiKeyAuth: []
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  "/issues.{format}":
+    $ref: ./paths/issues.yml
+
+  "/issues/{issue_id}.{format}":
+    $ref: ./paths/issues.issue_id.yml
+
+  "/issues/{issue_id}/watchers.{format}":
+    $ref: ./paths/issues.issue_id.watchers.yml
+
+  "/issues/{issue_id}/watchers/{user_id}.{format}":
+    $ref: ./paths/issues.issue_id.watchers.user_id.yml
+
+  "/projects.{format}":
+    $ref: ./paths/projects.yml
+
+  "/projects/{project_id}.{format}":
+    $ref: ./paths/projects.project_id.yml
+
+  "/issue_statuses.{format}":
+    $ref: ./paths/issue_statuses.yml
+
+  "/projects/{project_id}/memberships.{format}":
+    $ref: ./paths/projects.project_id.memberships.yml
+
+  "/projects{project_id}/memberships/{membership_id}.{format}":
+    $ref: ./paths/projects.project_id.memberships.membership_id.yml
+
+  "/users.{format}":
+    $ref: ./paths/users.yml
+
+  "/users/{user_id}.{format}":
+    $ref: ./paths/users.user_id.yml
+
+  "/users/current.{format}":
+    $ref: ./paths/users.current.yml
+
+  "/time_entries.{format}":
+    $ref: ./paths/time_entries.yml
+
+  "/time_entries/{time_entry_id}.{format}":
+    $ref: ./paths/time_entries.time_entry_id.yml
+
+  "/my/account.{format}":
+    $ref: ./paths/my_account.yml
+
+components:
+  securitySchemes:
+    $ref: ./components/securitySchemes.yml
+
+  parameters:
+    $ref: ./components/parameters.yml
+
+  schemas:
+    $ref: ./components/schemas.yml
+
+tags:
+  $ref: ./tags.yml

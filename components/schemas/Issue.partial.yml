@@ -1,0 +1,6 @@
+type: object
+properties:
+  spent_hours:
+    type: number
+  total_spent_hours:
+    type: number

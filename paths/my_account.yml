@@ -1,0 +1,47 @@
+get:
+  tags:
+    - My account
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+  responses:
+    200:
+      description: ""
+put:
+  tags:
+    - My account
+  summary: PUT
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                login:
+                  type: string
+                admin:
+                  type: boolean
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                mail:
+                  type: string
+                custom_fields:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/IdName.yml"
+              required:
+                - project_id
+                - status_id
+                - tracker_id
+          required:
+            - user
+  responses:
+    204:
+      description: ""

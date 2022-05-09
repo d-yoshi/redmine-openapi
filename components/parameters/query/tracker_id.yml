@@ -1,0 +1,6 @@
+name: tracker_id
+in: query
+description: |
+  get issues from the tracker with the given id
+schema:
+  type: integer

@@ -1,0 +1,5 @@
+name: time_entry_id
+in: path
+required: true
+schema:
+  type: integer

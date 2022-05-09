@@ -1,0 +1,17 @@
+type: object
+properties:
+  projects:
+    type: array
+    items:
+      $ref: "./Project.yml"
+  total_count:
+    type: integer
+  offset:
+    type: integer
+  limit:
+    type: integer
+required:
+  - projects
+  - total_count
+  - offset
+  - limit

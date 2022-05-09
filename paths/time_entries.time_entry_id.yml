@@ -1,0 +1,52 @@
+put:
+  tags:
+    - Time Entries
+  summary: Updating a time entry
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/time_entry_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            time_entry:
+              type: object
+              properties:
+                hours:
+                  type: integer
+                issue_id:
+                  type: integer
+                spent_on:
+                  type: string
+                activity_id:
+                  type: integer
+                comments:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+                - issue_id
+                - hours
+          required:
+            - time_entry
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml
+delete:
+  tags:
+    - Time Entries
+  summary: Deleting a time entry
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/time_entry_id.yml
+  responses:
+    204:
+      description: ""

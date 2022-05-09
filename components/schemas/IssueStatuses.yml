@@ -1,0 +1,6 @@
+allOf:
+  - $ref: ./IdName.yml
+  - type: object
+    properties:
+      is_closed:
+        type: boolean
