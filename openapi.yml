@@ -41,8 +41,8 @@ paths:
   "/projects/{project_id}/memberships.{format}":
     $ref: ./paths/projects.project_id.memberships.yml
 
-  "/projects{project_id}/memberships/{membership_id}.{format}":
-    $ref: ./paths/projects.project_id.memberships.membership_id.yml
+  "/memberships/{membership_id}.{format}":
+    $ref: ./paths/memberships.membership_id.yml
 
   "/users.{format}":
     $ref: ./paths/users.yml
