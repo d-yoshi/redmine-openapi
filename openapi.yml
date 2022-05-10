@@ -30,17 +30,14 @@ paths:
   /projects/{project_id}.{format}:
     $ref: ./paths/projects.project_id.yml
 
-  /issue_statuses.{format}:
-    $ref: ./paths/issue_statuses.yml
-
-  /projects/{project_id}/memberships.{format}:
-    $ref: ./paths/projects.project_id.memberships.yml
-
   /projects/{project_id}/archive.{format}:
     $ref: ./paths/projects.project_id.archive.yml
 
   /projects/{project_id}/unarchive.{format}:
     $ref: ./paths/projects.project_id.unarchive.yml
+
+  /projects/{project_id}/memberships.{format}:
+    $ref: ./paths/projects.project_id.memberships.yml
 
   /memberships/{membership_id}.{format}:
     $ref: ./paths/memberships.membership_id.yml
@@ -60,6 +57,21 @@ paths:
   /time_entries/{time_entry_id}.{format}:
     $ref: ./paths/time_entries.time_entry_id.yml
 
+  /attachments.{attachment_id}.{format}:
+    $ref: ./paths/attachments.attachment_id.yml
+
+  /issue_statuses.{format}:
+    $ref: ./paths/issue_statuses.yml
+
+  /trackers.{format}:
+    $ref: ./paths/trackers.yml
+
+  /roles.{format}:
+    $ref: ./paths/roles.yml
+
+  /roles/{role_id}.{format}:
+    $ref: ./paths/roles.role_id.yml
+
   /groups.{format}:
     $ref: ./paths/groups.yml
 
@@ -71,15 +83,6 @@ paths:
 
   /groups/{group_id}/users/{user_id}.{format}:
     $ref: ./paths/groups.group_id.users.user_id.yml
-
-  /trackers.{format}:
-    $ref: ./paths/trackers.yml
-
-  /roles.{format}:
-    $ref: ./paths/roles.yml
-
-  /roles/{role_id}.{format}:
-    $ref: ./paths/roles.role_id.yml
 
   /custom_fields.{format}:
     $ref: ./paths/custom_fields.yml

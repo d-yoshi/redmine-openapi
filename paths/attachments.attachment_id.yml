@@ -1,0 +1,46 @@
+get:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/attachment_id.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              attachment:
+                $ref: ../components/schemas/Attachment.yml
+
+# TODO
+patch:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
+  summary: PATCH
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/attachment_id.yml
+  responses:
+    204:
+      description: ""
+
+delete:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE
+  summary: DELETE
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/attachment_id.yml
+  responses:
+    204:
+      description: ""

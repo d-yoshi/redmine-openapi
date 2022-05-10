@@ -1,26 +1,29 @@
 format:
   $ref: ./parameters/path/format.yml
 
-issue_id:
-  $ref: ./parameters/path/issue_id.yml
-
-membership_id:
-  $ref: ./parameters/path/membership_id.yml
-
-project_id:
-  $ref: ./parameters/path/project_id.yml
-
-time_entry_id:
-  $ref: ./parameters/path/time_entry_id.yml
-
-user_id:
-  $ref: ./parameters/path/user_id.yml
-
-group_id:
-  $ref: ./parameters/path/group_id.yml
-
 limit:
   $ref: ./parameters/query/limit.yml
 
 offset:
   $ref: ./parameters/query/offset.yml
+
+issue_id:
+  $ref: ./parameters/path/issue_id.yml
+
+project_id:
+  $ref: ./parameters/path/project_id.yml
+
+membership_id:
+  $ref: ./parameters/path/membership_id.yml
+
+user_id:
+  $ref: ./parameters/path/user_id.yml
+
+time_entry_id:
+  $ref: ./parameters/path/time_entry_id.yml
+
+attachment_id:
+  $ref: ./parameters/path/attachment_id.yml
+
+group_id:
+  $ref: ./parameters/path/group_id.yml
