@@ -25,5 +25,8 @@ time_entry_id:
 attachment_id:
   $ref: ./parameters/path/attachment_id.yml
 
+issue_category_id:
+  $ref: ./parameters/path/issue_category_id.yml
+
 group_id:
   $ref: ./parameters/path/group_id.yml

@@ -66,6 +66,12 @@ paths:
   /trackers.{format}:
     $ref: ./paths/trackers.yml
 
+  /projects/{project_id}/issue_categories.{format}:
+    $ref: ./paths/projects.project_id.issue_categories.yml
+  
+  /issue_categories/{issue_category_id}.{format}:
+    $ref: ./paths/issue_categories.issue_category_id.yml
+
   /roles.{format}:
     $ref: ./paths/roles.yml
 

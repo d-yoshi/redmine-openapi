@@ -37,6 +37,9 @@ Tracker:
 Trackers:
   $ref: ./schemas/Trackers.yml
 
+IssueCategory:
+  $ref: ./schemas/IssueCategory.yml
+
 Role:
   $ref: ./schemas/Role.yml
 

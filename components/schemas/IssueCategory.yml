@@ -1,0 +1,14 @@
+type: object
+required:
+  - id
+  - project
+  - name
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./IdName.yml
+  name:
+    type: string
+  assigned_to:
+    $ref: ./IdName.yml
