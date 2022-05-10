@@ -27,7 +27,7 @@ You can feel the warmth of manual labor.
 | Issue Statuses      | **Done**          |
 | Trackers            | **Done**          |
 | Enumerations        | Todo              |
-| Issue Categories    | In Progress       |
+| Issue Categories    | **Done**          |
 | Roles               | **Done**          |
 | Groups              | **Done**          |
 | Custom Fields       | **Done**          |
