@@ -1,0 +1,113 @@
+openapi: 3.0.3
+
+info:
+  title: Redmine API
+  version: 5.0.0
+
+externalDocs:
+  url: https://www.redmine.org/projects/redmine/wiki/Rest_api
+
+security:
+  - BasicAuth: []
+  - ApiKeyAuth: []
+
+paths:
+  /issues.{format}:
+    $ref: ./paths/issues.yml
+
+  /issues/{issue_id}.{format}:
+    $ref: ./paths/issues.issue_id.yml
+
+  /issues/{issue_id}/watchers.{format}:
+    $ref: ./paths/issues.issue_id.watchers.yml
+
+  /issues/{issue_id}/watchers/{user_id}.{format}:
+    $ref: ./paths/issues.issue_id.watchers.user_id.yml
+
+  /projects.{format}:
+    $ref: ./paths/projects.yml
+
+  /projects/{project_id}.{format}:
+    $ref: ./paths/projects.project_id.yml
+
+  /projects/{project_id}/archive.{format}:
+    $ref: ./paths/projects.project_id.archive.yml
+
+  /projects/{project_id}/unarchive.{format}:
+    $ref: ./paths/projects.project_id.unarchive.yml
+
+  /projects/{project_id}/memberships.{format}:
+    $ref: ./paths/projects.project_id.memberships.yml
+
+  /memberships/{membership_id}.{format}:
+    $ref: ./paths/memberships.membership_id.yml
+
+  /users.{format}:
+    $ref: ./paths/users.yml
+
+  /users/{user_id}.{format}:
+    $ref: ./paths/users.user_id.yml
+
+  /users/current.{format}:
+    $ref: ./paths/users.current.yml
+
+  /time_entries.{format}:
+    $ref: ./paths/time_entries.yml
+
+  /time_entries/{time_entry_id}.{format}:
+    $ref: ./paths/time_entries.time_entry_id.yml
+
+  /attachments.{attachment_id}.{format}:
+    $ref: ./paths/attachments.attachment_id.yml
+
+  /issue_statuses.{format}:
+    $ref: ./paths/issue_statuses.yml
+
+  /trackers.{format}:
+    $ref: ./paths/trackers.yml
+
+  /projects/{project_id}/issue_categories.{format}:
+    $ref: ./paths/projects.project_id.issue_categories.yml
+  
+  /issue_categories/{issue_category_id}.{format}:
+    $ref: ./paths/issue_categories.issue_category_id.yml
+
+  /roles.{format}:
+    $ref: ./paths/roles.yml
+
+  /roles/{role_id}.{format}:
+    $ref: ./paths/roles.role_id.yml
+
+  /groups.{format}:
+    $ref: ./paths/groups.yml
+
+  /groups/{group_id}.{format}:
+    $ref: ./paths/groups.group_id.yml
+
+  /groups/{group_id}/users.{format}:
+    $ref: ./paths/groups.group_id.users.yml
+
+  /groups/{group_id}/users/{user_id}.{format}:
+    $ref: ./paths/groups.group_id.users.user_id.yml
+
+  /custom_fields.{format}:
+    $ref: ./paths/custom_fields.yml
+
+  /my/account.{format}:
+    $ref: ./paths/my_account.yml
+
+  /uploads.{format}:
+    $ref: ./paths/uploads.yml
+
+components:
+  securitySchemes:
+    $ref: ./components/securitySchemes.yml
+
+  parameters:
+    $ref: ./components/parameters.yml
+
+  schemas:
+    $ref: ./components/schemas.yml
+
+tags:
+  $ref: ./tags.yml

@@ -38,6 +38,8 @@ You can feel the warmth of manual labor.
 
 ## How to bundle into one YAML file
 
+To bundle files in the src directory, execute the following command.
+
 ```
-docker run --rm -v $(PWD)/:/workspace/ jeanberu/swagger-cli swagger-cli bundle -o workspace/dist/openapi.yml -t yaml workspace/openapi.yml
+docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli  swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
 ```
