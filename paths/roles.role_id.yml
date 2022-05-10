@@ -6,6 +6,7 @@ get:
   summary: GET
   parameters:
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/role_id.yml
   responses:
     200:
       description: ""
