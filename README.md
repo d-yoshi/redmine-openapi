@@ -30,7 +30,7 @@ You can feel the warmth of manual labor.
 | Issue Categories    | Todo              |
 | Roles               | **Done**          |
 | Groups              | **Done**          |
-| Custom Fields       | In Progress       |
+| Custom Fields       | **Done**          |
 | Search              | Todo              |
 | Files               | Todo              |
 | My account          | **Done**          |
