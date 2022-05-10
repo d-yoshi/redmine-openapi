@@ -23,44 +23,23 @@ get:
       content:
         application/json:
           schema:
-            allOf:
-              - type: object
-                required:
-                  - users
-                  - total_count
-                  - offset
-                  - limit
-                properties:
-                  users:
-                    type: array
-                    items:
-                      $ref: ../components/schemas/User.yml
-                  total_count:
-                    type: integer
-                  offset:
-                    type: integer
-                  limit:
-                    type: integer
-              - type: object
-                properties:
-                  users:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        memberships:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              project:
-                                type: string
-                              roles:
-                                type: array
-                                items:
-                                  $ref: ../components/schemas/IdName.yml
-                        groups:
-                          $ref: ../components/schemas/IdName.yml
+            type: object
+            required:
+              - users
+              - total_count
+              - offset
+              - limit
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: ../components/schemas/User.yml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
 
 post:
   tags:
