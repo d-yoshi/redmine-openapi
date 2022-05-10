@@ -81,6 +81,9 @@ paths:
   /roles/{role_id}.{format}:
     $ref: ./paths/roles.role_id.yml
 
+  /custom_fields.{format}:
+    $ref: ./paths/custom_fields.yml
+
   /my/account.{format}:
     $ref: ./paths/my_account.yml
 

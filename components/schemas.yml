@@ -40,5 +40,8 @@ Trackers:
 Role:
   $ref: ./schemas/Role.yml
 
+CustomField:
+  $ref: ./schemas/CustomField.yml
+
 Errors:
   $ref: ./schemas/Errors.yml

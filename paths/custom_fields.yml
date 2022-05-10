@@ -1,0 +1,22 @@
+get:
+  tags:
+    - Custom Fields
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields#GET
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - custom_fields
+            properties:
+              custom_fields:
+                type: array
+                items:
+                  $ref: ../components/schemas/CustomField.yml
