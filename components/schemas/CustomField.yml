@@ -34,7 +34,6 @@ properties:
       - text
   regexp:
     type: string
-    nullable: true
   min_length:
     type: integer
     nullable: true
