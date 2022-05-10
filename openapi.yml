@@ -12,76 +12,76 @@ security:
   - ApiKeyAuth: []
 
 paths:
-  "/issues.{format}":
+  /issues.{format}:
     $ref: ./paths/issues.yml
 
-  "/issues/{issue_id}.{format}":
+  /issues/{issue_id}.{format}:
     $ref: ./paths/issues.issue_id.yml
 
-  "/issues/{issue_id}/watchers.{format}":
+  /issues/{issue_id}/watchers.{format}:
     $ref: ./paths/issues.issue_id.watchers.yml
 
-  "/issues/{issue_id}/watchers/{user_id}.{format}":
+  /issues/{issue_id}/watchers/{user_id}.{format}:
     $ref: ./paths/issues.issue_id.watchers.user_id.yml
 
-  "/projects.{format}":
+  /projects.{format}:
     $ref: ./paths/projects.yml
 
-  "/projects/{project_id}.{format}":
+  /projects/{project_id}.{format}:
     $ref: ./paths/projects.project_id.yml
 
-  "/issue_statuses.{format}":
+  /issue_statuses.{format}:
     $ref: ./paths/issue_statuses.yml
 
-  "/projects/{project_id}/memberships.{format}":
+  /projects/{project_id}/memberships.{format}:
     $ref: ./paths/projects.project_id.memberships.yml
 
-  "/projects/{project_id}/archive.{format}":
+  /projects/{project_id}/archive.{format}:
     $ref: ./paths/projects.project_id.archive.yml
 
-  "/projects/{project_id}/unarchive.{format}":
+  /projects/{project_id}/unarchive.{format}:
     $ref: ./paths/projects.project_id.unarchive.yml
 
-  "/memberships/{membership_id}.{format}":
+  /memberships/{membership_id}.{format}:
     $ref: ./paths/memberships.membership_id.yml
 
-  "/users.{format}":
+  /users.{format}:
     $ref: ./paths/users.yml
 
-  "/users/{user_id}.{format}":
+  /users/{user_id}.{format}:
     $ref: ./paths/users.user_id.yml
 
-  "/users/current.{format}":
+  /users/current.{format}:
     $ref: ./paths/users.current.yml
 
-  "/time_entries.{format}":
+  /time_entries.{format}:
     $ref: ./paths/time_entries.yml
 
-  "/time_entries/{time_entry_id}.{format}":
+  /time_entries/{time_entry_id}.{format}:
     $ref: ./paths/time_entries.time_entry_id.yml
 
-  "/groups.{format}":
+  /groups.{format}:
     $ref: ./paths/groups.yml
 
-  "/groups/{group_id}.{format}":
+  /groups/{group_id}.{format}:
     $ref: ./paths/groups.group_id.yml
 
-  "/groups/{group_id}/users.{format}":
+  /groups/{group_id}/users.{format}:
     $ref: ./paths/groups.group_id.users.yml
 
-  "/groups/{group_id}/users/{user_id}.{format}":
+  /groups/{group_id}/users/{user_id}.{format}:
     $ref: ./paths/groups.group_id.users.user_id.yml
 
-  "/trackers.{format}":
+  /trackers.{format}:
     $ref: ./paths/trackers.yml
 
-  "/roles.{format}":
+  /roles.{format}:
     $ref: ./paths/roles.yml
 
-  "/roles/{role_id}.{format}":
+  /roles/{role_id}.{format}:
     $ref: ./paths/roles.role_id.yml
 
-  "/my/account.{format}":
+  /my/account.{format}:
     $ref: ./paths/my_account.yml
 
 components:
