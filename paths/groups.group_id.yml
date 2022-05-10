@@ -21,7 +21,10 @@ get:
         application/json:
           schema:
             allOf:
-              - $ref: ../components/schemas/Group.yml
+              - type: object
+                properties:
+                  group:
+                    $ref: ../components/schemas/Group.yml
               - type: object
                 properties:
                   group:

@@ -1,4 +1,1 @@
-type: object
-properties:
-  group:
-    $ref: ./IdName.yml
+$ref: ./IdName.yml

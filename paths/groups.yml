@@ -50,7 +50,10 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Group.yml
+            type: object
+            properties:
+              group:
+                $ref: ../components/schemas/Group.yml
     422:
       description: ""
       content:
