@@ -135,6 +135,20 @@ post:
                   type: boolean
                 estimated_hours:
                   type: string
+                uploads:
+                  type: object
+                  properties:
+                    upload:
+                      type: object
+                      properties:
+                        token:
+                          type: string
+                        filename:
+                          type: string
+                        description:
+                          type: string
+                        content_type:
+                          type: string
   responses:
     201:
       description: ""

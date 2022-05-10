@@ -90,6 +90,9 @@ paths:
   /my/account.{format}:
     $ref: ./paths/my_account.yml
 
+  /uploads.{format}:
+    $ref: ./paths/uploads.yml
+
 components:
   securitySchemes:
     $ref: ./components/securitySchemes.yml

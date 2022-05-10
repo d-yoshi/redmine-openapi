@@ -1,0 +1,40 @@
+post:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files
+  summary: Attaching files
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - name: filename
+      in: query
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              upload:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  token:
+                    type: string
+    406:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml
+            
