@@ -23,11 +23,11 @@ You can feel the warmth of manual labor.
 | Versions            | Todo              |
 | Wiki Pages          | Todo              |
 | Queries             | Todo              |
-| Attachements        | In Progress       |
+| Attachements        | **Done**          |
 | Issue Statuses      | **Done**          |
 | Trackers            | **Done**          |
 | Enumerations        | Todo              |
-| Issue Categories    | Todo              |
+| Issue Categories    | In Progress       |
 | Roles               | **Done**          |
 | Groups              | **Done**          |
 | Custom Fields       | **Done**          |
