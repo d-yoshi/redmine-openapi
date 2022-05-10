@@ -37,5 +37,8 @@ Tracker:
 Trackers:
   $ref: ./schemas/Trackers.yml
 
+Role:
+  $ref: ./schemas/Role.yml
+
 Errors:
   $ref: ./schemas/Errors.yml

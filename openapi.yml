@@ -75,6 +75,12 @@ paths:
   "/trackers.{format}":
     $ref: ./paths/trackers.yml
 
+  "/roles.{format}":
+    $ref: ./paths/roles.yml
+
+  "/roles/{role_id}.{format}":
+    $ref: ./paths/roles.role_id.yml
+
   "/my/account.{format}":
     $ref: ./paths/my_account.yml
 
