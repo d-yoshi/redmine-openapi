@@ -1,0 +1,20 @@
+name: yaml-bundle
+
+on:
+  push:
+    paths:
+      - 'src/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: bundle
+        run: docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
+      - name: push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git diff-index --quiet HEAD openapi.yml || git commit -am "Update bundle yaml files"
+          git push

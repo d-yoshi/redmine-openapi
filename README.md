@@ -41,5 +41,5 @@ You can feel the warmth of manual labor.
 To bundle files in the src directory, execute the following command.
 
 ```
-docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli  swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
+docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
 ```
