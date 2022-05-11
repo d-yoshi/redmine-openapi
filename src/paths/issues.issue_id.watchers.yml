@@ -16,8 +16,9 @@ post:
             - user_id
           properties:
             user_id:
-              type: string
-
+              oneOf:
+                - type: integer
+                - type: string
   responses:
     204:
       description: ""

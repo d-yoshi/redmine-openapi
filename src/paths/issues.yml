@@ -112,23 +112,35 @@ post:
                     - type: integer
                     - type: string
                 tracker_id:
-                  type: integer
+                  oneOf:
+                    - type: integer
+                    - type: string
                 status_id:
-                  type: integer
+                  oneOf:
+                    - type: integer
+                    - type: string
                 priority_id:
-                  type: integer
+                  oneOf:
+                    - type: integer
+                    - type: string
                 subject:
                   type: string
                 description:
                   type: string
                 category_id:
-                  type: integer
+                  oneOf:
+                    - type: integer
+                    - type: string
                 fixed_version_id:
                   type: string
                 assigned_to_id:
                   type: string
                 parent_issue_id:
-                  type: string
+                  oneOf:
+                    - type: integer
+                      nullable: true
+                    - type: string
+                      nullable: true
                 custom_fields:
                   type: string
                 watcher_user_ids:
