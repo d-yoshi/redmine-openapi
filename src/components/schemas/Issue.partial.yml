@@ -18,7 +18,12 @@ properties:
   attachments:
     type: array
     items:
-      type: string
+      allOf:
+        - $ref: ./Attachment.yml
+        - type: object
+          properties:
+            thumbnail_url:
+              type: string
   relations:
     type: array
     items:
