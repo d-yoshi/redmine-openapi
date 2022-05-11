@@ -108,7 +108,9 @@ post:
                 - subject
               properties:
                 project_id:
-                  type: integer
+                  oneOf:
+                    - type: integer
+                    - type: string
                 tracker_id:
                   type: integer
                 status_id:
