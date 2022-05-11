@@ -36,6 +36,18 @@ get:
                   project:
                     type: object
                     properties:
+                      trackers:
+                        type: array
+                        items:
+                          $ref: ../components/schemas/IdName.yml
+                      issue_categories:
+                        type: array
+                        items:
+                          $ref: ../components/schemas/IdName.yml
+                      enabled_modules:
+                        type: array
+                        items:
+                          $ref: ../components/schemas/IdName.yml
                       time_entry_activities:
                         type: array
                         items:
