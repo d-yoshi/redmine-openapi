@@ -127,6 +127,15 @@ post:
                   type: string
                 description:
                   type: string
+                  nullable: true
+                start_date:
+                  type: string
+                  format: date
+                  nullable: true
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
                 category_id:
                   oneOf:
                     - type: integer
@@ -134,7 +143,9 @@ post:
                 fixed_version_id:
                   type: string
                 assigned_to_id:
-                  type: string
+                  oneOf:
+                    - type: integer
+                    - type: string
                 parent_issue_id:
                   oneOf:
                     - type: integer
@@ -148,7 +159,11 @@ post:
                 is_private:
                   type: boolean
                 estimated_hours:
-                  type: string
+                  oneOf:
+                    - type: integer
+                      nullable: true
+                    - type: string
+                      nullable: true
                 uploads:
                   type: object
                   properties:
