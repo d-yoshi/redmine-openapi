@@ -69,7 +69,9 @@ post:
                     - hours
                   properties:
                     hours:
-                      type: number
+                      oneOf:
+                        - type: number
+                        - type: string
                     spent_on:
                       type: string
                       format: date
