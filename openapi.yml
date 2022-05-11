@@ -165,7 +165,11 @@ paths:
                     custom_fields:
                       type: string
                     watcher_user_ids:
-                      type: string
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
                     is_private:
                       type: boolean
                     estimated_hours:
@@ -306,8 +310,6 @@ paths:
                           nullable: true
                     custom_fields:
                       type: string
-                    watcher_user_ids:
-                      type: string
                     is_private:
                       type: boolean
                     estimated_hours:
@@ -316,7 +318,6 @@ paths:
                           nullable: true
                         - type: string
                           nullable: true
-                      nullable: true
                     notes:
                       type: string
                     private_notes:
