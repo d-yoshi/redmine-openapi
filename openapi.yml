@@ -451,7 +451,9 @@ paths:
                     is_public:
                       type: boolean
                     parent_id:
-                      type: integer
+                      oneOf:
+                        - type: integer
+                        - type: string
                     inherit_members:
                       type: boolean
                     default_assigned_to_id:
@@ -461,7 +463,9 @@ paths:
                     tracker_ids:
                       type: array
                       items:
-                        type: number
+                        oneOf:
+                          - type: integer
+                          - type: string
                     enabled_module_names:
                       type: array
                       items:
@@ -469,7 +473,9 @@ paths:
                     issue_custom_field_ids:
                       type: array
                       items:
-                        type: integer
+                        oneOf:
+                          - type: integer
+                          - type: string
                     custom_field_values:
                       type: object
                       additionalProperties:
@@ -581,7 +587,9 @@ paths:
                     tracker_ids:
                       type: array
                       items:
-                        type: number
+                        oneOf:
+                          - type: integer
+                          - type: string
                     enabled_module_names:
                       type: array
                       items:
@@ -589,7 +597,9 @@ paths:
                     issue_custom_field_ids:
                       type: array
                       items:
-                        type: integer
+                        oneOf:
+                          - type: integer
+                          - type: string
                     custom_field_values:
                       type: object
                       additionalProperties:
@@ -690,11 +700,15 @@ paths:
                     - role_ids
                   properties:
                     user_id:
-                      type: integer
+                      oneOf:
+                        - type: integer
+                        - type: string
                     role_ids:
                       type: array
                       items:
-                        type: integer
+                        oneOf:
+                          - type: integer
+                          - type: string
       responses:
         '201':
           description: ''
@@ -1056,13 +1070,8 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                time_entry:
-                  type: object
-                  required:
-                    - issue_id
-                    - hours
+              allOf:
+                - type: object
                   properties:
                     time_entry:
                       type: object
@@ -1129,12 +1138,12 @@ paths:
         - Time Entries
       externalDocs:
         url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry'
-      summary: Updating a time entry
+      summary: Showing a time entry
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
       responses:
-        '204':
+        '200':
           description: ''
           content:
             application/json:
@@ -1153,27 +1162,55 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                time_entry:
-                  type: object
-                  required:
-                    - issue_id
-                    - hours
+              allOf:
+                - type: object
                   properties:
-                    hours:
-                      type: integer
-                    issue_id:
-                      type: integer
-                    spent_on:
-                      type: string
-                      format: date
-                    activity_id:
-                      type: integer
-                    comments:
-                      type: string
-                    user_id:
-                      type: integer
+                    time_entry:
+                      type: object
+                      required:
+                        - issue_id
+                        - hours
+                      properties:
+                        hours:
+                          oneOf:
+                            - type: number
+                            - type: string
+                        spent_on:
+                          type: string
+                          format: date
+                        activity_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                        comments:
+                          type: string
+                        user_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                - oneOf:
+                    - type: object
+                      properties:
+                        time_entry:
+                          type: object
+                          required:
+                            - issue_id
+                          properties:
+                            issue_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
+                    - type: object
+                      properties:
+                        time_entry:
+                          type: object
+                          required:
+                            - project_id
+                          properties:
+                            project_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
       responses:
         '204':
           description: ''
@@ -1350,7 +1387,9 @@ paths:
                     name:
                       type: string
                     assigned_to_id:
-                      type: integer
+                      oneOf:
+                        - type: integer
+                        - type: string
       responses:
         '201':
           description: ''
@@ -1407,7 +1446,9 @@ paths:
                     name:
                       type: string
                     assigned_to_id:
-                      type: integer
+                      oneOf:
+                        - type: integer
+                        - type: string
       responses:
         '204':
           description: ''
@@ -1523,7 +1564,9 @@ paths:
                     user_ids:
                       type: array
                       items:
-                        type: string
+                        oneOf:
+                          - type: integer
+                          - type: string
       responses:
         '201':
           description: ''
