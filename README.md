@@ -11,30 +11,36 @@ These yaml files are created by my human scraping and experimentation with Redmi
 
 You can feel the warmth of manual labor.
 
-| Resource            | State of progress |
-| ------------------- | ----------------- |
-| Issues              | **Done**          |
-| Projects            | **Done**          |
-| Project Memberships | **Done**          |
-| Users               | **Done**          |
-| Time Entries        | **Done**          |
-| News                | Todo              |
-| Issue Relations     | Todo              |
-| Versions            | Todo              |
-| Wiki Pages          | Todo              |
-| Queries             | Todo              |
-| Attachements        | **Done**          |
-| Issue Statuses      | **Done**          |
-| Trackers            | **Done**          |
-| Enumerations        | Todo              |
-| Issue Categories    | **Done**          |
-| Roles               | **Done**          |
-| Groups              | **Done**          |
-| Custom Fields       | **Done**          |
-| Search              | Todo              |
-| Files               | Todo              |
-| My account          | **Done**          |
-| Journals            | Todo              |
+## Redoc
+
+https://d-yoshi.github.io/redmine-openapi/
+
+## Implementation Status
+
+| Resource            | Status   |
+| ------------------- | -------- |
+| Issues              | **Done** |
+| Projects            | **Done** |
+| Project Memberships | **Done** |
+| Users               | **Done** |
+| Time Entries        | **Done** |
+| News                | Todo     |
+| Issue Relations     | Todo     |
+| Versions            | Todo     |
+| Wiki Pages          | Todo     |
+| Queries             | Todo     |
+| Attachements        | **Done** |
+| Issue Statuses      | **Done** |
+| Trackers            | **Done** |
+| Enumerations        | Todo     |
+| Issue Categories    | **Done** |
+| Roles               | **Done** |
+| Groups              | **Done** |
+| Custom Fields       | **Done** |
+| Search              | Todo     |
+| Files               | Todo     |
+| My account          | **Done** |
+| Journals            | Todo     |
 
 ## How to bundle into one YAML file
 

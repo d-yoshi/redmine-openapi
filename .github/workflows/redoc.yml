@@ -1,4 +1,4 @@
-name: yaml-bundle
+name: Redoc
 
 on:
   push:
