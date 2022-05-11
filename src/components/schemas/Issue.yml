@@ -27,7 +27,7 @@ properties:
   tracker:
     $ref: ./IdName.yml
   status:
-    $ref: ./IssueStatuses.yml
+    $ref: ./IssueStatus.yml
   priority:
     $ref: ./IdName.yml
   author:
