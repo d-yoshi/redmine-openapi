@@ -1,17 +1,35 @@
-type: object
-required:
-  - id
-  - project
-  - user
-  - roles
-properties:
-  id:
-    type: integer
-  project:
-    $ref: ./IdName.yml
-  user:
-    $ref: ./IdName.yml
-  roles:
-    type: array
-    items:
-      $ref: ./IdName.yml
+oneOf:
+  - type: object
+    required:
+      - id
+      - project
+      - user
+      - roles
+    properties:
+      id:
+        type: integer
+      project:
+        $ref: ./IdName.yml
+      user:
+        $ref: ./IdName.yml
+      roles:
+        type: array
+        items:
+          $ref: ./IdName.yml
+  - type: object
+    required:
+      - id
+      - project
+      - group
+      - roles
+    properties:
+      id:
+        type: integer
+      project:
+        $ref: ./IdName.yml
+      group:
+        $ref: ./IdName.yml
+      roles:
+        type: array
+        items:
+          $ref: ./IdName.yml
