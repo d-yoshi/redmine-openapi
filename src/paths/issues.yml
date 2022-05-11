@@ -155,7 +155,11 @@ post:
                 custom_fields:
                   type: string
                 watcher_user_ids:
-                  type: string
+                  type: array
+                  items:
+                    oneOf:
+                      - type: integer
+                      - type: string
                 is_private:
                   type: boolean
                 estimated_hours:
