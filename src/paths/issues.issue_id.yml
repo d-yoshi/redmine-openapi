@@ -112,7 +112,6 @@ put:
                       nullable: true
                     - type: string
                       nullable: true
-                  nullable: true
                 notes:
                   type: string
                 private_notes:
