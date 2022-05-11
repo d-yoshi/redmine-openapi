@@ -1861,6 +1861,10 @@ components:
           type: array
           items:
             type: object
+            required:
+              - id
+              - tracker
+              - subject
             properties:
               id:
                 type: integer
@@ -1897,6 +1901,13 @@ components:
           type: array
           items:
             type: object
+            required:
+              - id
+              - user
+              - notes
+              - created_on
+              - private_notes
+              - details
             properties:
               id:
                 type: integer
@@ -1913,6 +1924,11 @@ components:
                 type: array
                 items:
                   type: object
+                  required:
+                    - property
+                    - name
+                    - old_value
+                    - new_value
                   properties:
                     property:
                       type: string
@@ -1930,14 +1946,7 @@ components:
         allowed_statuses:
           type: array
           items:
-            allOf:
-              - $ref: '#/components/schemas/IdName'
-              - type: object
-                required:
-                  - is_closed
-                properties:
-                  is_closed:
-                    type: boolean
+            $ref: '#/components/schemas/IssueStatus'
     Project:
       type: object
       required:
