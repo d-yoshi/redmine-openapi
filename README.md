@@ -44,6 +44,8 @@ https://d-yoshi.github.io/redmine-openapi/
 | My account          | **Done** |
 | Journals            | Todo     |
 
+[Redmine API Official Developer Guide](https://www.redmine.org/projects/redmine/wiki/Rest_api)
+
 ## How to bundle into one YAML file
 
 To bundle files in the src directory, execute the following command.
