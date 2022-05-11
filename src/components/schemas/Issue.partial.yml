@@ -8,6 +8,10 @@ properties:
     type: array
     items:
       type: object
+      required:
+        - id
+        - tracker
+        - subject
       properties:
         id:
           type: integer
@@ -44,6 +48,13 @@ properties:
     type: array
     items:
       type: object
+      required:
+        - id
+        - user
+        - notes
+        - created_on
+        - private_notes
+        - details
       properties:
         id:
           type: integer
@@ -60,6 +71,11 @@ properties:
           type: array
           items:
             type: object
+            required:
+              - property
+              - name
+              - old_value
+              - new_value
             properties:
               property:
                 type: string
@@ -77,11 +93,4 @@ properties:
   allowed_statuses:
     type: array
     items:
-      allOf:
-        - $ref: ./IdName.yml
-        - type: object
-          required:
-            - is_closed
-          properties:
-            is_closed:
-              type: boolean
+      $ref: ./IssueStatus.yml
