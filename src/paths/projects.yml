@@ -66,8 +66,10 @@ post:
                   type: string
                 description:
                   type: string
+                  nullable: true
                 homepage:
                   type: string
+                  nullable: true
                 is_public:
                   type: boolean
                 parent_id:

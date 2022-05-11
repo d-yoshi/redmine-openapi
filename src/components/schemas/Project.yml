@@ -21,6 +21,7 @@ properties:
     nullable: true
   homepage:
     type: string
+    nullable: true
   parent_id:
     type: integer
   status:
