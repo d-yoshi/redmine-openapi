@@ -52,54 +52,45 @@ put:
     content:
       application/json:
         schema:
-          allOf:
-            - type: object
+          type: object
+          properties:
+            issue:
+              type: object
               properties:
-                issue:
+                project_id:
                   oneOf:
-                    - type: object
-                      properties:
-                        project_id:
-                          type: integer
-                    - type: object
-                      properties:
-                        project_id:
-                          type: string
-            - type: object
-              properties:
-                issue:
-                  type: object
-                  properties:
-                    tracker_id:
-                      type: integer
-                    status_id:
-                      type: integer
-                    priority_id:
-                      type: integer
-                    subject:
-                      type: string
-                    description:
-                      type: string
-                    category_id:
-                      type: integer
-                    fixed_version_id:
-                      type: string
-                    assigned_to_id:
-                      type: string
-                    parent_issue_id:
-                      type: string
-                    custom_fields:
-                      type: string
-                    watcher_user_ids:
-                      type: string
-                    is_private:
-                      type: boolean
-                    estimated_hours:
-                      type: string
-                    notes:
-                      type: string
-                    private_notes:
-                      type: string
+                    - type: integer
+                    - type: string
+                tracker_id:
+                  type: integer
+                status_id:
+                  type: integer
+                priority_id:
+                  type: integer
+                subject:
+                  type: string
+                description:
+                  type: string
+                category_id:
+                  type: integer
+                fixed_version_id:
+                  type: string
+                assigned_to_id:
+                  type: string
+                parent_issue_id:
+                  type: string
+                custom_fields:
+                  type: string
+                watcher_user_ids:
+                  type: string
+                is_private:
+                  type: boolean
+                estimated_hours:
+                  type: string
+                notes:
+                  type: string
+                private_notes:
+                  type: string
   responses:
     204:
       description: ""
