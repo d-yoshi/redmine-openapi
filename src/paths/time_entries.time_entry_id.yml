@@ -3,12 +3,12 @@ get:
     - Time Entries
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry
-  summary: Updating a time entry
+  summary: Showing a time entry
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/time_entry_id.yml
   responses:
-    204:
+    200:
       description: ""
       content:
         application/json:
@@ -28,27 +28,55 @@ put:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            time_entry:
-              type: object
-              required:
-                - issue_id
-                - hours
+          allOf: 
+            - type: object
               properties:
-                hours:
-                  type: integer
-                issue_id:
-                  type: integer
-                spent_on:
-                  type: string
-                  format: date
-                activity_id:
-                  type: integer
-                comments:
-                  type: string
-                user_id:
-                  type: integer
+                time_entry:
+                  type: object
+                  required:
+                    - issue_id
+                    - hours
+                  properties:
+                    hours:
+                      oneOf:
+                        - type: number
+                        - type: string
+                    spent_on:
+                      type: string
+                      format: date
+                    activity_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    comments:
+                      type: string
+                    user_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+            - oneOf:
+                - type: object
+                  properties:
+                    time_entry:
+                      type: object
+                      required:
+                        - issue_id
+                      properties:
+                        issue_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                - type: object
+                  properties:
+                    time_entry:
+                      type: object
+                      required:
+                        - project_id
+                      properties:
+                        project_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
   responses:
     204:
       description: ""

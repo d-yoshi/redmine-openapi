@@ -41,7 +41,9 @@ put:
                 name:
                   type: string
                 assigned_to_id:
-                  type: integer
+                    oneOf:
+                      - type: integer
+                      - type: string
   responses:
     204:
       description: ""

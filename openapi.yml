@@ -1064,19 +1064,52 @@ paths:
                     - issue_id
                     - hours
                   properties:
-                    hours:
-                      type: integer
-                    issue_id:
-                      type: integer
-                    spent_on:
-                      type: string
-                      format: date
-                    activity_id:
-                      type: integer
-                    comments:
-                      type: string
-                    user_id:
-                      type: integer
+                    time_entry:
+                      type: object
+                      required:
+                        - issue_id
+                        - hours
+                      properties:
+                        hours:
+                          oneOf:
+                            - type: number
+                            - type: string
+                        spent_on:
+                          type: string
+                          format: date
+                        activity_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                        comments:
+                          type: string
+                        user_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                - oneOf:
+                    - type: object
+                      properties:
+                        time_entry:
+                          type: object
+                          required:
+                            - issue_id
+                          properties:
+                            issue_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
+                    - type: object
+                      properties:
+                        time_entry:
+                          type: object
+                          required:
+                            - project_id
+                          properties:
+                            project_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
       responses:
         '201':
           description: ''

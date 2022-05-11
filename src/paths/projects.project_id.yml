@@ -90,7 +90,9 @@ put:
                 tracker_ids:
                   type: array
                   items:
-                    type: number
+                    oneOf:
+                      - type: integer
+                      - type: string
                 enabled_module_names:
                   type: array
                   items:
@@ -98,7 +100,9 @@ put:
                 issue_custom_field_ids:
                   type: array
                   items:
-                    type: integer
+                    oneOf:
+                      - type: integer
+                      - type: string
                 custom_field_values:
                   type: object
                   additionalProperties:
