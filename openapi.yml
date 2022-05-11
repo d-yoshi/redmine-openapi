@@ -444,8 +444,10 @@ paths:
                       type: string
                     description:
                       type: string
+                      nullable: true
                     homepage:
                       type: string
+                      nullable: true
                     is_public:
                       type: boolean
                     parent_id:
@@ -526,6 +528,18 @@ paths:
                       project:
                         type: object
                         properties:
+                          trackers:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          issue_categories:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          enabled_modules:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
                           time_entry_activities:
                             type: array
                             items:
@@ -2037,6 +2051,7 @@ components:
           nullable: true
         homepage:
           type: string
+          nullable: true
         parent_id:
           type: integer
         status:
@@ -2119,23 +2134,41 @@ components:
         status:
           type: integer
     Membersip:
-      type: object
-      required:
-        - id
-        - project
-        - user
-        - roles
-      properties:
-        id:
-          type: integer
-        project:
-          $ref: '#/components/schemas/IdName'
-        user:
-          $ref: '#/components/schemas/IdName'
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdName'
+      oneOf:
+        - type: object
+          required:
+            - id
+            - project
+            - user
+            - roles
+          properties:
+            id:
+              type: integer
+            project:
+              $ref: '#/components/schemas/IdName'
+            user:
+              $ref: '#/components/schemas/IdName'
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
+        - type: object
+          required:
+            - id
+            - project
+            - group
+            - roles
+          properties:
+            id:
+              type: integer
+            project:
+              $ref: '#/components/schemas/IdName'
+            group:
+              $ref: '#/components/schemas/IdName'
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
     TimeEntry:
       type: object
       required:
