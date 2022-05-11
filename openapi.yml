@@ -1871,7 +1871,12 @@ components:
         attachments:
           type: array
           items:
-            type: string
+            allOf:
+              - $ref: '#/paths/~1attachments.%7Battachment_id%7D.%7Bformat%7D/get/responses/200/content/application~1json/schema/properties/attachment'
+              - type: object
+                properties:
+                  thumbnail_url:
+                    type: string
         relations:
           type: array
           items:
