@@ -104,8 +104,6 @@ put:
                       nullable: true
                 custom_fields:
                   type: string
-                watcher_user_ids:
-                  type: string
                 is_private:
                   type: boolean
                 estimated_hours:
