@@ -1,3 +1,5 @@
+[![Redoc](https://github.com/d-yoshi/redmine-openapi/actions/workflows/redoc.yml/badge.svg)](https://github.com/d-yoshi/redmine-openapi/actions/workflows/redoc.yml)
+
 # Redmine OpenAPI Specification
 
 ## Overview
