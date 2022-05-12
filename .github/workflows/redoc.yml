@@ -3,6 +3,8 @@ name: Redoc
 on:
   push:
     paths:
+      - '.github/workflows/redoc.yml'
+      - 'index.html'
       - 'src/**'
 
 jobs:
