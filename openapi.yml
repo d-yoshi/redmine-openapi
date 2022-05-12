@@ -1737,7 +1737,7 @@ paths:
   '/my/account.{format}':
     get:
       tags:
-        - My account
+        - My Account
       externalDocs:
         url: 'https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET'
       summary: GET
@@ -1760,7 +1760,7 @@ paths:
                           $ref: '#/components/schemas/IdName'
     put:
       tags:
-        - My account
+        - My Account
       externalDocs:
         url: 'https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT'
       summary: PUT
@@ -2509,7 +2509,7 @@ tags:
     description: 'Status: Alpha, Availablity: 3.4'
     externalDocs:
       url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files'
-  - name: My account
+  - name: My Account
     description: 'Status: Alpha, Availablity: 4.1'
     externalDocs:
       url: 'https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount'
