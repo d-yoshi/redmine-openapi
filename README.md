@@ -44,8 +44,6 @@ https://d-yoshi.github.io/redmine-openapi/
 | My Account          | **Done** |
 | Journals            | Todo     |
 
-[Redmine API Official Developer Guide](https://www.redmine.org/projects/redmine/wiki/Rest_api)
-
 ## How to bundle into one YAML file
 
 To bundle files in the src directory, execute the following command.
@@ -53,3 +51,7 @@ To bundle files in the src directory, execute the following command.
 ```
 docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli:4.0.4 swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
 ```
+
+## Reference
+
+[Redmine API Official Developer Guide](https://www.redmine.org/projects/redmine/wiki/Rest_api)
