@@ -98,7 +98,7 @@
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Files
 
-- name: My account
+- name: My Account
   description: "Status: Alpha, Availablity: 4.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount

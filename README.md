@@ -41,7 +41,7 @@ https://d-yoshi.github.io/redmine-openapi/
 | Custom Fields       | **Done** |
 | Search              | Todo     |
 | Files               | Todo     |
-| My account          | **Done** |
+| My Account          | **Done** |
 | Journals            | Todo     |
 
 [Redmine API Official Developer Guide](https://www.redmine.org/projects/redmine/wiki/Rest_api)

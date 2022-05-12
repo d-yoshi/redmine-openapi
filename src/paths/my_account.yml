@@ -1,6 +1,6 @@
 get:
   tags:
-    - My account
+    - My Account
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET
   summary: GET
@@ -24,7 +24,7 @@ get:
 
 put:
   tags:
-    - My account
+    - My Account
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT
   summary: PUT
