@@ -19,4 +19,4 @@ allOf:
         type: array
         items: 
           type: string
-  - ref: ./IdName.yml
+  - $ref: ./IdName.yml
