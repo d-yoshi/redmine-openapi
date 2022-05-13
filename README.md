@@ -34,7 +34,7 @@ https://d-yoshi.github.io/redmine-openapi/
 | Attachements        | **Done** |
 | Issue Statuses      | **Done** |
 | Trackers            | **Done** |
-| Enumerations        | Todo     |
+| Enumerations        | **Done** |
 | Issue Categories    | **Done** |
 | Roles               | **Done** |
 | Groups              | **Done** |
