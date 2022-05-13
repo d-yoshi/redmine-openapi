@@ -40,7 +40,7 @@ https://d-yoshi.github.io/redmine-openapi/
 | Groups              | **Done** |
 | Custom Fields       | **Done** |
 | Search              | **Done** |
-| Files               | Todo     |
+| Files               | **Done** |
 | My Account          | **Done** |
 | Journals            | Todo     |
 
