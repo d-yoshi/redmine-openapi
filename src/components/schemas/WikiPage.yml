@@ -1,0 +1,33 @@
+type: object
+required:
+  - title
+  - text
+  - version
+  - author
+  - comments
+  - created_on
+  - updated_on
+properties:
+  title:
+    type: string
+  parent:
+    type: object
+    required:
+      - title
+    properties:
+      title:
+        type: string
+  text:
+    type: string
+  version:
+    type: integer
+  author:
+    $ref: ./IdName.yml
+  comments:
+    type: string
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time

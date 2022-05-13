@@ -1,0 +1,24 @@
+type: object
+required:
+  - title
+  - version
+  - created_on
+  - updated_on
+properties:
+  title:
+    type: integer
+  parent:
+    type: object
+    required:
+      - title
+    properties:
+      title: 
+        type: string
+  version:
+    type: integer
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time

@@ -1,0 +1,5 @@
+name: wiki_page_title
+in: path
+required: true
+schema:
+  type: string

@@ -74,6 +74,15 @@ paths:
 
   /versions/{version_id}.{format}:
     $ref: ./paths/versions.version_id.yml
+    
+  /projects/{project_id}/wiki/index.{format}:
+    $ref: ./paths/projects.project_id.wiki.index.yml
+
+  /projects/{project_id}/wiki/{wiki_page_title}.{format}:
+    $ref: ./paths/projects.project_id.wiki.wiki_page_title.yml
+
+  /projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}:
+    $ref: ./paths/projects.project_id.wiki.wiki_page_title.version_id.yml
 
   /attachments/{attachment_id}.{format}:
     $ref: ./paths/attachments.attachment_id.yml

@@ -1,0 +1,23 @@
+get:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki
+  summary: Getting the pages list of a wiki
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - wiki_pages
+            properties:
+              wiki_pages:
+                type: array
+                items:
+                  $ref: ../components/schemas/WikiPages.yml

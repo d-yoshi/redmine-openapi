@@ -28,6 +28,9 @@ issue_relation_id:
 version_id:
   $ref: ./parameters/path/version_id.yml
 
+wiki_page_title:
+  $ref: ./parameters/path/wiki_page_title.yml
+
 attachment_id:
   $ref: ./parameters/path/attachment_id.yml
 

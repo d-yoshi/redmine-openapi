@@ -31,6 +31,12 @@ IssueRelation:
 Version:
   $ref: ./schemas/Version.yml
 
+WikiPage:
+  $ref: ./schemas/WikiPage.yml
+
+WikiPages:
+  $ref: ./schemas/WikiPages.yml
+
 IssueStatus:
   $ref: ./schemas/IssueStatus.yml
 

@@ -1,0 +1,87 @@
+get:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page
+  summary: Getting a wiki page
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+    - $ref: ../components/parameters/path/wiki_page_title.yml
+    - name: include
+      in: query
+      schema:
+        type: string
+        enum:
+          - attachments
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - wiki_page
+            properties:
+              wiki_page:
+                $ref: ../components/schemas/WikiPage.yml
+
+put:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
+  summary: Creating or updating a wiki page
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+    - $ref: ../components/parameters/path/wiki_page_title.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            wiki_page:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                comments:
+                  type: string
+                version:
+                  type: integer
+  responses:
+    201:
+      description: ""
+    204:
+      description: ""
+    409:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml
+
+delete:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page
+  summary: Deleting a wiki page
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+    - $ref: ../components/parameters/path/wiki_page_title.yml
+  responses:
+    204:
+      description: ""
