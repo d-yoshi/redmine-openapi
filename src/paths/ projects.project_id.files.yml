@@ -65,6 +65,10 @@ post:
             properties:
               file:
                 type: object
+                  required:
+                    - token
+                    - filename
+                    - description
                 properties:
                   token:
                     type: string
