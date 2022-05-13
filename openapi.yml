@@ -1892,34 +1892,90 @@ paths:
                   results:
                     type: array
                     items:
-                      type: object
-                      required:
-                        - id
-                        - title
-                        - type
-                        - url
-                        - description
-                        - datetime
-                      properties:
-                        id:
-                          type: integer
-                        title:
-                          type: string
-                        type:
-                          type: string
-                        url:
-                          type: string
-                        description:
-                          type: string
-                        datetime:
-                          type: string
-                          format: date-time
+                      $ref: '#/components/schemas/Search'
                   total_count:
                     type: integer
                   offset:
                     type: integer
                   limit:
                     type: integer
+  '/projects/{project_id}/files.{format}':
+    get:
+      tags:
+        - Files
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - files
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/File'
+    post:
+      tags:
+        - Files
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST'
+      summary: POST
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: object
+                  required:
+                    - token
+                  properties:
+                    token:
+                      type: string
+                    version_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    filename:
+                      type: string
+                    description:
+                      type: string
+      responses:
+        '204':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - file
+                properties:
+                  file:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      version_id:
+                        type: string
+                      filename:
+                        type: string
+                      description:
+                        type: string
   '/my/account.{format}':
     get:
       tags:
@@ -2663,6 +2719,68 @@ components:
                 type: string
               label:
                 type: string
+    Search:
+      type: object
+      required:
+        - id
+        - title
+        - type
+        - url
+        - description
+        - datetime
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        datetime:
+          type: string
+          format: date-time
+    File:
+      type: object
+      required:
+        - id
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - author
+        - created_on
+        - digest
+        - downloads
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        thumbnail_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/IdName'
+        created_on:
+          type: string
+          format: date-time
+        version:
+          $ref: '#/components/schemas/IdName'
+        digest:
+          type: string
+        downloads:
+          type: integer
     Errors:
       type: object
       required:
