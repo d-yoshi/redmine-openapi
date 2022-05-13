@@ -29,7 +29,7 @@ https://d-yoshi.github.io/redmine-openapi/
 | News                | **Done** |
 | Issue Relations     | **Done** |
 | Versions            | **Done** |
-| Wiki Pages          | Todo     |
+| Wiki Pages          | **Done** |
 | Queries             | Todo     |
 | Attachements        | **Done** |
 | Issue Statuses      | **Done** |
