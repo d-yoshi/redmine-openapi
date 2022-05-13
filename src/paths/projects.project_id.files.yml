@@ -1,0 +1,77 @@
+get:
+  tags:
+    - Files
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - files
+            properties:
+              files:
+                type: array
+                items:
+                  $ref: ../components/schemas/File.yml
+
+post:
+  tags:
+    - Files
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST
+  summary: POST
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - file
+          properties:
+            file:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                version_id:
+                  oneOf:
+                    - type: integer
+                    - type: string
+                filename:
+                  type: string
+                description:
+                  type: string
+  responses:
+    204:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - file
+            properties:
+              file:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  version_id:
+                    type: string
+                  filename:
+                    type: string
+                  description:
+                    type: string
