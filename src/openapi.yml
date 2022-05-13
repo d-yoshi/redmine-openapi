@@ -69,7 +69,7 @@ paths:
   /relations/{issue_relation_id}.{format}:
     $ref: ./paths/relations.issue_relation_id.yml
 
-  /attachments.{attachment_id}.{format}:
+  /attachments/{attachment_id}.{format}:
     $ref: ./paths/attachments.attachment_id.yml
 
   /issue_statuses.{format}:
