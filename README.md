@@ -27,7 +27,7 @@ https://d-yoshi.github.io/redmine-openapi/
 | Users               | **Done** |
 | Time Entries        | **Done** |
 | News                | Todo     |
-| Issue Relations     | Todo     |
+| Issue Relations     | **Done** |
 | Versions            | Todo     |
 | Wiki Pages          | Todo     |
 | Queries             | Todo     |
