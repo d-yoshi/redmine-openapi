@@ -1,0 +1,95 @@
+get:
+  tags:
+    - Search
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/query/limit.yml
+    - $ref: ../components/parameters/query/offset.yml
+    - name: q
+      in: query
+      schema:
+        type: string
+    - name: scope
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - my_project
+          - subprojects
+    - name: all_words
+      in: query
+      schema:
+        type: boolean
+    - name: titles_only
+      in: query
+      schema:
+        type: boolean
+    - name: issues
+      in: query
+      schema:
+        type: integer
+    - name: news
+      in: query
+      schema:
+        type: integer
+    - name: wiki_pages
+      in: query
+      schema:
+        type: integer
+    - name: projects
+      in: query
+      schema:
+        type: integer
+    - name: documents
+      in: query
+      schema:
+        type: integer
+    - name: changesets
+      in: query
+      schema:
+        type: integer
+    - name: messages
+      in: query
+      schema:
+        type: integer
+    - name: open_issues
+      in: query
+      schema:
+        type: integer
+    - name: attachments
+      in: query
+      schema:
+        oneOf:
+          - type: string
+          - type: integer
+        enum:
+          - 0
+          - 1
+          - only
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - results
+              - total_count
+              - offset
+              - limit
+            properties:
+              results:
+                type: array
+                items:
+                  $ref: ../components/schemas/Search.yml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer

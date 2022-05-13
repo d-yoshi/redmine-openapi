@@ -1,0 +1,22 @@
+type: object
+required:
+  - id
+  - title
+  - type
+  - url
+  - description
+  - datetime
+properties:
+  id:
+    type: integer
+  title:
+    type: string
+  type:
+    type: string
+  url:
+    type: string
+  description:
+    type: string
+  datetime:
+    type: string
+    format: date-time

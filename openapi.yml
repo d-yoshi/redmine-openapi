@@ -1803,6 +1803,123 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/CustomField'
+  '/search.{format}':
+    get:
+      tags:
+        - Search
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: scope
+          in: query
+          schema:
+            type: string
+            enum:
+              - all
+              - my_project
+              - subprojects
+        - name: all_words
+          in: query
+          schema:
+            type: boolean
+        - name: titles_only
+          in: query
+          schema:
+            type: boolean
+        - name: issues
+          in: query
+          schema:
+            type: integer
+        - name: news
+          in: query
+          schema:
+            type: integer
+        - name: wiki_pages
+          in: query
+          schema:
+            type: integer
+        - name: projects
+          in: query
+          schema:
+            type: integer
+        - name: documents
+          in: query
+          schema:
+            type: integer
+        - name: changesets
+          in: query
+          schema:
+            type: integer
+        - name: messages
+          in: query
+          schema:
+            type: integer
+        - name: open_issues
+          in: query
+          schema:
+            type: integer
+        - name: attachments
+          in: query
+          schema:
+            oneOf:
+              - type: string
+              - type: integer
+            enum:
+              - 0
+              - 1
+              - only
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - results
+                  - total_count
+                  - offset
+                  - limit
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - title
+                        - type
+                        - url
+                        - description
+                        - datetime
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                        type:
+                          type: string
+                        url:
+                          type: string
+                        description:
+                          type: string
+                        datetime:
+                          type: string
+                          format: date-time
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
   '/my/account.{format}':
     get:
       tags:
@@ -2472,7 +2589,7 @@ components:
               type: array
               items:
                 type: string
-        - ref: ./IdName.yml
+        - $ref: '#/components/schemas/IdName'
     CustomField:
       type: object
       properties:

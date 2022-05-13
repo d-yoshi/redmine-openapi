@@ -102,6 +102,9 @@ paths:
   /custom_fields.{format}:
     $ref: ./paths/custom_fields.yml
 
+  /search.{format}:
+    $ref: ./paths/search.yml
+
   /my/account.{format}:
     $ref: ./paths/my_account.yml
 
