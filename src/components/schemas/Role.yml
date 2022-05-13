@@ -1,1 +1,22 @@
-$ref: ./IdName.yml
+allOf:
+  - type: object
+    required:
+      - assignable
+      - issue_visibility
+      - time_entries_visibility
+      - users_visibility
+      - permissions
+    properties:
+      assignable:
+        type: boolean
+      issues_visibility:
+        type: string
+      time_entries_visibility:
+        type: string
+      users_visibility:
+        type: string
+      permissions:
+        type: array
+        items: 
+          type: string
+  - ref: ./IdName.yml

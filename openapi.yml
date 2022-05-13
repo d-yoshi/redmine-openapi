@@ -917,7 +917,7 @@ paths:
                                 roles:
                                   type: array
                                   items:
-                                    $ref: '#/components/schemas/IdName'
+                                    $ref: '#/components/schemas/Role'
                           groups:
                             type: array
                             items:
@@ -1587,7 +1587,7 @@ paths:
                 type: object
                 properties:
                   role:
-                    $ref: '#/components/schemas/IdName'
+                    $ref: '#/components/schemas/Role'
   '/groups.{format}':
     get:
       tags:
@@ -2451,7 +2451,28 @@ components:
         assigned_to:
           $ref: '#/components/schemas/IdName'
     Role:
-      $ref: '#/components/schemas/IdName'
+      allOf:
+        - type: object
+          required:
+            - assignable
+            - issue_visibility
+            - time_entries_visibility
+            - users_visibility
+            - permissions
+          properties:
+            assignable:
+              type: boolean
+            issues_visibility:
+              type: string
+            time_entries_visibility:
+              type: string
+            users_visibility:
+              type: string
+            permissions:
+              type: array
+              items:
+                type: string
+        - ref: ./IdName.yml
     CustomField:
       type: object
       properties:
@@ -2515,7 +2536,7 @@ components:
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/IdName'
+            $ref: '#/components/schemas/Role'
         possible_values:
           type: array
           items:
