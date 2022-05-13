@@ -1,0 +1,38 @@
+type: object
+required:
+  - id
+  - filename
+  - filesize
+  - content_type
+  - description
+  - content_url
+  - author
+  - created_on
+  - digest
+  - downloads
+properties:
+  id:
+    type: integer
+  filename:
+    type: string
+  filesize:
+    type: integer
+  content_type:
+    type: string
+  description:
+    type: string
+  content_url:
+    type: string
+  thumbnail_url:
+    type: string
+  author:
+    $ref: ./IdName.yml
+  created_on:
+    type: string
+    format: date-time
+  version:
+    $ref: ./IdName.yml
+  digest:
+    type: string
+  downloads:
+    type: integer

@@ -55,5 +55,11 @@ Role:
 CustomField:
   $ref: ./schemas/CustomField.yml
 
+Search:
+  $ref: ./schemas/Search.yml
+
+File:
+  $ref: ./schemas/File.yml
+
 Errors:
   $ref: ./schemas/Errors.yml

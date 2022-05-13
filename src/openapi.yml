@@ -105,6 +105,9 @@ paths:
   /search.{format}:
     $ref: ./paths/search.yml
 
+  /projects/{project_id}/files.{format}:
+    $ref: ./paths/projects.project_id.files.yml
+
   /my/account.{format}:
     $ref: ./paths/my_account.yml
 
