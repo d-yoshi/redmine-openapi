@@ -1602,6 +1602,146 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  '/projects/{project_id}/wiki/index.{format}':
+    get:
+      tags:
+        - Wiki Pages
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki'
+      summary: Getting the pages list of a wiki
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - wiki_pages
+                properties:
+                  wiki_pages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WikiPages'
+  '/projects/{project_id}/wiki/{wiki_page_title}.{format}':
+    get:
+      tags:
+        - Wiki Pages
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page'
+      summary: Getting a wiki page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+        - name: include
+          in: query
+          schema:
+            type: string
+            enum:
+              - attachments
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - wiki_page
+                properties:
+                  wiki_page:
+                    $ref: '#/components/schemas/WikiPage'
+    put:
+      tags:
+        - Wiki Pages
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page'
+      summary: Creating or updating a wiki page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wiki_page:
+                  type: object
+                  required:
+                    - text
+                  properties:
+                    text:
+                      type: string
+                    comments:
+                      type: string
+                    version:
+                      type: integer
+      responses:
+        '201':
+          description: ''
+        '204':
+          description: ''
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Wiki Pages
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page'
+      summary: Deleting a wiki page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+      responses:
+        '204':
+          description: ''
+  '/projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}':
+    get:
+      tags:
+        - Wiki Pages
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-an-old-version-of-a-wiki-page'
+      summary: Getting an old version of a wiki page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+        - $ref: '#/components/parameters/version_id'
+        - name: include
+          in: query
+          schema:
+            type: string
+            enum:
+              - attachments
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - wiki_page
+                properties:
+                  wiki_page:
+                    $ref: '#/components/schemas/WikiPage'
   '/attachments/{attachment_id}.{format}':
     get:
       tags:
@@ -2496,6 +2636,12 @@ components:
       required: true
       schema:
         type: integer
+    wiki_page_title:
+      name: wiki_page_title
+      in: path
+      required: true
+      schema:
+        type: string
     attachment_id:
       name: attachment_id
       in: path
@@ -2974,6 +3120,65 @@ components:
         wiki_page_title:
           type: string
           nullable: true
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    WikiPage:
+      type: object
+      required:
+        - title
+        - text
+        - version
+        - author
+        - comments
+        - created_on
+        - updated_on
+      properties:
+        title:
+          type: string
+        parent:
+          type: object
+          required:
+            - title
+          properties:
+            title:
+              type: string
+        text:
+          type: string
+        version:
+          type: integer
+        author:
+          $ref: '#/components/schemas/IdName'
+        comments:
+          type: string
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    WikiPages:
+      type: object
+      required:
+        - title
+        - version
+        - created_on
+        - updated_on
+      properties:
+        title:
+          type: integer
+        parent:
+          type: object
+          required:
+            - title
+          properties:
+            title:
+              type: string
+        version:
+          type: integer
         created_on:
           type: string
           format: date-time
