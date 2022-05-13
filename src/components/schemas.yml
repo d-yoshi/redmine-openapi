@@ -22,6 +22,9 @@ Membersip:
 TimeEntry:
   $ref: ./schemas/TimeEntry.yml
 
+News:
+  $ref: ./schemas/News.yml
+
 IssueRelation:
   $ref: ./schemas/IssueRelation.yml
 

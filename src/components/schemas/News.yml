@@ -1,0 +1,25 @@
+type: object
+required:
+  - id
+  - project
+  - author
+  - title
+  - summary
+  - description
+  - created_on
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./IdName.yml
+  author:
+    $ref: ./IdName.yml
+  title:
+    type: string
+  summary:
+    type: string
+  description:
+    type: string
+  created_on:
+    type: string
+    format: date-time
