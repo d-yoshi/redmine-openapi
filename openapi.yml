@@ -1573,11 +1573,7 @@ paths:
       summary: GET
       parameters:
         - $ref: '#/components/parameters/format'
-        - name: role_id
-          in: path
-          required: true
-          schema:
-            type: number
+        - $ref: '#/components/parameters/role_id'
       responses:
         '200':
           description: ''
@@ -2153,6 +2149,12 @@ components:
         type: number
     issue_category_id:
       name: issue_category_id
+      in: path
+      required: true
+      schema:
+        type: number
+    role_id:
+      name: role_id
       in: path
       required: true
       schema:
