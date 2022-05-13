@@ -1232,6 +1232,71 @@ paths:
       responses:
         '204':
           description: ''
+  '/news.{format}':
+    get:
+      tags:
+        - News
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News#GET'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - news
+                  - total_count
+                  - offset
+                  - limit
+                properties:
+                  news:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/News'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+  '/projects/{project_id}/news.{format}':
+    get:
+      tags:
+        - News
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - news
+                  - total_count
+                  - offset
+                  - limit
+                properties:
+                  news:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/News'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
   '/issues/{issue_id}/relations.{format}':
     get:
       tags:
@@ -2617,6 +2682,32 @@ components:
           type: string
           format: date-time
         updated_on:
+          type: string
+          format: date-time
+    News:
+      type: object
+      required:
+        - id
+        - project
+        - author
+        - title
+        - summary
+        - description
+        - created_on
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        author:
+          $ref: '#/components/schemas/IdName'
+        title:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        created_on:
           type: string
           format: date-time
     IssueRelation:
