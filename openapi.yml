@@ -1408,7 +1408,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/attachments.{attachment_id}.{format}':
+  '/attachments/{attachment_id}.{format}':
     get:
       tags:
         - Attachments
