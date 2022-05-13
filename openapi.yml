@@ -1403,6 +1403,75 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  '/enumerations/issue_priorities.{format}':
+    get:
+      tags:
+        - Enumerations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - issue_priorities
+                properties:
+                  issue_priorities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IssuePriority'
+  '/enumerations/time_entry_activities.{format}':
+    get:
+      tags:
+        - Enumerations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - time_entry_activities
+                properties:
+                  time_entry_activities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimeEntryActivity'
+  '/enumerations/document_categories.{format}':
+    get:
+      tags:
+        - Enumerations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - document_categories
+                properties:
+                  document_categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentCategory'
   '/issue_categories/{issue_category_id}.{format}':
     get:
       tags:
@@ -2330,6 +2399,42 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Tracker'
+    IssuePriority:
+      allOf:
+        - type: object
+          required:
+            - is_default
+            - active
+          properties:
+            is_default:
+              type: boolean
+            active:
+              type: boolean
+        - $ref: '#/components/schemas/IdName'
+    TimeEntryActivity:
+      allOf:
+        - type: object
+          required:
+            - is_default
+            - active
+          properties:
+            is_default:
+              type: boolean
+            active:
+              type: boolean
+        - $ref: '#/components/schemas/IdName'
+    DocumentCategory:
+      allOf:
+        - type: object
+          required:
+            - is_default
+            - active
+          properties:
+            is_default:
+              type: boolean
+            active:
+              type: boolean
+        - $ref: '#/components/schemas/IdName'
     IssueCategory:
       type: object
       required:
