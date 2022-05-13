@@ -1,0 +1,38 @@
+get:
+  tags:
+    - Issue Relations
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/issue_relation_id.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              relation:
+                $ref: ../components/schemas/IssueRelation.yml
+
+delete:
+  tags:
+    - Issue Relations
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE
+  summary: DELETE
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/issue_relation_id.yml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml

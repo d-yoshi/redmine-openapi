@@ -1,0 +1,19 @@
+type: object
+required:
+  - id
+  - issue_id
+  - issue_to_id
+  - relation_type
+  - delay
+properties:
+  id:
+    type: integer
+  issue_id:
+    type: integer
+  issue_to_id:
+    type: integer
+  relation_type:
+    type: string
+  delay:
+    type: integer
+    nullable: true

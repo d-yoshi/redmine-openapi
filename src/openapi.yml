@@ -57,6 +57,12 @@ paths:
   /time_entries/{time_entry_id}.{format}:
     $ref: ./paths/time_entries.time_entry_id.yml
 
+  /issues/{issue_id}/relations.{format}:
+    $ref: ./paths/issues.issue_id.relations.yml
+
+  /relations/{issue_relation_id}.{format}:
+    $ref: ./paths/relations.issue_relation_id.yml
+
   /attachments.{attachment_id}.{format}:
     $ref: ./paths/attachments.attachment_id.yml
 

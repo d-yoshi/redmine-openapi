@@ -22,8 +22,14 @@ Membersip:
 TimeEntry:
   $ref: ./schemas/TimeEntry.yml
 
+IssueRelation:
+  $ref: ./schemas/IssueRelation.yml
+
 IssueStatus:
   $ref: ./schemas/IssueStatus.yml
+
+Attachment:
+  $ref: ./schemas/Attachment.yml
 
 IssueStatuses:
   $ref: ./schemas/IssueStatuses.yml

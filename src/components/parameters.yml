@@ -22,6 +22,9 @@ user_id:
 time_entry_id:
   $ref: ./parameters/path/time_entry_id.yml
 
+issue_relation_id:
+  $ref: ./parameters/path/issue_relation_id.yml
+
 attachment_id:
   $ref: ./parameters/path/attachment_id.yml
 
