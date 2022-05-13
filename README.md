@@ -39,7 +39,7 @@ https://d-yoshi.github.io/redmine-openapi/
 | Roles               | **Done** |
 | Groups              | **Done** |
 | Custom Fields       | **Done** |
-| Search              | Todo     |
+| Search              | **Done** |
 | Files               | Todo     |
 | My Account          | **Done** |
 | Journals            | Todo     |
