@@ -1232,6 +1232,117 @@ paths:
       responses:
         '204':
           description: ''
+  '/issues/{issue_id}/relations.{format}':
+    get:
+      tags:
+        - Issue Relations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - relations
+                properties:
+                  relations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IssueRelation'
+    post:
+      tags:
+        - Issue Relations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST'
+      summary: POST
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - relation
+              properties:
+                relation:
+                  type: object
+                  required:
+                    - issue_to_id
+                    - relation_type
+                  properties:
+                    issue_to_id:
+                      type: integer
+                    relation_type:
+                      type: string
+                      enum:
+                        - relates
+                        - duplicates
+                        - duplicated
+                        - blocks
+                        - blocked
+                        - precedes
+                        - follows
+                        - copied_to
+                        - copied_from
+                    delay:
+                      type: integer
+                      nullable: true
+      responses:
+        '201':
+          description: ''
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  '/relations/{issue_relation_id}.{format}':
+    get:
+      tags:
+        - Issue Relations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_relation_id'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  relation:
+                    $ref: '#/components/schemas/IssueRelation'
+    delete:
+      tags:
+        - Issue Relations
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE'
+      summary: DELETE
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_relation_id'
+      responses:
+        '204':
+          description: ''
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
   '/attachments.{attachment_id}.{format}':
     get:
       tags:
@@ -1251,34 +1362,7 @@ paths:
                 type: object
                 properties:
                   attachment:
-                    type: object
-                    required:
-                      - id
-                      - filename
-                      - filesize
-                      - content_type
-                      - description
-                      - content_url
-                      - author
-                      - created_on
-                    properties:
-                      id:
-                        type: integer
-                      filename:
-                        type: string
-                      filesize:
-                        type: integer
-                      content_type:
-                        type: string
-                      description:
-                        type: string
-                      content_url:
-                        type: string
-                      author:
-                        $ref: '#/components/schemas/IdName'
-                      created_on:
-                        type: string
-                        format: data-time
+                    $ref: '#/components/schemas/Attachment'
     patch:
       tags:
         - Attachments
@@ -2141,6 +2225,12 @@ components:
       required: true
       schema:
         type: integer
+    issue_relation_id:
+      name: issue_relation_id
+      in: path
+      required: true
+      schema:
+        type: integer
     attachment_id:
       name: attachment_id
       in: path
@@ -2276,7 +2366,7 @@ components:
           type: array
           items:
             allOf:
-              - $ref: '#/paths/~1attachments.%7Battachment_id%7D.%7Bformat%7D/get/responses/200/content/application~1json/schema/properties/attachment'
+              - $ref: '#/components/schemas/Attachment'
               - type: object
                 properties:
                   thumbnail_url:
@@ -2529,6 +2619,26 @@ components:
         updated_on:
           type: string
           format: date-time
+    IssueRelation:
+      type: object
+      required:
+        - id
+        - issue_id
+        - issue_to_id
+        - relation_type
+        - delay
+      properties:
+        id:
+          type: integer
+        issue_id:
+          type: integer
+        issue_to_id:
+          type: integer
+        relation_type:
+          type: string
+        delay:
+          type: integer
+          nullable: true
     IssueStatus:
       allOf:
         - $ref: '#/components/schemas/IdName'
@@ -2538,6 +2648,35 @@ components:
           properties:
             is_closed:
               type: boolean
+    Attachment:
+      type: object
+      required:
+        - id
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - author
+        - created_on
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/IdName'
+        created_on:
+          type: string
+          format: data-time
     IssueStatuses:
       type: object
       required:
