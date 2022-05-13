@@ -1,0 +1,5 @@
+name: version_id
+in: path
+required: true
+schema:
+  type: integer

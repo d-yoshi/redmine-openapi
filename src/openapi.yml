@@ -69,6 +69,12 @@ paths:
   /relations/{issue_relation_id}.{format}:
     $ref: ./paths/relations.issue_relation_id.yml
 
+  /projects/{project_id}/versions.{format}:
+    $ref: ./paths/projects.project_id.versions.yml
+
+  /versions/{version_id}.{format}:
+    $ref: ./paths/versions.version_id.yml
+
   /attachments/{attachment_id}.{format}:
     $ref: ./paths/attachments.attachment_id.yml
 

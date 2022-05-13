@@ -1,0 +1,102 @@
+get:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
+  summary: GET
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/version_id.yml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - version
+            properties:
+              version:
+                type: array
+                items:
+                  allOf:
+                    - $ref: ../components/schemas/Version.yml
+                    - type: object
+                      properties:
+                        estimated_hours:
+                          type: number
+                        spent_hours:
+                          type: number
+
+put:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT
+  summary: PUT
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/version_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            version:
+              type: object
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - open
+                    - locked
+                    - closed
+                sharing:
+                  type: string
+                  enum:
+                    - none
+                    - descendants
+                    - hierarchy
+                    - tree
+                    - system
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
+                description:
+                  type: string
+                wiki_page_title:
+                  type: string
+                  nullable: true
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml
+
+delete:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE
+  summary: DELETE
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/version_id.yml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Errors.yml

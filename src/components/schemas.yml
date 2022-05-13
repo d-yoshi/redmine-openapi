@@ -28,6 +28,9 @@ News:
 IssueRelation:
   $ref: ./schemas/IssueRelation.yml
 
+Version:
+  $ref: ./schemas/Version.yml
+
 IssueStatus:
   $ref: ./schemas/IssueStatus.yml
 

@@ -25,6 +25,9 @@ time_entry_id:
 issue_relation_id:
   $ref: ./parameters/path/issue_relation_id.yml
 
+version_id:
+  $ref: ./parameters/path/version_id.yml
+
 attachment_id:
   $ref: ./parameters/path/attachment_id.yml
 
