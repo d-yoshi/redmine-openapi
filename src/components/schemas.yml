@@ -37,6 +37,15 @@ Tracker:
 Trackers:
   $ref: ./schemas/Trackers.yml
 
+IssuePriority:
+  $ref: ./schemas/IssuePriority.yml
+
+TimeEntryActivity:
+  $ref: ./schemas/TimeEntryActivity.yml
+
+DocumentCategory:
+  $ref: ./schemas/DocumentCategory.yml
+
 IssueCategory:
   $ref: ./schemas/IssueCategory.yml
 

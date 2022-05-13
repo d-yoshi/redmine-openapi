@@ -68,7 +68,16 @@ paths:
 
   /projects/{project_id}/issue_categories.{format}:
     $ref: ./paths/projects.project_id.issue_categories.yml
-  
+
+  /enumerations/issue_priorities.{format}:
+    $ref: ./paths/enumerations.issue_priorities.yml
+
+  /enumerations/time_entry_activities.{format}:
+    $ref: ./paths/enumerations.time_entry_activities.yml
+
+  /enumerations/document_categories.{format}:
+    $ref: ./paths/enumerations.document_categories.yml
+
   /issue_categories/{issue_category_id}.{format}:
     $ref: ./paths/issue_categories.issue_category_id.yml
 

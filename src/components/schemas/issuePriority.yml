@@ -1,0 +1,11 @@
+allOf:
+  - type: object
+    required:
+      - is_default
+      - active
+    properties:
+      is_default:
+        type: boolean
+      active:
+        type: boolean
+  - $ref: ./IdName.yml
