@@ -1742,6 +1742,38 @@ paths:
                 properties:
                   wiki_page:
                     $ref: '#/components/schemas/WikiPage'
+  '/queries.{format}':
+    get:
+      tags:
+        - Queries
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Queries#GET'
+      summary: GET
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - queries
+                  - total_count
+                  - offset
+                  - limit
+                properties:
+                  queries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Query'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
   '/attachments/{attachment_id}.{format}':
     get:
       tags:
@@ -3185,6 +3217,19 @@ components:
         updated_on:
           type: string
           format: date-time
+    Query:
+      allOf:
+        - type: object
+          required:
+            - is_public
+            - project_id
+          properties:
+            is_public:
+              type: boolean
+            project_id:
+              type: integer
+              nullable: true
+        - $ref: '#/components/schemas/IdName'
     IssueStatus:
       allOf:
         - $ref: '#/components/schemas/IdName'
