@@ -37,6 +37,9 @@ WikiPage:
 WikiPages:
   $ref: ./schemas/WikiPages.yml
 
+Query:
+  $ref: ./schemas/Query.yml
+
 IssueStatus:
   $ref: ./schemas/IssueStatus.yml
 

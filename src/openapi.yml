@@ -84,6 +84,9 @@ paths:
   /projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}:
     $ref: ./paths/projects.project_id.wiki.wiki_page_title.version_id.yml
 
+  /queries.{format}:
+    $ref: ./paths/queries.yml
+
   /attachments/{attachment_id}.{format}:
     $ref: ./paths/attachments.attachment_id.yml
 

@@ -1,0 +1,12 @@
+allOf:
+  - type: object
+    required:
+      - is_public
+      - project_id
+    properties:
+      is_public:
+        type: boolean
+      project_id:
+        type: integer
+        nullable: true
+  - $ref: ./IdName.yml
