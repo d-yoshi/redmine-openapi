@@ -19,30 +19,30 @@ https://d-yoshi.github.io/redmine-openapi/
 
 ## Implementation Status
 
-| Resource            | Status      |
-| ------------------- | ----------- |
-| Issues              | **Done**    |
-| Projects            | **Done**    |
-| Project Memberships | **Done**    |
-| Users               | **Done**    |
-| Time Entries        | **Done**    |
-| News                | **Done**    |
-| Issue Relations     | **Done**    |
-| Versions            | **Done**    |
-| Wiki Pages          | **Done**    |
-| Queries             | **Done**    |
-| Attachements        | **Done**    |
-| Issue Statuses      | **Done**    |
-| Trackers            | **Done**    |
-| Enumerations        | **Done**    |
-| Issue Categories    | **Done**    |
-| Roles               | **Done**    |
-| Groups              | **Done**    |
-| Custom Fields       | **Done**    |
-| Search              | **Done**    |
-| Files               | **Done**    |
-| My Account          | **Done**    |
-| Journals            | In Progress |
+| Resource            | Status   |
+| ------------------- | -------- |
+| Issues              | **Done** |
+| Projects            | **Done** |
+| Project Memberships | **Done** |
+| Users               | **Done** |
+| Time Entries        | **Done** |
+| News                | **Done** |
+| Issue Relations     | **Done** |
+| Versions            | **Done** |
+| Wiki Pages          | **Done** |
+| Queries             | **Done** |
+| Attachements        | **Done** |
+| Issue Statuses      | **Done** |
+| Trackers            | **Done** |
+| Enumerations        | **Done** |
+| Issue Categories    | **Done** |
+| Roles               | **Done** |
+| Groups              | **Done** |
+| Custom Fields       | **Done** |
+| Search              | **Done** |
+| Files               | **Done** |
+| My Account          | **Done** |
+| Journals            | **Done** |
 
 ## How to bundle into one YAML file
 
