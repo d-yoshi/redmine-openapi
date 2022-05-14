@@ -2562,6 +2562,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  '/journals/{journal_id}.{format}':
+    put:
+      tags:
+        - Journals
+      summary: PUT
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - name: journal_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                journal:
+                  type: object
+                  properties:
+                    notes:
+                      type: string
+                      nullable: true
+                    private_notes:
+                      type: boolean
+      responses:
+        '204':
+          description: ''
   '/uploads.{format}':
     post:
       tags:
@@ -2636,7 +2665,7 @@ components:
       in: path
       required: true
       schema:
-        type: number
+        type: integer
     project_id:
       name: project_id
       in: path
@@ -2654,7 +2683,7 @@ components:
       in: path
       required: true
       schema:
-        type: number
+        type: integer
     time_entry_id:
       name: time_entry_id
       in: path
@@ -2690,19 +2719,19 @@ components:
       in: path
       required: true
       schema:
-        type: number
+        type: integer
     role_id:
       name: role_id
       in: path
       required: true
       schema:
-        type: number
+        type: integer
     group_id:
       name: group_id
       in: path
       required: true
       schema:
-        type: number
+        type: integer
   schemas:
     IdName:
       type: object
