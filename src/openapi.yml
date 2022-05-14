@@ -146,6 +146,9 @@ paths:
   /my/account.{format}:
     $ref: ./paths/my_account.yml
 
+  /journals/{journal_id}.{format}:
+    $ref: ./paths/journals.journal_id.yml
+
   /uploads.{format}:
     $ref: ./paths/uploads.yml
 

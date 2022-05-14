@@ -1,0 +1,24 @@
+put:
+  tags:
+    - Journals
+  summary: PUT
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/journal_id.yml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            journal:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  nullable: true
+                private_notes:
+                  type: boolean
+  responses:
+    204:
+      description: ""

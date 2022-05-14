@@ -2,4 +2,4 @@ name: issue_category_id
 in: path
 required: true
 schema:
-  type: number
+  type: integer

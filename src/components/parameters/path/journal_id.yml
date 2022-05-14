@@ -1,4 +1,4 @@
-name: role_id
+name: journal_id
 in: path
 required: true
 schema:
