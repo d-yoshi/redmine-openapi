@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - '.github/workflows/redoc.yml'
-      - 'index.html'
       - 'src/**'
+      - 'docs/**'
 
 jobs:
   build:
@@ -14,6 +14,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: bundle
         run: docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli:4.0.4 swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
+      - name: docs
+        run: cp openapi.yml docs/
       - name: push
         run: |
           git config user.name github-actions
