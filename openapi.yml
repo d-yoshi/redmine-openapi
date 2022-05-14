@@ -6,9 +6,6 @@ info:
   contact:
     name: d-yoshi/redmine-openapi
     url: 'https://github.com/d-yoshi/redmine-openapi'
-  license:
-    name: GPLv2
-    url: 'https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt'
 externalDocs:
   description: Redmine API Official Developer Guide
   url: 'https://www.redmine.org/projects/redmine/wiki/Rest_api'
