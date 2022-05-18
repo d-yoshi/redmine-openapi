@@ -1804,10 +1804,23 @@ paths:
         - Attachments
       externalDocs:
         url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH'
-      summary: PATCH (TODO)
+      summary: PATCH
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                attachment:
+                  type: object
+                  properties:
+                    filename:
+                      type: string
+                    description:
+                      type: string
       responses:
         '204':
           description: ''
