@@ -24,7 +24,6 @@ properties:
     type: string
   mail:
     type: string
-    format: date-time
   created_on:
     type: string
     format: date-time
