@@ -3,9 +3,9 @@ name: Redoc
 on:
   push:
     paths:
-      - '.github/workflows/redoc.yml'
-      - 'src/**'
-      - 'docs/**'
+      - ".github/workflows/redoc.yml"
+      - "src/**"
+      - "docs/**"
 
 jobs:
   build:
@@ -15,10 +15,10 @@ jobs:
       - name: bundle
         run: docker run --rm -v $(pwd):/workspace jeanberu/swagger-cli:4.0.4 swagger-cli bundle -o workspace/openapi.yml -t yaml workspace/src/openapi.yml
       - name: docs
-        run: cp openapi.yml docs/
+        run: cp -f openapi.yml docs/openapi.yml
       - name: push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add openapi.yml
-          git diff-index --quiet HEAD openapi.yml || (git commit -m "Update bundle yaml files" && git push)
+          git add openapi.yml docs/openapi.yml
+          git diff-index --quiet HEAD openapi.yml docs/openapi.yml || (git commit -m "Update bundle yaml files" && git push)
