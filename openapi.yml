@@ -840,7 +840,6 @@ paths:
                   type: object
                   required:
                     - login
-                    - password
                     - firstname
                     - lastname
                     - mail
