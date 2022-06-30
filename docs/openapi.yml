@@ -120,6 +120,8 @@ paths:
                   type: object
                   required:
                     - project_id
+                    - tracer_id
+                    - status_id
                     - subject
                   properties:
                     project_id:
