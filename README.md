@@ -11,8 +11,6 @@ OpenAPI: 3.0.3
 
 These yaml files are created by my human scraping and experimentation with Redmine 5.0.0 in my local environment.
 
-You can feel the warmth of manual labor.
-
 ## Redoc
 
 https://d-yoshi.github.io/redmine-openapi/
