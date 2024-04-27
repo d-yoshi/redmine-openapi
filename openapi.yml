@@ -178,17 +178,7 @@ paths:
                   issues:
                     type: array
                     items:
-                      allOf:
-                        - $ref: '#/components/schemas/Issue'
-                        - type: object
-                          required:
-                            - spent_hours
-                            - total_spent_hours
-                          properties:
-                            spent_hours:
-                              type: number
-                            total_spent_hours:
-                              type: number
+                      $ref: '#/components/schemas/Issue'
                   total_count:
                     type: integer
                   offset:
@@ -221,21 +211,13 @@ paths:
                     - subject
                   properties:
                     project_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     tracker_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     status_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     priority_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     subject:
                       type: string
                     description:
@@ -250,37 +232,25 @@ paths:
                       format: date
                       nullable: true
                     category_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     fixed_version_id:
                       type: string
                     assigned_to_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     parent_issue_id:
-                      oneOf:
-                        - type: integer
-                          nullable: true
-                        - type: string
-                          nullable: true
+                      type: integer
+                      nullable: true
                     custom_fields:
                       type: string
                     watcher_user_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
                     is_private:
                       type: boolean
                     estimated_hours:
-                      oneOf:
-                        - type: integer
-                          nullable: true
-                        - type: string
-                          nullable: true
+                      type: number
+                      nullable: true
                     uploads:
                       type: object
                       properties:
@@ -337,18 +307,8 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - type: object
-                    required:
-                      - issue
-                    properties:
-                      issue:
-                        $ref: '#/components/schemas/Issue'
-                  - type: object
-                    required:
-                      - issue
-                    properties:
-                      issue:
-                        $ref: '#/components/schemas/Issue.partial'
+                  - $ref: '#/components/schemas/Issue'
+                  - $ref: '#/components/schemas/Issue.partial'
     put:
       tags:
         - Issues
@@ -369,21 +329,13 @@ paths:
                   type: object
                   properties:
                     project_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     tracker_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     status_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     priority_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     subject:
                       type: string
                     description:
@@ -398,31 +350,21 @@ paths:
                       format: date
                       nullable: true
                     category_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     fixed_version_id:
                       type: string
                     assigned_to_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     parent_issue_id:
-                      oneOf:
-                        - type: integer
-                          nullable: true
-                        - type: string
-                          nullable: true
+                      type: integer
+                      nullable: true
                     custom_fields:
                       type: string
                     is_private:
                       type: boolean
                     estimated_hours:
-                      oneOf:
-                        - type: integer
-                          nullable: true
-                        - type: string
-                          nullable: true
+                      type: number
+                      nullable: true
                     notes:
                       type: string
                     private_notes:
@@ -463,9 +405,7 @@ paths:
                 - user_id
               properties:
                 user_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
       responses:
         '204':
           description: ''
@@ -561,9 +501,7 @@ paths:
                     is_public:
                       type: boolean
                     parent_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     inherit_members:
                       type: boolean
                     default_assigned_to_id:
@@ -573,9 +511,7 @@ paths:
                     tracker_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
                     enabled_module_names:
                       type: array
                       items:
@@ -583,9 +519,7 @@ paths:
                     issue_custom_field_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
                     custom_field_values:
                       type: object
                       additionalProperties:
@@ -699,9 +633,7 @@ paths:
                     tracker_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
                     enabled_module_names:
                       type: array
                       items:
@@ -709,9 +641,7 @@ paths:
                     issue_custom_field_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
                     custom_field_values:
                       type: object
                       additionalProperties:
@@ -821,15 +751,11 @@ paths:
                     - role_ids
                   properties:
                     user_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     role_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
       responses:
         '201':
           description: ''
@@ -1217,22 +1143,16 @@ paths:
                         - hours
                       properties:
                         hours:
-                          oneOf:
-                            - type: number
-                            - type: string
+                          type: number
                         spent_on:
                           type: string
                           format: date
                         activity_id:
-                          oneOf:
-                            - type: integer
-                            - type: string
+                          type: integer
                         comments:
                           type: string
                         user_id:
-                          oneOf:
-                            - type: integer
-                            - type: string
+                          type: integer
                 - oneOf:
                     - type: object
                       properties:
@@ -1242,9 +1162,7 @@ paths:
                             - issue_id
                           properties:
                             issue_id:
-                              oneOf:
-                                - type: integer
-                                - type: string
+                              type: integer
                     - type: object
                       properties:
                         time_entry:
@@ -1253,9 +1171,7 @@ paths:
                             - project_id
                           properties:
                             project_id:
-                              oneOf:
-                                - type: integer
-                                - type: string
+                              type: integer
       responses:
         '201':
           description: ''
@@ -1311,22 +1227,16 @@ paths:
                         - hours
                       properties:
                         hours:
-                          oneOf:
-                            - type: number
-                            - type: string
+                          type: number
                         spent_on:
                           type: string
                           format: date
                         activity_id:
-                          oneOf:
-                            - type: integer
-                            - type: string
+                          type: integer
                         comments:
                           type: string
                         user_id:
-                          oneOf:
-                            - type: integer
-                            - type: string
+                          type: integer
                 - oneOf:
                     - type: object
                       properties:
@@ -1336,9 +1246,7 @@ paths:
                             - issue_id
                           properties:
                             issue_id:
-                              oneOf:
-                                - type: integer
-                                - type: string
+                              type: integer
                     - type: object
                       properties:
                         time_entry:
@@ -1347,9 +1255,7 @@ paths:
                             - project_id
                           properties:
                             project_id:
-                              oneOf:
-                                - type: integer
-                                - type: string
+                              type: integer
       responses:
         '204':
           description: ''
@@ -2079,9 +1985,7 @@ paths:
                     name:
                       type: string
                     assigned_to_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
       responses:
         '201':
           description: ''
@@ -2212,9 +2116,7 @@ paths:
                     name:
                       type: string
                     assigned_to_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
       responses:
         '204':
           description: ''
@@ -2331,9 +2233,7 @@ paths:
                     user_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
       responses:
         '201':
           description: ''
@@ -2425,9 +2325,7 @@ paths:
                     user_ids:
                       type: array
                       items:
-                        oneOf:
-                          - type: integer
-                          - type: string
+                        type: integer
       responses:
         '204':
           description: ''
@@ -2462,9 +2360,7 @@ paths:
               type: object
               properties:
                 user_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
       responses:
         '204':
           description: ''
@@ -2574,12 +2470,10 @@ paths:
         - name: attachments
           in: query
           schema:
-            oneOf:
-              - type: string
-              - type: integer
+            type: string
             enum:
-              - 0
-              - 1
+              - '0'
+              - '1'
               - only
       responses:
         '200':
@@ -2655,9 +2549,7 @@ paths:
                     token:
                       type: string
                     version_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     filename:
                       type: string
                     description:
