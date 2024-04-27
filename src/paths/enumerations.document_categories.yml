@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3
   summary: GET
+  operationId: getDocumentCategories
   parameters:
     - $ref: ../components/parameters/path/format.yml
   responses:

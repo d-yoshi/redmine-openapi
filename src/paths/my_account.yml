@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET
   summary: GET
+  operationId: getMyAccount
   parameters:
     - $ref: ../components/parameters/path/format.yml
   responses:
@@ -28,6 +29,7 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT
   summary: PUT
+  operationId: updateMyAccount
   parameters:
     - $ref: ../components/parameters/path/format.yml
   requestBody:

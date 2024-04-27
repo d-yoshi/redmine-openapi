@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page
   summary: Getting a wiki page
+  operationId: getWikiPageByTitle
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -33,6 +34,7 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
   summary: Creating or updating a wiki page
+  operationId: updateWikiPageByTitle
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -78,6 +80,7 @@ delete:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page
   summary: Deleting a wiki page
+  operationId: deleteWikiPageByTitle
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml

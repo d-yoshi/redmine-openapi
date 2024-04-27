@@ -3,6 +3,8 @@ get:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET
+  summary: GET
+  operationId: getMembershipsByProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -30,12 +32,13 @@ get:
               limit:
                 type: integer
 
-
 post:
   tags:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST
+  summary: POST
+  operationId: createMembershipsByProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml

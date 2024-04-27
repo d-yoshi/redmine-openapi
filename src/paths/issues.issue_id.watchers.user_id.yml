@@ -4,6 +4,7 @@ delete:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
   summary: Removing a watcher
+  operationId: deleteWatcher
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml

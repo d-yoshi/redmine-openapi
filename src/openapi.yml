@@ -2,11 +2,17 @@ openapi: 3.0.3
 
 info:
   title: Redmine API
-  description: "NOTE: This is unofficial OpenAPI specification file."
-  version: 5.0.0
+  description: "Unofficial OpenAPI specification for the Redmine API."
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+servers:
+  - url: /
 
 externalDocs:
   description: Redmine API Official Developer Guide
@@ -79,7 +85,7 @@ paths:
 
   /versions/{version_id}.{format}:
     $ref: ./paths/versions.version_id.yml
-    
+
   /projects/{project_id}/wiki/index.{format}:
     $ref: ./paths/projects.project_id.wiki.index.yml
 

@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
   summary: Listing issues
+  operationId: getIssues
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/query/offset.yml
@@ -91,6 +92,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
   summary: Creating an issue
+  operationId: createIssue
   parameters:
     - $ref: ../components/parameters/path/format.yml
   requestBody:

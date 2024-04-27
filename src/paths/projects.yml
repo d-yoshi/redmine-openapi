@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects
   summary: Listing projects
+  operationId: getProjects
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - name: include
@@ -44,6 +45,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
   summary: Creating a project
+  operationId: createProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
   requestBody:

@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2
   summary: GET
+  operationId: getIssueRelation
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_relation_id.yml
@@ -24,6 +25,7 @@ delete:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE
   summary: DELETE
+  operationId: deleteIssueRelation
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_relation_id.yml

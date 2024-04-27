@@ -1,10 +1,10 @@
-
 get:
   tags:
     - Issue Relations
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET
   summary: GET
+  operationId: getIssueRelationsByIssue
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
@@ -29,6 +29,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
   summary: POST
+  operationId: createIssueRelationsByIssue
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml

@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET
   summary: GET
+  operationId: getIssuePriorities
   parameters:
     - $ref: ../components/parameters/path/format.yml
   responses:

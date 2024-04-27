@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET
   summary: GET
+  operationId: getIssueCategoriesByProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -31,6 +32,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#POST
   summary: POST
+  operationId: createIssueCategoryByProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -66,4 +68,3 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/Errors.yml
-

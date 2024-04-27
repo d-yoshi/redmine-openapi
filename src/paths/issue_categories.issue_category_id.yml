@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2
   summary: GET
+  operationId: getIssueCategory
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_category_id.yml
@@ -26,6 +27,7 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT
   summary: PUT
+  operationId: updateIssueCategory
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_category_id.yml
@@ -60,6 +62,7 @@ delete:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#DELETE
   summary: DELETE
+  operationId: deleteIssueCategory
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_category_id.yml
