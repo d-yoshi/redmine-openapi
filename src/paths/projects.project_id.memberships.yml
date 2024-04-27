@@ -57,15 +57,11 @@ post:
                 - role_ids
               properties:
                 user_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 role_ids:
                   type: array
                   items:
-                    oneOf:
-                      - type: integer
-                      - type: string
+                    type: integer
 
   responses:
     201:

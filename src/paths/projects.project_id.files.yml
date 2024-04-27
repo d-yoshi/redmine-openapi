@@ -49,9 +49,7 @@ post:
                 token:
                   type: string
                 version_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 filename:
                   type: string
                 description:

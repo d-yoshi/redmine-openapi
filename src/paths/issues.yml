@@ -68,17 +68,7 @@ get:
               issues:
                 type: array
                 items:
-                  allOf:
-                    - $ref: ../components/schemas/Issue.yml
-                    - type: object
-                      required:
-                        - spent_hours
-                        - total_spent_hours
-                      properties:
-                        spent_hours:
-                          type: number
-                        total_spent_hours:
-                          type: number
+                  $ref: ../components/schemas/Issue.yml
               total_count:
                 type: integer
               offset:
@@ -112,21 +102,13 @@ post:
                 - subject
               properties:
                 project_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 tracker_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 status_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 priority_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 subject:
                   type: string
                 description:
@@ -141,37 +123,25 @@ post:
                   format: date
                   nullable: true
                 category_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 fixed_version_id:
                   type: string
                 assigned_to_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 parent_issue_id:
-                  oneOf:
-                    - type: integer
-                      nullable: true
-                    - type: string
-                      nullable: true
+                  type: integer
+                  nullable: true
                 custom_fields:
                   type: string
                 watcher_user_ids:
                   type: array
                   items:
-                    oneOf:
-                      - type: integer
-                      - type: string
+                    type: integer
                 is_private:
                   type: boolean
                 estimated_hours:
-                  oneOf:
-                    - type: integer
-                      nullable: true
-                    - type: string
-                      nullable: true
+                  type: number
+                  nullable: true
                 uploads:
                   type: object
                   properties:

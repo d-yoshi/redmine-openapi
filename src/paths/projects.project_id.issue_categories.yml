@@ -52,9 +52,7 @@ post:
                 name:
                   type: string
                 assigned_to_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
   responses:
     201:
       description: ""

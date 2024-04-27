@@ -73,9 +73,7 @@ put:
                 user_ids:
                   type: array
                   items:
-                    oneOf:
-                      - type: integer
-                      - type: string
+                    type: integer
   responses:
     204:
       description: ""

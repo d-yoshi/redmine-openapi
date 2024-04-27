@@ -69,22 +69,16 @@ post:
                     - hours
                   properties:
                     hours:
-                      oneOf:
-                        - type: number
-                        - type: string
+                      type: number
                     spent_on:
                       type: string
                       format: date
                     activity_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
                     comments:
                       type: string
                     user_id:
-                      oneOf:
-                        - type: integer
-                        - type: string
+                      type: integer
             - oneOf:
                 - type: object
                   properties:
@@ -94,9 +88,7 @@ post:
                         - issue_id
                       properties:
                         issue_id:
-                          oneOf:
-                            - type: integer
-                            - type: string
+                          type: integer
                 - type: object
                   properties:
                     time_entry:
@@ -105,9 +97,7 @@ post:
                         - project_id
                       properties:
                         project_id:
-                          oneOf:
-                            - type: integer
-                            - type: string
+                          type: integer
   responses:
     201:
       description: ""

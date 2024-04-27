@@ -75,9 +75,7 @@ post:
                 is_public:
                   type: boolean
                 parent_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
+                  type: integer
                 inherit_members:
                   type: boolean
                 default_assigned_to_id:
@@ -87,9 +85,7 @@ post:
                 tracker_ids:
                   type: array
                   items:
-                    oneOf:
-                      - type: integer
-                      - type: string
+                    type: integer
                 enabled_module_names:
                   type: array
                   items:
@@ -97,9 +93,7 @@ post:
                 issue_custom_field_ids:
                   type: array
                   items:
-                    oneOf:
-                      - type: integer
-                      - type: string
+                    type: integer
                 custom_field_values:
                   type: object
                   additionalProperties:
