@@ -1,4 +1,4 @@
-name: Generate docs
+name: Test, Bundle, Generate docs
 
 on:
   push:
