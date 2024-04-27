@@ -66,11 +66,10 @@ get:
       schema:
         oneOf:
           - type: string
-          - type: integer
         enum:
-          - 0
-          - 1
-          - only
+          - "0"
+          - "1"
+          - "only"
   responses:
     200:
       description: ""
