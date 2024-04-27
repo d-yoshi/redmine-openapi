@@ -1,25 +1,120 @@
 openapi: 3.0.3
 info:
   title: Redmine API
-  description: 'NOTE: This is unofficial OpenAPI specification file.'
-  version: 5.0.0
+  description: Unofficial OpenAPI specification for the Redmine API.
   contact:
     name: d-yoshi/redmine-openapi
-    url: 'https://github.com/d-yoshi/redmine-openapi'
-externalDocs:
-  description: Redmine API Official Developer Guide
-  url: 'https://www.redmine.org/projects/redmine/wiki/Rest_api'
+    url: https://github.com/d-yoshi/redmine-openapi
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: /
 security:
   - BasicAuth: []
   - ApiKeyAuth: []
+tags:
+  - name: Issues
+    description: 'Status: Stable, Availablity: 1.0'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues
+  - name: Projects
+    description: 'Status: Stable, Availablity: 1.0'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects
+  - name: Project Memberships
+    description: 'Status: Alpha, Availablity: 1.4'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships
+  - name: Users
+    description: 'Status: Stable, Availablity: 1.1'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Users
+  - name: Time Entries
+    description: 'Status: Stable, Availablity: 1.1'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
+  - name: News
+    description: 'Status: Prototype, Note: Prototype implementation for index only, Availablity: 1.1'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_News
+  - name: Issue Relations
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations
+  - name: Versions
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions
+  - name: Wiki Pages
+    description: 'Status: Alpha, Availablity: 2.2'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages
+  - name: Queries
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries
+  - name: Attachments
+    description: 'Status: Beta, Notes: Adding attachments via the API added in 1.4, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments
+  - name: Issue Statuses
+    description: 'Status: Alpha, Notes: Provides the list of all statuses, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses
+  - name: Trackers
+    description: 'Status: Alpha, Notes: Provides the list of all trackers, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers
+  - name: Enumerations
+    description: 'Status: Alpha, Notes: Provides the list of issue priorities and time tracking activities, Availablity: 2.2'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations
+  - name: Issue Categories
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories
+  - name: Roles
+    description: 'Status: Alpha, Availablity: 1.4'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles
+  - name: Groups
+    description: 'Status: Alpha, Availablity: 2.1'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups
+  - name: Custom Fields
+    description: 'Status: Alpha, Availablity: 2.4'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields
+  - name: Search
+    description: 'Status: Alpha, Availablity: 3.3'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Search
+  - name: Files
+    description: 'Status: Alpha, Availablity: 3.4'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Files
+  - name: My Account
+    description: 'Status: Alpha, Availablity: 4.1'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount
+  - name: Journals
+    description: 'Status: Alpha, Availablity: 5.0'
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals?parent=Rest_api
+externalDocs:
+  description: Redmine API Official Developer Guide
+  url: https://www.redmine.org/projects/redmine/wiki/Rest_api
 paths:
-  '/issues.{format}':
+  /issues.{format}:
     get:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
       summary: Listing issues
+      operationId: getIssues
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
@@ -104,8 +199,9 @@ paths:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
       summary: Creating an issue
+      operationId: createIssue
       parameters:
         - $ref: '#/components/parameters/format'
       requestBody:
@@ -211,13 +307,14 @@ paths:
                 properties:
                   issue:
                     $ref: '#/components/schemas/Issue'
-  '/issues/{issue_id}.{format}':
+  /issues/{issue_id}.{format}:
     get:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Showing-an-issue'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Showing-an-issue
       summary: Showing an issue
+      operationId: getIssue
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -251,13 +348,14 @@ paths:
                       - issue
                     properties:
                       issue:
-                        $ref: '#/components/schemas/IssuePartial'
+                        $ref: '#/components/schemas/Issue.partial'
     put:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
       summary: Updating an issue
+      operationId: updateIssue
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -336,21 +434,23 @@ paths:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Deleting-an-issue'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Deleting-an-issue
       summary: Deleting an issue
+      operationId: deleteIssue
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
       responses:
         '204':
           description: ''
-  '/issues/{issue_id}/watchers.{format}':
+  /issues/{issue_id}/watchers.{format}:
     post:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
       summary: Adding a watcher
+      operationId: createWatcher
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -369,13 +469,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/issues/{issue_id}/watchers/{user_id}.{format}':
+  /issues/{issue_id}/watchers/{user_id}.{format}:
     delete:
       tags:
         - Issues
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
       summary: Removing a watcher
+      operationId: deleteWatcher
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -383,13 +484,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/projects.{format}':
+  /projects.{format}:
     get:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects
       summary: Listing projects
+      operationId: getProjects
       parameters:
         - $ref: '#/components/parameters/format'
         - name: include
@@ -427,8 +529,9 @@ paths:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
       summary: Creating a project
+      operationId: createProject
       parameters:
         - $ref: '#/components/parameters/format'
       requestBody:
@@ -502,13 +605,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/projects/{project_id}.{format}':
+  /projects/{project_id}.{format}:
     get:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project
       summary: Showing a project
+      operationId: getProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -561,8 +665,9 @@ paths:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
       summary: Updating a project
+      operationId: updateProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -620,44 +725,51 @@ paths:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
       summary: Deleting a project
+      operationId: deleteProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
         '204':
           description: ''
-  '/projects/{project_id}/archive.{format}':
+  /projects/{project_id}/archive.{format}:
     put:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
+      summary: Archiving a project
+      operationId: archiveProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
         '204':
           description: ''
-  '/projects/{project_id}/unarchive.{format}':
+  /projects/{project_id}/unarchive.{format}:
     put:
       tags:
         - Projects
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Unarchiving-a-project'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Unarchiving-a-project
+      summary: Unarchiving a project
+      operationId: unarchiveProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
         '204':
           description: ''
-  '/projects/{project_id}/memberships.{format}':
+  /projects/{project_id}/memberships.{format}:
     get:
       tags:
         - Project Memberships
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET
+      summary: GET
+      operationId: getMembershipsByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -677,7 +789,7 @@ paths:
                   memberships:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Membersip'
+                      $ref: '#/components/schemas/Membership'
                   total_count:
                     type: integer
                   offset:
@@ -688,7 +800,9 @@ paths:
       tags:
         - Project Memberships
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST
+      summary: POST
+      operationId: createMembershipsByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -727,15 +841,16 @@ paths:
                   - membership
                 properties:
                   membership:
-                    $ref: '#/components/schemas/Membersip'
-  '/memberships/{membership_id}.{format}':
+                    $ref: '#/components/schemas/Membership'
+  /memberships/{membership_id}.{format}:
     get:
       tags:
         - Project Memberships
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2
+      summary: GET
+      operationId: getMembership
       parameters:
-        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/membership_id'
         - $ref: '#/components/parameters/format'
       responses:
@@ -749,14 +864,15 @@ paths:
                   - membership
                 properties:
                   membership:
-                    $ref: '#/components/schemas/Membersip'
+                    $ref: '#/components/schemas/Membership'
     put:
       tags:
         - Project Memberships
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
+      summary: PUT
+      operationId: updateMembership
       parameters:
-        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/membership_id'
         - $ref: '#/components/parameters/format'
       responses:
@@ -772,20 +888,23 @@ paths:
       tags:
         - Project Memberships
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE
+      summary: DELETE
+      operationId: deleteMembership
       parameters:
-        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/membership_id'
         - $ref: '#/components/parameters/format'
       responses:
         '204':
           description: ''
-  '/users.{format}':
+  /users.{format}:
     get:
       tags:
         - Users
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET
+      summary: GET
+      operationId: getUsers
       parameters:
         - $ref: '#/components/parameters/format'
         - name: status
@@ -827,7 +946,9 @@ paths:
       tags:
         - Users
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#POST
+      summary: POST
+      operationId: createUser
       parameters:
         - $ref: '#/components/parameters/format'
       requestBody:
@@ -875,19 +996,21 @@ paths:
                   user:
                     allOf:
                       - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/UserPartial'
+                      - $ref: '#/components/schemas/User.partial'
         '422':
           description: ''
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/users/{user_id}.{format}':
+  /users/{user_id}.{format}:
     get:
       tags:
         - Users
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
+      summary: GET
+      operationId: getUser
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/user_id'
@@ -906,7 +1029,7 @@ paths:
                   user:
                     allOf:
                       - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/UserPartial'
+                      - $ref: '#/components/schemas/User.partial'
                       - type: object
                         properties:
                           custom_fields:
@@ -932,7 +1055,9 @@ paths:
       tags:
         - Users
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#PUT'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#PUT
+      summary: PUT
+      operationId: updateUser
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/user_id'
@@ -980,19 +1105,23 @@ paths:
       tags:
         - Users
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#DELETE
+      summary: DELETE
+      operationId: deleteUser
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/user_id'
       responses:
         '204':
           description: ''
-  '/users/current.{format}':
+  /users/current.{format}:
     get:
       tags:
         - Users
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
+      summary: GET
+      operationId: getCurrentUser
       parameters:
         - $ref: '#/components/parameters/format'
         - name: include
@@ -1010,20 +1139,21 @@ paths:
                   user:
                     allOf:
                       - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/UserPartial'
+                      - $ref: '#/components/schemas/User.partial'
                       - type: object
                         properties:
                           custom_fields:
                             type: array
                             items:
                               $ref: '#/components/schemas/IdName'
-  '/time_entries.{format}':
+  /time_entries.{format}:
     get:
       tags:
         - Time Entries
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries
       summary: Listing time entries
+      operationId: getTimeEntries
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
@@ -1068,8 +1198,9 @@ paths:
       tags:
         - Time Entries
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
       summary: Creating a time entry
+      operationId: createTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
       requestBody:
@@ -1138,13 +1269,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/time_entries/{time_entry_id}.{format}':
+  /time_entries/{time_entry_id}.{format}:
     get:
       tags:
         - Time Entries
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry
       summary: Showing a time entry
+      operationId: getTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
@@ -1159,8 +1291,9 @@ paths:
       tags:
         - Time Entries
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Updating-a-time-entry'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Updating-a-time-entry
       summary: Updating a time entry
+      operationId: updateTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
@@ -1230,21 +1363,23 @@ paths:
       tags:
         - Time Entries
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Deleting-a-time-entry'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Deleting-a-time-entry
       summary: Deleting a time entry
+      operationId: deleteTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
       responses:
         '204':
           description: ''
-  '/news.{format}':
+  /news.{format}:
     get:
       tags:
         - News
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
       summary: GET
+      operationId: getNews
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -1270,13 +1405,14 @@ paths:
                     type: integer
                   limit:
                     type: integer
-  '/projects/{project_id}/news.{format}':
+  /projects/{project_id}/news.{format}:
     get:
       tags:
         - News
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2
       summary: GET
+      operationId: getNewsByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1303,13 +1439,14 @@ paths:
                     type: integer
                   limit:
                     type: integer
-  '/issues/{issue_id}/relations.{format}':
+  /issues/{issue_id}/relations.{format}:
     get:
       tags:
         - Issue Relations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET
       summary: GET
+      operationId: getIssueRelationsByIssue
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -1331,8 +1468,9 @@ paths:
       tags:
         - Issue Relations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
       summary: POST
+      operationId: createIssueRelationsByIssue
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -1376,13 +1514,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/relations/{issue_relation_id}.{format}':
+  /relations/{issue_relation_id}.{format}:
     get:
       tags:
         - Issue Relations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2
       summary: GET
+      operationId: getIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_relation_id'
@@ -1400,8 +1539,9 @@ paths:
       tags:
         - Issue Relations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE
       summary: DELETE
+      operationId: deleteIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_relation_id'
@@ -1414,13 +1554,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/projects/{project_id}/versions.{format}':
+  /projects/{project_id}/versions.{format}:
     get:
       tags:
         - Versions
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET
       summary: GET
+      operationId: getVersionsByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1444,8 +1585,9 @@ paths:
       tags:
         - Versions
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#POST
       summary: POST
+      operationId: createVersionByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1507,13 +1649,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/versions/{version_id}.{format}':
+  /versions/{version_id}.{format}:
     get:
       tags:
         - Versions
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
       summary: GET
+      operationId: getVersions
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
@@ -1542,8 +1685,9 @@ paths:
       tags:
         - Versions
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT
       summary: PUT
+      operationId: updateVersion
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
@@ -1594,8 +1738,9 @@ paths:
       tags:
         - Versions
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE
       summary: DELETE
+      operationId: deleteVersion
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
@@ -1608,13 +1753,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/projects/{project_id}/wiki/index.{format}':
+  /projects/{project_id}/wiki/index.{format}:
     get:
       tags:
         - Wiki Pages
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki
       summary: Getting the pages list of a wiki
+      operationId: getWikiPages
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1632,13 +1778,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/WikiPages'
-  '/projects/{project_id}/wiki/{wiki_page_title}.{format}':
+  /projects/{project_id}/wiki/{wiki_page_title}.{format}:
     get:
       tags:
         - Wiki Pages
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page
       summary: Getting a wiki page
+      operationId: getWikiPageByTitle
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1665,8 +1812,9 @@ paths:
       tags:
         - Wiki Pages
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
       summary: Creating or updating a wiki page
+      operationId: updateWikiPageByTitle
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1709,8 +1857,9 @@ paths:
       tags:
         - Wiki Pages
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page
       summary: Deleting a wiki page
+      operationId: deleteWikiPageByTitle
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1718,13 +1867,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}':
+  /projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}:
     get:
       tags:
         - Wiki Pages
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-an-old-version-of-a-wiki-page'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-an-old-version-of-a-wiki-page
       summary: Getting an old version of a wiki page
+      operationId: getWikiPageByVersion
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1748,13 +1898,14 @@ paths:
                 properties:
                   wiki_page:
                     $ref: '#/components/schemas/WikiPage'
-  '/queries.{format}':
+  /queries.{format}:
     get:
       tags:
         - Queries
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Queries#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries#GET
       summary: GET
+      operationId: getQueries
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -1780,13 +1931,14 @@ paths:
                     type: integer
                   limit:
                     type: integer
-  '/attachments/{attachment_id}.{format}':
+  /attachments/{attachment_id}.{format}:
     get:
       tags:
         - Attachments
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET
       summary: GET
+      operationId: getAttachment
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
@@ -1804,8 +1956,9 @@ paths:
       tags:
         - Attachments
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
       summary: PATCH
+      operationId: updateAttachment
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
@@ -1829,21 +1982,23 @@ paths:
       tags:
         - Attachments
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE
       summary: DELETE
+      operationId: deleteAttachment
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
       responses:
         '204':
           description: ''
-  '/issue_statuses.{format}':
+  /issue_statuses.{format}:
     get:
       tags:
         - Issue Statuses
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET
       summary: Returns possible Status Values for Issues
+      operationId: getIssueStatuses
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -1853,13 +2008,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IssueStatuses'
-  '/trackers.{format}':
+  /trackers.{format}:
     get:
       tags:
         - Trackers
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Trackers#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers#GET
       summary: GET
+      operationId: getTrackers
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -1869,13 +2025,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Trackers'
-  '/projects/{project_id}/issue_categories.{format}':
+  /projects/{project_id}/issue_categories.{format}:
     get:
       tags:
         - Issue Categories
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET
       summary: GET
+      operationId: getIssueCategoriesByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1900,8 +2057,9 @@ paths:
       tags:
         - Issue Categories
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#POST
       summary: POST
+      operationId: createIssueCategoryByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1937,13 +2095,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/enumerations/issue_priorities.{format}':
+  /enumerations/issue_priorities.{format}:
     get:
       tags:
         - Enumerations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET
       summary: GET
+      operationId: getIssuePriorities
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -1960,13 +2119,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/IssuePriority'
-  '/enumerations/time_entry_activities.{format}':
+  /enumerations/time_entry_activities.{format}:
     get:
       tags:
         - Enumerations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2
       summary: GET
+      operationId: getTimeEntryActivities
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -1983,13 +2143,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/TimeEntryActivity'
-  '/enumerations/document_categories.{format}':
+  /enumerations/document_categories.{format}:
     get:
       tags:
         - Enumerations
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3
       summary: GET
+      operationId: getDocumentCategories
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -2006,13 +2167,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/DocumentCategory'
-  '/issue_categories/{issue_category_id}.{format}':
+  /issue_categories/{issue_category_id}.{format}:
     get:
       tags:
         - Issue Categories
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2
       summary: GET
+      operationId: getIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_category_id'
@@ -2032,8 +2194,9 @@ paths:
       tags:
         - Issue Categories
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT
       summary: PUT
+      operationId: updateIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_category_id'
@@ -2065,8 +2228,9 @@ paths:
       tags:
         - Issue Categories
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#DELETE
       summary: DELETE
+      operationId: deleteIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_category_id'
@@ -2077,13 +2241,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/roles.{format}':
+  /roles.{format}:
     get:
       tags:
         - Roles
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET
       summary: GET
+      operationId: getRoles
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -2098,13 +2263,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/IdName'
-  '/roles/{role_id}.{format}':
+  /roles/{role_id}.{format}:
     get:
       tags:
         - Roles
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET-2
       summary: GET
+      operationId: getRole
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/role_id'
@@ -2118,13 +2284,14 @@ paths:
                 properties:
                   role:
                     $ref: '#/components/schemas/Role'
-  '/groups.{format}':
+  /groups.{format}:
     get:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET
       summary: GET
+      operationId: getGroups
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -2145,8 +2312,9 @@ paths:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST
       summary: POST
+      operationId: createGroup
       parameters:
         - $ref: '#/components/parameters/format'
       requestBody:
@@ -2182,13 +2350,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/groups/{group_id}.{format}':
+  /groups/{group_id}.{format}:
     get:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET-2
       summary: GET
+      operationId: getGroup
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
@@ -2236,8 +2405,9 @@ paths:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#PUT'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#PUT
       summary: PUT
+      operationId: updateGroup
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
@@ -2265,21 +2435,23 @@ paths:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE
       summary: DELETE
+      operationId: deleteGroup
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
       responses:
         '204':
           description: ''
-  '/groups/{group_id}/users.{format}':
+  /groups/{group_id}/users.{format}:
     post:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST-2
       summary: POST
+      operationId: addUserToGroup
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
@@ -2296,13 +2468,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/groups/{group_id}/users/{user_id}.{format}':
+  /groups/{group_id}/users/{user_id}.{format}:
     delete:
       tags:
         - Groups
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE-2'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE-2
       summary: DELETE
+      operationId: removeUserFromGroup
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
@@ -2310,13 +2483,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/custom_fields.{format}':
+  /custom_fields.{format}:
     get:
       tags:
         - Custom Fields
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields#GET
       summary: GET
+      operationId: getCustomFields
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -2333,13 +2507,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/CustomField'
-  '/search.{format}':
+  /search.{format}:
     get:
       tags:
         - Search
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
       summary: GET
+      operationId: search
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/limit'
@@ -2429,13 +2604,14 @@ paths:
                     type: integer
                   limit:
                     type: integer
-  '/projects/{project_id}/files.{format}':
+  /projects/{project_id}/files.{format}:
     get:
       tags:
         - Files
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET
       summary: GET
+      operationId: getFiles
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -2457,8 +2633,9 @@ paths:
       tags:
         - Files
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST
       summary: POST
+      operationId: createFile
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -2506,13 +2683,14 @@ paths:
                         type: string
                       description:
                         type: string
-  '/my/account.{format}':
+  /my/account.{format}:
     get:
       tags:
         - My Account
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET
       summary: GET
+      operationId: getMyAccount
       parameters:
         - $ref: '#/components/parameters/format'
       responses:
@@ -2523,7 +2701,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/User'
-                  - $ref: '#/components/schemas/UserPartial'
+                  - $ref: '#/components/schemas/User.partial'
                   - type: object
                     properties:
                       custom_fields:
@@ -2534,8 +2712,9 @@ paths:
       tags:
         - My Account
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT
       summary: PUT
+      operationId: updateMyAccount
       parameters:
         - $ref: '#/components/parameters/format'
       requestBody:
@@ -2576,18 +2755,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  '/journals/{journal_id}.{format}':
+  /journals/{journal_id}.{format}:
     put:
       tags:
         - Journals
       summary: PUT
+      operationId: updateJournal
       parameters:
         - $ref: '#/components/parameters/format'
-        - name: journal_id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/journal_id'
       requestBody:
         content:
           application/json:
@@ -2605,13 +2781,14 @@ paths:
       responses:
         '204':
           description: ''
-  '/uploads.{format}':
+  /uploads.{format}:
     post:
       tags:
         - Attachments
       externalDocs:
-        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files'
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files
       summary: Attaching files
+      operationId: uploadAttachmentFile
       parameters:
         - $ref: '#/components/parameters/format'
         - name: filename
@@ -2664,18 +2841,24 @@ components:
         enum:
           - json
           - xml
-    limit:
-      name: limit
-      in: query
-      schema:
-        type: integer
     offset:
       name: offset
       in: query
       schema:
         type: integer
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
     issue_id:
       name: issue_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    user_id:
+      name: user_id
       in: path
       required: true
       schema:
@@ -2692,12 +2875,6 @@ components:
       required: true
       schema:
         type: string
-    user_id:
-      name: user_id
-      in: path
-      required: true
-      schema:
-        type: integer
     time_entry_id:
       name: time_entry_id
       in: path
@@ -2746,6 +2923,12 @@ components:
       required: true
       schema:
         type: integer
+    journal_id:
+      name: journal_id
+      in: path
+      required: true
+      schema:
+        type: integer
   schemas:
     IdName:
       type: object
@@ -2757,6 +2940,15 @@ components:
           type: integer
         name:
           type: string
+    IssueStatus:
+      allOf:
+        - $ref: '#/components/schemas/IdName'
+        - type: object
+          required:
+            - is_closed
+          properties:
+            is_closed:
+              type: boolean
     Issue:
       type: object
       required:
@@ -2831,7 +3023,36 @@ components:
           type: string
           format: date-time
           nullable: true
-    IssuePartial:
+    Attachment:
+      type: object
+      required:
+        - id
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - author
+        - created_on
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/IdName'
+        created_on:
+          type: string
+          format: data-time
+    Issue.partial:
       type: object
       properties:
         changesets:
@@ -2979,6 +3200,50 @@ components:
         updated_on:
           type: string
           format: date-time
+    Errors:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          items:
+            type: string
+    Membership:
+      oneOf:
+        - type: object
+          required:
+            - id
+            - project
+            - user
+            - roles
+          properties:
+            id:
+              type: integer
+            project:
+              $ref: '#/components/schemas/IdName'
+            user:
+              $ref: '#/components/schemas/IdName'
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
+        - type: object
+          required:
+            - id
+            - project
+            - group
+            - roles
+          properties:
+            id:
+              type: integer
+            project:
+              $ref: '#/components/schemas/IdName'
+            group:
+              $ref: '#/components/schemas/IdName'
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
     User:
       type: object
       required:
@@ -3023,7 +3288,7 @@ components:
         twofa_scheme:
           type: object
           nullable: true
-    UserPartial:
+    User.partial:
       type: object
       required:
         - api_key
@@ -3033,42 +3298,29 @@ components:
           type: string
         status:
           type: integer
-    Membersip:
-      oneOf:
+    Role:
+      allOf:
         - type: object
           required:
-            - id
-            - project
-            - user
-            - roles
+            - assignable
+            - issue_visibility
+            - time_entries_visibility
+            - users_visibility
+            - permissions
           properties:
-            id:
-              type: integer
-            project:
-              $ref: '#/components/schemas/IdName'
-            user:
-              $ref: '#/components/schemas/IdName'
-            roles:
+            assignable:
+              type: boolean
+            issues_visibility:
+              type: string
+            time_entries_visibility:
+              type: string
+            users_visibility:
+              type: string
+            permissions:
               type: array
               items:
-                $ref: '#/components/schemas/IdName'
-        - type: object
-          required:
-            - id
-            - project
-            - group
-            - roles
-          properties:
-            id:
-              type: integer
-            project:
-              $ref: '#/components/schemas/IdName'
-            group:
-              $ref: '#/components/schemas/IdName'
-            roles:
-              type: array
-              items:
-                $ref: '#/components/schemas/IdName'
+                type: string
+        - $ref: '#/components/schemas/IdName'
     TimeEntry:
       type: object
       required:
@@ -3205,6 +3457,31 @@ components:
         updated_on:
           type: string
           format: date-time
+    WikiPages:
+      type: object
+      required:
+        - title
+        - version
+        - created_on
+        - updated_on
+      properties:
+        title:
+          type: integer
+        parent:
+          type: object
+          required:
+            - title
+          properties:
+            title:
+              type: string
+        version:
+          type: integer
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
     WikiPage:
       type: object
       required:
@@ -3239,31 +3516,6 @@ components:
         updated_on:
           type: string
           format: date-time
-    WikiPages:
-      type: object
-      required:
-        - title
-        - version
-        - created_on
-        - updated_on
-      properties:
-        title:
-          type: integer
-        parent:
-          type: object
-          required:
-            - title
-          properties:
-            title:
-              type: string
-        version:
-          type: integer
-        created_on:
-          type: string
-          format: date-time
-        updated_on:
-          type: string
-          format: date-time
     Query:
       allOf:
         - type: object
@@ -3277,44 +3529,6 @@ components:
               type: integer
               nullable: true
         - $ref: '#/components/schemas/IdName'
-    IssueStatus:
-      allOf:
-        - $ref: '#/components/schemas/IdName'
-        - type: object
-          required:
-            - is_closed
-          properties:
-            is_closed:
-              type: boolean
-    Attachment:
-      type: object
-      required:
-        - id
-        - filename
-        - filesize
-        - content_type
-        - description
-        - content_url
-        - author
-        - created_on
-      properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        filesize:
-          type: integer
-        content_type:
-          type: string
-        description:
-          type: string
-        content_url:
-          type: string
-        author:
-          $ref: '#/components/schemas/IdName'
-        created_on:
-          type: string
-          format: data-time
     IssueStatuses:
       type: object
       required:
@@ -3324,8 +3538,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/IssueStatus'
-    Group:
-      $ref: '#/components/schemas/IdName'
     Tracker:
       type: object
       properties:
@@ -3351,6 +3563,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Tracker'
+    IssueCategory:
+      type: object
+      required:
+        - id
+        - project
+        - name
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        name:
+          type: string
+        assigned_to:
+          $ref: '#/components/schemas/IdName'
     IssuePriority:
       allOf:
         - type: object
@@ -3386,44 +3613,6 @@ components:
               type: boolean
             active:
               type: boolean
-        - $ref: '#/components/schemas/IdName'
-    IssueCategory:
-      type: object
-      required:
-        - id
-        - project
-        - name
-      properties:
-        id:
-          type: integer
-        project:
-          $ref: '#/components/schemas/IdName'
-        name:
-          type: string
-        assigned_to:
-          $ref: '#/components/schemas/IdName'
-    Role:
-      allOf:
-        - type: object
-          required:
-            - assignable
-            - issue_visibility
-            - time_entries_visibility
-            - users_visibility
-            - permissions
-          properties:
-            assignable:
-              type: boolean
-            issues_visibility:
-              type: string
-            time_entries_visibility:
-              type: string
-            users_visibility:
-              type: string
-            permissions:
-              type: array
-              items:
-                type: string
         - $ref: '#/components/schemas/IdName'
     CustomField:
       type: object
@@ -3560,100 +3749,11 @@ components:
           type: string
         downloads:
           type: integer
-    Errors:
-      type: object
-      required:
-        - errors
-      properties:
-        errors:
-          items:
-            type: string
-tags:
-  - name: Issues
-    description: 'Status: Stable, Availablity: 1.0'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues'
-  - name: Projects
-    description: 'Status: Stable, Availablity: 1.0'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects'
-  - name: Project Memberships
-    description: 'Status: Alpha, Availablity: 1.4'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships'
-  - name: Users
-    description: 'Status: Stable, Availablity: 1.1'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users'
-  - name: Time Entries
-    description: 'Status: Stable, Availablity: 1.1'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries'
-  - name: News
-    description: 'Status: Prototype, Note: Prototype implementation for index only, Availablity: 1.1'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News'
-  - name: Issue Relations
-    description: 'Status: Alpha, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations'
-  - name: Versions
-    description: 'Status: Alpha, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions'
-  - name: Wiki Pages
-    description: 'Status: Alpha, Availablity: 2.2'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages'
-  - name: Queries
-    description: 'Status: Alpha, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Queries'
-  - name: Attachments
-    description: 'Status: Beta, Notes: Adding attachments via the API added in 1.4, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments'
-  - name: Issue Statuses
-    description: 'Status: Alpha, Notes: Provides the list of all statuses, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses'
-  - name: Trackers
-    description: 'Status: Alpha, Notes: Provides the list of all trackers, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Trackers'
-  - name: Enumerations
-    description: 'Status: Alpha, Notes: Provides the list of issue priorities and time tracking activities, Availablity: 2.2'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations'
-  - name: Issue Categories
-    description: 'Status: Alpha, Availablity: 1.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories'
-  - name: Roles
-    description: 'Status: Alpha, Availablity: 1.4'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Roles'
-  - name: Groups
-    description: 'Status: Alpha, Availablity: 2.1'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups'
-  - name: Custom Fields
-    description: 'Status: Alpha, Availablity: 2.4'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields'
-  - name: Search
-    description: 'Status: Alpha, Availablity: 3.3'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Search'
-  - name: Files
-    description: 'Status: Alpha, Availablity: 3.4'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files'
-  - name: My Account
-    description: 'Status: Alpha, Availablity: 4.1'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount'
-  - name: Journals
-    description: 'Status: Alpha, Availablity: 5.0'
-    externalDocs:
-      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Journals?parent=Rest_api'
+    IssuePartial:
+      $ref: '#/components/schemas/Issue.partial'
+    UserPartial:
+      $ref: '#/components/schemas/User.partial'
+    Membersip:
+      $ref: '#/components/schemas/Membership'
+    Group:
+      $ref: '#/components/schemas/IdName'
