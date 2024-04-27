@@ -1,9 +1,9 @@
-name: Redoc
+name: Generate docs
 
 on:
   push:
     paths:
-      - ".github/workflows/redoc.yml"
+      - ".github/workflows/generate-docs.yml"
       - "src/**"
       - "docs/**"
     tags-ignore:
