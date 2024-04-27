@@ -6,6 +6,10 @@ on:
       - ".github/workflows/redoc.yml"
       - "src/**"
       - "docs/**"
+    tags-ignore:
+      - "*"
+    branches:
+      - "*"
 
 jobs:
   build:
