@@ -1,4 +1,4 @@
-name: Test, Bundle, Generate docs
+name: CI
 
 on:
   push:
@@ -46,12 +46,12 @@ jobs:
         with:
           name: openapi
       - name: generate client typescript-node
-        run: npx @openapitools/openapi-generator-cli generate -i openapi.yml -g typescript-node -o ./dist/typescript-node
+        run: npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g typescript-node -o dist/typescript-node
       - name: generate client java
         run: |
-          npx @openapitools/openapi-generator-cli generate -i openapi.yml -g java -o ./dist/java
-          cd ./dist/java
-          chmod +x ./gradlew
+          npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g java -c test/openapitools.json -o dist/java
+          cd dist/java
+          chmod +x gradlew
           ./gradlew build --warn
 
   build-docs:

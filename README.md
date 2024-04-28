@@ -1,6 +1,6 @@
 [![CI](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yml/badge.svg)](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yml)
 
-# Redmine OpenAPI Specification
+# Unofficial OpenAPI specification for the Redmine API
 
 ## Overview
 
@@ -11,7 +11,7 @@ OpenAPI: 3.0.3
 
 These yaml files are created by my human scraping and experimentation with Redmine 5.0.0 in my local environment.
 
-## Redoc
+## Docs
 
 https://d-yoshi.github.io/redmine-openapi/
 
