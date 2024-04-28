@@ -23,19 +23,12 @@ get:
       content:
         application/json:
           schema:
-            allOf:
-              - type: object
-                required:
-                  - project
-                properties:
-                  project:
-                    $ref: ../components/schemas/Project.yml
-              - type: object
-                required:
-                  - project
-                properties:
-                  project:
-                    type: object
+            type: object
+            properties:
+              project:
+                allOf:
+                  - $ref: ../components/schemas/Project.yml
+                  - type: object
                     properties:
                       trackers:
                         type: array

@@ -21,15 +21,12 @@ get:
       content:
         application/json:
           schema:
-            allOf:
-              - type: object
-                properties:
-                  group:
-                    $ref: ../components/schemas/Group.yml
-              - type: object
-                properties:
-                  group:
-                    type: object
+            type: object
+            properties:
+              group:
+                allOf:
+                  - $ref: ../components/schemas/Group.yml
+                  - type: object
                     properties:
                       users:
                         type: array
