@@ -1,54 +1,19 @@
-[![CI](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yml/badge.svg)](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yml)
-
 # Unofficial OpenAPI specification for the Redmine API
 
+[![CI](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yml/badge.svg)](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yml)
+
 ## Overview
+
+These openapi files are created by my manual scraping the official api docs and experimentation with Redmine in my local environment.
+
+## Docs
 
 ```
 Redmine: 5.0.0
 OpenAPI: 3.0.3
 ```
 
-These yaml files are created by my human scraping and experimentation with Redmine 5.0.0 in my local environment.
-
-## Docs
-
 https://d-yoshi.github.io/redmine-openapi/
-
-## Implementation Status
-
-| Resource            | Status   |
-| ------------------- | -------- |
-| Issues              | **Done** |
-| Projects            | **Done** |
-| Project Memberships | **Done** |
-| Users               | **Done** |
-| Time Entries        | **Done** |
-| News                | **Done** |
-| Issue Relations     | **Done** |
-| Versions            | **Done** |
-| Wiki Pages          | **Done** |
-| Queries             | **Done** |
-| Attachements        | **Done** |
-| Issue Statuses      | **Done** |
-| Trackers            | **Done** |
-| Enumerations        | **Done** |
-| Issue Categories    | **Done** |
-| Roles               | **Done** |
-| Groups              | **Done** |
-| Custom Fields       | **Done** |
-| Search              | **Done** |
-| Files               | **Done** |
-| My Account          | **Done** |
-| Journals            | **Done** |
-
-## How to bundle into one YAML file
-
-To bundle files in the src directory, execute the following command.
-
-```
-npx @redocly/cli bundle src/openapi.yml -o openapi.yml
-```
 
 ## Reference
 
