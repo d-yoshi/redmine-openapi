@@ -46,10 +46,10 @@ jobs:
         with:
           name: openapi
       - name: generate client typescript-node
-        run: npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g typescript-node -o dist/typescript-node
+        run: npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g typescript-node -o test/dist/typescript-node
       - name: generate client java
         run: |
-          npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g java -c test/openapitools.json -o dist/java
+          npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g java -c test/openapitools.json -o test/dist/java
           cd dist/java
           chmod +x gradlew
           ./gradlew build --warn
