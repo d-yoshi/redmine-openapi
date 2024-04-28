@@ -3,13 +3,13 @@ name: Test, Bundle, Generate docs
 on:
   push:
     paths:
-      - ".github/workflows/generate-docs.yml"
+      - ".github/workflows/ci.yml"
       - "src/**"
       - "docs/**"
     tags-ignore:
-      - "*"
+      - "**"
     branches:
-      - "*"
+      - "**"
 
 jobs:
   build:
