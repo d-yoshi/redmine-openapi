@@ -306,9 +306,12 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Issue'
-                  - $ref: '#/components/schemas/Issue.partial'
+                type: object
+                properties:
+                  issue:
+                    allOf:
+                      - $ref: '#/components/schemas/Issue'
+                      - $ref: '#/components/schemas/Issue.partial'
     put:
       tags:
         - Issues
@@ -565,19 +568,12 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - type: object
-                    required:
-                      - project
-                    properties:
-                      project:
-                        $ref: '#/components/schemas/Project'
-                  - type: object
-                    required:
-                      - project
-                    properties:
-                      project:
-                        type: object
+                type: object
+                properties:
+                  project:
+                    allOf:
+                      - $ref: '#/components/schemas/Project'
+                      - type: object
                         properties:
                           trackers:
                             type: array
@@ -2274,15 +2270,12 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - type: object
-                    properties:
-                      group:
-                        $ref: '#/components/schemas/IdName'
-                  - type: object
-                    properties:
-                      group:
-                        type: object
+                type: object
+                properties:
+                  group:
+                    allOf:
+                      - $ref: '#/components/schemas/IdName'
+                      - type: object
                         properties:
                           users:
                             type: array
