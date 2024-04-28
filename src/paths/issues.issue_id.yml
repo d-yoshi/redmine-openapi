@@ -26,9 +26,12 @@ get:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: ../components/schemas/Issue.yml
-              - $ref: ../components/schemas/Issue.partial.yml
+            type: object
+            properties:
+              issue:
+                allOf:
+                  - $ref: ../components/schemas/Issue.yml
+                  - $ref: ../components/schemas/Issue.partial.yml
 
 put:
   tags:
