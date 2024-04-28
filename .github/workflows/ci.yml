@@ -12,7 +12,7 @@ on:
       - "**"
 
 jobs:
-  build:
+  lint_bundle:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +23,44 @@ jobs:
         run: npx @redocly/cli lint src/openapi.yml
       - name: bundle
         run: npx @redocly/cli bundle src/openapi.yml -o openapi.yml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openapi
+          path: openapi.yml
+
+  test:
+    needs: lint_bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: "17"
+      - uses: actions/download-artifact@v4
+        with:
+          name: openapi
+      - name: generate client typescript-node
+        run: npx @openapitools/openapi-generator-cli generate -i openapi.yml -g typescript-node -o ./dist/typescript-node
+      - name: generate client java
+        run: |
+          npx @openapitools/openapi-generator-cli generate -i openapi.yml -g java -o ./dist/java
+          cd ./dist/java
+          chmod +x ./gradlew
+          ./gradlew build
+
+  build-docs:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+      - uses: actions/download-artifact@v4
+        with:
+          name: openapi
       - name: docs
         run: cp -f openapi.yml docs/openapi.yml
       - name: commit & push
