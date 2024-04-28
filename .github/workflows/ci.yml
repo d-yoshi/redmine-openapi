@@ -31,6 +31,8 @@ jobs:
   test:
     needs: lint_bundle
     runs-on: ubuntu-latest
+    env:
+      JAVA_OPTS: "-Dlog.level=warn"
     steps:
       - uses: actions/setup-node@v4
         with:
@@ -49,7 +51,7 @@ jobs:
           npx @openapitools/openapi-generator-cli generate -i openapi.yml -g java -o ./dist/java
           cd ./dist/java
           chmod +x ./gradlew
-          ./gradlew build
+          ./gradlew build --warn
 
   build-docs:
     needs: test
