@@ -2584,15 +2584,18 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/User'
-                  - $ref: '#/components/schemas/User.partial'
-                  - type: object
-                    properties:
-                      custom_fields:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/IdName'
+                type: object
+                properties:
+                  user:
+                    allOf:
+                      - $ref: '#/components/schemas/User'
+                      - $ref: '#/components/schemas/User.partial'
+                      - type: object
+                        properties:
+                          custom_fields:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
     put:
       tags:
         - My Account
