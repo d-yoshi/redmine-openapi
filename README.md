@@ -9,7 +9,7 @@ These openapi files are created by my manual scraping the official api docs and 
 ## Docs
 
 ```
-Redmine: 5.0.0
+Redmine: 5.0.x
 OpenAPI: 3.0.3
 ```
 
