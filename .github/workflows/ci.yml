@@ -12,7 +12,7 @@ on:
       - "**"
 
 jobs:
-  lint_bundle:
+  bundle:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,8 +28,21 @@ jobs:
           name: openapi
           path: openapi.yml
 
-  test:
-    needs: lint_bundle
+  test_openapi-typescript:
+    needs: bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+      - uses: actions/download-artifact@v4
+        with:
+          name: openapi
+      - name: generate type file
+        run: npx openapi-typescript openapi.yml -o test/dist/openapi-typescript/schema.d.ts
+
+  test_openapi-generator:
+    needs: bundle
     runs-on: ubuntu-latest
     env:
       JAVA_OPTS: "-Dlog.level=warn"
@@ -45,17 +58,19 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: openapi
-      - name: generate client typescript-node
-        run: npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g typescript-node -o test/dist/typescript-node
-      - name: generate client java
+      - name: use typescript-node generator
+        run: npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g typescript-node -o test/dist/openapi-generator/typescript-node
+      - name: use java generator
         run: |
-          npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g java -o test/dist/java
-          cd test/dist/java
+          npx @openapitools/openapi-generator-cli --openapitools test/openapitools.json generate -i openapi.yml -g java -o test/dist/openapi-generator/java
+          cd test/dist/openapi-generator/java
           chmod +x gradlew
           ./gradlew build --warn
 
   build-docs:
-    needs: test
+    needs:
+      - test_openapi-typescript
+      - test_openapi-generator
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
