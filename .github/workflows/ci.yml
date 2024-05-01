@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "npm"
+          cache-dependency-path: ".github/workflows/ci.yml"
       - name: lint
         run: npx @redocly/cli lint src/openapi.yml
       - name: bundle
@@ -31,9 +33,12 @@ jobs:
     needs: bundle
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "npm"
+          cache-dependency-path: ".github/workflows/ci.yml"
       - uses: actions/download-artifact@v4
         with:
           name: openapi
@@ -46,9 +51,12 @@ jobs:
     env:
       JAVA_OPTS: "-Dlog.level=warn"
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "npm"
+          cache-dependency-path: ".github/workflows/ci.yml"
       - uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
@@ -73,9 +81,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
       - uses: actions/download-artifact@v4
         with:
           name: openapi
