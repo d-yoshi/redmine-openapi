@@ -26,11 +26,17 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
       - uses: actions/configure-pages@v5
         id: setup
-      - name: test
+      - name: build docs
         run: |
-          `cat <<EOT > sitemap.xml
+          mkdir dist
+          cp -r docs/assets/* dist
+          npx @redocly/cli build-docs openapi.yml -t docs/custom.hbs --templateOptions.googleSiteVerification "EIX6Cs78Ns_gEmme6LKjuQUCXwvwAJbGAK3E59ZXcOI" --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
+          `cat <<EOT > dist/sitemap.xml
           <?xml version="1.0" encoding="UTF-8"?>
           <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
           <url>
@@ -39,17 +45,16 @@ jobs:
           </url>
           </urlset>
           EOT`
-          cat sitemap.xml
-      # - uses: actions/upload-pages-artifact@v3
-      #   with:
-      #     path: "docs"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: "dist"
 
-  # deploy:
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - uses: actions/deploy-pages@v4
-  #       id: deployment
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

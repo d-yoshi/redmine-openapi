@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <meta charset="utf8" />
+    <title>{{title}}</title>
+    <meta
+      name="”description”"
+      content="Unofficial OpenAPI specification for the Redmine API."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="google-site-verification"
+      content="{{{templateOptions.googleSiteVerification}}}"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{{{templateOptions.basePath}}}/favicon.ico"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{{templateOptions.basePath}}}/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{{{templateOptions.basePath}}}/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{{{templateOptions.basePath}}}/favicon-16x16.png"
+    />
+    <link
+      rel="manifest"
+      href="{{{templateOptions.basePath}}}/site.webmanifest"
+    />
+    <style>
+      body { padding: 0; margin: 0; }
+    </style>
+    {{{redocHead}}}
+    {{#unless disableGoogleFont}}<link
+        href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700"
+        rel="stylesheet"
+      />{{/unless}}
+  </head>
+  <body>
+    {{{redocHTML}}}
+  </body>
+</html>
