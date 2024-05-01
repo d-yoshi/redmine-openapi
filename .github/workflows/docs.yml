@@ -35,7 +35,7 @@ jobs:
         run: |
           mkdir dist
           cp -r docs/assets/* dist
-          npx @redocly/cli build-docs openapi.yml -t docs/custom.hbs --templateOptions.googleSiteVerification "EIX6Cs78Ns_gEmme6LKjuQUCXwvwAJbGAK3E59ZXcOI" --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
+          npx @redocly/cli build-docs openapi.yml -t docs/custom.hbs --templateOptions.googleSiteVerification "${{ vars.GOOGLE_SITE_VERIFICATION }}" --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
           `cat <<EOT > dist/sitemap.xml
           <?xml version="1.0" encoding="UTF-8"?>
           <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
