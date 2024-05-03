@@ -1,0 +1,40 @@
+type: object
+required:
+  - user
+properties:
+  user:
+    required:
+      - id
+      - login
+      - admin
+      - firstname
+      - lastname
+      - mail
+      - created_on
+      - last_login_on
+      - api_key
+    properties:
+      id:
+        type: integer
+      login:
+        type: string
+      admin:
+        type: boolean
+      firstname:
+        type: string
+      lastname:
+        type: string
+      mail:
+        type: string
+      created_on:
+        type: string
+        format: date-time
+      last_login_on:
+        type: string
+        format: date-time
+      api_key:
+        type: string
+      custom_fields:
+        type: array
+        items:
+          $ref: ./IdName.yml
