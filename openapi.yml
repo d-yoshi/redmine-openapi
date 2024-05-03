@@ -2584,18 +2584,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  user:
-                    allOf:
-                      - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/User.partial'
-                      - type: object
-                        properties:
-                          custom_fields:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/IdName'
+                $ref: '#/components/schemas/MyAccount'
     put:
       tags:
         - My Account
@@ -3637,6 +3626,47 @@ components:
           type: string
         downloads:
           type: integer
+    MyAccount:
+      type: object
+      required:
+        - user
+      properties:
+        user:
+          required:
+            - id
+            - login
+            - admin
+            - firstname
+            - lastname
+            - mail
+            - created_on
+            - last_login_on
+            - api_key
+          properties:
+            id:
+              type: integer
+            login:
+              type: string
+            admin:
+              type: boolean
+            firstname:
+              type: string
+            lastname:
+              type: string
+            mail:
+              type: string
+            created_on:
+              type: string
+              format: date-time
+            last_login_on:
+              type: string
+              format: date-time
+            api_key:
+              type: string
+            custom_fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
     IssuePartial:
       $ref: '#/components/schemas/Issue.partial'
     UserPartial:
