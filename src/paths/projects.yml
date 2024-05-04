@@ -106,7 +106,12 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Project.yml
+            type: object
+            required:
+              - project
+            properties:
+              project:
+                $ref: ../components/schemas/Project.yml
     422:
       description: ""
       content:

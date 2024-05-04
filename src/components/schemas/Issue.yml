@@ -14,8 +14,6 @@ required:
   - is_private
   - estimated_hours
   - total_estimated_hours
-  - spent_hours
-  - total_spent_hours
   - created_on
   - updated_on
   - closed_on
