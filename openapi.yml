@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.4.0
+  version: 0.5.0
 servers:
   - url: /
 security:
@@ -535,7 +535,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                type: object
+                required:
+                  - project
+                properties:
+                  project:
+                    $ref: '#/components/schemas/Project'
         '422':
           description: ''
           content:
@@ -2927,8 +2932,6 @@ components:
         - is_private
         - estimated_hours
         - total_estimated_hours
-        - spent_hours
-        - total_spent_hours
         - created_on
         - updated_on
         - closed_on
@@ -3126,11 +3129,11 @@ components:
         id:
           type: integer
         name:
-          type: integer
+          type: string
         identifier:
-          type: integer
+          type: string
         description:
-          type: integer
+          type: string
           nullable: true
         homepage:
           type: string
@@ -3167,6 +3170,7 @@ components:
         - errors
       properties:
         errors:
+          type: array
           items:
             type: string
     Membership:
