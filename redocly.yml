@@ -1,5 +1,5 @@
 extends:
-  - recommended
+  - recommended-strict
 
 rules:
   operation-4xx-response: off
