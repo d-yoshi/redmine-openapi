@@ -33,26 +33,109 @@ put:
             user:
               type: object
               properties:
-                login:
-                  type: string
-                password:
-                  type: string
                 firstname:
                   type: string
                 lastname:
                   type: string
                 mail:
                   type: string
+                mail_notification:
+                  type: string
+                  enum:
+                    - all
+                    - only_my_events
+                    - only_assigned
+                    - only_owner
+                    - none
+                notified_project_ids:
+                  type: array
+                  items:
+                    type: integer
+                language:
+                  type: string
+                custom_field_values:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    "1": "custom_field_value"
+                custom_fields:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - value
+                    properties:
+                      id:
+                        type: string
+                      value:
+                        type: string
+                login:
+                  type: string
+                status:
+                  type: integer
                 auth_source_id:
                   type: integer
-                mail_notification:
+                generate_password:
                   type: boolean
                 must_change_passwd:
                   type: boolean
-                generate_password:
-                  type: boolean
                 admin:
                   type: boolean
+                group_ids:
+                  type: array
+                  items:
+                    type: integer
+            pref:
+              type: object
+              properties:
+                hide_mail:
+                  type: boolean
+                time_zone:
+                  type: string
+                  nullable: true
+                comments_sorting:
+                  type: string
+                  enum:
+                    - asc
+                    - desc
+                warn_on_leaving_unsaved:
+                  type: boolean
+                no_self_notified:
+                  type: boolean
+                notify_about_high_priority_issues:
+                  type: boolean
+                textarea_font:
+                  type: string
+                  enum:
+                    - monospace
+                    - proportional
+                  nullable: true
+                recently_used_projects:
+                  type: integer
+                history_default_tab:
+                  type: string
+                  enum:
+                    - notes
+                    - history
+                    - properties
+                    - time_entries
+                    - changesets
+                    - last_tab_visited
+                default_issue_query:
+                  type: string
+                  nullable: true
+                default_project_query:
+                  type: string
+                  nullable: true
+                toolbar_language_options:
+                  type: string
+                auto_watch_on:
+                  type: string
+                  enum:
+                    - issue_contributed_to
+                  nullable: true
   responses:
     204:
       description: ""
