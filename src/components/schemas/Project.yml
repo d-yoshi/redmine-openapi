@@ -13,11 +13,11 @@ properties:
   id:
     type: integer
   name:
-    type: integer
+    type: string
   identifier:
-    type: integer
+    type: string
   description:
-    type: integer
+    type: string
     nullable: true
   homepage:
     type: string

@@ -3,5 +3,6 @@ required:
   - errors
 properties:
   errors:
+    type: array
     items:
       type: string
