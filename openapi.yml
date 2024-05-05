@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.5.0
+  version: 0.5.1
 servers:
   - url: /
 security:
@@ -126,10 +126,13 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - attachments
-              - relations
+            type: array
+            items:
+              type: string
+              enum:
+                - attachments
+                - relations
+          explode: false
         - name: issue_id
           in: query
           schema:
@@ -291,15 +294,18 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - children
-              - attachments
-              - relations
-              - changesets
-              - journals
-              - watchers
-              - allowed_statuses
+            type: array
+            items:
+              type: string
+              enum:
+                - children
+                - attachments
+                - relations
+                - changesets
+                - journals
+                - watchers
+                - allowed_statuses
+          explode: false
       responses:
         '200':
           description: ''
@@ -440,11 +446,16 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - trackers
-              - issue_categories
-              - enabled_modules
+            type: array
+            items:
+              type: string
+              enum:
+                - trackers
+                - issue_categories
+                - enabled_modules
+                - time_entry_activities
+                - issue_custom_fields
+          explode: false
       responses:
         '200':
           description: ''
@@ -561,12 +572,16 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - trackers
-              - issue_categories
-              - enabled_modules
-              - time_entry_activities
+            type: array
+            items:
+              type: string
+              enum:
+                - trackers
+                - issue_categories
+                - enabled_modules
+                - time_entry_activities
+                - issue_custom_fields
+          explode: false
       responses:
         '200':
           description: ''
@@ -944,7 +959,13 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              enum:
+                - memberships
+                - groups
+          explode: false
       responses:
         '200':
           description: ''
@@ -1054,7 +1075,13 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              enum:
+                - memberships
+                - groups
+          explode: false
       responses:
         '200':
           description: ''
@@ -2265,10 +2292,13 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - users
-              - memberships
+            type: array
+            items:
+              type: string
+              enum:
+                - users
+                - memberships
+          explode: false
       responses:
         '200':
           description: ''
@@ -2907,14 +2937,18 @@ components:
         name:
           type: string
     IssueStatus:
-      allOf:
-        - $ref: '#/components/schemas/IdName'
-        - type: object
-          required:
-            - is_closed
-          properties:
-            is_closed:
-              type: boolean
+      type: object
+      required:
+        - id
+        - name
+        - is_closed
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_closed:
+          type: boolean
     Issue:
       type: object
       required:
@@ -3264,28 +3298,32 @@ components:
         status:
           type: integer
     Role:
-      allOf:
-        - type: object
-          required:
-            - assignable
-            - issue_visibility
-            - time_entries_visibility
-            - users_visibility
-            - permissions
-          properties:
-            assignable:
-              type: boolean
-            issues_visibility:
-              type: string
-            time_entries_visibility:
-              type: string
-            users_visibility:
-              type: string
-            permissions:
-              type: array
-              items:
-                type: string
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - assignable
+        - issue_visibility
+        - time_entries_visibility
+        - users_visibility
+        - permissions
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        assignable:
+          type: boolean
+        issues_visibility:
+          type: string
+        time_entries_visibility:
+          type: string
+        users_visibility:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
     TimeEntry:
       type: object
       required:
@@ -3482,18 +3520,22 @@ components:
           type: string
           format: date-time
     Query:
-      allOf:
-        - type: object
-          required:
-            - is_public
-            - project_id
-          properties:
-            is_public:
-              type: boolean
-            project_id:
-              type: integer
-              nullable: true
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_public
+        - project_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_public:
+          type: boolean
+        project_id:
+          type: integer
+          nullable: true
     IssueStatuses:
       type: object
       required:
@@ -3544,41 +3586,53 @@ components:
         assigned_to:
           $ref: '#/components/schemas/IdName'
     IssuePriority:
-      allOf:
-        - type: object
-          required:
-            - is_default
-            - active
-          properties:
-            is_default:
-              type: boolean
-            active:
-              type: boolean
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_default
+        - active
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_default:
+          type: boolean
+        active:
+          type: boolean
     TimeEntryActivity:
-      allOf:
-        - type: object
-          required:
-            - is_default
-            - active
-          properties:
-            is_default:
-              type: boolean
-            active:
-              type: boolean
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_default
+        - active
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_default:
+          type: boolean
+        active:
+          type: boolean
     DocumentCategory:
-      allOf:
-        - type: object
-          required:
-            - is_default
-            - active
-          properties:
-            is_default:
-              type: boolean
-            active:
-              type: boolean
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_default
+        - active
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_default:
+          type: boolean
+        active:
+          type: boolean
     CustomField:
       type: object
       properties:
