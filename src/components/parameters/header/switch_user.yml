@@ -1,0 +1,4 @@
+name: X-Redmine-Switch-User
+in: header
+schema:
+  type: integer

@@ -1,0 +1,6 @@
+name: X-Redmine-Nometa
+in: header
+schema:
+  type: integer
+  enum:
+    - 1

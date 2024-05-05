@@ -1,0 +1,6 @@
+name: nometa
+in: query
+schema:
+  type: integer
+  enum:
+    - 1

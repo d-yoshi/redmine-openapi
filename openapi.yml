@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.5.0
+  version: 0.5.1
 servers:
   - url: /
 security:
@@ -16,91 +16,91 @@ security:
   - ApiKeyAuth: []
 tags:
   - name: Issues
-    description: 'Status: Stable, Availablity: 1.0'
+    description: "Status: Stable, Availablity: 1.0"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues
   - name: Projects
-    description: 'Status: Stable, Availablity: 1.0'
+    description: "Status: Stable, Availablity: 1.0"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects
   - name: Project Memberships
-    description: 'Status: Alpha, Availablity: 1.4'
+    description: "Status: Alpha, Availablity: 1.4"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships
   - name: Users
-    description: 'Status: Stable, Availablity: 1.1'
+    description: "Status: Stable, Availablity: 1.1"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Users
   - name: Time Entries
-    description: 'Status: Stable, Availablity: 1.1'
+    description: "Status: Stable, Availablity: 1.1"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
   - name: News
-    description: 'Status: Prototype, Note: Prototype implementation for index only, Availablity: 1.1'
+    description: "Status: Prototype, Note: Prototype implementation for index only, Availablity: 1.1"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_News
   - name: Issue Relations
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: "Status: Alpha, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations
   - name: Versions
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: "Status: Alpha, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions
   - name: Wiki Pages
-    description: 'Status: Alpha, Availablity: 2.2'
+    description: "Status: Alpha, Availablity: 2.2"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages
   - name: Queries
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: "Status: Alpha, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries
   - name: Attachments
-    description: 'Status: Beta, Notes: Adding attachments via the API added in 1.4, Availablity: 1.3'
+    description: "Status: Beta, Notes: Adding attachments via the API added in 1.4, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments
   - name: Issue Statuses
-    description: 'Status: Alpha, Notes: Provides the list of all statuses, Availablity: 1.3'
+    description: "Status: Alpha, Notes: Provides the list of all statuses, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses
   - name: Trackers
-    description: 'Status: Alpha, Notes: Provides the list of all trackers, Availablity: 1.3'
+    description: "Status: Alpha, Notes: Provides the list of all trackers, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers
   - name: Enumerations
-    description: 'Status: Alpha, Notes: Provides the list of issue priorities and time tracking activities, Availablity: 2.2'
+    description: "Status: Alpha, Notes: Provides the list of issue priorities and time tracking activities, Availablity: 2.2"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations
   - name: Issue Categories
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: "Status: Alpha, Availablity: 1.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories
   - name: Roles
-    description: 'Status: Alpha, Availablity: 1.4'
+    description: "Status: Alpha, Availablity: 1.4"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles
   - name: Groups
-    description: 'Status: Alpha, Availablity: 2.1'
+    description: "Status: Alpha, Availablity: 2.1"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups
   - name: Custom Fields
-    description: 'Status: Alpha, Availablity: 2.4'
+    description: "Status: Alpha, Availablity: 2.4"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields
   - name: Search
-    description: 'Status: Alpha, Availablity: 3.3'
+    description: "Status: Alpha, Availablity: 3.3"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Search
   - name: Files
-    description: 'Status: Alpha, Availablity: 3.4'
+    description: "Status: Alpha, Availablity: 3.4"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Files
   - name: My Account
-    description: 'Status: Alpha, Availablity: 4.1'
+    description: "Status: Alpha, Availablity: 4.1"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount
   - name: Journals
-    description: 'Status: Alpha, Availablity: 5.0'
+    description: "Status: Alpha, Availablity: 5.0"
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals?parent=Rest_api
 externalDocs:
@@ -116,9 +116,9 @@ paths:
       summary: Listing issues
       operationId: getIssues
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/offset'
-        - $ref: '#/components/parameters/limit'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/limit"
         - name: sort
           in: query
           schema:
@@ -126,10 +126,13 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - attachments
-              - relations
+            type: array
+            items:
+              type: string
+              enum:
+                - attachments
+                - relations
+          explode: false
         - name: issue_id
           in: query
           schema:
@@ -163,8 +166,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -178,7 +181,7 @@ paths:
                   issues:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Issue'
+                      $ref: "#/components/schemas/Issue"
                   total_count:
                     type: integer
                   offset:
@@ -193,7 +196,7 @@ paths:
       summary: Creating an issue
       operationId: createIssue
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       requestBody:
         content:
           application/json:
@@ -266,8 +269,8 @@ paths:
                             content_type:
                               type: string
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -276,7 +279,7 @@ paths:
                   - issue
                 properties:
                   issue:
-                    $ref: '#/components/schemas/Issue'
+                    $ref: "#/components/schemas/Issue"
   /issues/{issue_id}.{format}:
     get:
       tags:
@@ -286,23 +289,26 @@ paths:
       summary: Showing an issue
       operationId: getIssue
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - children
-              - attachments
-              - relations
-              - changesets
-              - journals
-              - watchers
-              - allowed_statuses
+            type: array
+            items:
+              type: string
+              enum:
+                - children
+                - attachments
+                - relations
+                - changesets
+                - journals
+                - watchers
+                - allowed_statuses
+          explode: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -310,8 +316,8 @@ paths:
                 properties:
                   issue:
                     allOf:
-                      - $ref: '#/components/schemas/Issue'
-                      - $ref: '#/components/schemas/Issue.partial'
+                      - $ref: "#/components/schemas/Issue"
+                      - $ref: "#/components/schemas/Issue.partial"
     put:
       tags:
         - Issues
@@ -320,8 +326,8 @@ paths:
       summary: Updating an issue
       operationId: updateIssue
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
       requestBody:
         content:
           application/json:
@@ -373,8 +379,8 @@ paths:
                     private_notes:
                       type: string
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
     delete:
       tags:
         - Issues
@@ -383,11 +389,11 @@ paths:
       summary: Deleting an issue
       operationId: deleteIssue
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /issues/{issue_id}/watchers.{format}:
     post:
       tags:
@@ -397,8 +403,8 @@ paths:
       summary: Adding a watcher
       operationId: createWatcher
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
       requestBody:
         content:
           application/json:
@@ -410,8 +416,8 @@ paths:
                 user_id:
                   type: integer
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /issues/{issue_id}/watchers/{user_id}.{format}:
     delete:
       tags:
@@ -421,12 +427,12 @@ paths:
       summary: Removing a watcher
       operationId: deleteWatcher
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
-        - $ref: '#/components/parameters/user_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
+        - $ref: "#/components/parameters/user_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /projects.{format}:
     get:
       tags:
@@ -436,18 +442,23 @@ paths:
       summary: Listing projects
       operationId: getProjects
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - trackers
-              - issue_categories
-              - enabled_modules
+            type: array
+            items:
+              type: string
+              enum:
+                - trackers
+                - issue_categories
+                - enabled_modules
+                - time_entry_activities
+                - issue_custom_fields
+          explode: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -461,7 +472,7 @@ paths:
                   projects:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Project'
+                      $ref: "#/components/schemas/Project"
                   total_count:
                     type: integer
                   offset:
@@ -476,7 +487,7 @@ paths:
       summary: Creating a project
       operationId: createProject
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       requestBody:
         content:
           application/json:
@@ -528,10 +539,10 @@ paths:
                       additionalProperties:
                         type: string
                       example:
-                        '1': VALUE
+                        "1": VALUE
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -540,13 +551,13 @@ paths:
                   - project
                 properties:
                   project:
-                    $ref: '#/components/schemas/Project'
-        '422':
-          description: ''
+                    $ref: "#/components/schemas/Project"
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /projects/{project_id}.{format}:
     get:
       tags:
@@ -556,20 +567,24 @@ paths:
       summary: Showing a project
       operationId: getProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - trackers
-              - issue_categories
-              - enabled_modules
-              - time_entry_activities
+            type: array
+            items:
+              type: string
+              enum:
+                - trackers
+                - issue_categories
+                - enabled_modules
+                - time_entry_activities
+                - issue_custom_fields
+          explode: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -577,25 +592,25 @@ paths:
                 properties:
                   project:
                     allOf:
-                      - $ref: '#/components/schemas/Project'
+                      - $ref: "#/components/schemas/Project"
                       - type: object
                         properties:
                           trackers:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
                           issue_categories:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
                           enabled_modules:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
                           time_entry_activities:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
     put:
       tags:
         - Projects
@@ -604,8 +619,8 @@ paths:
       summary: Updating a project
       operationId: updateProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       requestBody:
         content:
           application/json:
@@ -648,10 +663,10 @@ paths:
                       additionalProperties:
                         type: string
                       example:
-                        '1': VALUE
+                        "1": VALUE
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
     delete:
       tags:
         - Projects
@@ -660,11 +675,11 @@ paths:
       summary: Deleting a project
       operationId: deleteProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /projects/{project_id}/archive.{format}:
     put:
       tags:
@@ -674,11 +689,11 @@ paths:
       summary: Archiving a project
       operationId: archiveProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /projects/{project_id}/unarchive.{format}:
     put:
       tags:
@@ -688,11 +703,11 @@ paths:
       summary: Unarchiving a project
       operationId: unarchiveProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /projects/{project_id}/memberships.{format}:
     get:
       tags:
@@ -702,11 +717,11 @@ paths:
       summary: GET
       operationId: getMembershipsByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -720,7 +735,7 @@ paths:
                   memberships:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Membership'
+                      $ref: "#/components/schemas/Membership"
                   total_count:
                     type: integer
                   offset:
@@ -735,8 +750,8 @@ paths:
       summary: POST
       operationId: createMembershipsByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       requestBody:
         content:
           application/json:
@@ -758,8 +773,8 @@ paths:
                       items:
                         type: integer
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -768,7 +783,7 @@ paths:
                   - membership
                 properties:
                   membership:
-                    $ref: '#/components/schemas/Membership'
+                    $ref: "#/components/schemas/Membership"
   /memberships/{membership_id}.{format}:
     get:
       tags:
@@ -778,11 +793,11 @@ paths:
       summary: GET
       operationId: getMembership
       parameters:
-        - $ref: '#/components/parameters/membership_id'
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/membership_id"
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -791,7 +806,7 @@ paths:
                   - membership
                 properties:
                   membership:
-                    $ref: '#/components/schemas/Membership'
+                    $ref: "#/components/schemas/Membership"
     put:
       tags:
         - Project Memberships
@@ -800,17 +815,17 @@ paths:
       summary: PUT
       operationId: updateMembership
       parameters:
-        - $ref: '#/components/parameters/membership_id'
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/membership_id"
+        - $ref: "#/components/parameters/format"
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
     delete:
       tags:
         - Project Memberships
@@ -819,11 +834,11 @@ paths:
       summary: DELETE
       operationId: deleteMembership
       parameters:
-        - $ref: '#/components/parameters/membership_id'
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/membership_id"
+        - $ref: "#/components/parameters/format"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /users.{format}:
     get:
       tags:
@@ -833,7 +848,7 @@ paths:
       summary: GET
       operationId: getUsers
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
         - name: status
           in: query
           schema:
@@ -847,8 +862,8 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -862,7 +877,7 @@ paths:
                   users:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: "#/components/schemas/User"
                   total_count:
                     type: integer
                   offset:
@@ -877,7 +892,7 @@ paths:
       summary: POST
       operationId: createUser
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       requestBody:
         content:
           application/json:
@@ -913,8 +928,8 @@ paths:
                     generate_password:
                       type: boolean
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -922,14 +937,14 @@ paths:
                 properties:
                   user:
                     allOf:
-                      - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/User.partial'
-        '422':
-          description: ''
+                      - $ref: "#/components/schemas/User"
+                      - $ref: "#/components/schemas/User.partial"
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /users/{user_id}.{format}:
     get:
       tags:
@@ -939,15 +954,21 @@ paths:
       summary: GET
       operationId: getUser
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/user_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/user_id"
         - name: include
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              enum:
+                - memberships
+                - groups
+          explode: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -955,14 +976,14 @@ paths:
                 properties:
                   user:
                     allOf:
-                      - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/User.partial'
+                      - $ref: "#/components/schemas/User"
+                      - $ref: "#/components/schemas/User.partial"
                       - type: object
                         properties:
                           custom_fields:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
                           memberships:
                             type: array
                             items:
@@ -973,11 +994,11 @@ paths:
                                 roles:
                                   type: array
                                   items:
-                                    $ref: '#/components/schemas/Role'
+                                    $ref: "#/components/schemas/Role"
                           groups:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
     put:
       tags:
         - Users
@@ -986,8 +1007,8 @@ paths:
       summary: PUT
       operationId: updateUser
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/user_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/user_id"
       requestBody:
         content:
           application/json:
@@ -1020,14 +1041,14 @@ paths:
                     admin:
                       type: boolean
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
     delete:
       tags:
         - Users
@@ -1036,11 +1057,11 @@ paths:
       summary: DELETE
       operationId: deleteUser
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/user_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/user_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /users/current.{format}:
     get:
       tags:
@@ -1050,14 +1071,20 @@ paths:
       summary: GET
       operationId: getCurrentUser
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
         - name: include
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              enum:
+                - memberships
+                - groups
+          explode: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1065,14 +1092,14 @@ paths:
                 properties:
                   user:
                     allOf:
-                      - $ref: '#/components/schemas/User'
-                      - $ref: '#/components/schemas/User.partial'
+                      - $ref: "#/components/schemas/User"
+                      - $ref: "#/components/schemas/User.partial"
                       - type: object
                         properties:
                           custom_fields:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
   /time_entries.{format}:
     get:
       tags:
@@ -1082,9 +1109,9 @@ paths:
       summary: Listing time entries
       operationId: getTimeEntries
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/offset'
-        - $ref: '#/components/parameters/limit'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/limit"
         - name: user_id
           in: query
           schema:
@@ -1099,8 +1126,8 @@ paths:
             type: string
             format: date
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1114,7 +1141,7 @@ paths:
                   time_entries:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TimeEntry'
+                      $ref: "#/components/schemas/TimeEntry"
                   total_count:
                     type: integer
                   offset:
@@ -1129,7 +1156,7 @@ paths:
       summary: Creating a time entry
       operationId: createTimeEntry
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       requestBody:
         content:
           application/json:
@@ -1174,18 +1201,18 @@ paths:
                             project_id:
                               type: integer
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeEntry'
-        '422':
-          description: ''
+                $ref: "#/components/schemas/TimeEntry"
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /time_entries/{time_entry_id}.{format}:
     get:
       tags:
@@ -1195,15 +1222,15 @@ paths:
       summary: Showing a time entry
       operationId: getTimeEntry
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/time_entry_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/time_entry_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TimeEntry'
+                $ref: "#/components/schemas/TimeEntry"
     put:
       tags:
         - Time Entries
@@ -1212,8 +1239,8 @@ paths:
       summary: Updating a time entry
       operationId: updateTimeEntry
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/time_entry_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/time_entry_id"
       requestBody:
         content:
           application/json:
@@ -1258,14 +1285,14 @@ paths:
                             project_id:
                               type: integer
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
     delete:
       tags:
         - Time Entries
@@ -1274,11 +1301,11 @@ paths:
       summary: Deleting a time entry
       operationId: deleteTimeEntry
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/time_entry_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/time_entry_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /news.{format}:
     get:
       tags:
@@ -1288,10 +1315,10 @@ paths:
       summary: GET
       operationId: getNews
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1305,7 +1332,7 @@ paths:
                   news:
                     type: array
                     items:
-                      $ref: '#/components/schemas/News'
+                      $ref: "#/components/schemas/News"
                   total_count:
                     type: integer
                   offset:
@@ -1321,11 +1348,11 @@ paths:
       summary: GET
       operationId: getNewsByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1339,7 +1366,7 @@ paths:
                   news:
                     type: array
                     items:
-                      $ref: '#/components/schemas/News'
+                      $ref: "#/components/schemas/News"
                   total_count:
                     type: integer
                   offset:
@@ -1355,11 +1382,11 @@ paths:
       summary: GET
       operationId: getIssueRelationsByIssue
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1370,7 +1397,7 @@ paths:
                   relations:
                     type: array
                     items:
-                      $ref: '#/components/schemas/IssueRelation'
+                      $ref: "#/components/schemas/IssueRelation"
     post:
       tags:
         - Issue Relations
@@ -1379,8 +1406,8 @@ paths:
       summary: POST
       operationId: createIssueRelationsByIssue
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_id"
       requestBody:
         content:
           application/json:
@@ -1413,14 +1440,14 @@ paths:
                       type: integer
                       nullable: true
       responses:
-        '201':
-          description: ''
-        '422':
-          description: ''
+        "201":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /relations/{issue_relation_id}.{format}:
     get:
       tags:
@@ -1430,18 +1457,18 @@ paths:
       summary: GET
       operationId: getIssueRelation
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_relation_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_relation_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   relation:
-                    $ref: '#/components/schemas/IssueRelation'
+                    $ref: "#/components/schemas/IssueRelation"
     delete:
       tags:
         - Issue Relations
@@ -1450,17 +1477,17 @@ paths:
       summary: DELETE
       operationId: deleteIssueRelation
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_relation_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_relation_id"
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /projects/{project_id}/versions.{format}:
     get:
       tags:
@@ -1470,11 +1497,11 @@ paths:
       summary: GET
       operationId: getVersionsByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1485,7 +1512,7 @@ paths:
                   versions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Version'
+                      $ref: "#/components/schemas/Version"
                   total_count:
                     type: integer
     post:
@@ -1496,8 +1523,8 @@ paths:
       summary: POST
       operationId: createVersionByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       requestBody:
         content:
           application/json:
@@ -1537,25 +1564,25 @@ paths:
                       type: string
                       nullable: true
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/Version'
+                  - $ref: "#/components/schemas/Version"
                   - type: object
                     properties:
                       estimated_hours:
                         type: number
                       spent_hours:
                         type: number
-        '422':
-          description: ''
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /versions/{version_id}.{format}:
     get:
       tags:
@@ -1565,11 +1592,11 @@ paths:
       summary: GET
       operationId: getVersions
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/version_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/version_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1581,7 +1608,7 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Version'
+                        - $ref: "#/components/schemas/Version"
                         - type: object
                           properties:
                             estimated_hours:
@@ -1596,8 +1623,8 @@ paths:
       summary: PUT
       operationId: updateVersion
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/version_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/version_id"
       requestBody:
         content:
           application/json:
@@ -1633,14 +1660,14 @@ paths:
                       type: string
                       nullable: true
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
     delete:
       tags:
         - Versions
@@ -1649,17 +1676,17 @@ paths:
       summary: DELETE
       operationId: deleteVersion
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/version_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/version_id"
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /projects/{project_id}/wiki/index.{format}:
     get:
       tags:
@@ -1669,11 +1696,11 @@ paths:
       summary: Getting the pages list of a wiki
       operationId: getWikiPages
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1684,7 +1711,7 @@ paths:
                   wiki_pages:
                     type: array
                     items:
-                      $ref: '#/components/schemas/WikiPages'
+                      $ref: "#/components/schemas/WikiPages"
   /projects/{project_id}/wiki/{wiki_page_title}.{format}:
     get:
       tags:
@@ -1694,9 +1721,9 @@ paths:
       summary: Getting a wiki page
       operationId: getWikiPageByTitle
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/wiki_page_title'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
+        - $ref: "#/components/parameters/wiki_page_title"
         - name: include
           in: query
           schema:
@@ -1704,8 +1731,8 @@ paths:
             enum:
               - attachments
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1714,7 +1741,7 @@ paths:
                   - wiki_page
                 properties:
                   wiki_page:
-                    $ref: '#/components/schemas/WikiPage'
+                    $ref: "#/components/schemas/WikiPage"
     put:
       tags:
         - Wiki Pages
@@ -1723,9 +1750,9 @@ paths:
       summary: Creating or updating a wiki page
       operationId: updateWikiPageByTitle
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/wiki_page_title'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
+        - $ref: "#/components/parameters/wiki_page_title"
       requestBody:
         content:
           application/json:
@@ -1744,22 +1771,22 @@ paths:
                     version:
                       type: integer
       responses:
-        '201':
-          description: ''
-        '204':
-          description: ''
-        '409':
-          description: ''
+        "201":
+          description: ""
+        "204":
+          description: ""
+        "409":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
-        '422':
-          description: ''
+                $ref: "#/components/schemas/Errors"
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
     delete:
       tags:
         - Wiki Pages
@@ -1768,12 +1795,12 @@ paths:
       summary: Deleting a wiki page
       operationId: deleteWikiPageByTitle
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/wiki_page_title'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
+        - $ref: "#/components/parameters/wiki_page_title"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}:
     get:
       tags:
@@ -1783,10 +1810,10 @@ paths:
       summary: Getting an old version of a wiki page
       operationId: getWikiPageByVersion
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/wiki_page_title'
-        - $ref: '#/components/parameters/version_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
+        - $ref: "#/components/parameters/wiki_page_title"
+        - $ref: "#/components/parameters/version_id"
         - name: include
           in: query
           schema:
@@ -1794,8 +1821,8 @@ paths:
             enum:
               - attachments
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1804,7 +1831,7 @@ paths:
                   - wiki_page
                 properties:
                   wiki_page:
-                    $ref: '#/components/schemas/WikiPage'
+                    $ref: "#/components/schemas/WikiPage"
   /queries.{format}:
     get:
       tags:
@@ -1814,10 +1841,10 @@ paths:
       summary: GET
       operationId: getQueries
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1831,7 +1858,7 @@ paths:
                   queries:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Query'
+                      $ref: "#/components/schemas/Query"
                   total_count:
                     type: integer
                   offset:
@@ -1847,18 +1874,18 @@ paths:
       summary: GET
       operationId: getAttachment
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/attachment_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/attachment_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   attachment:
-                    $ref: '#/components/schemas/Attachment'
+                    $ref: "#/components/schemas/Attachment"
     patch:
       tags:
         - Attachments
@@ -1867,8 +1894,8 @@ paths:
       summary: PATCH
       operationId: updateAttachment
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/attachment_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/attachment_id"
       requestBody:
         content:
           application/json:
@@ -1883,8 +1910,8 @@ paths:
                     description:
                       type: string
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
     delete:
       tags:
         - Attachments
@@ -1893,11 +1920,11 @@ paths:
       summary: DELETE
       operationId: deleteAttachment
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/attachment_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/attachment_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /issue_statuses.{format}:
     get:
       tags:
@@ -1907,14 +1934,14 @@ paths:
       summary: Returns possible Status Values for Issues
       operationId: getIssueStatuses
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssueStatuses'
+                $ref: "#/components/schemas/IssueStatuses"
   /trackers.{format}:
     get:
       tags:
@@ -1924,14 +1951,14 @@ paths:
       summary: GET
       operationId: getTrackers
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Trackers'
+                $ref: "#/components/schemas/Trackers"
   /projects/{project_id}/issue_categories.{format}:
     get:
       tags:
@@ -1941,11 +1968,11 @@ paths:
       summary: GET
       operationId: getIssueCategoriesByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1957,7 +1984,7 @@ paths:
                   issue_categories:
                     type: array
                     items:
-                      $ref: '#/components/schemas/IssueCategory'
+                      $ref: "#/components/schemas/IssueCategory"
                   total_count:
                     type: integer
     post:
@@ -1968,8 +1995,8 @@ paths:
       summary: POST
       operationId: createIssueCategoryByProject
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       requestBody:
         content:
           application/json:
@@ -1988,18 +2015,18 @@ paths:
                     assigned_to_id:
                       type: integer
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssueCategory'
-        '422':
-          description: ''
+                $ref: "#/components/schemas/IssueCategory"
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /enumerations/issue_priorities.{format}:
     get:
       tags:
@@ -2009,10 +2036,10 @@ paths:
       summary: GET
       operationId: getIssuePriorities
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2023,7 +2050,7 @@ paths:
                   issue_priorities:
                     type: array
                     items:
-                      $ref: '#/components/schemas/IssuePriority'
+                      $ref: "#/components/schemas/IssuePriority"
   /enumerations/time_entry_activities.{format}:
     get:
       tags:
@@ -2033,10 +2060,10 @@ paths:
       summary: GET
       operationId: getTimeEntryActivities
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2047,7 +2074,7 @@ paths:
                   time_entry_activities:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TimeEntryActivity'
+                      $ref: "#/components/schemas/TimeEntryActivity"
   /enumerations/document_categories.{format}:
     get:
       tags:
@@ -2057,10 +2084,10 @@ paths:
       summary: GET
       operationId: getDocumentCategories
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2071,7 +2098,7 @@ paths:
                   document_categories:
                     type: array
                     items:
-                      $ref: '#/components/schemas/DocumentCategory'
+                      $ref: "#/components/schemas/DocumentCategory"
   /issue_categories/{issue_category_id}.{format}:
     get:
       tags:
@@ -2081,11 +2108,11 @@ paths:
       summary: GET
       operationId: getIssueCategory
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_category_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_category_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2094,7 +2121,7 @@ paths:
                   - issue_category
                 properties:
                   issue_category:
-                    $ref: '#/components/schemas/IssueCategory'
+                    $ref: "#/components/schemas/IssueCategory"
     put:
       tags:
         - Issue Categories
@@ -2103,8 +2130,8 @@ paths:
       summary: PUT
       operationId: updateIssueCategory
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_category_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_category_id"
       requestBody:
         content:
           application/json:
@@ -2119,14 +2146,14 @@ paths:
                     assigned_to_id:
                       type: integer
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
     delete:
       tags:
         - Issue Categories
@@ -2135,15 +2162,15 @@ paths:
       summary: DELETE
       operationId: deleteIssueCategory
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/issue_category_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/issue_category_id"
         - name: reassign_to_id
           in: query
           schema:
             type: integer
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /roles.{format}:
     get:
       tags:
@@ -2153,10 +2180,10 @@ paths:
       summary: GET
       operationId: getRoles
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2165,7 +2192,7 @@ paths:
                   roles:
                     type: array
                     items:
-                      $ref: '#/components/schemas/IdName'
+                      $ref: "#/components/schemas/IdName"
   /roles/{role_id}.{format}:
     get:
       tags:
@@ -2175,18 +2202,18 @@ paths:
       summary: GET
       operationId: getRole
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/role_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/role_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   role:
-                    $ref: '#/components/schemas/Role'
+                    $ref: "#/components/schemas/Role"
   /groups.{format}:
     get:
       tags:
@@ -2196,10 +2223,10 @@ paths:
       summary: GET
       operationId: getGroups
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2210,7 +2237,7 @@ paths:
                   groups:
                     type: array
                     items:
-                      $ref: '#/components/schemas/IdName'
+                      $ref: "#/components/schemas/IdName"
     post:
       tags:
         - Groups
@@ -2219,7 +2246,7 @@ paths:
       summary: POST
       operationId: createGroup
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       requestBody:
         content:
           application/json:
@@ -2236,21 +2263,21 @@ paths:
                       items:
                         type: integer
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   group:
-                    $ref: '#/components/schemas/IdName'
-        '422':
-          description: ''
+                    $ref: "#/components/schemas/IdName"
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /groups/{group_id}.{format}:
     get:
       tags:
@@ -2260,18 +2287,21 @@ paths:
       summary: GET
       operationId: getGroup
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/group_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/group_id"
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - users
-              - memberships
+            type: array
+            items:
+              type: string
+              enum:
+                - users
+                - memberships
+          explode: false
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2279,13 +2309,13 @@ paths:
                 properties:
                   group:
                     allOf:
-                      - $ref: '#/components/schemas/IdName'
+                      - $ref: "#/components/schemas/IdName"
                       - type: object
                         properties:
                           users:
                             type: array
                             items:
-                              $ref: '#/components/schemas/IdName'
+                              $ref: "#/components/schemas/IdName"
                           memberships:
                             type: array
                             items:
@@ -2294,11 +2324,11 @@ paths:
                                 id:
                                   type: integer
                                 project:
-                                  $ref: '#/components/schemas/IdName'
+                                  $ref: "#/components/schemas/IdName"
                                 roles:
                                   type: array
                                   items:
-                                    $ref: '#/components/schemas/IdName'
+                                    $ref: "#/components/schemas/IdName"
     put:
       tags:
         - Groups
@@ -2307,8 +2337,8 @@ paths:
       summary: PUT
       operationId: updateGroup
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/group_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/group_id"
       requestBody:
         content:
           application/json:
@@ -2325,8 +2355,8 @@ paths:
                       items:
                         type: integer
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
     delete:
       tags:
         - Groups
@@ -2335,11 +2365,11 @@ paths:
       summary: DELETE
       operationId: deleteGroup
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/group_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/group_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /groups/{group_id}/users.{format}:
     post:
       tags:
@@ -2349,8 +2379,8 @@ paths:
       summary: POST
       operationId: addUserToGroup
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/group_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/group_id"
       requestBody:
         content:
           application/json:
@@ -2360,8 +2390,8 @@ paths:
                 user_id:
                   type: integer
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /groups/{group_id}/users/{user_id}.{format}:
     delete:
       tags:
@@ -2371,12 +2401,12 @@ paths:
       summary: DELETE
       operationId: removeUserFromGroup
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/group_id'
-        - $ref: '#/components/parameters/user_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/group_id"
+        - $ref: "#/components/parameters/user_id"
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /custom_fields.{format}:
     get:
       tags:
@@ -2386,10 +2416,10 @@ paths:
       summary: GET
       operationId: getCustomFields
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2400,7 +2430,7 @@ paths:
                   custom_fields:
                     type: array
                     items:
-                      $ref: '#/components/schemas/CustomField'
+                      $ref: "#/components/schemas/CustomField"
   /search.{format}:
     get:
       tags:
@@ -2410,9 +2440,9 @@ paths:
       summary: GET
       operationId: search
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/offset'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/offset"
         - name: q
           in: query
           schema:
@@ -2471,12 +2501,12 @@ paths:
           schema:
             type: string
             enum:
-              - '0'
-              - '1'
+              - "0"
+              - "1"
               - only
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2490,7 +2520,7 @@ paths:
                   results:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Search'
+                      $ref: "#/components/schemas/Search"
                   total_count:
                     type: integer
                   offset:
@@ -2506,11 +2536,11 @@ paths:
       summary: GET
       operationId: getFiles
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2521,7 +2551,7 @@ paths:
                   files:
                     type: array
                     items:
-                      $ref: '#/components/schemas/File'
+                      $ref: "#/components/schemas/File"
     post:
       tags:
         - Files
@@ -2530,8 +2560,8 @@ paths:
       summary: POST
       operationId: createFile
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/project_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/project_id"
       requestBody:
         content:
           application/json:
@@ -2554,8 +2584,8 @@ paths:
                     description:
                       type: string
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
           content:
             application/json:
               schema:
@@ -2583,14 +2613,14 @@ paths:
       summary: GET
       operationId: getMyAccount
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MyAccount'
+                $ref: "#/components/schemas/MyAccount"
     put:
       tags:
         - My Account
@@ -2599,7 +2629,7 @@ paths:
       summary: PUT
       operationId: updateMyAccount
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
       requestBody:
         content:
           application/json:
@@ -2634,7 +2664,7 @@ paths:
                       additionalProperties:
                         type: string
                       example:
-                        '1': custom_field_value
+                        "1": custom_field_value
                     custom_fields:
                       type: array
                       items:
@@ -2713,14 +2743,14 @@ paths:
                         - issue_contributed_to
                       nullable: true
       responses:
-        '204':
-          description: ''
-        '422':
-          description: ''
+        "204":
+          description: ""
+        "422":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
   /journals/{journal_id}.{format}:
     put:
       tags:
@@ -2728,8 +2758,8 @@ paths:
       summary: PUT
       operationId: updateJournal
       parameters:
-        - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/journal_id'
+        - $ref: "#/components/parameters/format"
+        - $ref: "#/components/parameters/journal_id"
       requestBody:
         content:
           application/json:
@@ -2745,8 +2775,8 @@ paths:
                     private_notes:
                       type: boolean
       responses:
-        '204':
-          description: ''
+        "204":
+          description: ""
   /uploads.{format}:
     post:
       tags:
@@ -2756,7 +2786,7 @@ paths:
       summary: Attaching files
       operationId: uploadAttachmentFile
       parameters:
-        - $ref: '#/components/parameters/format'
+        - $ref: "#/components/parameters/format"
         - name: filename
           in: query
           schema:
@@ -2768,8 +2798,8 @@ paths:
               type: string
               format: binary
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -2782,12 +2812,12 @@ paths:
                         type: integer
                       token:
                         type: string
-        '406':
-          description: ''
+        "406":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Errors'
+                $ref: "#/components/schemas/Errors"
 components:
   securitySchemes:
     BasicAuth:
@@ -2907,14 +2937,18 @@ components:
         name:
           type: string
     IssueStatus:
-      allOf:
-        - $ref: '#/components/schemas/IdName'
-        - type: object
-          required:
-            - is_closed
-          properties:
-            is_closed:
-              type: boolean
+      type: object
+      required:
+        - id
+        - name
+        - is_closed
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_closed:
+          type: boolean
     Issue:
       type: object
       required:
@@ -2939,19 +2973,19 @@ components:
         id:
           type: integer
         project:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         tracker:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         status:
-          $ref: '#/components/schemas/IssueStatus'
+          $ref: "#/components/schemas/IssueStatus"
         priority:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         author:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         assigned_to:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         category:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         subject:
           type: string
         description:
@@ -3012,7 +3046,7 @@ components:
         content_url:
           type: string
         author:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         created_on:
           type: string
           format: data-time
@@ -3035,14 +3069,14 @@ components:
               id:
                 type: integer
               tracker:
-                $ref: '#/components/schemas/IdName'
+                $ref: "#/components/schemas/IdName"
               subject:
                 type: string
         attachments:
           type: array
           items:
             allOf:
-              - $ref: '#/components/schemas/Attachment'
+              - $ref: "#/components/schemas/Attachment"
               - type: object
                 properties:
                   thumbnail_url:
@@ -3078,7 +3112,7 @@ components:
               id:
                 type: integer
               user:
-                $ref: '#/components/schemas/IdName'
+                $ref: "#/components/schemas/IdName"
               notes:
                 type: string
               created_on:
@@ -3108,11 +3142,11 @@ components:
         watchers:
           type: array
           items:
-            $ref: '#/components/schemas/IdName'
+            $ref: "#/components/schemas/IdName"
         allowed_statuses:
           type: array
           items:
-            $ref: '#/components/schemas/IssueStatus'
+            $ref: "#/components/schemas/IssueStatus"
     Project:
       type: object
       required:
@@ -3149,15 +3183,15 @@ components:
         trackers:
           type: array
           items:
-            $ref: '#/components/schemas/IdName'
+            $ref: "#/components/schemas/IdName"
         issue_categories:
           type: array
           items:
-            $ref: '#/components/schemas/IdName'
+            $ref: "#/components/schemas/IdName"
         enabled_modules:
           type: array
           items:
-            $ref: '#/components/schemas/IdName'
+            $ref: "#/components/schemas/IdName"
         created_on:
           type: string
           format: date-time
@@ -3185,13 +3219,13 @@ components:
             id:
               type: integer
             project:
-              $ref: '#/components/schemas/IdName'
+              $ref: "#/components/schemas/IdName"
             user:
-              $ref: '#/components/schemas/IdName'
+              $ref: "#/components/schemas/IdName"
             roles:
               type: array
               items:
-                $ref: '#/components/schemas/IdName'
+                $ref: "#/components/schemas/IdName"
         - type: object
           required:
             - id
@@ -3202,13 +3236,13 @@ components:
             id:
               type: integer
             project:
-              $ref: '#/components/schemas/IdName'
+              $ref: "#/components/schemas/IdName"
             group:
-              $ref: '#/components/schemas/IdName'
+              $ref: "#/components/schemas/IdName"
             roles:
               type: array
               items:
-                $ref: '#/components/schemas/IdName'
+                $ref: "#/components/schemas/IdName"
     User:
       type: object
       required:
@@ -3264,28 +3298,32 @@ components:
         status:
           type: integer
     Role:
-      allOf:
-        - type: object
-          required:
-            - assignable
-            - issue_visibility
-            - time_entries_visibility
-            - users_visibility
-            - permissions
-          properties:
-            assignable:
-              type: boolean
-            issues_visibility:
-              type: string
-            time_entries_visibility:
-              type: string
-            users_visibility:
-              type: string
-            permissions:
-              type: array
-              items:
-                type: string
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - assignable
+        - issue_visibility
+        - time_entries_visibility
+        - users_visibility
+        - permissions
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        assignable:
+          type: boolean
+        issues_visibility:
+          type: string
+        time_entries_visibility:
+          type: string
+        users_visibility:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
     TimeEntry:
       type: object
       required:
@@ -3303,16 +3341,16 @@ components:
         id:
           type: integer
         project:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         issue:
           type: object
           properties:
             id:
               type: integer
         user:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         activity:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         hours:
           type: number
         comments:
@@ -3340,9 +3378,9 @@ components:
         id:
           type: integer
         project:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         author:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         title:
           type: string
         summary:
@@ -3389,7 +3427,7 @@ components:
         id:
           type: integer
         project:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         name:
           type: string
         description:
@@ -3472,7 +3510,7 @@ components:
         version:
           type: integer
         author:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         comments:
           type: string
         created_on:
@@ -3482,18 +3520,22 @@ components:
           type: string
           format: date-time
     Query:
-      allOf:
-        - type: object
-          required:
-            - is_public
-            - project_id
-          properties:
-            is_public:
-              type: boolean
-            project_id:
-              type: integer
-              nullable: true
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_public
+        - project_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_public:
+          type: boolean
+        project_id:
+          type: integer
+          nullable: true
     IssueStatuses:
       type: object
       required:
@@ -3502,7 +3544,7 @@ components:
         issue_statuses:
           type: array
           items:
-            $ref: '#/components/schemas/IssueStatus'
+            $ref: "#/components/schemas/IssueStatus"
     Tracker:
       type: object
       properties:
@@ -3511,7 +3553,7 @@ components:
         name:
           type: string
         default_status:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         description:
           type: string
           nullable: true
@@ -3527,7 +3569,7 @@ components:
         trackers:
           type: array
           items:
-            $ref: '#/components/schemas/Tracker'
+            $ref: "#/components/schemas/Tracker"
     IssueCategory:
       type: object
       required:
@@ -3538,47 +3580,59 @@ components:
         id:
           type: integer
         project:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         name:
           type: string
         assigned_to:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
     IssuePriority:
-      allOf:
-        - type: object
-          required:
-            - is_default
-            - active
-          properties:
-            is_default:
-              type: boolean
-            active:
-              type: boolean
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_default
+        - active
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_default:
+          type: boolean
+        active:
+          type: boolean
     TimeEntryActivity:
-      allOf:
-        - type: object
-          required:
-            - is_default
-            - active
-          properties:
-            is_default:
-              type: boolean
-            active:
-              type: boolean
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_default
+        - active
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_default:
+          type: boolean
+        active:
+          type: boolean
     DocumentCategory:
-      allOf:
-        - type: object
-          required:
-            - is_default
-            - active
-          properties:
-            is_default:
-              type: boolean
-            active:
-              type: boolean
-        - $ref: '#/components/schemas/IdName'
+      type: object
+      required:
+        - id
+        - name
+        - is_default
+        - active
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_default:
+          type: boolean
+        active:
+          type: boolean
     CustomField:
       type: object
       properties:
@@ -3638,11 +3692,11 @@ components:
         trackers:
           type: array
           items:
-            $ref: '#/components/schemas/IdName'
+            $ref: "#/components/schemas/IdName"
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/Role'
+            $ref: "#/components/schemas/Role"
         possible_values:
           type: array
           items:
@@ -3704,12 +3758,12 @@ components:
         thumbnail_url:
           type: string
         author:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         created_on:
           type: string
           format: date-time
         version:
-          $ref: '#/components/schemas/IdName'
+          $ref: "#/components/schemas/IdName"
         digest:
           type: string
         downloads:
@@ -3767,12 +3821,12 @@ components:
             custom_fields:
               type: array
               items:
-                $ref: '#/components/schemas/CustomFieldValues'
+                $ref: "#/components/schemas/CustomFieldValues"
     IssuePartial:
-      $ref: '#/components/schemas/Issue.partial'
+      $ref: "#/components/schemas/Issue.partial"
     UserPartial:
-      $ref: '#/components/schemas/User.partial'
+      $ref: "#/components/schemas/User.partial"
     Membersip:
-      $ref: '#/components/schemas/Membership'
+      $ref: "#/components/schemas/Membership"
     Group:
-      $ref: '#/components/schemas/IdName'
+      $ref: "#/components/schemas/IdName"

@@ -11,10 +11,13 @@ get:
     - name: include
       in: query
       schema:
-        type: string
-        enum:
-          - users
-          - memberships
+        type: array
+        items:
+          type: string
+          enum:
+            - users
+            - memberships
+      explode: false
   responses:
     200:
       description: ""
