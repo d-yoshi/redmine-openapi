@@ -10,7 +10,13 @@ get:
     - name: include
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: string
+          enum:
+            - memberships
+            - groups
+      explode: false
   responses:
     200:
       description: ""

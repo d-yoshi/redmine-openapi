@@ -10,11 +10,16 @@ get:
     - name: include
       in: query
       schema:
-        type: string
-        enum:
-          - trackers
-          - issue_categories
-          - enabled_modules
+        type: array
+        items:
+          type: string
+          enum:
+            - trackers
+            - issue_categories
+            - enabled_modules
+            - time_entry_activities
+            - issue_custom_fields
+      explode: false
   responses:
     200:
       description: ""

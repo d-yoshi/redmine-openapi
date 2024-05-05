@@ -11,15 +11,18 @@ get:
     - name: include
       in: query
       schema:
-        type: string
-        enum:
-          - children
-          - attachments
-          - relations
-          - changesets
-          - journals
-          - watchers
-          - allowed_statuses
+        type: array
+        items:
+          type: string
+          enum:
+            - children
+            - attachments
+            - relations
+            - changesets
+            - journals
+            - watchers
+            - allowed_statuses
+      explode: false
   responses:
     200:
       description: ""

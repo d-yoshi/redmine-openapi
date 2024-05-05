@@ -16,10 +16,13 @@ get:
     - name: include
       in: query
       schema:
-        type: string
-        enum:
-          - attachments
-          - relations
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+            - relations
+      explode: false
     - name: issue_id
       in: query
       schema:
