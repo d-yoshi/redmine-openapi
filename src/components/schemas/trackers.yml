@@ -1,8 +1,0 @@
-type: object
-required:
-  - trackers
-properties:
-  trackers:
-    type: array
-    items:
-      $ref: ./tracker.yml

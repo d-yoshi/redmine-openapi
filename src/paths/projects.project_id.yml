@@ -30,26 +30,7 @@ get:
             type: object
             properties:
               project:
-                allOf:
-                  - $ref: ../components/schemas/project.yml
-                  - type: object
-                    properties:
-                      trackers:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/id_name.yml
-                      issue_categories:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/id_name.yml
-                      enabled_modules:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/id_name.yml
-                      time_entry_activities:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/id_name.yml
+                $ref: ../components/schemas/project.yml
 
 put:
   tags:

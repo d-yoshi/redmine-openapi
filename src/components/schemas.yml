@@ -46,17 +46,11 @@ IssueStatus:
 Attachment:
   $ref: ./schemas/attachment.yml
 
-IssueStatuses:
-  $ref: ./schemas/issue_statuses.yml
-
 Group:
   $ref: ./schemas/group.yml
 
 Tracker:
   $ref: ./schemas/tracker.yml
-
-Trackers:
-  $ref: ./schemas/trackers.yml
 
 IssuePriority:
   $ref: ./schemas/issue_priority.yml

@@ -13,4 +13,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/trackers.yml
+            type: object
+            required:
+              - trackers
+            properties:
+              trackers:
+                type: array
+                items:
+                  $ref: ../components/schemas/tracker.yml
