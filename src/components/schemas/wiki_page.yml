@@ -25,9 +25,14 @@ properties:
     $ref: ./id_name.yml
   comments:
     type: string
+    nullable: true
   created_on:
     type: string
     format: date-time
   updated_on:
     type: string
     format: date-time
+  attachments:
+    type: array
+    items:
+      $ref: ./attachment.yml

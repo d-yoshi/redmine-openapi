@@ -61,6 +61,15 @@ put:
   responses:
     201:
       description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - wiki_page
+            properties:
+              wiki_page:
+                $ref: ../components/schemas/wiki_page.yml
     204:
       description: ""
     409:
