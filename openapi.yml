@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.6.1
+  version: 0.6.2
 servers:
   - url: /
 security:
@@ -4024,57 +4024,3 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/custom_field_value'
-    IdName:
-      $ref: '#/components/schemas/id_name'
-    Issue:
-      $ref: '#/components/schemas/issue'
-    SimpleIssue:
-      $ref: '#/components/schemas/issue.simple'
-    Project:
-      $ref: '#/components/schemas/project'
-    User:
-      $ref: '#/components/schemas/user'
-    SimpleUser:
-      $ref: '#/components/schemas/user.simple'
-    Membersip:
-      $ref: '#/components/schemas/membership'
-    TimeEntry:
-      $ref: '#/components/schemas/time_entry'
-    News:
-      $ref: '#/components/schemas/news'
-    IssueRelation:
-      $ref: '#/components/schemas/issue_relation'
-    Version:
-      $ref: '#/components/schemas/version'
-    WikiPage:
-      $ref: '#/components/schemas/wiki_page'
-    WikiPages:
-      $ref: '#/components/schemas/wiki_pages'
-    Query:
-      $ref: '#/components/schemas/query'
-    IssueStatus:
-      $ref: '#/components/schemas/issue_status'
-    Attachment:
-      $ref: '#/components/schemas/attachment'
-    Group:
-      $ref: '#/components/schemas/id_name'
-    Tracker:
-      $ref: '#/components/schemas/tracker'
-    IssuePriority:
-      $ref: '#/components/schemas/issue_priority'
-    TimeEntryActivity:
-      $ref: '#/components/schemas/time_entry_activity'
-    DocumentCategory:
-      $ref: '#/components/schemas/document_category'
-    IssueCategory:
-      $ref: '#/components/schemas/issue_category'
-    Role:
-      $ref: '#/components/schemas/role'
-    CustomField:
-      $ref: '#/components/schemas/custom_field'
-    Search:
-      $ref: '#/components/schemas/search'
-    File:
-      $ref: '#/components/schemas/file'
-    Errors:
-      $ref: '#/components/schemas/errors'
