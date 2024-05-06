@@ -33,15 +33,23 @@ properties:
   trackers:
     type: array
     items:
-      $ref: ./IdName.yml
+      $ref: ./id_name.yml
   issue_categories:
     type: array
     items:
-      $ref: ./IdName.yml
+      $ref: ./id_name.yml
   enabled_modules:
     type: array
     items:
-      $ref: ./IdName.yml
+      $ref: ./id_name.yml
+  time_entry_activities:
+    type: array
+    items:
+      $ref: ./id_name.yml
+  issue_custom_fields:
+    type: array
+    items:
+      $ref: ./id_name.yml
   created_on:
     type: string
     format: date-time

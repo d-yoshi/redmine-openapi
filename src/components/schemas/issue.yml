@@ -1,0 +1,189 @@
+type: object
+required:
+  - id
+  - project
+  - tracker
+  - status
+  - priority
+  - author
+  - subject
+  - description
+  - start_date
+  - due_date
+  - done_ratio
+  - is_private
+  - estimated_hours
+  - total_estimated_hours
+  - created_on
+  - updated_on
+  - closed_on
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./id_name.yml
+  tracker:
+    $ref: ./id_name.yml
+  status:
+    $ref: ./issue_status.yml
+  priority:
+    $ref: ./id_name.yml
+  author:
+    $ref: ./id_name.yml
+  assigned_to:
+    $ref: ./id_name.yml
+  category:
+    $ref: ./id_name.yml
+  subject:
+    type: string
+  description:
+    type: string
+    nullable: true
+  start_date:
+    type: string
+    nullable: true
+  due_date:
+    type: string
+    nullable: true
+  done_ratio:
+    type: integer
+  is_private:
+    type: boolean
+  estimated_hours:
+    type: number
+    nullable: true
+  total_estimated_hours:
+    type: number
+    nullable: true
+  spent_hours:
+    type: number
+  total_spent_hours:
+    type: number
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time
+  closed_on:
+    type: string
+    format: date-time
+    nullable: true
+  changesets:
+    type: array
+    items:
+      type: string
+  children:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - tracker
+        - subject
+      properties:
+        id:
+          type: integer
+        tracker:
+          $ref: ./id_name.yml
+        subject:
+          type: string
+  attachments:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - author
+        - created_on
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        author:
+          $ref: ./id_name.yml
+        created_on:
+          type: string
+          format: data-time
+        thumbnail_url:
+          type: string
+  relations:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        issue_id:
+          type: integer
+        issue_to_id:
+          type: integer
+        relation_type:
+          type: string
+        delay:
+          type: integer
+          nullable: true
+  journals:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - user
+        - notes
+        - created_on
+        - private_notes
+        - details
+      properties:
+        id:
+          type: integer
+        user:
+          $ref: ./id_name.yml
+        notes:
+          type: string
+        created_on:
+          type: string
+          format: date-time
+        private_notes:
+          type: boolean
+        details:
+          type: array
+          items:
+            type: object
+            required:
+              - property
+              - name
+              - old_value
+              - new_value
+            properties:
+              property:
+                type: string
+              name:
+                type: string
+              old_value:
+                type: string
+                nullable: true
+              new_value:
+                type: string
+  watchers:
+    type: array
+    items:
+      $ref: ./id_name.yml
+  allowed_statuses:
+    type: array
+    items:
+      $ref: ./issue_status.yml

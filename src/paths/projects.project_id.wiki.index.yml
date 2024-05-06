@@ -6,6 +6,7 @@ get:
   summary: Getting the pages list of a wiki
   operationId: getWikiPages
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   responses:
@@ -21,4 +22,4 @@ get:
               wiki_pages:
                 type: array
                 items:
-                  $ref: ../components/schemas/WikiPages.yml
+                  $ref: ../components/schemas/wiki_pages.yml

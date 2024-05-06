@@ -1,0 +1,68 @@
+type: object
+required:
+  - id
+  - login
+  - admin
+  - firstname
+  - lastname
+  - mail
+  - created_on
+  - updated_on
+  - last_login_on
+  - passwd_changed_on
+  - twofa_scheme
+  - api_key
+  - status
+properties:
+  id:
+    type: integer
+  login:
+    type: string
+  admin:
+    type: boolean
+  firstname:
+    type: string
+  lastname:
+    type: string
+  mail:
+    type: string
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time
+  last_login_on:
+    type: string
+    format: date-time
+    nullable: true
+  passwd_changed_on:
+    type: string
+    format: date-time
+    nullable: true
+  twofa_scheme:
+    type: object
+    nullable: true
+  api_key:
+    type: string
+  status:
+    type: integer
+  custom_fields:
+    type: array
+    items:
+      $ref: ./id_name.yml
+  memberships:
+    type: array
+    items:
+      type: object
+      properties:
+        project:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: ./role.yml
+  groups:
+    type: array
+    items:
+      $ref: ./group.yml

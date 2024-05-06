@@ -19,7 +19,7 @@ get:
               - membership
             properties:
               membership:
-                $ref: ../components/schemas/Membership.yml
+                $ref: ../components/schemas/membership.yml
 
 put:
   tags:
@@ -39,7 +39,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:

@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getIssueCategory
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_category_id.yml
   responses:
@@ -19,7 +20,7 @@ get:
               - issue_category
             properties:
               issue_category:
-                $ref: ../components/schemas/IssueCategory.yml
+                $ref: ../components/schemas/issue_category.yml
 
 put:
   tags:
@@ -29,6 +30,7 @@ put:
   summary: PUT
   operationId: updateIssueCategory
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_category_id.yml
   requestBody:
@@ -52,7 +54,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:
@@ -62,6 +64,7 @@ delete:
   summary: DELETE
   operationId: deleteIssueCategory
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_category_id.yml
     - name: reassign_to_id

@@ -1,8 +1,0 @@
-type: object
-required:
-  - issue_statuses
-properties:
-  issue_statuses:
-    type: array
-    items:
-      $ref: ./IssueStatus.yml

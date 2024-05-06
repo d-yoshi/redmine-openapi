@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getGroups
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   responses:
     200:
@@ -20,7 +21,7 @@ get:
               groups:
                 type: array
                 items:
-                  $ref: ../components/schemas/Group.yml
+                  $ref: ../components/schemas/group.yml
 
 post:
   tags:
@@ -30,6 +31,7 @@ post:
   summary: POST
   operationId: createGroup
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   requestBody:
     content:
@@ -56,10 +58,10 @@ post:
             type: object
             properties:
               group:
-                $ref: ../components/schemas/Group.yml
+                $ref: ../components/schemas/group.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

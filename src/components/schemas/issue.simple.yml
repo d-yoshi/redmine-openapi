@@ -21,19 +21,19 @@ properties:
   id:
     type: integer
   project:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   tracker:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   status:
-    $ref: ./IssueStatus.yml
+    $ref: ./issue_status.yml
   priority:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   author:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   assigned_to:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   category:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   subject:
     type: string
   description:

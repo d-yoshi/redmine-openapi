@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getCurrentUser
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - name: include
       in: query
@@ -26,12 +27,4 @@ get:
             type: object
             properties:
               user:
-                allOf:
-                  - $ref: ../components/schemas/User.yml
-                  - $ref: ../components/schemas/User.partial.yml
-                  - type: object
-                    properties:
-                      custom_fields:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/IdName.yml
+                $ref: ../components/schemas/user.yml

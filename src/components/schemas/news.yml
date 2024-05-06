@@ -11,9 +11,9 @@ properties:
   id:
     type: integer
   project:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   author:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   title:
     type: string
   summary:

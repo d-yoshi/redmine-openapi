@@ -6,6 +6,7 @@ get:
   summary: Showing a project
   operationId: getProject
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - name: include
@@ -30,26 +31,7 @@ get:
             type: object
             properties:
               project:
-                allOf:
-                  - $ref: ../components/schemas/Project.yml
-                  - type: object
-                    properties:
-                      trackers:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/IdName.yml
-                      issue_categories:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/IdName.yml
-                      enabled_modules:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/IdName.yml
-                      time_entry_activities:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/IdName.yml
+                $ref: ../components/schemas/project.yml
 
 put:
   tags:
@@ -59,6 +41,7 @@ put:
   summary: Updating a project
   operationId: updateProject
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   requestBody:
@@ -116,6 +99,7 @@ delete:
   summary: Deleting a project
   operationId: deleteProject
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   responses:

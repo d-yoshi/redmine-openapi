@@ -6,9 +6,11 @@ get:
   summary: Listing time entries
   operationId: getTimeEntries
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/limit.yml
+    - $ref: ../components/parameters/query/nometa.yml
     - name: user_id
       in: query
       schema:
@@ -31,14 +33,11 @@ get:
             type: object
             required:
               - time_entries
-              - total_count
-              - offset
-              - limit
             properties:
               time_entries:
                 type: array
                 items:
-                  $ref: ../components/schemas/TimeEntry.yml
+                  $ref: ../components/schemas/time_entry.yml
               total_count:
                 type: integer
               offset:
@@ -54,6 +53,7 @@ post:
   summary: Creating a time entry
   operationId: createTimeEntry
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   requestBody:
     content:
@@ -104,10 +104,10 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/TimeEntry.yml
+            $ref: ../components/schemas/time_entry.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

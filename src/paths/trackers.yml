@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getTrackers
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   responses:
     200:
@@ -13,4 +14,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Trackers.yml
+            type: object
+            required:
+              - trackers
+            properties:
+              trackers:
+                type: array
+                items:
+                  $ref: ../components/schemas/tracker.yml

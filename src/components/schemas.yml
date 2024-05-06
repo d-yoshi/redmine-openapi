@@ -1,86 +1,80 @@
 IdName:
-  $ref: ./schemas/IdName.yml
+  $ref: ./schemas/id_name.yml
 
 Issue:
-  $ref: ./schemas/Issue.yml
+  $ref: ./schemas/issue.yml
 
-IssuePartial:
-  $ref: ./schemas/Issue.partial.yml
+SimpleIssue:
+  $ref: ./schemas/issue.simple.yml
 
 Project:
-  $ref: ./schemas/Project.yml
+  $ref: ./schemas/project.yml
 
 User:
-  $ref: ./schemas/User.yml
+  $ref: ./schemas/user.yml
 
-UserPartial:
-  $ref: ./schemas/User.partial.yml
+SimpleUser:
+  $ref: ./schemas/user.simple.yml
 
 Membersip:
-  $ref: ./schemas/Membership.yml
+  $ref: ./schemas/membership.yml
 
 TimeEntry:
-  $ref: ./schemas/TimeEntry.yml
+  $ref: ./schemas/time_entry.yml
 
 News:
-  $ref: ./schemas/News.yml
+  $ref: ./schemas/news.yml
 
 IssueRelation:
-  $ref: ./schemas/IssueRelation.yml
+  $ref: ./schemas/issue_relation.yml
 
 Version:
-  $ref: ./schemas/Version.yml
+  $ref: ./schemas/version.yml
 
 WikiPage:
-  $ref: ./schemas/WikiPage.yml
+  $ref: ./schemas/wiki_page.yml
 
 WikiPages:
-  $ref: ./schemas/WikiPages.yml
+  $ref: ./schemas/wiki_pages.yml
 
 Query:
-  $ref: ./schemas/Query.yml
+  $ref: ./schemas/query.yml
 
 IssueStatus:
-  $ref: ./schemas/IssueStatus.yml
+  $ref: ./schemas/issue_status.yml
 
 Attachment:
-  $ref: ./schemas/Attachment.yml
-
-IssueStatuses:
-  $ref: ./schemas/IssueStatuses.yml
+  $ref: ./schemas/attachment.yml
 
 Group:
-  $ref: ./schemas/Group.yml
+  $ref: ./schemas/group.yml
 
 Tracker:
-  $ref: ./schemas/Tracker.yml
-
-Trackers:
-  $ref: ./schemas/Trackers.yml
+  $ref: ./schemas/tracker.yml
 
 IssuePriority:
-  $ref: ./schemas/IssuePriority.yml
+  $ref: ./schemas/issue_priority.yml
 
 TimeEntryActivity:
-  $ref: ./schemas/TimeEntryActivity.yml
+  $ref: ./schemas/time_entry_activity.yml
 
 DocumentCategory:
-  $ref: ./schemas/DocumentCategory.yml
+  $ref: ./schemas/document_category.yml
 
 IssueCategory:
-  $ref: ./schemas/IssueCategory.yml
+  $ref: ./schemas/issue_category.yml
 
 Role:
-  $ref: ./schemas/Role.yml
+  $ref: ./schemas/role.yml
 
 CustomField:
-  $ref: ./schemas/CustomField.yml
+  $ref: ./schemas/custom_field.yml
 
 Search:
-  $ref: ./schemas/Search.yml
+  $ref: ./schemas/search.yml
 
 File:
-  $ref: ./schemas/File.yml
+  $ref: ./schemas/file.yml
 
 Errors:
-  $ref: ./schemas/Errors.yml
+  $ref: ./schemas/errors.yml

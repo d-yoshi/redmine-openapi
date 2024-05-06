@@ -6,6 +6,7 @@ get:
   summary: Showing an issue
   operationId: getIssue
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
     - name: include
@@ -32,9 +33,7 @@ get:
             type: object
             properties:
               issue:
-                allOf:
-                  - $ref: ../components/schemas/Issue.yml
-                  - $ref: ../components/schemas/Issue.partial.yml
+                $ref: ../components/schemas/issue.yml
 
 put:
   tags:
@@ -44,6 +43,7 @@ put:
   summary: Updating an issue
   operationId: updateIssue
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
   requestBody:
@@ -108,6 +108,7 @@ delete:
   summary: Deleting an issue
   operationId: deleteIssue
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
   responses:

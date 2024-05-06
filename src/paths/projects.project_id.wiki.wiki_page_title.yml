@@ -6,6 +6,7 @@ get:
   summary: Getting a wiki page
   operationId: getWikiPageByTitle
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/wiki_page_title.yml
@@ -26,7 +27,7 @@ get:
               - wiki_page
             properties:
               wiki_page:
-                $ref: ../components/schemas/WikiPage.yml
+                $ref: ../components/schemas/wiki_page.yml
 
 put:
   tags:
@@ -36,6 +37,7 @@ put:
   summary: Creating or updating a wiki page
   operationId: updateWikiPageByTitle
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/wiki_page_title.yml
@@ -66,13 +68,13 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:
@@ -82,6 +84,7 @@ delete:
   summary: Deleting a wiki page
   operationId: deleteWikiPageByTitle
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/wiki_page_title.yml

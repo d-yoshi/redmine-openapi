@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getRole
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/role_id.yml
   responses:
@@ -17,4 +18,4 @@ get:
             type: object
             properties:
               role:
-                $ref: ../components/schemas/Role.yml
+                $ref: ../components/schemas/role.yml

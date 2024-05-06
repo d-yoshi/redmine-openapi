@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getIssueRelationsByIssue
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
   responses:
@@ -21,7 +22,7 @@ get:
               relations:
                 type: array
                 items:
-                  $ref: ../components/schemas/IssueRelation.yml
+                  $ref: ../components/schemas/issue_relation.yml
 
 post:
   tags:
@@ -31,6 +32,7 @@ post:
   summary: POST
   operationId: createIssueRelationsByIssue
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
   requestBody:
@@ -72,4 +74,4 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

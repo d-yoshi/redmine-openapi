@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getIssueRelation
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_relation_id.yml
   responses:
@@ -17,7 +18,7 @@ get:
             type: object
             properties:
               relation:
-                $ref: ../components/schemas/IssueRelation.yml
+                $ref: ../components/schemas/issue_relation.yml
 
 delete:
   tags:
@@ -27,6 +28,7 @@ delete:
   summary: DELETE
   operationId: deleteIssueRelation
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_relation_id.yml
   responses:
@@ -37,4 +39,4 @@ delete:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
