@@ -116,7 +116,8 @@ paths:
       summary: Listing issues
       operationId: getIssues
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
         - $ref: '#/components/parameters/limit'
@@ -195,7 +196,7 @@ paths:
       summary: Creating an issue
       operationId: createIssue
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       requestBody:
         content:
@@ -289,7 +290,7 @@ paths:
       summary: Showing an issue
       operationId: getIssue
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
         - name: include
@@ -325,7 +326,7 @@ paths:
       summary: Updating an issue
       operationId: updateIssue
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
       requestBody:
@@ -389,7 +390,7 @@ paths:
       summary: Deleting an issue
       operationId: deleteIssue
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
       responses:
@@ -404,7 +405,7 @@ paths:
       summary: Adding a watcher
       operationId: createWatcher
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
       requestBody:
@@ -429,7 +430,7 @@ paths:
       summary: Removing a watcher
       operationId: deleteWatcher
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
         - $ref: '#/components/parameters/user_id'
@@ -445,7 +446,8 @@ paths:
       summary: Listing projects
       operationId: getProjects
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
         - $ref: '#/components/parameters/limit'
@@ -491,7 +493,7 @@ paths:
       summary: Creating a project
       operationId: createProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       requestBody:
         content:
@@ -572,7 +574,7 @@ paths:
       summary: Showing a project
       operationId: getProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - name: include
@@ -606,7 +608,7 @@ paths:
       summary: Updating a project
       operationId: updateProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       requestBody:
@@ -663,7 +665,7 @@ paths:
       summary: Deleting a project
       operationId: deleteProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -678,7 +680,7 @@ paths:
       summary: Archiving a project
       operationId: archiveProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -693,7 +695,7 @@ paths:
       summary: Unarchiving a project
       operationId: unarchiveProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -708,7 +710,8 @@ paths:
       summary: GET
       operationId: getMembershipsByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/offset'
@@ -742,7 +745,7 @@ paths:
       summary: POST
       operationId: createMembershipsByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       requestBody:
@@ -841,7 +844,8 @@ paths:
       summary: GET
       operationId: getUsers
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
         - $ref: '#/components/parameters/limit'
@@ -886,7 +890,7 @@ paths:
       summary: POST
       operationId: createUser
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       requestBody:
         content:
@@ -947,7 +951,7 @@ paths:
       summary: GET
       operationId: getUser
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/user_id'
         - name: include
@@ -978,7 +982,7 @@ paths:
       summary: PUT
       operationId: updateUser
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/user_id'
       requestBody:
@@ -1029,7 +1033,7 @@ paths:
       summary: DELETE
       operationId: deleteUser
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/user_id'
       responses:
@@ -1044,7 +1048,7 @@ paths:
       summary: GET
       operationId: getCurrentUser
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - name: include
           in: query
@@ -1075,7 +1079,8 @@ paths:
       summary: Listing time entries
       operationId: getTimeEntries
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
         - $ref: '#/components/parameters/limit'
@@ -1121,7 +1126,7 @@ paths:
       summary: Creating a time entry
       operationId: createTimeEntry
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       requestBody:
         content:
@@ -1188,7 +1193,7 @@ paths:
       summary: Showing a time entry
       operationId: getTimeEntry
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
       responses:
@@ -1206,7 +1211,7 @@ paths:
       summary: Updating a time entry
       operationId: updateTimeEntry
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
       requestBody:
@@ -1269,7 +1274,7 @@ paths:
       summary: Deleting a time entry
       operationId: deleteTimeEntry
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/time_entry_id'
       responses:
@@ -1284,7 +1289,8 @@ paths:
       summary: GET
       operationId: getNews
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
         - $ref: '#/components/parameters/limit'
@@ -1318,7 +1324,8 @@ paths:
       summary: GET
       operationId: getNewsByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/offset'
@@ -1353,7 +1360,7 @@ paths:
       summary: GET
       operationId: getIssueRelationsByIssue
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
       responses:
@@ -1378,7 +1385,7 @@ paths:
       summary: POST
       operationId: createIssueRelationsByIssue
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
       requestBody:
@@ -1430,7 +1437,7 @@ paths:
       summary: GET
       operationId: getIssueRelation
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_relation_id'
       responses:
@@ -1451,7 +1458,7 @@ paths:
       summary: DELETE
       operationId: deleteIssueRelation
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_relation_id'
       responses:
@@ -1472,7 +1479,8 @@ paths:
       summary: GET
       operationId: getVersionsByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/nometa'
@@ -1500,7 +1508,7 @@ paths:
       summary: POST
       operationId: createVersionByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       requestBody:
@@ -1570,7 +1578,7 @@ paths:
       summary: GET
       operationId: getVersions
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -1602,7 +1610,7 @@ paths:
       summary: PUT
       operationId: updateVersion
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
       requestBody:
@@ -1656,7 +1664,7 @@ paths:
       summary: DELETE
       operationId: deleteVersion
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -1677,7 +1685,7 @@ paths:
       summary: Getting the pages list of a wiki
       operationId: getWikiPages
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -1703,7 +1711,7 @@ paths:
       summary: Getting a wiki page
       operationId: getWikiPageByTitle
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/wiki_page_title'
@@ -1733,7 +1741,7 @@ paths:
       summary: Creating or updating a wiki page
       operationId: updateWikiPageByTitle
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/wiki_page_title'
@@ -1779,7 +1787,7 @@ paths:
       summary: Deleting a wiki page
       operationId: deleteWikiPageByTitle
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/wiki_page_title'
@@ -1795,7 +1803,7 @@ paths:
       summary: Getting an old version of a wiki page
       operationId: getWikiPageByVersion
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/wiki_page_title'
@@ -1827,7 +1835,8 @@ paths:
       summary: GET
       operationId: getQueries
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
         - $ref: '#/components/parameters/limit'
@@ -1861,7 +1870,7 @@ paths:
       summary: GET
       operationId: getAttachment
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
       responses:
@@ -1882,7 +1891,7 @@ paths:
       summary: PATCH
       operationId: updateAttachment
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
       requestBody:
@@ -1909,7 +1918,7 @@ paths:
       summary: DELETE
       operationId: deleteAttachment
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/attachment_id'
       responses:
@@ -1924,7 +1933,7 @@ paths:
       summary: Returns possible Status Values for Issues
       operationId: getIssueStatuses
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -1949,7 +1958,7 @@ paths:
       summary: GET
       operationId: getTrackers
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -1974,7 +1983,8 @@ paths:
       summary: GET
       operationId: getIssueCategoriesByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/nometa'
@@ -2002,7 +2012,7 @@ paths:
       summary: POST
       operationId: createIssueCategoryByProject
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       requestBody:
@@ -2044,7 +2054,7 @@ paths:
       summary: GET
       operationId: getIssuePriorities
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2069,7 +2079,7 @@ paths:
       summary: GET
       operationId: getTimeEntryActivities
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2094,7 +2104,7 @@ paths:
       summary: GET
       operationId: getDocumentCategories
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2119,7 +2129,7 @@ paths:
       summary: GET
       operationId: getIssueCategory
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_category_id'
       responses:
@@ -2142,7 +2152,7 @@ paths:
       summary: PUT
       operationId: updateIssueCategory
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_category_id'
       requestBody:
@@ -2175,7 +2185,7 @@ paths:
       summary: DELETE
       operationId: deleteIssueCategory
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_category_id'
         - name: reassign_to_id
@@ -2194,7 +2204,7 @@ paths:
       summary: GET
       operationId: getRoles
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2217,7 +2227,7 @@ paths:
       summary: GET
       operationId: getRole
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/role_id'
       responses:
@@ -2239,7 +2249,7 @@ paths:
       summary: GET
       operationId: getGroups
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2263,7 +2273,7 @@ paths:
       summary: POST
       operationId: createGroup
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       requestBody:
         content:
@@ -2305,7 +2315,7 @@ paths:
       summary: GET
       operationId: getGroup
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
         - name: include
@@ -2356,7 +2366,7 @@ paths:
       summary: PUT
       operationId: updateGroup
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
       requestBody:
@@ -2385,7 +2395,7 @@ paths:
       summary: DELETE
       operationId: deleteGroup
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
       responses:
@@ -2400,7 +2410,7 @@ paths:
       summary: POST
       operationId: addUserToGroup
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
       requestBody:
@@ -2423,7 +2433,7 @@ paths:
       summary: DELETE
       operationId: removeUserFromGroup
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/group_id'
         - $ref: '#/components/parameters/user_id'
@@ -2439,7 +2449,7 @@ paths:
       summary: GET
       operationId: getCustomFields
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2464,7 +2474,8 @@ paths:
       summary: GET
       operationId: search
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/offset'
@@ -2559,7 +2570,7 @@ paths:
       summary: GET
       operationId: getFiles
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -2584,7 +2595,7 @@ paths:
       summary: POST
       operationId: createFile
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
       requestBody:
@@ -2638,7 +2649,7 @@ paths:
       summary: GET
       operationId: getMyAccount
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       responses:
         '200':
@@ -2655,7 +2666,7 @@ paths:
       summary: PUT
       operationId: updateMyAccount
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
       requestBody:
         content:
@@ -2785,7 +2796,7 @@ paths:
       summary: PUT
       operationId: updateJournal
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/journal_id'
       requestBody:
@@ -2814,7 +2825,7 @@ paths:
       summary: Attaching files
       operationId: uploadAttachmentFile
       parameters:
-        - $ref: '#/components/parameters/switch_user'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
         - name: filename
           in: query
@@ -2857,12 +2868,19 @@ components:
       in: header
       name: X-Redmine-API-Key
   parameters:
-    switch_user:
+    x_redmine_switch_user:
       name: X-Redmine-Switch-User
       in: header
       schema:
         type: string
         example: jsmith
+    x_redmine_nometa:
+      name: X-Redmine-Nometa
+      in: header
+      schema:
+        type: integer
+        enum:
+          - 1
     format:
       name: format
       in: path
