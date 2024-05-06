@@ -65,7 +65,6 @@ post:
                   type: array
                   items:
                     type: integer
-
   responses:
     201:
       description: ""

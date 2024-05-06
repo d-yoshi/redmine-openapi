@@ -32,45 +32,28 @@ put:
     content:
       application/json:
         schema:
-          allOf:
-            - type: object
+          type: object
+          properties:
+            time_entry:
+              type: object
+              required:
+                - hours
               properties:
-                time_entry:
-                  type: object
-                  required:
-                    - issue_id
-                    - hours
-                  properties:
-                    hours:
-                      type: number
-                    spent_on:
-                      type: string
-                      format: date
-                    activity_id:
-                      type: integer
-                    comments:
-                      type: string
-                    user_id:
-                      type: integer
-            - oneOf:
-                - type: object
-                  properties:
-                    time_entry:
-                      type: object
-                      required:
-                        - issue_id
-                      properties:
-                        issue_id:
-                          type: integer
-                - type: object
-                  properties:
-                    time_entry:
-                      type: object
-                      required:
-                        - project_id
-                      properties:
-                        project_id:
-                          type: integer
+                issue_id:
+                  type: integer
+                project_id:
+                  type: integer
+                spent_on:
+                  type: string
+                  format: date
+                hours:
+                  type: number
+                activity_id:
+                  type: integer
+                comments:
+                  type: string
+                user_id:
+                  type: integer
   responses:
     204:
       description: ""

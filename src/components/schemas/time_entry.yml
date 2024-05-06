@@ -28,6 +28,7 @@ properties:
     type: number
   comments:
     type: string
+    nullable: true
   spent_on:
     type: string
     format: date
