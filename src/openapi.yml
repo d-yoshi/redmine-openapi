@@ -7,9 +7,9 @@ info:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
   license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.8.1
+    name: MIT License
+    url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
+  version: 0.9.0
 
 servers:
   - url: /
