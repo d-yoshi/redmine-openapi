@@ -8,8 +8,8 @@ properties:
     type: string
     enum:
       - issue
-      - project
       - time_entry
+      - project
       - version
       - document
       - user

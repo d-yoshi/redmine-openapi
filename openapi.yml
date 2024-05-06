@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.7.0
+  version: 0.8.0
 servers:
   - url: /
 security:
@@ -789,8 +789,9 @@ paths:
       summary: GET
       operationId: getMembership
       parameters:
-        - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/membership_id'
       responses:
         '200':
           description: ''
@@ -811,8 +812,9 @@ paths:
       summary: PUT
       operationId: updateMembership
       parameters:
-        - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/membership_id'
       responses:
         '204':
           description: ''
@@ -830,8 +832,9 @@ paths:
       summary: DELETE
       operationId: deleteMembership
       parameters:
-        - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/membership_id'
       responses:
         '204':
           description: ''
@@ -1730,6 +1733,15 @@ paths:
       responses:
         '201':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - wiki_page
+                properties:
+                  wiki_page:
+                    $ref: '#/components/schemas/wiki_page'
         '204':
           description: ''
         '409':
@@ -3710,57 +3722,6 @@ components:
         updated_on:
           type: string
           format: date-time
-    wiki_page:
-      type: object
-      required:
-        - title
-        - text
-        - version
-        - author
-        - comments
-        - created_on
-        - updated_on
-      properties:
-        title:
-          type: string
-        parent:
-          type: object
-          required:
-            - title
-          properties:
-            title:
-              type: string
-        text:
-          type: string
-        version:
-          type: integer
-        author:
-          $ref: '#/components/schemas/id_name'
-        comments:
-          type: string
-        created_on:
-          type: string
-          format: date-time
-        updated_on:
-          type: string
-          format: date-time
-    query:
-      type: object
-      required:
-        - id
-        - name
-        - is_public
-        - project_id
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        is_public:
-          type: boolean
-        project_id:
-          type: integer
-          nullable: true
     attachment:
       type: object
       required:
@@ -3790,6 +3751,62 @@ components:
         created_on:
           type: string
           format: data-time
+    wiki_page:
+      type: object
+      required:
+        - title
+        - text
+        - version
+        - author
+        - comments
+        - created_on
+        - updated_on
+      properties:
+        title:
+          type: string
+        parent:
+          type: object
+          required:
+            - title
+          properties:
+            title:
+              type: string
+        text:
+          type: string
+        version:
+          type: integer
+        author:
+          $ref: '#/components/schemas/id_name'
+        comments:
+          type: string
+          nullable: true
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment'
+    query:
+      type: object
+      required:
+        - id
+        - name
+        - is_public
+        - project_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_public:
+          type: boolean
+        project_id:
+          type: integer
+          nullable: true
     tracker:
       type: object
       properties:
@@ -3880,8 +3897,8 @@ components:
           type: string
           enum:
             - issue
-            - project
             - time_entry
+            - project
             - version
             - document
             - user
