@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.6.2
+  version: 0.6.3
 servers:
   - url: /
 security:
@@ -1132,52 +1132,40 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - type: object
+              type: object
+              properties:
+                time_entry:
+                  type: object
+                  required:
+                    - hours
                   properties:
-                    time_entry:
-                      type: object
-                      required:
-                        - issue_id
-                        - hours
-                      properties:
-                        hours:
-                          type: number
-                        spent_on:
-                          type: string
-                          format: date
-                        activity_id:
-                          type: integer
-                        comments:
-                          type: string
-                        user_id:
-                          type: integer
-                - oneOf:
-                    - type: object
-                      properties:
-                        time_entry:
-                          type: object
-                          required:
-                            - issue_id
-                          properties:
-                            issue_id:
-                              type: integer
-                    - type: object
-                      properties:
-                        time_entry:
-                          type: object
-                          required:
-                            - project_id
-                          properties:
-                            project_id:
-                              type: integer
+                    issue_id:
+                      type: integer
+                    project_id:
+                      type: integer
+                    spent_on:
+                      type: string
+                      format: date
+                    hours:
+                      type: number
+                    activity_id:
+                      type: integer
+                    comments:
+                      type: string
+                    user_id:
+                      type: integer
       responses:
         '201':
           description: ''
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/time_entry'
+                type: object
+                required:
+                  - time_entry
+                properties:
+                  time_entry:
+                    $ref: '#/components/schemas/time_entry'
         '422':
           description: ''
           content:
@@ -1218,45 +1206,28 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - type: object
+              type: object
+              properties:
+                time_entry:
+                  type: object
+                  required:
+                    - hours
                   properties:
-                    time_entry:
-                      type: object
-                      required:
-                        - issue_id
-                        - hours
-                      properties:
-                        hours:
-                          type: number
-                        spent_on:
-                          type: string
-                          format: date
-                        activity_id:
-                          type: integer
-                        comments:
-                          type: string
-                        user_id:
-                          type: integer
-                - oneOf:
-                    - type: object
-                      properties:
-                        time_entry:
-                          type: object
-                          required:
-                            - issue_id
-                          properties:
-                            issue_id:
-                              type: integer
-                    - type: object
-                      properties:
-                        time_entry:
-                          type: object
-                          required:
-                            - project_id
-                          properties:
-                            project_id:
-                              type: integer
+                    issue_id:
+                      type: integer
+                    project_id:
+                      type: integer
+                    spent_on:
+                      type: string
+                      format: date
+                    hours:
+                      type: number
+                    activity_id:
+                      type: integer
+                    comments:
+                      type: string
+                    user_id:
+                      type: integer
       responses:
         '204':
           description: ''
@@ -1497,7 +1468,7 @@ paths:
                   versions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/version'
+                      $ref: '#/components/schemas/version.simple'
                   total_count:
                     type: integer
     post:
@@ -1555,14 +1526,12 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/version'
-                  - type: object
-                    properties:
-                      estimated_hours:
-                        type: number
-                      spent_hours:
-                        type: number
+                type: object
+                required:
+                  - version
+                properties:
+                  version:
+                    $ref: '#/components/schemas/version'
         '422':
           description: ''
           content:
@@ -1592,16 +1561,7 @@ paths:
                   - version
                 properties:
                   version:
-                    type: array
-                    items:
-                      allOf:
-                        - $ref: '#/components/schemas/version'
-                        - type: object
-                          properties:
-                            estimated_hours:
-                              type: number
-                            spent_hours:
-                              type: number
+                    $ref: '#/components/schemas/version'
     put:
       tags:
         - Versions
@@ -2337,27 +2297,7 @@ paths:
                 type: object
                 properties:
                   group:
-                    allOf:
-                      - $ref: '#/components/schemas/id_name'
-                      - type: object
-                        properties:
-                          users:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/id_name'
-                          memberships:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: integer
-                                project:
-                                  $ref: '#/components/schemas/id_name'
-                                roles:
-                                  type: array
-                                  items:
-                                    $ref: '#/components/schemas/id_name'
+                    $ref: '#/components/schemas/group'
     put:
       tags:
         - Groups
@@ -3340,41 +3280,24 @@ components:
           items:
             type: string
     membership:
-      oneOf:
-        - type: object
-          required:
-            - id
-            - project
-            - user
-            - roles
-          properties:
-            id:
-              type: integer
-            project:
-              $ref: '#/components/schemas/id_name'
-            user:
-              $ref: '#/components/schemas/id_name'
-            roles:
-              type: array
-              items:
-                $ref: '#/components/schemas/id_name'
-        - type: object
-          required:
-            - id
-            - project
-            - group
-            - roles
-          properties:
-            id:
-              type: integer
-            project:
-              $ref: '#/components/schemas/id_name'
-            group:
-              $ref: '#/components/schemas/id_name'
-            roles:
-              type: array
-              items:
-                $ref: '#/components/schemas/id_name'
+      type: object
+      required:
+        - id
+        - project
+        - roles
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/id_name'
+        user:
+          $ref: '#/components/schemas/id_name'
+        group:
+          $ref: '#/components/schemas/id_name'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/id_name'
     user.simple:
       type: object
       required:
@@ -3446,6 +3369,37 @@ components:
           type: array
           items:
             type: string
+    group:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/id_name'
+        memberships:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - project
+              - roles
+            properties:
+              id:
+                type: integer
+              project:
+                $ref: '#/components/schemas/id_name'
+              roles:
+                type: array
+                items:
+                  $ref: '#/components/schemas/id_name'
     user:
       type: object
       required:
@@ -3514,7 +3468,7 @@ components:
         groups:
           type: array
           items:
-            $ref: '#/components/schemas/id_name'
+            $ref: '#/components/schemas/group'
     time_entry:
       type: object
       required:
@@ -3546,6 +3500,7 @@ components:
           type: number
         comments:
           type: string
+          nullable: true
         spent_on:
           type: string
           format: date
@@ -3601,6 +3556,56 @@ components:
         delay:
           type: integer
           nullable: true
+    version.simple:
+      type: object
+      required:
+        - id
+        - project
+        - name
+        - status
+        - due_date
+        - sharing
+        - description
+        - wiki_page_title
+        - created_on
+        - updated_on
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/id_name'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - open
+            - locked
+            - closed
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        sharing:
+          type: string
+          enum:
+            - none
+            - descendants
+            - hierarchy
+            - tree
+            - system
+        wiki_page_title:
+          type: string
+          nullable: true
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
     version:
       type: object
       required:
@@ -3645,6 +3650,10 @@ components:
         wiki_page_title:
           type: string
           nullable: true
+        estimated_hours:
+          type: number
+        spent_hours:
+          type: number
         created_on:
           type: string
           format: date-time
