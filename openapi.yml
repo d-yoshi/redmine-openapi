@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.6.3
+  version: 0.7.0
 servers:
   - url: /
 security:
@@ -1190,7 +1190,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/time_entry'
+                type: object
+                required:
+                  - time_entry
+                properties:
+                  time_entry:
+                    $ref: '#/components/schemas/time_entry'
     put:
       tags:
         - Time Entries
@@ -2436,43 +2441,63 @@ paths:
         - name: all_words
           in: query
           schema:
-            type: boolean
+            type: integer
+            enum:
+              - 1
         - name: titles_only
           in: query
           schema:
-            type: boolean
+            type: integer
+            enum:
+              - 1
         - name: issues
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: news
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: wiki_pages
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: projects
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: documents
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: changesets
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: messages
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: open_issues
           in: query
           schema:
             type: integer
+            enum:
+              - 1
         - name: attachments
           in: query
           schema:

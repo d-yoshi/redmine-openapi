@@ -28,43 +28,63 @@ get:
     - name: all_words
       in: query
       schema:
-        type: boolean
+        type: integer
+        enum:
+          - 1
     - name: titles_only
       in: query
       schema:
-        type: boolean
+        type: integer
+        enum:
+          - 1
     - name: issues
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: news
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: wiki_pages
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: projects
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: documents
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: changesets
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: messages
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: open_issues
       in: query
       schema:
         type: integer
+        enum:
+          - 1
     - name: attachments
       in: query
       schema:
