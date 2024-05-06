@@ -6,7 +6,7 @@ get:
   summary: Showing a time entry
   operationId: getTimeEntry
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/time_entry_id.yml
   responses:
@@ -25,7 +25,7 @@ put:
   summary: Updating a time entry
   operationId: updateTimeEntry
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/time_entry_id.yml
   requestBody:
@@ -89,7 +89,7 @@ delete:
   summary: Deleting a time entry
   operationId: deleteTimeEntry
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/time_entry_id.yml
   responses:

@@ -6,7 +6,7 @@ get:
   summary: GET
   operationId: getCurrentUser
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - name: include
       in: query
