@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getFiles
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   responses:
@@ -31,6 +32,7 @@ post:
   summary: POST
   operationId: createFile
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   requestBody:

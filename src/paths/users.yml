@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getUsers
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - name: status
       in: query
@@ -51,6 +52,7 @@ post:
   summary: POST
   operationId: createUser
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   requestBody:
     content:

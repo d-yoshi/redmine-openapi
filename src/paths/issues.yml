@@ -6,6 +6,7 @@ get:
   summary: Listing issues
   operationId: getIssues
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/limit.yml
@@ -87,6 +88,7 @@ post:
   summary: Creating an issue
   operationId: createIssue
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   requestBody:
     content:

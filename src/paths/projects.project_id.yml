@@ -6,6 +6,7 @@ get:
   summary: Showing a project
   operationId: getProject
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - name: include
@@ -40,6 +41,7 @@ put:
   summary: Updating a project
   operationId: updateProject
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   requestBody:
@@ -97,6 +99,7 @@ delete:
   summary: Deleting a project
   operationId: deleteProject
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
   responses:

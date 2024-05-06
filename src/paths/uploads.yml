@@ -6,6 +6,7 @@ post:
   summary: Attaching files
   operationId: uploadAttachmentFile
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - name: filename
       in: query

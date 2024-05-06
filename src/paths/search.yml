@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: search
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/query/limit.yml
     - $ref: ../components/parameters/query/offset.yml

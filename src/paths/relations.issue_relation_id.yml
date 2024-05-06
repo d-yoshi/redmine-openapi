@@ -6,6 +6,7 @@ get:
   summary: GET
   operationId: getIssueRelation
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_relation_id.yml
   responses:
@@ -27,6 +28,7 @@ delete:
   summary: DELETE
   operationId: deleteIssueRelation
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_relation_id.yml
   responses:

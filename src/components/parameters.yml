@@ -1,3 +1,6 @@
+switch_user:
+  $ref: ./parameters/header/switch_user.yml
+
 format:
   $ref: ./parameters/path/format.yml
 

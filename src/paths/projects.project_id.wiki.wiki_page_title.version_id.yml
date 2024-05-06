@@ -6,6 +6,7 @@ get:
   summary: Getting an old version of a wiki page
   operationId: getWikiPageByVersion
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/path/wiki_page_title.yml

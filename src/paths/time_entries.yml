@@ -6,6 +6,7 @@ get:
   summary: Listing time entries
   operationId: getTimeEntries
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/limit.yml
@@ -54,6 +55,7 @@ post:
   summary: Creating a time entry
   operationId: createTimeEntry
   parameters:
+    - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
   requestBody:
     content:
