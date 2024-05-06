@@ -9,13 +9,13 @@ oneOf:
       id:
         type: integer
       project:
-        $ref: ./IdName.yml
+        $ref: ./id_name.yml
       user:
-        $ref: ./IdName.yml
+        $ref: ./id_name.yml
       roles:
         type: array
         items:
-          $ref: ./IdName.yml
+          $ref: ./id_name.yml
   - type: object
     required:
       - id
@@ -26,10 +26,10 @@ oneOf:
       id:
         type: integer
       project:
-        $ref: ./IdName.yml
+        $ref: ./id_name.yml
       group:
-        $ref: ./IdName.yml
+        $ref: ./id_name.yml
       roles:
         type: array
         items:
-          $ref: ./IdName.yml
+          $ref: ./id_name.yml

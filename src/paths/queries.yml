@@ -23,7 +23,7 @@ get:
               queries:
                 type: array
                 items:
-                  $ref: ../components/schemas/Query.yml
+                  $ref: ../components/schemas/query.yml
               total_count:
                 type: integer
               offset:

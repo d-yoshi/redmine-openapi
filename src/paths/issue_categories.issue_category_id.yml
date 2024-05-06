@@ -19,7 +19,7 @@ get:
               - issue_category
             properties:
               issue_category:
-                $ref: ../components/schemas/IssueCategory.yml
+                $ref: ../components/schemas/issue_category.yml
 
 put:
   tags:
@@ -52,7 +52,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:

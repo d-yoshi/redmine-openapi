@@ -71,7 +71,7 @@ get:
               issues:
                 type: array
                 items:
-                  $ref: ../components/schemas/Issue.yml
+                  $ref: ../components/schemas/issue.simple.yml
               total_count:
                 type: integer
               offset:
@@ -170,4 +170,4 @@ post:
               - issue
             properties:
               issue:
-                $ref: ../components/schemas/Issue.yml
+                $ref: ../components/schemas/issue.simple.yml

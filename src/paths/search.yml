@@ -86,7 +86,7 @@ get:
               results:
                 type: array
                 items:
-                  $ref: ../components/schemas/Search.yml
+                  $ref: ../components/schemas/search.yml
               total_count:
                 type: integer
               offset:

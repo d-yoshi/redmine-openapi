@@ -20,4 +20,4 @@ get:
               custom_fields:
                 type: array
                 items:
-                  $ref: ../components/schemas/CustomField.yml
+                  $ref: ../components/schemas/custom_field.yml

@@ -20,7 +20,7 @@ get:
               groups:
                 type: array
                 items:
-                  $ref: ../components/schemas/Group.yml
+                  $ref: ../components/schemas/group.yml
 
 post:
   tags:
@@ -56,10 +56,10 @@ post:
             type: object
             properties:
               group:
-                $ref: ../components/schemas/Group.yml
+                $ref: ../components/schemas/group.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

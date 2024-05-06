@@ -27,30 +27,7 @@ get:
             type: object
             properties:
               user:
-                allOf:
-                  - $ref: ../components/schemas/User.yml
-                  - $ref: ../components/schemas/User.partial.yml
-                  - type: object
-                    properties:
-                      custom_fields:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/IdName.yml
-                      memberships:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            project:
-                              type: string
-                            roles:
-                              type: array
-                              items:
-                                $ref: ../components/schemas/Role.yml
-                      groups:
-                        type: array
-                        items:
-                          $ref: ../components/schemas/Group.yml
+                $ref: ../components/schemas/user.yml
 
 put:
   tags:
@@ -101,7 +78,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:

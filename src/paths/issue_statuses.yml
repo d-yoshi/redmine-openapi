@@ -13,4 +13,4 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/IssueStatuses.yml
+            $ref: ../components/schemas/issue_statuses.yml

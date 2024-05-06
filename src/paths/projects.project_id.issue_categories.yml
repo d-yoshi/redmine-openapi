@@ -22,7 +22,7 @@ get:
               issue_categories:
                 type: array
                 items:
-                  $ref: ../components/schemas/IssueCategory.yml
+                  $ref: ../components/schemas/issue_category.yml
               total_count:
                 type: integer
 
@@ -59,10 +59,10 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/IssueCategory.yml
+            $ref: ../components/schemas/issue_category.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

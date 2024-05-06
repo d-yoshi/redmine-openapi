@@ -5,4 +5,4 @@ properties:
   issue_statuses:
     type: array
     items:
-      $ref: ./IssueStatus.yml
+      $ref: ./issue_status.yml

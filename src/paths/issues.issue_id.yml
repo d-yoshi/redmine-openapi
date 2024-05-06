@@ -32,9 +32,7 @@ get:
             type: object
             properties:
               issue:
-                allOf:
-                  - $ref: ../components/schemas/Issue.yml
-                  - $ref: ../components/schemas/Issue.partial.yml
+                $ref: ../components/schemas/issue.yml
 
 put:
   tags:

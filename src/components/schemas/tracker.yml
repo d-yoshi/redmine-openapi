@@ -5,7 +5,7 @@ properties:
   name:
     type: string
   default_status:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   description:
     type: string
     nullable: true

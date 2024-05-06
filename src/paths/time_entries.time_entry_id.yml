@@ -14,7 +14,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/TimeEntry.yml
+            $ref: ../components/schemas/time_entry.yml
 
 put:
   tags:
@@ -77,7 +77,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:

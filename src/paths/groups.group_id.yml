@@ -28,13 +28,13 @@ get:
             properties:
               group:
                 allOf:
-                  - $ref: ../components/schemas/Group.yml
+                  - $ref: ../components/schemas/group.yml
                   - type: object
                     properties:
                       users:
                         type: array
                         items:
-                          $ref: ../components/schemas/IdName.yml
+                          $ref: ../components/schemas/id_name.yml
                       memberships:
                         type: array
                         items:
@@ -43,11 +43,11 @@ get:
                             id:
                               type: integer
                             project:
-                              $ref: ../components/schemas/IdName.yml
+                              $ref: ../components/schemas/id_name.yml
                             roles:
                               type: array
                               items:
-                                $ref: ../components/schemas/IdName.yml
+                                $ref: ../components/schemas/id_name.yml
 
 put:
   tags:

@@ -21,7 +21,7 @@ get:
               versions:
                 type: array
                 items:
-                  $ref: ../components/schemas/Version.yml
+                  $ref: ../components/schemas/version.yml
               total_count:
                 type: integer
 
@@ -80,7 +80,7 @@ post:
         application/json:
           schema:
             allOf:
-              - $ref: ../components/schemas/Version.yml
+              - $ref: ../components/schemas/version.yml
               - type: object
                 properties:
                   estimated_hours:
@@ -92,4 +92,4 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

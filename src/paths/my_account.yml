@@ -13,7 +13,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/MyAccount.yml
+            $ref: ../components/schemas/my_account.yml
 
 put:
   tags:
@@ -144,4 +144,4 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

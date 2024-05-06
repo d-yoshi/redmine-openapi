@@ -20,4 +20,4 @@ get:
               issue_priorities:
                 type: array
                 items:
-                  $ref: ../components/schemas/IssuePriority.yml
+                  $ref: ../components/schemas/issue_priority.yml

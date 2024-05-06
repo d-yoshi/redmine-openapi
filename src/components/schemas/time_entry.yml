@@ -14,16 +14,16 @@ properties:
   id:
     type: integer
   project:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   issue:
     type: object
     properties:
       id:
         type: integer
   user:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   activity:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   hours:
     type: number
   comments:

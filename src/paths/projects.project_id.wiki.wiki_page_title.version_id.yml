@@ -27,4 +27,4 @@ get:
               - wiki_page
             properties:
               wiki_page:
-                $ref: ../components/schemas/WikiPage.yml
+                $ref: ../components/schemas/wiki_page.yml

@@ -20,4 +20,4 @@ get:
               document_categories:
                 type: array
                 items:
-                  $ref: ../components/schemas/DocumentCategory.yml
+                  $ref: ../components/schemas/document_category.yml

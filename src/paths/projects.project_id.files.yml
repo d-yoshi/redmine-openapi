@@ -21,7 +21,7 @@ get:
               files:
                 type: array
                 items:
-                  $ref: ../components/schemas/File.yml
+                  $ref: ../components/schemas/file.yml
 
 post:
   tags:

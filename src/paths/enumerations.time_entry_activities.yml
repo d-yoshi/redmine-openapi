@@ -20,4 +20,4 @@ get:
               time_entry_activities:
                 type: array
                 items:
-                  $ref: ../components/schemas/TimeEntryActivity.yml
+                  $ref: ../components/schemas/time_entry_activity.yml

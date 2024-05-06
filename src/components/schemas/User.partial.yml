@@ -1,9 +1,0 @@
-type: object
-required:
-  - api_key
-  - status
-properties:
-  api_key:
-    type: string
-  status:
-    type: integer

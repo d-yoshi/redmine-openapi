@@ -21,4 +21,4 @@ get:
               wiki_pages:
                 type: array
                 items:
-                  $ref: ../components/schemas/WikiPages.yml
+                  $ref: ../components/schemas/wiki_pages.yml

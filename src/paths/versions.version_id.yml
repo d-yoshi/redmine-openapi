@@ -22,7 +22,7 @@ get:
                 type: array
                 items:
                   allOf:
-                    - $ref: ../components/schemas/Version.yml
+                    - $ref: ../components/schemas/version.yml
                     - type: object
                       properties:
                         estimated_hours:
@@ -82,7 +82,7 @@ put:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
 
 delete:
   tags:
@@ -102,4 +102,4 @@ delete:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

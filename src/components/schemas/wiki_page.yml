@@ -22,7 +22,7 @@ properties:
   version:
     type: integer
   author:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   comments:
     type: string
   created_on:

@@ -17,7 +17,7 @@ get:
             type: object
             properties:
               attachment:
-                $ref: ../components/schemas/Attachment.yml
+                $ref: ../components/schemas/attachment.yml
 
 patch:
   tags:

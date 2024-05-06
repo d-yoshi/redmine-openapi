@@ -13,4 +13,4 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Trackers.yml
+            $ref: ../components/schemas/trackers.yml

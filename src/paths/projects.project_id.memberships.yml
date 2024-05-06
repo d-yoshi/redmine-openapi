@@ -24,7 +24,7 @@ get:
               memberships:
                 type: array
                 items:
-                  $ref: ../components/schemas/Membership.yml
+                  $ref: ../components/schemas/membership.yml
               total_count:
                 type: integer
               offset:
@@ -74,4 +74,4 @@ post:
               - membership
             properties:
               membership:
-                $ref: ../components/schemas/Membership.yml
+                $ref: ../components/schemas/membership.yml

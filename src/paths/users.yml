@@ -35,7 +35,7 @@ get:
               users:
                 type: array
                 items:
-                  $ref: ../components/schemas/User.yml
+                  $ref: ../components/schemas/user.simple.yml
               total_count:
                 type: integer
               offset:
@@ -95,12 +95,10 @@ post:
             type: object
             properties:
               user:
-                allOf:
-                  - $ref: ../components/schemas/User.yml
-                  - $ref: ../components/schemas/User.partial.yml
+                $ref: ../components/schemas/user.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

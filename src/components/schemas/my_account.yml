@@ -37,4 +37,4 @@ properties:
       custom_fields:
         type: array
         items:
-          $ref: ./CustomFieldValues.yml
+          $ref: ./custom_field_values.yml

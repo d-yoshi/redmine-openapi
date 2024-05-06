@@ -21,7 +21,7 @@ get:
               relations:
                 type: array
                 items:
-                  $ref: ../components/schemas/IssueRelation.yml
+                  $ref: ../components/schemas/issue_relation.yml
 
 post:
   tags:
@@ -72,4 +72,4 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml

@@ -14,7 +14,7 @@ properties:
   id:
     type: integer
   project:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   name:
     type: string
   description:
@@ -47,4 +47,3 @@ properties:
   updated_on:
     type: string
     format: date-time
-  

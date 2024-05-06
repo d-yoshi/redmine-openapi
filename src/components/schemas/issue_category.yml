@@ -7,8 +7,8 @@ properties:
   id:
     type: integer
   project:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml
   name:
     type: string
   assigned_to:
-    $ref: ./IdName.yml
+    $ref: ./id_name.yml

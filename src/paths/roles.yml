@@ -18,4 +18,4 @@ get:
               roles:
                 type: array
                 items:
-                  $ref: ../components/schemas/IdName.yml
+                  $ref: ../components/schemas/id_name.yml

@@ -36,7 +36,7 @@ get:
               projects:
                 type: array
                 items:
-                  $ref: ../components/schemas/Project.yml
+                  $ref: ../components/schemas/project.yml
               total_count:
                 type: integer
               offset:
@@ -116,10 +116,10 @@ post:
               - project
             properties:
               project:
-                $ref: ../components/schemas/Project.yml
+                $ref: ../components/schemas/project.yml
     422:
       description: ""
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/Errors.yml
+            $ref: ../components/schemas/errors.yml
