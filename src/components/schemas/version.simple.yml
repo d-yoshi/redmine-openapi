@@ -41,10 +41,6 @@ properties:
   wiki_page_title:
     type: string
     nullable: true
-  estimated_hours:
-    type: number
-  spent_hours:
-    type: number
   created_on:
     type: string
     format: date-time

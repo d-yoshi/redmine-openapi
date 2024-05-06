@@ -21,7 +21,7 @@ get:
               groups:
                 type: array
                 items:
-                  $ref: ../components/schemas/group.yml
+                  $ref: ../components/schemas/group.simple.yml
 
 post:
   tags:
@@ -48,7 +48,6 @@ post:
                   type: array
                   items:
                     type: integer
-
   responses:
     201:
       description: ""
@@ -58,7 +57,7 @@ post:
             type: object
             properties:
               group:
-                $ref: ../components/schemas/group.yml
+                $ref: ../components/schemas/group.simple.yml
     422:
       description: ""
       content:

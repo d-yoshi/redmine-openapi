@@ -20,16 +20,7 @@ get:
               - version
             properties:
               version:
-                type: array
-                items:
-                  allOf:
-                    - $ref: ../components/schemas/version.yml
-                    - type: object
-                      properties:
-                        estimated_hours:
-                          type: number
-                        spent_hours:
-                          type: number
+                $ref: ../components/schemas/version.yml
 
 put:
   tags:
