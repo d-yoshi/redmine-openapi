@@ -9,6 +9,7 @@ get:
     - $ref: ../components/parameters/header/switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
+    - $ref: ../components/parameters/query/nometa.yml
   responses:
     200:
       description: ""

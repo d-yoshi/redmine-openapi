@@ -10,6 +10,9 @@ limit:
 offset:
   $ref: ./parameters/query/offset.yml
 
+nometa:
+  $ref: ./parameters/query/nometa.yml
+
 issue_id:
   $ref: ./parameters/path/issue_id.yml
 
