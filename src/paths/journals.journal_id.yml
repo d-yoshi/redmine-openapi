@@ -4,9 +4,9 @@ put:
   summary: PUT
   operationId: updateJournal
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/journal_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
       application/json:

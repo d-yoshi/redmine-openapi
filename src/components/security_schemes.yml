@@ -6,3 +6,8 @@ ApiKeyAuth:
   type: apiKey
   in: header
   name: X-Redmine-API-Key
+
+ApiKeyInQueryAuth:
+  type: apiKey
+  in: query
+  name: key

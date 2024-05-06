@@ -6,9 +6,9 @@ get:
   summary: GET
   operationId: getUser
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/user_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - name: include
       in: query
       schema:
@@ -38,9 +38,9 @@ put:
   summary: PUT
   operationId: updateUser
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/user_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
       application/json:
@@ -90,9 +90,9 @@ delete:
   summary: DELETE
   operationId: deleteUser
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/user_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
       description: ""

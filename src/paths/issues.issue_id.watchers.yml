@@ -6,9 +6,9 @@ post:
   summary: Adding a watcher
   operationId: createWatcher
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
       application/json:

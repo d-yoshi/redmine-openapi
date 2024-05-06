@@ -6,9 +6,9 @@ get:
   summary: GET
   operationId: getMembership
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/membership_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     200:
       description: ""
@@ -30,9 +30,9 @@ put:
   summary: PUT
   operationId: updateMembership
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/membership_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
       description: ""
@@ -51,9 +51,9 @@ delete:
   summary: DELETE
   operationId: deleteMembership
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/membership_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
       description: ""
