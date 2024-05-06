@@ -1,5 +1,8 @@
-switch_user:
-  $ref: ./parameters/header/switch_user.yml
+x_redmine_switch_user:
+  $ref: ./parameters/header/x_redmine_switch_user.yml
+
+x_redmine_nometa:
+  $ref: parameters/header/x_redmine_nometa.yml
 
 format:
   $ref: ./parameters/path/format.yml

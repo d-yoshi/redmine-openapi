@@ -6,7 +6,7 @@ get:
   summary: GET
   operationId: getAttachment
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/attachment_id.yml
   responses:
@@ -28,7 +28,7 @@ patch:
   summary: PATCH
   operationId: updateAttachment
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/attachment_id.yml
   requestBody:
@@ -56,7 +56,7 @@ delete:
   summary: DELETE
   operationId: deleteAttachment
   parameters:
-    - $ref: ../components/parameters/header/switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/attachment_id.yml
   responses:
