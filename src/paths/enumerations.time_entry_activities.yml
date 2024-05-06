@@ -6,8 +6,8 @@ get:
   summary: GET
   operationId: getTimeEntryActivities
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     200:
       description: ""

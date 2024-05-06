@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.8.0
+  version: 0.8.1
 
 servers:
   - url: /
@@ -21,6 +21,7 @@ externalDocs:
 security:
   - BasicAuth: []
   - ApiKeyAuth: []
+  - ApiKeyInQueryAuth: []
 
 paths:
   /issues.{format}:
@@ -160,7 +161,7 @@ paths:
 
 components:
   securitySchemes:
-    $ref: ./components/securitySchemes.yml
+    $ref: ./components/security_schemes.yml
 
 tags:
   $ref: ./tags.yml

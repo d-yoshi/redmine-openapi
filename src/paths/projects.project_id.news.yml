@@ -6,13 +6,13 @@ get:
   summary: GET
   operationId: getNewsByProject
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
-    - $ref: ../components/parameters/header/x_redmine_nometa.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/limit.yml
     - $ref: ../components/parameters/query/nometa.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yml
   responses:
     200:
       description: ""

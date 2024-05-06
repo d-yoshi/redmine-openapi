@@ -6,8 +6,8 @@ get:
   summary: GET
   operationId: getGroups
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     200:
       description: ""
@@ -31,8 +31,8 @@ post:
   summary: POST
   operationId: createGroup
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
       application/json:

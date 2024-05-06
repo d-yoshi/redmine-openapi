@@ -6,9 +6,9 @@ get:
   summary: GET
   operationId: getVersions
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/version_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     200:
       description: ""
@@ -30,9 +30,9 @@ put:
   summary: PUT
   operationId: updateVersion
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/version_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
       application/json:
@@ -85,9 +85,9 @@ delete:
   summary: DELETE
   operationId: deleteVersion
   parameters:
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/version_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
       description: ""
