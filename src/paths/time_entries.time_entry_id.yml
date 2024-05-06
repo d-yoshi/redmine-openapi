@@ -15,7 +15,12 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/time_entry.yml
+            type: object
+            required:
+              - time_entry
+            properties:
+              time_entry:
+                $ref: ../components/schemas/time_entry.yml
 
 put:
   tags:
