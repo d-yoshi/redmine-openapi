@@ -1,8 +1,6 @@
 type: object
 required:
   - id
-  - project
-  - issue
   - user
   - activity
   - hours
