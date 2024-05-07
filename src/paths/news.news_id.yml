@@ -1,18 +1,22 @@
 get:
   tags:
     - News
-  externalDocs:
-    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2
   summary: GET
-  operationId: getNewsByProject
+  operationId: getNews
   parameters:
     - $ref: ../components/parameters/path/format.yml
-    - $ref: ../components/parameters/path/project_id.yml
-    - $ref: ../components/parameters/query/offset.yml
-    - $ref: ../components/parameters/query/limit.yml
-    - $ref: ../components/parameters/query/nometa.yml
+    - $ref: ../components/parameters/path/news_id.yml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
-    - $ref: ../components/parameters/header/x_redmine_nometa.yml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+            - comments
+      explode: false
   responses:
     200:
       description: ""
@@ -24,24 +28,16 @@ get:
               - news
             properties:
               news:
-                type: array
-                items:
-                  $ref: ../components/schemas/news.yml
-              total_count:
-                type: integer
-              offset:
-                type: integer
-              limit:
-                type: integer
+                $ref: ../components/schemas/news.yml
 
-post:
+put:
   tags:
     - News
-  summary: POST
-  operationId: createNewsByProject
+  summary: PUT
+  operationId: updateNews
   parameters:
     - $ref: ../components/parameters/path/format.yml
-    - $ref: ../components/parameters/path/project_id.yml
+    - $ref: ../components/parameters/path/news_id.yml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
@@ -73,6 +69,19 @@ post:
                         type: string
                       content_type:
                         type: string
+  responses:
+    204:
+      description: ""
+
+delete:
+  tags:
+    - News
+  summary: DELETE
+  operationId: deleteNews
+  parameters:
+    - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/news_id.yml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
       description: ""

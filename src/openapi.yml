@@ -72,6 +72,9 @@ paths:
   /news.{format}:
     $ref: ./paths/news.yml
 
+  /news/{news_id}.{format}:
+    $ref: ./paths/news.news_id.yml
+
   /projects/{project_id}/news.{format}:
     $ref: ./paths/projects.project_id.news.yml
 

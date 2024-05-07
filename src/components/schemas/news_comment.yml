@@ -1,0 +1,12 @@
+type: object
+required:
+  - id
+  - author
+  - content
+properties:
+  id:
+    type: integer
+  author:
+    $ref: ./id_name.yml
+  content:
+    type: string
