@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.9.2
+  version: 0.10.0
 servers:
   - url: /
 security:
@@ -1284,7 +1284,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
       summary: GET
-      operationId: getNews
+      operationId: getNewsList
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
@@ -1312,6 +1312,92 @@ paths:
                     type: integer
                   limit:
                     type: integer
+  /news/{news_id}.{format}:
+    get:
+      tags:
+        - News
+      summary: GET
+      operationId: getNews
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/news_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - name: include
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - attachments
+                - comments
+          explode: false
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - news
+                properties:
+                  news:
+                    $ref: '#/components/schemas/news'
+    put:
+      tags:
+        - News
+      summary: PUT
+      operationId: updateNews
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/news_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - news
+              properties:
+                news:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    summary:
+                      type: string
+                    description:
+                      type: string
+                    uploads:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                          filename:
+                            type: string
+                          description:
+                            type: string
+                          content_type:
+                            type: string
+      responses:
+        '204':
+          description: ''
+    delete:
+      tags:
+        - News
+      summary: DELETE
+      operationId: deleteNews
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/news_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      responses:
+        '204':
+          description: ''
   /projects/{project_id}/news.{format}:
     get:
       tags:
@@ -1348,6 +1434,48 @@ paths:
                     type: integer
                   limit:
                     type: integer
+    post:
+      tags:
+        - News
+      summary: POST
+      operationId: createNewsByProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - news
+              properties:
+                news:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    summary:
+                      type: string
+                    description:
+                      type: string
+                    uploads:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                          filename:
+                            type: string
+                          description:
+                            type: string
+                          content_type:
+                            type: string
+      responses:
+        '204':
+          description: ''
   /issues/{issue_id}/relations.{format}:
     get:
       tags:
@@ -2936,6 +3064,12 @@ components:
       required: true
       schema:
         type: integer
+    news_id:
+      name: news_id
+      in: path
+      required: true
+      schema:
+        type: integer
     issue_relation_id:
       name: issue_relation_id
       in: path
@@ -3546,6 +3680,8 @@ components:
           $ref: '#/components/schemas/id_name'
         issue:
           type: object
+          required:
+            - id
           properties:
             id:
               type: integer
@@ -3567,6 +3703,48 @@ components:
         updated_on:
           type: string
           format: date-time
+    attachment:
+      type: object
+      required:
+        - id
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - author
+        - created_on
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/id_name'
+        created_on:
+          type: string
+          format: data-time
+    news_comment:
+      type: object
+      required:
+        - id
+        - author
+        - content
+      properties:
+        id:
+          type: integer
+        author:
+          $ref: '#/components/schemas/id_name'
+        content:
+          type: string
     news:
       type: object
       required:
@@ -3574,7 +3752,6 @@ components:
         - project
         - author
         - title
-        - summary
         - description
         - created_on
       properties:
@@ -3593,6 +3770,14 @@ components:
         created_on:
           type: string
           format: date-time
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/news_comment'
     issue_relation:
       type: object
       required:
@@ -3742,35 +3927,6 @@ components:
         updated_on:
           type: string
           format: date-time
-    attachment:
-      type: object
-      required:
-        - id
-        - filename
-        - filesize
-        - content_type
-        - description
-        - content_url
-        - author
-        - created_on
-      properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        filesize:
-          type: integer
-        content_type:
-          type: string
-        description:
-          type: string
-        content_url:
-          type: string
-        author:
-          $ref: '#/components/schemas/id_name'
-        created_on:
-          type: string
-          format: data-time
     wiki_page:
       type: object
       required:
