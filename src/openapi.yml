@@ -9,7 +9,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.9.2
+  version: 0.10.0
 
 servers:
   - url: /
@@ -71,6 +71,9 @@ paths:
 
   /news.{format}:
     $ref: ./paths/news.yml
+
+  /news/{news_id}.{format}:
+    $ref: ./paths/news.news_id.yml
 
   /projects/{project_id}/news.{format}:
     $ref: ./paths/projects.project_id.news.yml

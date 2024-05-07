@@ -1,0 +1,5 @@
+name: news_id
+in: path
+required: true
+schema:
+  type: integer

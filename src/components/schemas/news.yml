@@ -4,7 +4,6 @@ required:
   - project
   - author
   - title
-  - summary
   - description
   - created_on
 properties:
@@ -23,3 +22,11 @@ properties:
   created_on:
     type: string
     format: date-time
+  attachments:
+    type: array
+    items:
+      $ref: ./attachment.yml
+  comments:
+    type: array
+    items:
+      $ref: ./news_comment.yml
