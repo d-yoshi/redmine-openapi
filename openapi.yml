@@ -6,9 +6,9 @@ info:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
   license:
-    name: MIT License
+    name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.9.0
+  version: 0.9.1
 servers:
   - url: /
 security:
@@ -816,6 +816,23 @@ paths:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/membership_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - membership
+              properties:
+                membership:
+                  type: object
+                  required:
+                    - role_ids
+                  properties:
+                    role_ids:
+                      type: array
+                      items:
+                        type: integer
       responses:
         '204':
           description: ''
