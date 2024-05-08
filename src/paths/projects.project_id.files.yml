@@ -56,24 +56,8 @@ post:
                   type: string
                 description:
                   type: string
+                content_type:
+                  type: string
   responses:
     204:
       description: ""
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - file
-            properties:
-              file:
-                type: object
-                properties:
-                  token:
-                    type: string
-                  version_id:
-                    type: string
-                  filename:
-                    type: string
-                  description:
-                    type: string
