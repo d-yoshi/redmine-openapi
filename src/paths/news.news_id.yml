@@ -44,8 +44,6 @@ put:
       application/json:
         schema:
           type: object
-          required:
-            - news
           properties:
             news:
               type: object

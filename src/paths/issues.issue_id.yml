@@ -31,6 +31,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - issue
             properties:
               issue:
                 $ref: ../components/schemas/issue.yml

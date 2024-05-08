@@ -38,8 +38,6 @@ put:
       application/json:
         schema:
           type: object
-          required:
-            - membership
           properties:
             membership:
               type: object

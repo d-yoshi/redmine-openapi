@@ -26,6 +26,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - group
             properties:
               group:
                 $ref: ../components/schemas/group.yml

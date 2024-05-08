@@ -16,6 +16,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - relation
             properties:
               relation:
                 $ref: ../components/schemas/issue_relation.yml

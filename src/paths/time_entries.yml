@@ -61,6 +61,8 @@ post:
       application/json:
         schema:
           type: object
+          required:
+            - time_entry
           properties:
             time_entry:
               type: object

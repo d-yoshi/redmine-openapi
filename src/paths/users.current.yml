@@ -25,6 +25,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - user
             properties:
               user:
                 $ref: ../components/schemas/user.yml

@@ -16,6 +16,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - attachment
             properties:
               attachment:
                 $ref: ../components/schemas/attachment.yml

@@ -29,6 +29,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - project
             properties:
               project:
                 $ref: ../components/schemas/project.yml

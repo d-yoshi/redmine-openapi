@@ -25,9 +25,14 @@ post:
         application/json:
           schema:
             type: object
+            required:
+              - upload
             properties:
               upload:
                 type: object
+                required:
+                  - id
+                  - token
                 properties:
                   id:
                     type: integer
