@@ -77,6 +77,15 @@ post:
                 wiki_page_title:
                   type: string
                   nullable: true
+                custom_fields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      value:
+                        type: string
   responses:
     201:
       description: ""

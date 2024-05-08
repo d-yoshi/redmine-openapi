@@ -38,6 +38,8 @@ put:
       application/json:
         schema:
           type: object
+          required:
+            - version
           properties:
             version:
               type: object
@@ -67,6 +69,15 @@ put:
                 wiki_page_title:
                   type: string
                   nullable: true
+                custom_fields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      value:
+                        type: string
   responses:
     204:
       description: ""
