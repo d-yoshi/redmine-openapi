@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.11.0
+  version: 0.11.1
 servers:
   - url: /
 security:
@@ -323,6 +323,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - issue
                 properties:
                   issue:
                     $ref: '#/components/schemas/issue'
@@ -612,6 +614,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - project
                 properties:
                   project:
                     $ref: '#/components/schemas/project'
@@ -835,8 +839,6 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - membership
               properties:
                 membership:
                   type: object
@@ -1006,6 +1008,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - user
                 properties:
                   user:
                     $ref: '#/components/schemas/user'
@@ -1025,8 +1029,6 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - user
               properties:
                 user:
                   type: object
@@ -1102,6 +1104,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - user
                 properties:
                   user:
                     $ref: '#/components/schemas/user'
@@ -1168,6 +1172,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - time_entry
               properties:
                 time_entry:
                   type: object
@@ -1372,8 +1378,6 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - news
               properties:
                 news:
                   type: object
@@ -1586,6 +1590,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - relation
                 properties:
                   relation:
                     $ref: '#/components/schemas/issue_relation'
@@ -1755,8 +1761,6 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - version
               properties:
                 version:
                   type: object
@@ -2037,6 +2041,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - attachment
                 properties:
                   attachment:
                     $ref: '#/components/schemas/attachment'
@@ -2370,6 +2376,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - roles
                 properties:
                   roles:
                     type: array
@@ -2394,6 +2402,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - role
                 properties:
                   role:
                     $ref: '#/components/schemas/role'
@@ -2437,6 +2447,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - group
               properties:
                 group:
                   type: object
@@ -2492,6 +2504,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - group
                 properties:
                   group:
                     $ref: '#/components/schemas/group'
@@ -2555,6 +2569,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - user_id
               properties:
                 user_id:
                   type: integer
@@ -2985,9 +3001,14 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - upload
                 properties:
                   upload:
                     type: object
+                    required:
+                      - id
+                      - token
                     properties:
                       id:
                         type: integer
