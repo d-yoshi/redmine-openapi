@@ -86,7 +86,14 @@ put:
                   type: integer
                   nullable: true
                 custom_fields:
-                  type: string
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      value:
+                        type: string
                 is_private:
                   type: boolean
                 estimated_hours:
