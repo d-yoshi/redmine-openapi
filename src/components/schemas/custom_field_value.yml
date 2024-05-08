@@ -10,3 +10,4 @@ properties:
     type: string
   value:
     type: string
+    nullable: true
