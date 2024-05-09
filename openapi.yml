@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.11.1
+  version: 0.12.0
 servers:
   - url: /
 security:
@@ -114,7 +114,7 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
-      summary: Listing issues
+      summary: List issues
       operationId: getIssues
       parameters:
         - $ref: '#/components/parameters/format'
@@ -194,7 +194,7 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
-      summary: Creating an issue
+      summary: Create issue
       operationId: createIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -295,7 +295,7 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Showing-an-issue
-      summary: Showing an issue
+      summary: Show issue
       operationId: getIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -333,7 +333,7 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
-      summary: Updating an issue
+      summary: Update issue
       operationId: updateIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -404,7 +404,7 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Deleting-an-issue
-      summary: Deleting an issue
+      summary: Delete issue
       operationId: deleteIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -419,8 +419,8 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
-      summary: Adding a watcher
-      operationId: createWatcher
+      summary: Add watcher
+      operationId: addWatcher
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -444,8 +444,8 @@ paths:
         - Issues
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
-      summary: Removing a watcher
-      operationId: deleteWatcher
+      summary: Remove watcher
+      operationId: removeWatcher
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -460,7 +460,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects
-      summary: Listing projects
+      summary: List projects
       operationId: getProjects
       parameters:
         - $ref: '#/components/parameters/format'
@@ -507,7 +507,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
-      summary: Creating a project
+      summary: Crete project
       operationId: createProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -588,7 +588,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project
-      summary: Showing a project
+      summary: Show project
       operationId: getProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -624,7 +624,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
-      summary: Updating a project
+      summary: Update project
       operationId: updateProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -681,7 +681,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
-      summary: Deleting a project
+      summary: Delete project
       operationId: deleteProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -696,7 +696,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
-      summary: Archiving a project
+      summary: Archive project
       operationId: archiveProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -711,7 +711,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Unarchiving-a-project
-      summary: Unarchiving a project
+      summary: Unarchive project
       operationId: unarchiveProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -726,8 +726,8 @@ paths:
         - Project Memberships
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET
-      summary: GET
-      operationId: getMembershipsByProject
+      summary: List memberships
+      operationId: getMemberships
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -761,8 +761,8 @@ paths:
         - Project Memberships
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST
-      summary: POST
-      operationId: createMembershipsByProject
+      summary: Create membership
+      operationId: createMembership
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -805,7 +805,7 @@ paths:
         - Project Memberships
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2
-      summary: GET
+      summary: Show membership
       operationId: getMembership
       parameters:
         - $ref: '#/components/parameters/format'
@@ -828,7 +828,7 @@ paths:
         - Project Memberships
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
-      summary: PUT
+      summary: Update membership
       operationId: updateMembership
       parameters:
         - $ref: '#/components/parameters/format'
@@ -863,7 +863,7 @@ paths:
         - Project Memberships
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE
-      summary: DELETE
+      summary: Delete membership
       operationId: deleteMembership
       parameters:
         - $ref: '#/components/parameters/format'
@@ -878,7 +878,7 @@ paths:
         - Users
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET
-      summary: GET
+      summary: List users
       operationId: getUsers
       parameters:
         - $ref: '#/components/parameters/format'
@@ -924,7 +924,7 @@ paths:
         - Users
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#POST
-      summary: POST
+      summary: Create user
       operationId: createUser
       parameters:
         - $ref: '#/components/parameters/format'
@@ -985,7 +985,7 @@ paths:
         - Users
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
-      summary: GET
+      summary: Show user
       operationId: getUser
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1018,7 +1018,7 @@ paths:
         - Users
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#PUT
-      summary: PUT
+      summary: Update user
       operationId: updateUser
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1067,7 +1067,7 @@ paths:
         - Users
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#DELETE
-      summary: DELETE
+      summary: Delete user
       operationId: deleteUser
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1082,7 +1082,7 @@ paths:
         - Users
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
-      summary: GET
+      summary: Show current user
       operationId: getCurrentUser
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1115,7 +1115,7 @@ paths:
         - Time Entries
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries
-      summary: Listing time entries
+      summary: List time entries
       operationId: getTimeEntries
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1162,7 +1162,7 @@ paths:
         - Time Entries
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
-      summary: Creating a time entry
+      summary: Create time entry
       operationId: createTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1219,7 +1219,7 @@ paths:
         - Time Entries
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry
-      summary: Showing a time entry
+      summary: Show time entry
       operationId: getTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1242,7 +1242,7 @@ paths:
         - Time Entries
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Updating-a-time-entry
-      summary: Updating a time entry
+      summary: Update time entry
       operationId: updateTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1288,7 +1288,7 @@ paths:
         - Time Entries
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Deleting-a-time-entry
-      summary: Deleting a time entry
+      summary: Delete time entry
       operationId: deleteTimeEntry
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1303,7 +1303,7 @@ paths:
         - News
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
-      summary: GET
+      summary: List news
       operationId: getNewsList
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1336,7 +1336,7 @@ paths:
     get:
       tags:
         - News
-      summary: GET
+      summary: Show news
       operationId: getNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1367,7 +1367,7 @@ paths:
     put:
       tags:
         - News
-      summary: PUT
+      summary: Update news
       operationId: updateNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1407,7 +1407,7 @@ paths:
     delete:
       tags:
         - News
-      summary: DELETE
+      summary: Delete news
       operationId: deleteNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1422,8 +1422,8 @@ paths:
         - News
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2
-      summary: GET
-      operationId: getNewsByProject
+      summary: List news by project
+      operationId: getNewsListByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1455,8 +1455,8 @@ paths:
     post:
       tags:
         - News
-      summary: POST
-      operationId: createNewsByProject
+      summary: Create news
+      operationId: createNews
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1500,8 +1500,8 @@ paths:
         - Issue Relations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET
-      summary: GET
-      operationId: getIssueRelationsByIssue
+      summary: List issue relations
+      operationId: getIssueRelations
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -1525,8 +1525,8 @@ paths:
         - Issue Relations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
-      summary: POST
-      operationId: createIssueRelationsByIssue
+      summary: Update issue relation
+      operationId: createIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/issue_id'
@@ -1577,7 +1577,7 @@ paths:
         - Issue Relations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2
-      summary: GET
+      summary: Show issue relation
       operationId: getIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1600,7 +1600,7 @@ paths:
         - Issue Relations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE
-      summary: DELETE
+      summary: Delete issue relation
       operationId: deleteIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1621,7 +1621,7 @@ paths:
         - Versions
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET
-      summary: GET
+      summary: List versions by project
       operationId: getVersionsByProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1650,8 +1650,8 @@ paths:
         - Versions
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#POST
-      summary: POST
-      operationId: createVersionByProject
+      summary: Create version
+      operationId: createVersion
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1727,7 +1727,7 @@ paths:
         - Versions
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
-      summary: GET
+      summary: List versions
       operationId: getVersions
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1750,7 +1750,7 @@ paths:
         - Versions
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT
-      summary: PUT
+      summary: Update version
       operationId: updateVersion
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1813,7 +1813,7 @@ paths:
         - Versions
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE
-      summary: DELETE
+      summary: Delete version
       operationId: deleteVersion
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1834,7 +1834,7 @@ paths:
         - Wiki Pages
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki
-      summary: Getting the pages list of a wiki
+      summary: List wiki pages
       operationId: getWikiPages
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1860,8 +1860,8 @@ paths:
         - Wiki Pages
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page
-      summary: Getting a wiki page
-      operationId: getWikiPageByTitle
+      summary: Show wiki page
+      operationId: getWikiPage
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1890,8 +1890,8 @@ paths:
         - Wiki Pages
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
-      summary: Creating or updating a wiki page
-      operationId: updateWikiPageByTitle
+      summary: Create or update wiki page
+      operationId: updateWikiPage
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1945,8 +1945,8 @@ paths:
         - Wiki Pages
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page
-      summary: Deleting a wiki page
-      operationId: deleteWikiPageByTitle
+      summary: Delete wiki page
+      operationId: deleteWikiPage
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -1961,7 +1961,7 @@ paths:
         - Wiki Pages
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-an-old-version-of-a-wiki-page
-      summary: Getting an old version of a wiki page
+      summary: Show wiki page by specific version
       operationId: getWikiPageByVersion
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1993,7 +1993,7 @@ paths:
         - Queries
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries#GET
-      summary: GET
+      summary: List queries
       operationId: getQueries
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2028,7 +2028,7 @@ paths:
         - Attachments
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET
-      summary: GET
+      summary: Show attachment
       operationId: getAttachment
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2051,7 +2051,7 @@ paths:
         - Attachments
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
-      summary: PATCH
+      summary: Update attachment
       operationId: updateAttachment
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2078,7 +2078,7 @@ paths:
         - Attachments
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE
-      summary: DELETE
+      summary: Delete attachment
       operationId: deleteAttachment
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2093,7 +2093,7 @@ paths:
         - Issue Statuses
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET
-      summary: Returns possible Status Values for Issues
+      summary: List issue statuses
       operationId: getIssueStatuses
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2118,7 +2118,7 @@ paths:
         - Trackers
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers#GET
-      summary: GET
+      summary: List trackers
       operationId: getTrackers
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2143,8 +2143,8 @@ paths:
         - Issue Categories
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET
-      summary: GET
-      operationId: getIssueCategoriesByProject
+      summary: List issue categories
+      operationId: getIssueCategories
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -2172,8 +2172,8 @@ paths:
         - Issue Categories
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#POST
-      summary: POST
-      operationId: createIssueCategoryByProject
+      summary: Create issue category
+      operationId: createIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
@@ -2214,7 +2214,7 @@ paths:
         - Enumerations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET
-      summary: GET
+      summary: List issue priorities
       operationId: getIssuePriorities
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2239,7 +2239,7 @@ paths:
         - Enumerations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2
-      summary: GET
+      summary: List time entry activities
       operationId: getTimeEntryActivities
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2264,7 +2264,7 @@ paths:
         - Enumerations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3
-      summary: GET
+      summary: List document categories
       operationId: getDocumentCategories
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2289,7 +2289,7 @@ paths:
         - Issue Categories
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2
-      summary: GET
+      summary: Show issue category
       operationId: getIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2312,7 +2312,7 @@ paths:
         - Issue Categories
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT
-      summary: PUT
+      summary: Update issue category
       operationId: updateIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2345,7 +2345,7 @@ paths:
         - Issue Categories
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#DELETE
-      summary: DELETE
+      summary: Delete issue category
       operationId: deleteIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2364,7 +2364,7 @@ paths:
         - Roles
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET
-      summary: GET
+      summary: List roles
       operationId: getRoles
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2389,7 +2389,7 @@ paths:
         - Roles
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET-2
-      summary: GET
+      summary: Show role
       operationId: getRole
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2413,7 +2413,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET
-      summary: GET
+      summary: List groups
       operationId: getGroups
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2437,7 +2437,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST
-      summary: POST
+      summary: Create group
       operationId: createGroup
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2481,7 +2481,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET-2
-      summary: GET
+      summary: Show group
       operationId: getGroup
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2514,7 +2514,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#PUT
-      summary: PUT
+      summary: Update group
       operationId: updateGroup
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2543,7 +2543,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE
-      summary: DELETE
+      summary: Delete group
       operationId: deleteGroup
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2558,7 +2558,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST-2
-      summary: POST
+      summary: Add user to group
       operationId: addUserToGroup
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2583,7 +2583,7 @@ paths:
         - Groups
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE-2
-      summary: DELETE
+      summary: Remove user from group
       operationId: removeUserFromGroup
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2599,7 +2599,7 @@ paths:
         - Custom Fields
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields#GET
-      summary: GET
+      summary: List custom fields
       operationId: getCustomFields
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2624,7 +2624,7 @@ paths:
         - Search
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
-      summary: GET
+      summary: Search
       operationId: search
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2740,7 +2740,7 @@ paths:
         - Files
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET
-      summary: GET
+      summary: List files
       operationId: getFiles
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2765,7 +2765,7 @@ paths:
         - Files
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST
-      summary: POST
+      summary: Create file
       operationId: createFile
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2803,7 +2803,7 @@ paths:
         - My Account
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET
-      summary: GET
+      summary: Show my account
       operationId: getMyAccount
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2820,7 +2820,7 @@ paths:
         - My Account
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT
-      summary: PUT
+      summary: Update my account
       operationId: updateMyAccount
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2950,7 +2950,7 @@ paths:
     put:
       tags:
         - Journals
-      summary: PUT
+      summary: Update journal
       operationId: updateJournal
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2979,7 +2979,7 @@ paths:
         - Attachments
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files
-      summary: Attaching files
+      summary: Upload attachment file
       operationId: uploadAttachmentFile
       parameters:
         - $ref: '#/components/parameters/format'
