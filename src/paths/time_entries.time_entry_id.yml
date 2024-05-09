@@ -3,7 +3,7 @@ get:
     - Time Entries
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry
-  summary: Showing a time entry
+  summary: Show time entry
   operationId: getTimeEntry
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -27,7 +27,7 @@ put:
     - Time Entries
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Updating-a-time-entry
-  summary: Updating a time entry
+  summary: Update time entry
   operationId: updateTimeEntry
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -74,7 +74,7 @@ delete:
     - Time Entries
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Deleting-a-time-entry
-  summary: Deleting a time entry
+  summary: Delete time entry
   operationId: deleteTimeEntry
   parameters:
     - $ref: ../components/parameters/path/format.yml

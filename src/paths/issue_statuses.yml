@@ -3,7 +3,7 @@ get:
     - Issue Statuses
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET
-  summary: Returns possible Status Values for Issues
+  summary: List issue statuses
   operationId: getIssueStatuses
   parameters:
     - $ref: ../components/parameters/path/format.yml

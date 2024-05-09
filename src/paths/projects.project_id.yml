@@ -3,7 +3,7 @@ get:
     - Projects
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project
-  summary: Showing a project
+  summary: Show project
   operationId: getProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -40,7 +40,7 @@ put:
     - Projects
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
-  summary: Updating a project
+  summary: Update project
   operationId: updateProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -98,7 +98,7 @@ delete:
     - Projects
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
-  summary: Deleting a project
+  summary: Delete project
   operationId: deleteProject
   parameters:
     - $ref: ../components/parameters/path/format.yml

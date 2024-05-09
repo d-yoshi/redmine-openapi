@@ -3,7 +3,7 @@ delete:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE-2
-  summary: DELETE
+  summary: Remove user from group
   operationId: removeUserFromGroup
   parameters:
     - $ref: ../components/parameters/path/format.yml

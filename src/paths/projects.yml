@@ -3,7 +3,7 @@ get:
     - Projects
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects
-  summary: Listing projects
+  summary: List projects
   operationId: getProjects
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -51,7 +51,7 @@ post:
     - Projects
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
-  summary: Creating a project
+  summary: Crete project
   operationId: createProject
   parameters:
     - $ref: ../components/parameters/path/format.yml

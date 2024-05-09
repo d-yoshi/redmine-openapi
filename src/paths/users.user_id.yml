@@ -3,7 +3,7 @@ get:
     - Users
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
-  summary: GET
+  summary: Show user
   operationId: getUser
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -37,7 +37,7 @@ put:
     - Users
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#PUT
-  summary: PUT
+  summary: Update user
   operationId: updateUser
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -87,7 +87,7 @@ delete:
     - Users
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#DELETE
-  summary: DELETE
+  summary: Delete user
   operationId: deleteUser
   parameters:
     - $ref: ../components/parameters/path/format.yml

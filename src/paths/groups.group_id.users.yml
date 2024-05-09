@@ -3,7 +3,7 @@ post:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST-2
-  summary: POST
+  summary: Add user to group
   operationId: addUserToGroup
   parameters:
     - $ref: ../components/parameters/path/format.yml

@@ -3,7 +3,7 @@ get:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2
-  summary: GET
+  summary: Show membership
   operationId: getMembership
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -27,7 +27,7 @@ put:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
-  summary: PUT
+  summary: Update membership
   operationId: updateMembership
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -63,7 +63,7 @@ delete:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE
-  summary: DELETE
+  summary: Delete membership
   operationId: deleteMembership
   parameters:
     - $ref: ../components/parameters/path/format.yml

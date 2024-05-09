@@ -3,7 +3,7 @@ get:
     - Roles
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET
-  summary: GET
+  summary: List roles
   operationId: getRoles
   parameters:
     - $ref: ../components/parameters/path/format.yml

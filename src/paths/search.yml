@@ -3,7 +3,7 @@ get:
     - Search
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
-  summary: GET
+  summary: Search
   operationId: search
   parameters:
     - $ref: ../components/parameters/path/format.yml

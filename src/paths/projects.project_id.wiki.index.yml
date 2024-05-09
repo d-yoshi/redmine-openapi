@@ -3,7 +3,7 @@ get:
     - Wiki Pages
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki
-  summary: Getting the pages list of a wiki
+  summary: List wiki pages
   operationId: getWikiPages
   parameters:
     - $ref: ../components/parameters/path/format.yml

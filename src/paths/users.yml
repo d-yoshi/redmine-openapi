@@ -3,7 +3,7 @@ get:
     - Users
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET
-  summary: GET
+  summary: List users
   operationId: getUsers
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -50,7 +50,7 @@ post:
     - Users
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#POST
-  summary: POST
+  summary: Create user
   operationId: createUser
   parameters:
     - $ref: ../components/parameters/path/format.yml

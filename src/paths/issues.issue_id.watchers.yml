@@ -3,8 +3,8 @@ post:
     - Issues
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
-  summary: Adding a watcher
-  operationId: createWatcher
+  summary: Add watcher
+  operationId: addWatcher
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/issue_id.yml

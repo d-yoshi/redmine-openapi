@@ -1,7 +1,7 @@
 put:
   tags:
     - Journals
-  summary: PUT
+  summary: Update journal
   operationId: updateJournal
   parameters:
     - $ref: ../components/parameters/path/format.yml

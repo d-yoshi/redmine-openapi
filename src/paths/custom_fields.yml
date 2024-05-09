@@ -3,7 +3,7 @@ get:
     - Custom Fields
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields#GET
-  summary: GET
+  summary: List custom fields
   operationId: getCustomFields
   parameters:
     - $ref: ../components/parameters/path/format.yml

@@ -3,7 +3,7 @@ get:
     - Trackers
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers#GET
-  summary: GET
+  summary: List trackers
   operationId: getTrackers
   parameters:
     - $ref: ../components/parameters/path/format.yml

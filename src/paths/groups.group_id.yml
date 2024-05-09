@@ -3,7 +3,7 @@ get:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET-2
-  summary: GET
+  summary: Show group
   operationId: getGroup
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -37,7 +37,7 @@ put:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#PUT
-  summary: PUT
+  summary: Update group
   operationId: updateGroup
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -67,7 +67,7 @@ delete:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE
-  summary: DELETE
+  summary: Delete group
   operationId: deleteGroup
   parameters:
     - $ref: ../components/parameters/path/format.yml

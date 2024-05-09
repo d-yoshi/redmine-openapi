@@ -3,7 +3,7 @@ get:
     - Attachments
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET
-  summary: GET
+  summary: Show attachment
   operationId: getAttachment
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -27,7 +27,7 @@ patch:
     - Attachments
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
-  summary: PATCH
+  summary: Update attachment
   operationId: updateAttachment
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -55,7 +55,7 @@ delete:
     - Attachments
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE
-  summary: DELETE
+  summary: Delete attachment
   operationId: deleteAttachment
   parameters:
     - $ref: ../components/parameters/path/format.yml

@@ -3,8 +3,8 @@ get:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET
-  summary: GET
-  operationId: getMembershipsByProject
+  summary: List memberships
+  operationId: getMemberships
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -39,8 +39,8 @@ post:
     - Project Memberships
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST
-  summary: POST
-  operationId: createMembershipsByProject
+  summary: Create membership
+  operationId: createMembership
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml

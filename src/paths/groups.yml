@@ -3,7 +3,7 @@ get:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET
-  summary: GET
+  summary: List groups
   operationId: getGroups
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -28,7 +28,7 @@ post:
     - Groups
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST
-  summary: POST
+  summary: Create group
   operationId: createGroup
   parameters:
     - $ref: ../components/parameters/path/format.yml

@@ -3,7 +3,7 @@ get:
     - My Account
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#GET
-  summary: GET
+  summary: Show my account
   operationId: getMyAccount
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -21,7 +21,7 @@ put:
     - My Account
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT
-  summary: PUT
+  summary: Update my account
   operationId: updateMyAccount
   parameters:
     - $ref: ../components/parameters/path/format.yml

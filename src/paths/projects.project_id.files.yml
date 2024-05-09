@@ -3,7 +3,7 @@ get:
     - Files
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET
-  summary: GET
+  summary: List files
   operationId: getFiles
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -29,7 +29,7 @@ post:
     - Files
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST
-  summary: POST
+  summary: Create file
   operationId: createFile
   parameters:
     - $ref: ../components/parameters/path/format.yml

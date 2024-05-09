@@ -3,8 +3,8 @@ get:
     - Issue Categories
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET
-  summary: GET
-  operationId: getIssueCategoriesByProject
+  summary: List issue categories
+  operationId: getIssueCategories
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml
@@ -33,8 +33,8 @@ post:
     - Issue Categories
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#POST
-  summary: POST
-  operationId: createIssueCategoryByProject
+  summary: Create issue category
+  operationId: createIssueCategory
   parameters:
     - $ref: ../components/parameters/path/format.yml
     - $ref: ../components/parameters/path/project_id.yml

@@ -3,7 +3,7 @@ get:
     - Enumerations
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2
-  summary: GET
+  summary: List time entry activities
   operationId: getTimeEntryActivities
   parameters:
     - $ref: ../components/parameters/path/format.yml

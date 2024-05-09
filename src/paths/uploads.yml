@@ -3,7 +3,7 @@ post:
     - Attachments
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files
-  summary: Attaching files
+  summary: Upload attachment file
   operationId: uploadAttachmentFile
   parameters:
     - $ref: ../components/parameters/path/format.yml
