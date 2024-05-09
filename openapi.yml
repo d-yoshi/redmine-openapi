@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.12.0
+  version: 0.12.1
 servers:
   - url: /
 security:
@@ -1727,7 +1727,7 @@ paths:
         - Versions
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
-      summary: List versions
+      summary: Show version
       operationId: getVersions
       parameters:
         - $ref: '#/components/parameters/format'
