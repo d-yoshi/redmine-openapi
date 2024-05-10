@@ -29,7 +29,7 @@ post:
     - Issue Relations
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
-  summary: Update issue relation
+  summary: Create issue relation
   operationId: createIssueRelation
   parameters:
     - $ref: ../components/parameters/path/format.yml
@@ -69,6 +69,15 @@ post:
   responses:
     201:
       description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - relation
+            properties:
+              relation:
+                $ref: ../components/schemas/issue_relation.yml
     422:
       description: ""
       content:
