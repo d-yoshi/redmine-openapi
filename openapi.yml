@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.12.1
+  version: 0.12.2
 servers:
   - url: /
 security:
@@ -1525,7 +1525,7 @@ paths:
         - Issue Relations
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
-      summary: Update issue relation
+      summary: Create issue relation
       operationId: createIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1565,6 +1565,15 @@ paths:
       responses:
         '201':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - relation
+                properties:
+                  relation:
+                    $ref: '#/components/schemas/issue_relation'
         '422':
           description: ''
           content:
