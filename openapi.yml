@@ -2100,8 +2100,8 @@ paths:
     get:
       tags:
         - Attachments
-      summary: Download attachment
-      operationId: downloadAttachment
+      summary: Download attachment file
+      operationId: downloadAttachmentFile
       parameters:
         - $ref: '#/components/parameters/attachment_id'
         - $ref: '#/components/parameters/filename'
