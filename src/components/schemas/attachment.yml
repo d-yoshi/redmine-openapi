@@ -21,6 +21,8 @@ properties:
     type: string
   content_url:
     type: string
+  thumbnail_url:
+    type: string
   author:
     $ref: ./id_name.yml
   created_on:
