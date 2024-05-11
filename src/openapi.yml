@@ -9,7 +9,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.12.3
+  version: 0.12.4
 
 servers:
   - url: /
@@ -53,6 +53,12 @@ paths:
 
   /memberships/{membership_id}.{format}:
     $ref: ./paths/memberships.membership_id.yml
+
+  /projects/{project_id}/close.{format}:
+    $ref: ./paths/projects.project_id.close.yml
+
+  /projects/{project_id}/reopen.{format}:
+    $ref: ./paths/projects.project_id.reopen.yml
 
   /users.{format}:
     $ref: ./paths/users.yml
@@ -167,6 +173,12 @@ paths:
 
   /uploads.{format}:
     $ref: ./paths/uploads.yml
+
+  /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues.{format}:
+    $ref: ./paths/projects.project_id.repository.repository_id.revisions.revision.issues.yml
+
+  /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues/{issue_id}.{format}:
+    $ref: ./paths/projects.project_id.repository.repository_id.revisions.revision.issues.issue_id.yml
 
 components:
   securitySchemes:

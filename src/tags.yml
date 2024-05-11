@@ -107,3 +107,6 @@
   description: "Status: Alpha, Availablity: 5.0"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals?parent=Rest_api
+
+- name: Repositories
+  description: "Undocumented"
