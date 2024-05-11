@@ -62,7 +62,12 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../components/schemas/issue_category.yml
+            type: object
+            required:
+              - issue_category
+            properties:
+              issue_category:
+                $ref: ../components/schemas/issue_category.yml
     422:
       description: ""
       content:
