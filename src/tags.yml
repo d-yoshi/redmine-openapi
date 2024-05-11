@@ -24,7 +24,7 @@
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
 
 - name: News
-  description: "Status: Prototype, Note: Prototype implementation for index only, Availablity: 1.1"
+  description: "Status: Prototype, Notes: Prototype implementation for index only, Availablity: 1.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_News
 
