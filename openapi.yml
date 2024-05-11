@@ -170,7 +170,11 @@ paths:
         - name: cf_x
           in: query
           schema:
-            type: string
+            type: object
+            additionalProperties:
+              type: string
+            example:
+              cf_0: custom field value
       responses:
         '200':
           description: ''
