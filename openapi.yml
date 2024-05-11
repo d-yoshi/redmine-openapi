@@ -174,7 +174,7 @@ paths:
             additionalProperties:
               type: string
             example:
-              cf_0: custom field value
+              cf_0: string
       responses:
         '200':
           description: ''
