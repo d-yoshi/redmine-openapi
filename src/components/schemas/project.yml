@@ -30,6 +30,10 @@ properties:
     type: boolean
   inherit_members:
     type: boolean
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yml
   trackers:
     type: array
     items:

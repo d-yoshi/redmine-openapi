@@ -7,6 +7,10 @@ properties:
     type: integer
   name:
     type: string
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yml
   users:
     type: array
     items:

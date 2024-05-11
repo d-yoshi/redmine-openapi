@@ -1,0 +1,13 @@
+type: array
+items:
+  type: object
+  required:
+    - id
+  properties:
+    id:
+      type: number
+  additionalProperties:
+    description: "value: string? | string[]"
+  example:
+    id: 0
+    value: "string"

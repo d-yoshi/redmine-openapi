@@ -50,7 +50,7 @@ properties:
   custom_fields:
     type: array
     items:
-      $ref: ./id_name.yml
+      $ref: ./custom_field_value.yml
   memberships:
     type: array
     items:

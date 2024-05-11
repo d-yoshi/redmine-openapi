@@ -13,3 +13,7 @@ properties:
     type: boolean
   active:
     type: boolean
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yml

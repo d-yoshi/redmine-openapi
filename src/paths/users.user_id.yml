@@ -72,6 +72,10 @@ put:
                   type: boolean
                 admin:
                   type: boolean
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yml
   responses:
     204:
       description: ""

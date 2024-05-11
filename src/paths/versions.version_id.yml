@@ -68,14 +68,9 @@ put:
                   type: string
                   nullable: true
                 custom_fields:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: number
-                      value:
-                        type: string
+                  $ref: ../components/schemas/request/custom_fields.yml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yml
   responses:
     204:
       description: ""

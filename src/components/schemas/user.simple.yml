@@ -41,3 +41,7 @@ properties:
   twofa_scheme:
     type: object
     nullable: true
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yml

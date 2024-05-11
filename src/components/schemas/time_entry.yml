@@ -38,3 +38,7 @@ properties:
   updated_on:
     type: string
     format: date-time
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yml

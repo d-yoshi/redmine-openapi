@@ -2,12 +2,18 @@ type: object
 required:
   - id
   - name
-  - value
+  # - value
 properties:
   id:
     type: integer
   name:
     type: string
-  value:
-    type: string
-    nullable: true
+  multiple:
+    type: boolean
+# Workaround: Some generators do not support "oneOf".
+additionalProperties:
+  description: "value: string? | string[]"
+example:
+  id: 0
+  name: "string"
+  value: "string"
