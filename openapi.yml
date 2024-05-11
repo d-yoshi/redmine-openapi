@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.13.0
+  version: 0.13.1
 servers:
   - url: /
 security:
@@ -376,14 +376,9 @@ paths:
                       type: integer
                       nullable: true
                     custom_fields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                          value:
-                            type: string
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
                     is_private:
                       type: boolean
                     estimated_hours:
@@ -3435,7 +3430,7 @@ components:
       additionalProperties:
         description: 'value: string? | string[]'
       example:
-        '1': string
+        '0': string
     issue:
       type: object
       required:
