@@ -3,9 +3,11 @@ items:
   type: object
   required:
     - id
+    # - value
   properties:
     id:
       type: number
+  # Workaround: Some generators do not support "oneOf".
   additionalProperties:
     description: "value: string? | string[]"
   example:
