@@ -1,8 +1,8 @@
 get:
   tags:
     - Attachments
-  summary: Download attachment
-  operationId: downloadAttachment
+  summary: Download attachment file
+  operationId: downloadAttachmentFile
   parameters:
     - $ref: ../components/parameters/path/attachment_id.yml
     - $ref: ../components/parameters/path/filename.yml
