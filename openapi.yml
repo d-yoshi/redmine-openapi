@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.12.5
+  version: 0.13.0
 servers:
   - url: /
 security:
@@ -37,7 +37,7 @@ tags:
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
   - name: News
-    description: 'Status: Prototype, Note: Prototype implementation for index only, Availablity: 1.1'
+    description: 'Status: Prototype, Notes: Prototype implementation for index only, Availablity: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_News
   - name: Issue Relations
@@ -248,14 +248,9 @@ paths:
                       type: integer
                       nullable: true
                     custom_fields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                          value:
-                            type: string
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
                     watcher_user_ids:
                       type: array
                       items:
@@ -560,12 +555,10 @@ paths:
                       type: array
                       items:
                         type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      example:
-                        '1': VALUE
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '201':
           description: ''
@@ -669,12 +662,10 @@ paths:
                       type: array
                       items:
                         type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      example:
-                        '1': VALUE
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '204':
           description: ''
@@ -991,6 +982,10 @@ paths:
                       type: boolean
                     generate_password:
                       type: boolean
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '201':
           description: ''
@@ -1081,6 +1076,10 @@ paths:
                       type: boolean
                     admin:
                       type: boolean
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '204':
           description: ''
@@ -1223,6 +1222,10 @@ paths:
                       type: string
                     user_id:
                       type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '201':
           description: ''
@@ -1302,6 +1305,10 @@ paths:
                       type: string
                     user_id:
                       type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '204':
           description: ''
@@ -1732,14 +1739,9 @@ paths:
                       type: string
                       nullable: true
                     custom_fields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                          value:
-                            type: string
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '201':
           description: ''
@@ -1828,14 +1830,9 @@ paths:
                       type: string
                       nullable: true
                     custom_fields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                          value:
-                            type: string
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '204':
           description: ''
@@ -2508,7 +2505,7 @@ paths:
                   groups:
                     type: array
                     items:
-                      $ref: '#/components/schemas/id_name'
+                      $ref: '#/components/schemas/group.simple'
     post:
       tags:
         - Groups
@@ -2536,6 +2533,10 @@ paths:
                       type: array
                       items:
                         type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '201':
           description: ''
@@ -2545,7 +2546,7 @@ paths:
                 type: object
                 properties:
                   group:
-                    $ref: '#/components/schemas/id_name'
+                    $ref: '#/components/schemas/group.simple'
         '422':
           description: ''
           content:
@@ -2612,6 +2613,10 @@ paths:
                       type: array
                       items:
                         type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
       responses:
         '204':
           description: ''
@@ -3317,6 +3322,24 @@ components:
           type: string
         is_closed:
           type: boolean
+    custom_field_value:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        multiple:
+          type: boolean
+      additionalProperties:
+        description: 'value: string? | string[]'
+      example:
+        id: 0
+        name: string
+        value: string
     issue.simple:
       type: object
       required:
@@ -3379,6 +3402,10 @@ components:
           type: number
         total_spent_hours:
           type: number
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
         created_on:
           type: string
           format: date-time
@@ -3389,6 +3416,26 @@ components:
           type: string
           format: date-time
           nullable: true
+    custom_fields:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+        properties:
+          id:
+            type: number
+        additionalProperties:
+          description: 'value: string? | string[]'
+        example:
+          id: 0
+          value: string
+    custom_field_values:
+      type: object
+      additionalProperties:
+        description: 'value: string? | string[]'
+      example:
+        '1': string
     issue:
       type: object
       required:
@@ -3451,6 +3498,10 @@ components:
           type: number
         total_spent_hours:
           type: number
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
         created_on:
           type: string
           format: date-time
@@ -3613,6 +3664,10 @@ components:
           type: boolean
         inherit_members:
           type: boolean
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
         trackers:
           type: array
           items:
@@ -3711,6 +3766,10 @@ components:
         twofa_scheme:
           type: object
           nullable: true
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
     role:
       type: object
       required:
@@ -3748,6 +3807,10 @@ components:
           type: integer
         name:
           type: string
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
         users:
           type: array
           items:
@@ -3822,7 +3885,7 @@ components:
         custom_fields:
           type: array
           items:
-            $ref: '#/components/schemas/id_name'
+            $ref: '#/components/schemas/custom_field_value'
         memberships:
           type: array
           items:
@@ -3879,6 +3942,10 @@ components:
         updated_on:
           type: string
           format: date-time
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
     attachment:
       type: object
       required:
@@ -3975,20 +4042,6 @@ components:
           type: string
         delay:
           type: integer
-          nullable: true
-    custom_field_value:
-      type: object
-      required:
-        - id
-        - name
-        - value
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        value:
-          type: string
           nullable: true
     version.simple:
       type: object
@@ -4088,14 +4141,14 @@ components:
         wiki_page_title:
           type: string
           nullable: true
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/custom_field_value'
         estimated_hours:
           type: number
         spent_hours:
           type: number
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
         created_on:
           type: string
           format: date-time
@@ -4230,6 +4283,10 @@ components:
           type: boolean
         active:
           type: boolean
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
     time_entry_activity:
       type: object
       required:
@@ -4246,6 +4303,10 @@ components:
           type: boolean
         active:
           type: boolean
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
     document_category:
       type: object
       required:
@@ -4262,6 +4323,24 @@ components:
           type: boolean
         active:
           type: boolean
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
+    group.simple:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
     custom_field:
       type: object
       properties:
