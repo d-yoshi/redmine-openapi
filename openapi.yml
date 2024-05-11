@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.12.3
+  version: 0.12.4
 servers:
   - url: /
 security:
@@ -104,6 +104,8 @@ tags:
     description: 'Status: Alpha, Availablity: 5.0'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals?parent=Rest_api
+  - name: Repositories
+    description: Undocumented
 externalDocs:
   description: Redmine API Official Developer Guide
   url: https://www.redmine.org/projects/redmine/wiki/Rest_api
@@ -868,6 +870,32 @@ paths:
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      responses:
+        '204':
+          description: ''
+  /projects/{project_id}/close.{format}:
+    put:
+      tags:
+        - Projects
+      summary: Close project
+      operationId: closeProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      responses:
+        '204':
+          description: ''
+  /projects/{project_id}/reopen.{format}:
+    put:
+      tags:
+        - Projects
+      summary: Reopen project
+      operationId: reopenProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       responses:
         '204':
@@ -3064,6 +3092,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errors'
+  /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues.{format}:
+    post:
+      tags:
+        - Repositories
+      summary: Add related issue
+      operationId: addRelatedIssue
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/repository_id'
+        - $ref: '#/components/parameters/revision'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - issue_id
+              properties:
+                issue_id:
+                  type: integer
+      responses:
+        '204':
+          description: ''
+  /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues/{issue_id}.{format}:
+    delete:
+      tags:
+        - Repositories
+      summary: Remove related issue
+      operationId: removeRelatedIssue
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/repository_id'
+        - $ref: '#/components/parameters/revision'
+        - $ref: '#/components/parameters/issue_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      responses:
+        '204':
+          description: ''
 components:
   securitySchemes:
     BasicAuth:
@@ -3207,6 +3276,18 @@ components:
       required: true
       schema:
         type: integer
+    repository_id:
+      name: repository_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    revision:
+      name: revision
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     id_name:
       type: object
@@ -3485,6 +3566,7 @@ components:
                       nullable: true
                     new_value:
                       type: string
+                      nullable: true
         watchers:
           type: array
           items:
