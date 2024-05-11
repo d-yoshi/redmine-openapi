@@ -2,4 +2,4 @@ type: object
 additionalProperties:
   description: "value: string? | string[]"
 example:
-  "1": "string"
+  0: string
