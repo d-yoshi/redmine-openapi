@@ -4,7 +4,7 @@
 
 ## Overview
 
-These openapi files are created by my manual scraping the official api docs and experimentation with Redmine in my local environment.
+This OpenAPI specification file was created by manual scraping the official api docs and experimentation.
 
 ## Docs
 
