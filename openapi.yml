@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.12.2
+  version: 0.12.3
 servers:
   - url: /
 security:
@@ -2096,6 +2096,41 @@ paths:
       responses:
         '204':
           description: ''
+  /attachments/download/{attachment_id}/{filename}:
+    get:
+      tags:
+        - Attachments
+      summary: Download attachment
+      operationId: downloadAttachment
+      parameters:
+        - $ref: '#/components/parameters/attachment_id'
+        - $ref: '#/components/parameters/filename'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      responses:
+        '200':
+          description: ''
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+  /attachments/thumbnail/{attachment_id}:
+    get:
+      tags:
+        - Attachments
+      summary: Download thumbnail
+      operationId: downloadThumbnail
+      parameters:
+        - $ref: '#/components/parameters/attachment_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      responses:
+        '200':
+          description: ''
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
   /issue_statuses.{format}:
     get:
       tags:
@@ -3142,6 +3177,12 @@ components:
       required: true
       schema:
         type: number
+    filename:
+      name: filename
+      in: path
+      required: true
+      schema:
+        type: string
     issue_category_id:
       name: issue_category_id
       in: path
@@ -3774,6 +3815,8 @@ components:
         description:
           type: string
         content_url:
+          type: string
+        thumbnail_url:
           type: string
         author:
           $ref: '#/components/schemas/id_name'
