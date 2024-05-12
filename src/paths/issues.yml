@@ -130,6 +130,11 @@ post:
                   type: string
                   format: date
                   nullable: true
+                done_ratio:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  multipleOf: 10
                 category_id:
                   type: integer
                 fixed_version_id:
@@ -153,19 +158,17 @@ post:
                   type: number
                   nullable: true
                 uploads:
-                  type: object
-                  properties:
-                    upload:
-                      type: object
-                      properties:
-                        token:
-                          type: string
-                        filename:
-                          type: string
-                        description:
-                          type: string
-                        content_type:
-                          type: string
+                  type: array
+                  items:
+                    properties:
+                      token:
+                        type: string
+                      filename:
+                        type: string
+                      description:
+                        type: string
+                      content_type:
+                        type: string
   responses:
     201:
       description: ""
