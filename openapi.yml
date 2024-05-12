@@ -247,10 +247,13 @@ paths:
                       multipleOf: 10
                     category_id:
                       type: integer
+                      nullable: true
                     fixed_version_id:
                       type: integer
+                      nullable: true
                     assigned_to_id:
                       type: integer
+                      nullable: true
                     parent_issue_id:
                       type: integer
                       nullable: true
@@ -368,10 +371,13 @@ paths:
                       multipleOf: 10
                     category_id:
                       type: integer
+                      nullable: true
                     fixed_version_id:
                       type: integer
+                      nullable: true
                     assigned_to_id:
                       type: integer
+                      nullable: true
                     parent_issue_id:
                       type: integer
                       nullable: true
@@ -379,6 +385,10 @@ paths:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
+                    watcher_user_ids:
+                      type: array
+                      items:
+                        type: integer
                     is_private:
                       type: boolean
                     estimated_hours:
@@ -2933,24 +2943,10 @@ paths:
                         type: integer
                     language:
                       type: string
-                    custom_field_values:
-                      type: object
-                      additionalProperties:
-                        type: string
-                      example:
-                        '1': custom_field_value
                     custom_fields:
-                      type: array
-                      items:
-                        type: object
-                        required:
-                          - id
-                          - value
-                        properties:
-                          id:
-                            type: string
-                          value:
-                            type: string
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
                     login:
                       type: string
                     status:
