@@ -135,10 +135,13 @@ post:
                   multipleOf: 10
                 category_id:
                   type: integer
+                  nullable: true
                 fixed_version_id:
                   type: integer
+                  nullable: true
                 assigned_to_id:
                   type: integer
+                  nullable: true
                 parent_issue_id:
                   type: integer
                   nullable: true

@@ -85,10 +85,13 @@ put:
                   multipleOf: 10
                 category_id:
                   type: integer
+                  nullable: true
                 fixed_version_id:
                   type: integer
+                  nullable: true
                 assigned_to_id:
                   type: integer
+                  nullable: true
                 parent_issue_id:
                   type: integer
                   nullable: true
@@ -96,6 +99,10 @@ put:
                   $ref: ../components/schemas/request/custom_fields.yml
                 custom_field_values:
                   $ref: ../components/schemas/request/custom_field_values.yml
+                watcher_user_ids:
+                  type: array
+                  items:
+                    type: integer
                 is_private:
                   type: boolean
                 estimated_hours:

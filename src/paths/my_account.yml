@@ -55,24 +55,10 @@ put:
                     type: integer
                 language:
                   type: string
-                custom_field_values:
-                  type: object
-                  additionalProperties:
-                    type: string
-                  example:
-                    "1": "custom_field_value"
                 custom_fields:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - id
-                      - value
-                    properties:
-                      id:
-                        type: string
-                      value:
-                        type: string
+                  $ref: ../components/schemas/request/custom_fields.yml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yml
                 login:
                   type: string
                 status:
