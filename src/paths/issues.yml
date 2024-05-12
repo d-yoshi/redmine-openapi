@@ -133,7 +133,7 @@ post:
                 category_id:
                   type: integer
                 fixed_version_id:
-                  type: string
+                  type: integer
                 assigned_to_id:
                   type: integer
                 parent_issue_id:
