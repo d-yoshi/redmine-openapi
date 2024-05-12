@@ -105,8 +105,6 @@ post:
               type: object
               required:
                 - project_id
-                - tracker_id
-                - status_id
                 - subject
               properties:
                 project_id:
