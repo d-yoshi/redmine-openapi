@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.13.2
+  version: 0.13.3
 servers:
   - url: /
 security:
@@ -242,10 +242,15 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                    done_ratio:
+                      type: integer
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 10
                     category_id:
                       type: integer
                     fixed_version_id:
-                      type: string
+                      type: integer
                     assigned_to_id:
                       type: integer
                     parent_issue_id:
@@ -265,19 +270,17 @@ paths:
                       type: number
                       nullable: true
                     uploads:
-                      type: object
-                      properties:
-                        upload:
-                          type: object
-                          properties:
-                            token:
-                              type: string
-                            filename:
-                              type: string
-                            description:
-                              type: string
-                            content_type:
-                              type: string
+                      type: array
+                      items:
+                        properties:
+                          token:
+                            type: string
+                          filename:
+                            type: string
+                          description:
+                            type: string
+                          content_type:
+                            type: string
       responses:
         '201':
           description: ''
@@ -370,10 +373,15 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                    done_ratio:
+                      type: integer
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 10
                     category_id:
                       type: integer
                     fixed_version_id:
-                      type: string
+                      type: integer
                     assigned_to_id:
                       type: integer
                     parent_issue_id:
@@ -392,6 +400,18 @@ paths:
                       type: string
                     private_notes:
                       type: string
+                    uploads:
+                      type: array
+                      items:
+                        properties:
+                          token:
+                            type: string
+                          filename:
+                            type: string
+                          description:
+                            type: string
+                          content_type:
+                            type: string
       responses:
         '204':
           description: ''
