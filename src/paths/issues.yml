@@ -158,17 +158,7 @@ post:
                   type: number
                   nullable: true
                 uploads:
-                  type: array
-                  items:
-                    properties:
-                      token:
-                        type: string
-                      filename:
-                        type: string
-                      description:
-                        type: string
-                      content_type:
-                        type: string
+                  $ref: ../components/schemas/request/uploads.yml
   responses:
     201:
       description: ""
