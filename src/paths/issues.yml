@@ -105,7 +105,7 @@ post:
               type: object
               required:
                 - project_id
-                - tracer_id
+                - tracker_id
                 - status_id
                 - subject
               properties:
