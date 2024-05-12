@@ -217,8 +217,6 @@ paths:
                   type: object
                   required:
                     - project_id
-                    - tracer_id
-                    - status_id
                     - subject
                   properties:
                     project_id:
@@ -270,17 +268,7 @@ paths:
                       type: number
                       nullable: true
                     uploads:
-                      type: array
-                      items:
-                        properties:
-                          token:
-                            type: string
-                          filename:
-                            type: string
-                          description:
-                            type: string
-                          content_type:
-                            type: string
+                      $ref: '#/components/schemas/uploads'
       responses:
         '201':
           description: ''
@@ -401,17 +389,7 @@ paths:
                     private_notes:
                       type: string
                     uploads:
-                      type: array
-                      items:
-                        properties:
-                          token:
-                            type: string
-                          filename:
-                            type: string
-                          description:
-                            type: string
-                          content_type:
-                            type: string
+                      $ref: '#/components/schemas/uploads'
       responses:
         '204':
           description: ''
@@ -3455,6 +3433,18 @@ components:
         description: 'value: string? | string[]'
       example:
         '0': string
+    uploads:
+      type: array
+      items:
+        properties:
+          token:
+            type: string
+          filename:
+            type: string
+          description:
+            type: string
+          content_type:
+            type: string
     issue:
       type: object
       required:
