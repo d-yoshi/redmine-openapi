@@ -68,9 +68,9 @@ put:
                 inherit_members:
                   type: boolean
                 default_assigned_to_id:
-                  type: string
+                  type: integer
                 default_version_id:
-                  type: string
+                  type: integer
                 tracker_ids:
                   type: array
                   items:
