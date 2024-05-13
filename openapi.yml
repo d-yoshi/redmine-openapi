@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.13.4
+  version: 0.13.5
 servers:
   - url: /
 security:
@@ -547,9 +547,9 @@ paths:
                     inherit_members:
                       type: boolean
                     default_assigned_to_id:
-                      type: string
+                      type: integer
                     default_version_id:
-                      type: string
+                      type: integer
                     tracker_ids:
                       type: array
                       items:
@@ -654,9 +654,9 @@ paths:
                     inherit_members:
                       type: boolean
                     default_assigned_to_id:
-                      type: string
+                      type: integer
                     default_version_id:
-                      type: string
+                      type: integer
                     tracker_ids:
                       type: array
                       items:
