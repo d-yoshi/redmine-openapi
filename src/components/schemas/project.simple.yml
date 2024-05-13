@@ -19,9 +19,6 @@ properties:
   description:
     type: string
     nullable: true
-  homepage:
-    type: string
-    nullable: true
   parent:
     $ref: ./id_name.yml
   status:
@@ -30,10 +27,6 @@ properties:
     type: boolean
   inherit_members:
     type: boolean
-  default_version:
-    $ref: ./id_name.yml
-  default_assignee:
-    $ref: ./id_name.yml
   custom_fields:
     type: array
     items:

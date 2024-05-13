@@ -18,8 +18,8 @@ get:
           enum:
             - trackers
             - issue_categories
-            - enabled_modules
             - time_entry_activities
+            - enabled_modules
             - issue_custom_fields
       explode: false
   responses:
@@ -59,18 +59,23 @@ put:
                   type: string
                 description:
                   type: string
+                  nullable: true
                 homepage:
                   type: string
+                  nullable: true
                 is_public:
                   type: boolean
                 parent_id:
                   type: integer
+                  nullable: true
                 inherit_members:
                   type: boolean
                 default_assigned_to_id:
                   type: integer
+                  nullable: true
                 default_version_id:
                   type: integer
+                  nullable: true
                 tracker_ids:
                   type: array
                   items:

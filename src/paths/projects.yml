@@ -21,8 +21,8 @@ get:
           enum:
             - trackers
             - issue_categories
-            - enabled_modules
             - time_entry_activities
+            - enabled_modules
             - issue_custom_fields
       explode: false
   responses:
@@ -38,7 +38,7 @@ get:
               projects:
                 type: array
                 items:
-                  $ref: ../components/schemas/project.yml
+                  $ref: ../components/schemas/project.simple.yml
               total_count:
                 type: integer
               offset:
@@ -84,12 +84,15 @@ post:
                   type: boolean
                 parent_id:
                   type: integer
+                  nullable: true
                 inherit_members:
                   type: boolean
                 default_assigned_to_id:
                   type: integer
+                  nullable: true
                 default_version_id:
                   type: integer
+                  nullable: true
                 tracker_ids:
                   type: array
                   items:
