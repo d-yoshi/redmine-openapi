@@ -45,6 +45,7 @@ put:
                   type: string
                   enum:
                     - all
+                    - selected
                     - only_my_events
                     - only_assigned
                     - only_owner
@@ -76,54 +77,7 @@ put:
                   items:
                     type: integer
             pref:
-              type: object
-              properties:
-                hide_mail:
-                  type: boolean
-                time_zone:
-                  type: string
-                  nullable: true
-                comments_sorting:
-                  type: string
-                  enum:
-                    - asc
-                    - desc
-                warn_on_leaving_unsaved:
-                  type: boolean
-                no_self_notified:
-                  type: boolean
-                notify_about_high_priority_issues:
-                  type: boolean
-                textarea_font:
-                  type: string
-                  enum:
-                    - monospace
-                    - proportional
-                  nullable: true
-                recently_used_projects:
-                  type: integer
-                history_default_tab:
-                  type: string
-                  enum:
-                    - notes
-                    - history
-                    - properties
-                    - time_entries
-                    - changesets
-                    - last_tab_visited
-                default_issue_query:
-                  type: string
-                  nullable: true
-                default_project_query:
-                  type: string
-                  nullable: true
-                toolbar_language_options:
-                  type: string
-                auto_watch_on:
-                  type: string
-                  enum:
-                    - issue_contributed_to
-                  nullable: true
+              $ref: ../components/schemas/request/pref.yml
   responses:
     204:
       description: ""

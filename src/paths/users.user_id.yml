@@ -54,6 +54,8 @@ put:
               properties:
                 login:
                   type: string
+                admin:
+                  type: boolean
                 password:
                   type: string
                 firstname:
@@ -64,18 +66,32 @@ put:
                   type: string
                 auth_source_id:
                   type: integer
+                  nullable: true
                 mail_notification:
-                  type: boolean
+                  type: string
+                  enum:
+                    - all
+                    - selected
+                    - only_my_events
+                    - only_assigned
+                    - only_owner
+                    - none
                 must_change_passwd:
                   type: boolean
                 generate_password:
-                  type: boolean
-                admin:
                   type: boolean
                 custom_fields:
                   $ref: ../components/schemas/request/custom_fields.yml
                 custom_field_values:
                   $ref: ../components/schemas/request/custom_field_values.yml
+                group_ids:
+                  type: array
+                  items:
+                    type: integer
+            send_information:
+              type: boolean
+            pref:
+              $ref: ../components/schemas/request/pref.yml
   responses:
     204:
       description: ""
