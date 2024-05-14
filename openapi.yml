@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.15.0
+  version: 0.15.1
 servers:
   - url: /
 security:
@@ -991,6 +991,8 @@ paths:
                       type: string
                     mail:
                       type: string
+                    language:
+                      type: string
                     auth_source_id:
                       type: integer
                       nullable: true
@@ -1003,10 +1005,16 @@ paths:
                         - only_assigned
                         - only_owner
                         - none
+                    notified_project_ids:
+                      type: array
+                      items:
+                        type: integer
                     must_change_passwd:
                       type: boolean
                     generate_password:
                       type: boolean
+                    status:
+                      type: integer
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
@@ -1097,6 +1105,8 @@ paths:
                       type: string
                     mail:
                       type: string
+                    language:
+                      type: string
                     auth_source_id:
                       type: integer
                       nullable: true
@@ -1109,10 +1119,16 @@ paths:
                         - only_assigned
                         - only_owner
                         - none
+                    notified_project_ids:
+                      type: array
+                      items:
+                        type: integer
                     must_change_passwd:
                       type: boolean
                     generate_password:
                       type: boolean
+                    status:
+                      type: integer
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
@@ -2961,12 +2977,23 @@ paths:
                 user:
                   type: object
                   properties:
+                    login:
+                      type: string
+                    admin:
+                      type: boolean
+                    password:
+                      type: string
                     firstname:
                       type: string
                     lastname:
                       type: string
                     mail:
                       type: string
+                    language:
+                      type: string
+                    auth_source_id:
+                      type: integer
+                      nullable: true
                     mail_notification:
                       type: string
                       enum:
@@ -2980,24 +3007,16 @@ paths:
                       type: array
                       items:
                         type: integer
-                    language:
-                      type: string
+                    must_change_passwd:
+                      type: boolean
+                    generate_password:
+                      type: boolean
+                    status:
+                      type: integer
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
-                    login:
-                      type: string
-                    status:
-                      type: integer
-                    auth_source_id:
-                      type: integer
-                    generate_password:
-                      type: boolean
-                    must_change_passwd:
-                      type: boolean
-                    admin:
-                      type: boolean
                     group_ids:
                       type: array
                       items:
