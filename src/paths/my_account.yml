@@ -35,12 +35,23 @@ put:
             user:
               type: object
               properties:
+                login:
+                  type: string
+                admin:
+                  type: boolean
+                password:
+                  type: string
                 firstname:
                   type: string
                 lastname:
                   type: string
                 mail:
                   type: string
+                language:
+                  type: string
+                auth_source_id:
+                  type: integer
+                  nullable: true
                 mail_notification:
                   type: string
                   enum:
@@ -54,24 +65,16 @@ put:
                   type: array
                   items:
                     type: integer
-                language:
-                  type: string
+                must_change_passwd:
+                  type: boolean
+                generate_password:
+                  type: boolean
+                status:
+                  type: integer
                 custom_fields:
                   $ref: ../components/schemas/request/custom_fields.yml
                 custom_field_values:
                   $ref: ../components/schemas/request/custom_field_values.yml
-                login:
-                  type: string
-                status:
-                  type: integer
-                auth_source_id:
-                  type: integer
-                generate_password:
-                  type: boolean
-                must_change_passwd:
-                  type: boolean
-                admin:
-                  type: boolean
                 group_ids:
                   type: array
                   items:

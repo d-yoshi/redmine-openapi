@@ -9,7 +9,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.15.0
+  version: 0.15.1
 
 servers:
   - url: /

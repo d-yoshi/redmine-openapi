@@ -64,6 +64,8 @@ put:
                   type: string
                 mail:
                   type: string
+                language:
+                  type: string
                 auth_source_id:
                   type: integer
                   nullable: true
@@ -76,10 +78,16 @@ put:
                     - only_assigned
                     - only_owner
                     - none
+                notified_project_ids:
+                  type: array
+                  items:
+                    type: integer
                 must_change_passwd:
                   type: boolean
                 generate_password:
                   type: boolean
+                status:
+                  type: integer
                 custom_fields:
                   $ref: ../components/schemas/request/custom_fields.yml
                 custom_field_values:
