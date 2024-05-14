@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.14.0
+  version: 0.15.0
 servers:
   - url: /
 security:
@@ -981,6 +981,8 @@ paths:
                   properties:
                     login:
                       type: string
+                    admin:
+                      type: boolean
                     password:
                       type: string
                     firstname:
@@ -991,8 +993,16 @@ paths:
                       type: string
                     auth_source_id:
                       type: integer
+                      nullable: true
                     mail_notification:
-                      type: boolean
+                      type: string
+                      enum:
+                        - all
+                        - selected
+                        - only_my_events
+                        - only_assigned
+                        - only_owner
+                        - none
                     must_change_passwd:
                       type: boolean
                     generate_password:
@@ -1001,6 +1011,10 @@ paths:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
+                send_information:
+                  type: boolean
+                pref:
+                  $ref: '#/components/schemas/pref'
       responses:
         '201':
           description: ''
@@ -1073,6 +1087,8 @@ paths:
                   properties:
                     login:
                       type: string
+                    admin:
+                      type: boolean
                     password:
                       type: string
                     firstname:
@@ -1083,18 +1099,32 @@ paths:
                       type: string
                     auth_source_id:
                       type: integer
+                      nullable: true
                     mail_notification:
-                      type: boolean
+                      type: string
+                      enum:
+                        - all
+                        - selected
+                        - only_my_events
+                        - only_assigned
+                        - only_owner
+                        - none
                     must_change_passwd:
                       type: boolean
                     generate_password:
-                      type: boolean
-                    admin:
                       type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
+                    group_ids:
+                      type: array
+                      items:
+                        type: integer
+                send_information:
+                  type: boolean
+                pref:
+                  $ref: '#/components/schemas/pref'
       responses:
         '204':
           description: ''
@@ -2941,6 +2971,7 @@ paths:
                       type: string
                       enum:
                         - all
+                        - selected
                         - only_my_events
                         - only_assigned
                         - only_owner
@@ -2972,54 +3003,7 @@ paths:
                       items:
                         type: integer
                 pref:
-                  type: object
-                  properties:
-                    hide_mail:
-                      type: boolean
-                    time_zone:
-                      type: string
-                      nullable: true
-                    comments_sorting:
-                      type: string
-                      enum:
-                        - asc
-                        - desc
-                    warn_on_leaving_unsaved:
-                      type: boolean
-                    no_self_notified:
-                      type: boolean
-                    notify_about_high_priority_issues:
-                      type: boolean
-                    textarea_font:
-                      type: string
-                      enum:
-                        - monospace
-                        - proportional
-                      nullable: true
-                    recently_used_projects:
-                      type: integer
-                    history_default_tab:
-                      type: string
-                      enum:
-                        - notes
-                        - history
-                        - properties
-                        - time_entries
-                        - changesets
-                        - last_tab_visited
-                    default_issue_query:
-                      type: string
-                      nullable: true
-                    default_project_query:
-                      type: string
-                      nullable: true
-                    toolbar_language_options:
-                      type: string
-                    auto_watch_on:
-                      type: string
-                      enum:
-                        - issue_contributed_to
-                      nullable: true
+                  $ref: '#/components/schemas/pref'
       responses:
         '204':
           description: ''
@@ -3847,68 +3831,55 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
-    role:
+    pref:
       type: object
-      required:
-        - id
-        - name
-        - assignable
-        - issue_visibility
-        - time_entries_visibility
-        - users_visibility
-        - permissions
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        assignable:
+        hide_mail:
           type: boolean
-        issues_visibility:
+        time_zone:
           type: string
-        time_entries_visibility:
+          nullable: true
+        comments_sorting:
           type: string
-        users_visibility:
+          enum:
+            - asc
+            - desc
+        warn_on_leaving_unsaved:
+          type: boolean
+        no_self_notified:
+          type: boolean
+        notify_about_high_priority_issues:
+          type: boolean
+        textarea_font:
           type: string
-        permissions:
-          type: array
-          items:
-            type: string
-    group:
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
+          enum:
+            - monospace
+            - proportional
+          nullable: true
+        recently_used_projects:
           type: integer
-        name:
+        history_default_tab:
           type: string
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/custom_field_value'
-        users:
-          type: array
-          items:
-            $ref: '#/components/schemas/id_name'
-        memberships:
-          type: array
-          items:
-            type: object
-            required:
-              - id
-              - project
-              - roles
-            properties:
-              id:
-                type: integer
-              project:
-                $ref: '#/components/schemas/id_name'
-              roles:
-                type: array
-                items:
-                  $ref: '#/components/schemas/id_name'
+          enum:
+            - notes
+            - history
+            - properties
+            - time_entries
+            - changesets
+            - last_tab_visited
+        toolbar_language_options:
+          type: string
+        default_issue_query:
+          type: integer
+          nullable: true
+        default_project_query:
+          type: integer
+          nullable: true
+        auto_watch_on:
+          type: string
+          enum:
+            - issue_contributed_to
+          nullable: true
     user:
       type: object
       required:
@@ -3963,21 +3934,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/id_name'
         memberships:
           type: array
           items:
             type: object
+            required:
+              - id
+              - project
+              - roles
             properties:
+              id:
+                type: integer
               project:
-                type: string
+                $ref: '#/components/schemas/id_name'
               roles:
                 type: array
                 items:
-                  $ref: '#/components/schemas/role'
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/group'
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    inherited:
+                      type: boolean
     time_entry:
       type: object
       required:
@@ -4404,6 +4391,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
+    role:
+      type: object
+      required:
+        - id
+        - name
+        - assignable
+        - issue_visibility
+        - time_entries_visibility
+        - users_visibility
+        - permissions
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        assignable:
+          type: boolean
+        issues_visibility:
+          type: string
+        time_entries_visibility:
+          type: string
+        users_visibility:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
     group.simple:
       type: object
       required:
@@ -4418,6 +4432,41 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
+    group:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/id_name'
+        memberships:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - project
+              - roles
+            properties:
+              id:
+                type: integer
+              project:
+                $ref: '#/components/schemas/id_name'
+              roles:
+                type: array
+                items:
+                  $ref: '#/components/schemas/id_name'
     custom_field:
       type: object
       properties:
