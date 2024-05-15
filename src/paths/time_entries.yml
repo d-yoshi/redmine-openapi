@@ -19,12 +19,72 @@ get:
     - name: project_id
       in: query
       schema:
-        type: string
+        type: integer
     - name: spent_on
       in: query
       schema:
         type: string
         format: date
+    - name: from
+      in: query
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      schema:
+        type: string
+        format: date
+    # I don't know this is working correctly.
+    # - name: subproject_id
+    #   in: query
+    #   schema:
+    #     type: string
+    - name: issue_id
+      in: query
+      schema:
+        type: integer
+    - name: issue.tracker_id
+      in: query
+      schema:
+        type: integer
+    - name: issue.status_id
+      in: query
+      schema:
+        type: integer
+    - name: issue.fixed_version_id
+      in: query
+      schema:
+        type: integer
+    - name: issue.category_id
+      in: query
+      schema:
+        type: integer
+    - name: author_id
+      in: query
+      schema:
+        type: integer
+    - name: activity_id
+      in: query
+      schema:
+        type: integer
+    - name: project.status
+      in: query
+      schema:
+        type: integer
+    - name: comments
+      in: query
+      schema:
+        type: string
+    - name: hours
+      in: query
+      schema:
+        type: number
+    - name: sort
+      in: query
+      schema:
+        type: string
+        example: "spent_on:desc"
   responses:
     200:
       description: ""
