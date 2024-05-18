@@ -16,6 +16,7 @@ get:
       in: query
       schema:
         type: string
+        example: "id:desc"
     - name: include
       in: query
       schema:
@@ -29,31 +30,45 @@ get:
     - name: issue_id
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: integer
     - name: project_id
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: integer
     - name: subproject_id
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: string
     - name: tracker_id
       in: query
       schema:
-        type: integer
+        type: array
+        items:
+          type: integer
     - name: status_id
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: integer
     - name: assigned_to_id
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: integer
     - name: parent_id
       in: query
       schema:
-        type: string
+        type: array
+        items:
+          type: integer
     - name: cf_x
       in: query
       schema:
@@ -62,6 +77,140 @@ get:
           type: string
         example:
           cf_0: string
+    - name: author_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: member_of_group
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: assigned_to_role
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: fixed_version_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: fixed_version.due_date
+      in: query
+      schema:
+        type: string
+    - name: fixed_version.status
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: category_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: subject
+      in: query
+      schema:
+        type: string
+    - name: description
+      in: query
+      schema:
+        type: string
+    - name: notes
+      in: query
+      schema:
+        type: string
+    - name: created_on
+      in: query
+      schema:
+        type: string
+    - name: updated_on
+      in: query
+      schema:
+        type: string
+    - name: closed_on
+      in: query
+      schema:
+        type: string
+    - name: start_date
+      in: query
+      schema:
+        type: string
+    - name: due_date
+      in: query
+      schema:
+        type: string
+    - name: estimated_hours
+      in: query
+      schema:
+        type: number
+    - name: spent_time
+      in: query
+      schema:
+        type: string
+    - name: done_ratio
+      in: query
+      schema:
+        type: integer
+    - name: is_private
+      in: query
+      schema:
+        type: boolean
+    - name: attachment
+      in: query
+      schema:
+        type: string
+    - name: attachment_description
+      in: query
+      schema:
+        type: string
+    - name: watcher_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: updated_by
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: last_updated_by
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: project.status
+      in: query
+      schema:
+        type: integer
+    - name: relation_type
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+    - name: child_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+    - name: query_id
+      in: query
+      schema:
+        type: integer
   responses:
     200:
       description: ""
