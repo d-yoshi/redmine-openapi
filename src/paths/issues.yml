@@ -33,42 +33,49 @@ get:
         type: array
         items:
           type: integer
+      explode: false
     - name: project_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: subproject_id
       in: query
       schema:
         type: array
         items:
           type: string
+      explode: false
     - name: tracker_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: status_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: assigned_to_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: parent_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: cf_x
       in: query
       schema:
@@ -83,24 +90,28 @@ get:
         type: array
         items:
           type: integer
+      explode: false
     - name: member_of_group
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: assigned_to_role
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: fixed_version_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: fixed_version.due_date
       in: query
       schema:
@@ -111,12 +122,14 @@ get:
         type: array
         items:
           type: integer
+      explode: false
     - name: category_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: subject
       in: query
       schema:
@@ -179,18 +192,21 @@ get:
         type: array
         items:
           type: integer
+      explode: false
     - name: updated_by
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: last_updated_by
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: project.status
       in: query
       schema:
@@ -201,12 +217,14 @@ get:
         type: array
         items:
           type: string
+      explode: false
     - name: child_id
       in: query
       schema:
         type: array
         items:
           type: integer
+      explode: false
     - name: query_id
       in: query
       schema:

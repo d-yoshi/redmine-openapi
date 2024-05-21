@@ -25,6 +25,49 @@ get:
             - enabled_modules
             - issue_custom_fields
       explode: false
+    - name: status
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+      explode: false
+    - name: id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+      explode: false
+    - name: name
+      in: query
+      schema:
+        type: string
+    - name: description
+      in: query
+      schema:
+        type: string
+    - name: parent_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+      explode: false
+    - name: is_public
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+          enum:
+            - 0
+            - 1
+      explode: false
+    - name: created_on
+      in: query
+      schema:
+        type: string
   responses:
     200:
       description: ""
