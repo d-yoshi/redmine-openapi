@@ -24,7 +24,7 @@
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
 
 - name: News
-  description: "Status: Prototype, Notes: Prototype implementation for index only, Availablity: 1.1"
+  description: "Status: Prototype, Availablity: 1.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_News
 
@@ -49,22 +49,22 @@
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries
 
 - name: Attachments
-  description: "Status: Beta, Notes: Adding attachments via the API added in 1.4, Availablity: 1.3"
+  description: "Status: Beta, Availablity: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments
 
 - name: Issue Statuses
-  description: "Status: Alpha, Notes: Provides the list of all statuses, Availablity: 1.3"
+  description: "Status: Alpha, Availablity: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses
 
 - name: Trackers
-  description: "Status: Alpha, Notes: Provides the list of all trackers, Availablity: 1.3"
+  description: "Status: Alpha, Availablity: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers
 
 - name: Enumerations
-  description: "Status: Alpha, Notes: Provides the list of issue priorities and time tracking activities, Availablity: 2.2"
+  description: "Status: Alpha, Availablity: 2.2"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations
 
