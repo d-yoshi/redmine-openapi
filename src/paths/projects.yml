@@ -37,7 +37,7 @@ get:
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: name
       in: query
@@ -52,17 +52,17 @@ get:
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: is_public
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
           enum:
-            - 0
-            - 1
+            - "0"
+            - "1"
       explode: false
     - name: created_on
       in: query

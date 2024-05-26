@@ -17,14 +17,14 @@ get:
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: project_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: spent_on
       in: query
@@ -53,56 +53,56 @@ get:
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: issue.tracker_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: issue.status_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: issue.fixed_version_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: issue.category_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: author_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: activity_id
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: project.status
       in: query
       schema:
         type: array
         items:
-          type: integer
+          type: string
       explode: false
     - name: comments
       in: query
@@ -111,7 +111,7 @@ get:
     - name: hours
       in: query
       schema:
-        type: number
+        type: string
     - name: sort
       in: query
       schema:
