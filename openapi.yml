@@ -145,14 +145,14 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: project_id
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: subproject_id
           in: query
@@ -166,28 +166,28 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: status_id
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: assigned_to_id
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: parent_id
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: cf_x
           in: query
@@ -202,28 +202,28 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: member_of_group
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: assigned_to_role
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: fixed_version_id
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: fixed_version.due_date
           in: query
@@ -234,14 +234,14 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: category_id
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: subject
           in: query
@@ -278,7 +278,7 @@ paths:
         - name: estimated_hours
           in: query
           schema:
-            type: number
+            type: string
         - name: spent_time
           in: query
           schema:
@@ -286,11 +286,11 @@ paths:
         - name: done_ratio
           in: query
           schema:
-            type: integer
+            type: string
         - name: is_private
           in: query
           schema:
-            type: boolean
+            type: string
         - name: attachment
           in: query
           schema:
@@ -304,21 +304,21 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: updated_by
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: last_updated_by
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: project.status
           in: query
@@ -336,7 +336,7 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: query_id
           in: query
@@ -665,7 +665,7 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: name
           in: query
@@ -680,17 +680,17 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           explode: false
         - name: is_public
           in: query
           schema:
             type: array
             items:
-              type: integer
+              type: string
               enum:
-                - 0
-                - 1
+                - '0'
+                - '1'
           explode: false
         - name: created_on
           in: query
@@ -1425,11 +1425,17 @@ paths:
         - name: user_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: project_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: spent_on
           in: query
           schema:
@@ -1445,38 +1451,69 @@ paths:
           schema:
             type: string
             format: date
+        - name: subproject_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue.tracker_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue.status_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue.fixed_version_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue.category_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: author_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: activity_id
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: project.status
           in: query
           schema:
-            type: integer
+            type: array
+            items:
+              type: string
+          explode: false
         - name: comments
           in: query
           schema:
@@ -1484,7 +1521,7 @@ paths:
         - name: hours
           in: query
           schema:
-            type: number
+            type: string
         - name: sort
           in: query
           schema:
