@@ -94,7 +94,7 @@ post:
     - Projects
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
-  summary: Crete project
+  summary: Create project
   operationId: createProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
