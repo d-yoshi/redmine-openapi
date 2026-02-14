@@ -16,6 +16,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - attachment
             properties:
@@ -38,11 +39,15 @@ patch:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             attachment:
               type: object
+              additionalProperties: false
               properties:
                 filename:
+                  type: string
+                content_type:
                   type: string
                 description:
                   type: string

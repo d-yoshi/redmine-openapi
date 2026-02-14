@@ -1,4 +1,5 @@
 type: object
+additionalProperties: false
 required:
   - id
   - login
@@ -11,6 +12,7 @@ required:
   - last_login_on
   - passwd_changed_on
   - twofa_scheme
+  - status
 properties:
   id:
     type: integer
@@ -38,9 +40,15 @@ properties:
     type: string
     format: date-time
     nullable: true
+  avatar_url:
+    type: string
   twofa_scheme:
-    type: object
+    type: string
     nullable: true
+  status:
+    type: integer
+  auth_source:
+    $ref: ./id_name.yml
   custom_fields:
     type: array
     items:

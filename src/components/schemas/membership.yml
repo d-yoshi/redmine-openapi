@@ -1,4 +1,5 @@
 type: object
+additionalProperties: false
 required:
   - id
   - project
@@ -15,4 +16,4 @@ properties:
   roles:
     type: array
     items:
-      $ref: ./id_name.yml
+      $ref: ./membership_role.yml

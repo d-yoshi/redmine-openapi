@@ -124,6 +124,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - time_entries
             properties:
@@ -153,11 +154,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - time_entry
           properties:
             time_entry:
               type: object
+              additionalProperties: false
               required:
                 - hours
               properties:
@@ -187,6 +190,7 @@ post:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - time_entry
             properties:

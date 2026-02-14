@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.16.0
+  version: 1.0.0
 servers:
   - url: /
 security:
@@ -17,93 +17,93 @@ security:
   - ApiKeyInQueryAuth: []
 tags:
   - name: Issues
-    description: 'Status: Stable, Availablity: 1.0'
+    description: 'Status: Stable, Availability: 1.0'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues
   - name: Projects
-    description: 'Status: Stable, Availablity: 1.0'
+    description: 'Status: Stable, Availability: 1.0'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects
   - name: Project Memberships
-    description: 'Status: Alpha, Availablity: 1.4'
+    description: 'Status: Alpha, Availability: 1.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships
   - name: Users
-    description: 'Status: Stable, Availablity: 1.1'
+    description: 'Status: Stable, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Users
   - name: Time Entries
-    description: 'Status: Stable, Availablity: 1.1'
+    description: 'Status: Stable, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
   - name: News
-    description: 'Status: Prototype, Availablity: 1.1'
+    description: 'Status: Prototype, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_News
   - name: Issue Relations
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations
   - name: Versions
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions
   - name: Wiki Pages
-    description: 'Status: Alpha, Availablity: 2.2'
+    description: 'Status: Alpha, Availability: 2.2'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages
   - name: Queries
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries
   - name: Attachments
-    description: 'Status: Beta, Availablity: 1.3'
+    description: 'Status: Beta, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments
   - name: Issue Statuses
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses
   - name: Trackers
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers
   - name: Enumerations
-    description: 'Status: Alpha, Availablity: 2.2'
+    description: 'Status: Alpha, Availability: 2.2'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations
   - name: Issue Categories
-    description: 'Status: Alpha, Availablity: 1.3'
+    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories
   - name: Roles
-    description: 'Status: Alpha, Availablity: 1.4'
+    description: 'Status: Alpha, Availability: 1.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles
   - name: Groups
-    description: 'Status: Alpha, Availablity: 2.1'
+    description: 'Status: Alpha, Availability: 2.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups
   - name: Custom Fields
-    description: 'Status: Alpha, Availablity: 2.4'
+    description: 'Status: Alpha, Availability: 2.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields
   - name: Search
-    description: 'Status: Alpha, Availablity: 3.3'
+    description: 'Status: Alpha, Availability: 3.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Search
   - name: Files
-    description: 'Status: Alpha, Availablity: 3.4'
+    description: 'Status: Alpha, Availability: 3.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Files
   - name: My Account
-    description: 'Status: Alpha, Availablity: 4.1'
+    description: 'Status: Alpha, Availability: 4.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount
   - name: Journals
-    description: 'Status: Alpha, Availablity: 5.0'
+    description: 'Status: Alpha, Availability: 5.0'
     externalDocs:
-      url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals?parent=Rest_api
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueJournals
   - name: Repositories
     description: Undocumented
 externalDocs:
@@ -349,6 +349,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issues
                 properties:
@@ -377,17 +378,21 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - issue
               properties:
                 issue:
                   type: object
+                  additionalProperties: false
                   required:
                     - project_id
                     - subject
                   properties:
                     project_id:
-                      type: integer
+                      oneOf:
+                        - type: integer
+                        - type: string
                     tracker_id:
                       type: integer
                     status_id:
@@ -411,7 +416,6 @@ paths:
                       type: integer
                       minimum: 0
                       maximum: 100
-                      multipleOf: 10
                     category_id:
                       type: integer
                       nullable: true
@@ -446,6 +450,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue
                 properties:
@@ -485,6 +490,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue
                 properties:
@@ -506,12 +512,16 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 issue:
                   type: object
+                  additionalProperties: false
                   properties:
                     project_id:
-                      type: integer
+                      oneOf:
+                        - type: integer
+                        - type: string
                     tracker_id:
                       type: integer
                     status_id:
@@ -535,7 +545,6 @@ paths:
                       type: integer
                       minimum: 0
                       maximum: 100
-                      multipleOf: 10
                     category_id:
                       type: integer
                       nullable: true
@@ -584,6 +593,342 @@ paths:
       responses:
         '204':
           description: ''
+  /projects/{project_id}/issues.{format}:
+    get:
+      tags:
+        - Issues
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
+      summary: List issues by project
+      operationId: getIssuesByProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/nometa'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: id:desc
+        - name: include
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - attachments
+                - relations
+          explode: false
+        - name: issue_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: subproject_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: tracker_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: status_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: assigned_to_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: parent_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: cf_x
+          in: query
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+            example:
+              cf_0: string
+        - name: author_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: member_of_group
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: assigned_to_role
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: fixed_version_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: fixed_version.due_date
+          in: query
+          schema:
+            type: string
+        - name: fixed_version.status
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: category_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: subject
+          in: query
+          schema:
+            type: string
+        - name: description
+          in: query
+          schema:
+            type: string
+        - name: notes
+          in: query
+          schema:
+            type: string
+        - name: created_on
+          in: query
+          schema:
+            type: string
+        - name: updated_on
+          in: query
+          schema:
+            type: string
+        - name: closed_on
+          in: query
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          schema:
+            type: string
+        - name: due_date
+          in: query
+          schema:
+            type: string
+        - name: estimated_hours
+          in: query
+          schema:
+            type: string
+        - name: spent_time
+          in: query
+          schema:
+            type: string
+        - name: done_ratio
+          in: query
+          schema:
+            type: string
+        - name: is_private
+          in: query
+          schema:
+            type: string
+        - name: attachment
+          in: query
+          schema:
+            type: string
+        - name: attachment_description
+          in: query
+          schema:
+            type: string
+        - name: watcher_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: updated_by
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: last_updated_by
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: project.status
+          in: query
+          schema:
+            type: integer
+        - name: relation_type
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: child_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: query_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - issues
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/issue.simple'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+    post:
+      tags:
+        - Issues
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
+      summary: Create issue under project
+      operationId: createIssueUnderProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - issue
+              properties:
+                issue:
+                  type: object
+                  additionalProperties: false
+                  required:
+                    - subject
+                  properties:
+                    tracker_id:
+                      type: integer
+                    status_id:
+                      type: integer
+                    priority_id:
+                      type: integer
+                    subject:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    due_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    done_ratio:
+                      type: integer
+                      minimum: 0
+                      maximum: 100
+                    category_id:
+                      type: integer
+                      nullable: true
+                    fixed_version_id:
+                      type: integer
+                      nullable: true
+                    assigned_to_id:
+                      type: integer
+                      nullable: true
+                    parent_issue_id:
+                      type: integer
+                      nullable: true
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
+                    watcher_user_ids:
+                      type: array
+                      items:
+                        type: integer
+                    is_private:
+                      type: boolean
+                    estimated_hours:
+                      type: number
+                      nullable: true
+                    uploads:
+                      $ref: '#/components/schemas/uploads'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - issue
+                properties:
+                  issue:
+                    $ref: '#/components/schemas/issue.simple'
   /issues/{issue_id}/watchers.{format}:
     post:
       tags:
@@ -601,6 +946,7 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - user_id
               properties:
@@ -703,6 +1049,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - projects
                 properties:
@@ -721,7 +1068,7 @@ paths:
         - Projects
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
-      summary: Crete project
+      summary: Create project
       operationId: createProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -731,11 +1078,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - project
               properties:
                 project:
                   type: object
+                  additionalProperties: false
                   required:
                     - name
                     - identifier
@@ -763,6 +1112,9 @@ paths:
                     default_version_id:
                       type: integer
                       nullable: true
+                    default_issue_query_id:
+                      type: integer
+                      nullable: true
                     tracker_ids:
                       type: array
                       items:
@@ -786,6 +1138,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - project
                 properties:
@@ -829,6 +1182,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - project
                 properties:
@@ -850,9 +1204,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 project:
                   type: object
+                  additionalProperties: false
                   properties:
                     name:
                       type: string
@@ -873,6 +1229,9 @@ paths:
                       type: integer
                       nullable: true
                     default_version_id:
+                      type: integer
+                      nullable: true
+                    default_issue_query_id:
                       type: integer
                       nullable: true
                     tracker_ids:
@@ -961,6 +1320,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - memberships
                 properties:
@@ -990,11 +1350,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - membership
               properties:
                 membership:
                   type: object
+                  additionalProperties: false
                   required:
                     - user_id
                     - role_ids
@@ -1012,6 +1374,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - membership
                 properties:
@@ -1036,6 +1399,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - membership
                 properties:
@@ -1057,9 +1421,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 membership:
                   type: object
+                  additionalProperties: false
                   required:
                     - role_ids
                   properties:
@@ -1131,6 +1497,15 @@ paths:
         - $ref: '#/components/parameters/nometa'
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - $ref: '#/components/parameters/x_redmine_nometa'
+        - name: include
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - auth_source
+          explode: false
         - name: status
           in: query
           schema:
@@ -1150,6 +1525,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - users
                 properties:
@@ -1178,11 +1554,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - user
               properties:
                 user:
                   type: object
+                  additionalProperties: false
                   required:
                     - login
                     - firstname
@@ -1240,6 +1618,9 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - user
                 properties:
                   user:
                     $ref: '#/components/schemas/user'
@@ -1270,6 +1651,7 @@ paths:
               enum:
                 - memberships
                 - groups
+                - auth_source
           explode: false
       responses:
         '200':
@@ -1278,6 +1660,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - user
                 properties:
@@ -1299,9 +1682,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 user:
                   type: object
+                  additionalProperties: false
                   properties:
                     login:
                       type: string
@@ -1394,6 +1779,7 @@ paths:
               enum:
                 - memberships
                 - groups
+                - auth_source
           explode: false
       responses:
         '200':
@@ -1402,6 +1788,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - user
                 properties:
@@ -1534,6 +1921,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - time_entries
                 properties:
@@ -1562,11 +1950,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - time_entry
               properties:
                 time_entry:
                   type: object
+                  additionalProperties: false
                   required:
                     - hours
                   properties:
@@ -1596,6 +1986,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - time_entry
                 properties:
@@ -1626,6 +2017,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - time_entry
                 properties:
@@ -1647,11 +2039,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 time_entry:
                   type: object
-                  required:
-                    - hours
+                  additionalProperties: false
                   properties:
                     issue_id:
                       type: integer
@@ -1695,6 +2087,266 @@ paths:
       responses:
         '204':
           description: ''
+  /projects/{project_id}/time_entries.{format}:
+    get:
+      tags:
+        - Time Entries
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries
+      summary: List time entries by project
+      operationId: getTimeEntriesByProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/nometa'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
+        - name: user_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: spent_on
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: subproject_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue.tracker_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue.status_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue.fixed_version_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue.category_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: author_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: activity_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: project.status
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: comments
+          in: query
+          schema:
+            type: string
+        - name: hours
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: spent_on:desc
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - time_entries
+                properties:
+                  time_entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/time_entry'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+    post:
+      tags:
+        - Time Entries
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
+      summary: Create time entry under project
+      operationId: createTimeEntryUnderProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - time_entry
+              properties:
+                time_entry:
+                  type: object
+                  additionalProperties: false
+                  required:
+                    - hours
+                  properties:
+                    issue_id:
+                      type: integer
+                    spent_on:
+                      type: string
+                      format: date
+                    hours:
+                      type: number
+                    activity_id:
+                      type: integer
+                    comments:
+                      type: string
+                    user_id:
+                      type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - time_entry
+                properties:
+                  time_entry:
+                    $ref: '#/components/schemas/time_entry'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
+  /issues/{issue_id}/time_entries.{format}:
+    post:
+      tags:
+        - Time Entries
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
+      summary: Create time entry under issue
+      operationId: createTimeEntryUnderIssue
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - time_entry
+              properties:
+                time_entry:
+                  type: object
+                  additionalProperties: false
+                  required:
+                    - hours
+                  properties:
+                    project_id:
+                      type: integer
+                    spent_on:
+                      type: string
+                      format: date
+                    hours:
+                      type: number
+                    activity_id:
+                      type: integer
+                    comments:
+                      type: string
+                    user_id:
+                      type: integer
+                    custom_fields:
+                      $ref: '#/components/schemas/custom_fields'
+                    custom_field_values:
+                      $ref: '#/components/schemas/custom_field_values'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - time_entry
+                properties:
+                  time_entry:
+                    $ref: '#/components/schemas/time_entry'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
   /news.{format}:
     get:
       tags:
@@ -1717,6 +2369,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - news
                 properties:
@@ -1757,6 +2410,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - news
                 properties:
@@ -1776,9 +2430,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 news:
                   type: object
+                  additionalProperties: false
                   properties:
                     title:
                       type: string
@@ -1790,6 +2446,7 @@ paths:
                       type: array
                       items:
                         type: object
+                        additionalProperties: false
                         properties:
                           token:
                             type: string
@@ -1837,6 +2494,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - news
                 properties:
@@ -1864,11 +2522,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - news
               properties:
                 news:
                   type: object
+                  additionalProperties: false
                   properties:
                     title:
                       type: string
@@ -1880,6 +2540,7 @@ paths:
                       type: array
                       items:
                         type: object
+                        additionalProperties: false
                         properties:
                           token:
                             type: string
@@ -1911,6 +2572,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - relations
                 properties:
@@ -1934,11 +2596,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - relation
               properties:
                 relation:
                   type: object
+                  additionalProperties: false
                   required:
                     - issue_to_id
                     - relation_type
@@ -1967,6 +2631,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - relation
                 properties:
@@ -1997,6 +2662,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - relation
                 properties:
@@ -2043,6 +2709,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - versions
                 properties:
@@ -2068,11 +2735,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - version
               properties:
                 version:
                   type: object
+                  additionalProperties: false
                   required:
                     - name
                   properties:
@@ -2112,6 +2781,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - version
                 properties:
@@ -2142,6 +2812,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - version
                 properties:
@@ -2163,9 +2834,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 version:
                   type: object
+                  additionalProperties: false
                   properties:
                     name:
                       type: string
@@ -2244,13 +2917,14 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - wiki_pages
                 properties:
                   wiki_pages:
                     type: array
                     items:
-                      $ref: '#/components/schemas/wiki_pages'
+                      $ref: '#/components/schemas/wiki_page.simple'
   /projects/{project_id}/wiki/{wiki_page_title}.{format}:
     get:
       tags:
@@ -2267,9 +2941,12 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - attachments
+            type: array
+            items:
+              type: string
+              enum:
+                - attachments
+          explode: false
       responses:
         '200':
           description: ''
@@ -2277,6 +2954,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - wiki_page
                 properties:
@@ -2299,9 +2977,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 wiki_page:
                   type: object
+                  additionalProperties: false
                   required:
                     - text
                   properties:
@@ -2311,6 +2991,10 @@ paths:
                       type: string
                     version:
                       type: integer
+                    parent_title:
+                      type: string
+                    uploads:
+                      $ref: '#/components/schemas/uploads'
       responses:
         '201':
           description: ''
@@ -2318,6 +3002,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - wiki_page
                 properties:
@@ -2369,9 +3054,12 @@ paths:
         - name: include
           in: query
           schema:
-            type: string
-            enum:
-              - attachments
+            type: array
+            items:
+              type: string
+              enum:
+                - attachments
+          explode: false
       responses:
         '200':
           description: ''
@@ -2379,6 +3067,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - wiki_page
                 properties:
@@ -2406,6 +3095,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - queries
                 properties:
@@ -2438,6 +3128,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - attachment
                 properties:
@@ -2459,11 +3150,15 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 attachment:
                   type: object
+                  additionalProperties: false
                   properties:
                     filename:
+                      type: string
+                    content_type:
                       type: string
                     description:
                       type: string
@@ -2537,6 +3232,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue_statuses
                 properties:
@@ -2562,6 +3258,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - trackers
                 properties:
@@ -2590,6 +3287,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue_categories
                 properties:
@@ -2615,11 +3313,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - issue_category
               properties:
                 issue_category:
                   type: object
+                  additionalProperties: false
                   required:
                     - name
                   properties:
@@ -2634,6 +3334,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue_category
                 properties:
@@ -2663,6 +3364,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue_priorities
                 properties:
@@ -2688,6 +3390,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - time_entry_activities
                 properties:
@@ -2713,6 +3416,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - document_categories
                 properties:
@@ -2739,6 +3443,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - issue_category
                 properties:
@@ -2760,9 +3465,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 issue_category:
                   type: object
+                  additionalProperties: false
                   properties:
                     name:
                       type: string
@@ -2813,6 +3520,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - roles
                 properties:
@@ -2839,6 +3547,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - role
                 properties:
@@ -2862,6 +3571,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - groups
                 properties:
@@ -2884,11 +3594,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - group
               properties:
                 group:
                   type: object
+                  additionalProperties: false
                   properties:
                     name:
                       type: string
@@ -2907,6 +3619,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   group:
                     $ref: '#/components/schemas/group.simple'
@@ -2945,6 +3658,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - group
                 properties:
@@ -2966,9 +3680,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 group:
                   type: object
+                  additionalProperties: false
                   properties:
                     name:
                       type: string
@@ -3014,6 +3730,7 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - user_id
               properties:
@@ -3056,6 +3773,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - custom_fields
                 properties:
@@ -3089,7 +3807,8 @@ paths:
             type: string
             enum:
               - all
-              - my_project
+              - my_projects
+              - bookmarks
               - subprojects
         - name: all_words
           in: query
@@ -3166,6 +3885,126 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - results
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/search'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+  /projects/{project_id}/search.{format}:
+    get:
+      tags:
+        - Search
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
+      summary: Search within project
+      operationId: searchByProject
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/nometa'
+        - $ref: '#/components/parameters/x_redmine_switch_user'
+        - $ref: '#/components/parameters/x_redmine_nometa'
+        - name: q
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: scope
+          in: query
+          schema:
+            type: string
+            enum:
+              - all
+              - my_projects
+              - bookmarks
+              - subprojects
+        - name: all_words
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: titles_only
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: issues
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: news
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: wiki_pages
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: projects
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: documents
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: changesets
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: messages
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: open_issues
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - name: attachments
+          in: query
+          schema:
+            type: string
+            enum:
+              - '0'
+              - '1'
+              - only
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
                 required:
                   - results
                 properties:
@@ -3198,6 +4037,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - files
                 properties:
@@ -3221,11 +4061,13 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - file
               properties:
                 file:
                   type: object
+                  additionalProperties: false
                   required:
                     - token
                   properties:
@@ -3275,9 +4117,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 user:
                   type: object
+                  additionalProperties: false
                   properties:
                     login:
                       type: string
@@ -3349,9 +4193,11 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 journal:
                   type: object
+                  additionalProperties: false
                   properties:
                     notes:
                       type: string
@@ -3389,11 +4235,13 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - upload
                 properties:
                   upload:
                     type: object
+                    additionalProperties: false
                     required:
                       - id
                       - token
@@ -3425,6 +4273,7 @@ paths:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required:
                 - issue_id
               properties:
@@ -3508,14 +4357,16 @@ components:
       required: true
       schema:
         type: integer
-    user_id:
-      name: user_id
+    project_id:
+      name: project_id
       in: path
       required: true
       schema:
-        type: integer
-    project_id:
-      name: project_id
+        oneOf:
+          - type: integer
+          - type: string
+    user_id:
+      name: user_id
       in: path
       required: true
       schema:
@@ -3597,7 +4448,9 @@ components:
       in: path
       required: true
       schema:
-        type: integer
+        oneOf:
+          - type: integer
+          - type: string
     revision:
       name: revision
       in: path
@@ -3607,6 +4460,7 @@ components:
   schemas:
     id_name:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -3615,8 +4469,9 @@ components:
           type: integer
         name:
           type: string
-    issue_status:
+    issue_status.simple:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -3630,9 +4485,11 @@ components:
           type: boolean
     custom_field_value:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
+        - value
       properties:
         id:
           type: integer
@@ -3640,21 +4497,18 @@ components:
           type: string
         multiple:
           type: boolean
-      additionalProperties:
-        description: 'value: string? | string[]'
-      example:
-        id: 0
-        name: string
-        value: string
+        value:
+          oneOf:
+            - type: string
+              nullable: true
+            - type: array
+              items:
+                type: string
     issue.simple:
       type: object
+      additionalProperties: false
       required:
         - id
-        - project
-        - tracker
-        - status
-        - priority
-        - author
         - subject
         - description
         - start_date
@@ -3674,7 +4528,7 @@ components:
         tracker:
           $ref: '#/components/schemas/id_name'
         status:
-          $ref: '#/components/schemas/issue_status'
+          $ref: '#/components/schemas/issue_status.simple'
         priority:
           $ref: '#/components/schemas/id_name'
         author:
@@ -3683,6 +4537,14 @@ components:
           $ref: '#/components/schemas/id_name'
         category:
           $ref: '#/components/schemas/id_name'
+        fixed_version:
+          $ref: '#/components/schemas/id_name'
+        parent:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: integer
         subject:
           type: string
         description:
@@ -3690,12 +4552,16 @@ components:
           nullable: true
         start_date:
           type: string
+          format: date
           nullable: true
         due_date:
           type: string
+          format: date
           nullable: true
         done_ratio:
           type: integer
+          minimum: 0
+          maximum: 100
         is_private:
           type: boolean
         estimated_hours:
@@ -3726,25 +4592,33 @@ components:
       type: array
       items:
         type: object
+        additionalProperties: false
         required:
           - id
         properties:
           id:
-            type: number
-        additionalProperties:
-          description: 'value: string? | string[]'
-        example:
-          id: 0
-          value: string
+            type: integer
+          value:
+            oneOf:
+              - type: string
+                nullable: true
+              - type: array
+                items:
+                  type: string
     custom_field_values:
       type: object
       additionalProperties:
-        description: 'value: string? | string[]'
-      example:
-        '0': string
+        oneOf:
+          - type: string
+            nullable: true
+          - type: array
+            items:
+              type: string
     uploads:
       type: array
       items:
+        type: object
+        additionalProperties: false
         properties:
           token:
             type: string
@@ -3754,15 +4628,43 @@ components:
             type: string
           content_type:
             type: string
-    issue:
+    attachment:
       type: object
+      additionalProperties: false
       required:
         - id
-        - project
-        - tracker
-        - status
-        - priority
-        - author
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - created_on
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+          nullable: true
+        content_url:
+          type: string
+        thumbnail_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/id_name'
+        created_on:
+          type: string
+          format: date-time
+    issue:
+      type: object
+      additionalProperties: false
+      required:
+        - id
         - subject
         - description
         - start_date
@@ -3782,7 +4684,7 @@ components:
         tracker:
           $ref: '#/components/schemas/id_name'
         status:
-          $ref: '#/components/schemas/issue_status'
+          $ref: '#/components/schemas/issue_status.simple'
         priority:
           $ref: '#/components/schemas/id_name'
         author:
@@ -3791,6 +4693,14 @@ components:
           $ref: '#/components/schemas/id_name'
         category:
           $ref: '#/components/schemas/id_name'
+        fixed_version:
+          $ref: '#/components/schemas/id_name'
+        parent:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: integer
         subject:
           type: string
         description:
@@ -3798,12 +4708,16 @@ components:
           nullable: true
         start_date:
           type: string
+          format: date
           nullable: true
         due_date:
           type: string
+          format: date
           nullable: true
         done_ratio:
           type: integer
+          minimum: 0
+          maximum: 100
         is_private:
           type: boolean
         estimated_hours:
@@ -3833,15 +4747,23 @@ components:
         changesets:
           type: array
           items:
-            type: string
+            type: object
+            additionalProperties: false
+            properties:
+              revision:
+                type: string
+              user:
+                $ref: '#/components/schemas/id_name'
+              comments:
+                type: string
+              committed_on:
+                type: string
+                format: date-time
         children:
           type: array
           items:
             type: object
-            required:
-              - id
-              - tracker
-              - subject
+            additionalProperties: false
             properties:
               id:
                 type: integer
@@ -3852,40 +4774,12 @@ components:
         attachments:
           type: array
           items:
-            type: object
-            required:
-              - id
-              - filename
-              - filesize
-              - content_type
-              - description
-              - content_url
-              - author
-              - created_on
-            properties:
-              id:
-                type: integer
-              filename:
-                type: string
-              filesize:
-                type: integer
-              content_type:
-                type: string
-              description:
-                type: string
-              content_url:
-                type: string
-              author:
-                $ref: '#/components/schemas/id_name'
-              created_on:
-                type: string
-                format: data-time
-              thumbnail_url:
-                type: string
+            $ref: '#/components/schemas/attachment'
         relations:
           type: array
           items:
             type: object
+            additionalProperties: false
             properties:
               id:
                 type: integer
@@ -3895,6 +4789,16 @@ components:
                 type: integer
               relation_type:
                 type: string
+                enum:
+                  - relates
+                  - duplicates
+                  - duplicated
+                  - blocks
+                  - blocked
+                  - precedes
+                  - follows
+                  - copied_to
+                  - copied_from
               delay:
                 type: integer
                 nullable: true
@@ -3902,13 +4806,7 @@ components:
           type: array
           items:
             type: object
-            required:
-              - id
-              - user
-              - notes
-              - created_on
-              - private_notes
-              - details
+            additionalProperties: false
             properties:
               id:
                 type: integer
@@ -3919,17 +4817,18 @@ components:
               created_on:
                 type: string
                 format: date-time
+              updated_on:
+                type: string
+                format: date-time
+              updated_by:
+                $ref: '#/components/schemas/id_name'
               private_notes:
                 type: boolean
               details:
                 type: array
                 items:
                   type: object
-                  required:
-                    - property
-                    - name
-                    - old_value
-                    - new_value
+                  additionalProperties: false
                   properties:
                     property:
                       type: string
@@ -3948,14 +4847,16 @@ components:
         allowed_statuses:
           type: array
           items:
-            $ref: '#/components/schemas/issue_status'
+            $ref: '#/components/schemas/issue_status.simple'
     project.simple:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
         - identifier
         - description
+        - homepage
         - status
         - is_public
         - inherit_members
@@ -3969,6 +4870,9 @@ components:
         identifier:
           type: string
         description:
+          type: string
+          nullable: true
+        homepage:
           type: string
           nullable: true
         parent:
@@ -4011,11 +4915,13 @@ components:
           format: date-time
     project:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
         - identifier
         - description
+        - homepage
         - status
         - is_public
         - inherit_members
@@ -4078,6 +4984,7 @@ components:
           format: date-time
     errors:
       type: object
+      additionalProperties: false
       required:
         - errors
       properties:
@@ -4085,8 +4992,22 @@ components:
           type: array
           items:
             type: string
+    membership_role:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        inherited:
+          type: boolean
     membership:
       type: object
+      additionalProperties: false
       required:
         - id
         - project
@@ -4103,9 +5024,10 @@ components:
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/id_name'
+            $ref: '#/components/schemas/membership_role'
     user.simple:
       type: object
+      additionalProperties: false
       required:
         - id
         - login
@@ -4118,6 +5040,7 @@ components:
         - last_login_on
         - passwd_changed_on
         - twofa_scheme
+        - status
       properties:
         id:
           type: integer
@@ -4145,15 +5068,22 @@ components:
           type: string
           format: date-time
           nullable: true
+        avatar_url:
+          type: string
         twofa_scheme:
-          type: object
+          type: string
           nullable: true
+        status:
+          type: integer
+        auth_source:
+          $ref: '#/components/schemas/id_name'
         custom_fields:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
     pref:
       type: object
+      additionalProperties: false
       properties:
         hide_mail:
           type: boolean
@@ -4197,26 +5127,25 @@ components:
           type: integer
           nullable: true
         auto_watch_on:
-          type: string
-          enum:
-            - issue_contributed_to
-          nullable: true
+          type: array
+          items:
+            type: string
+            enum:
+              - issue_created
+              - issue_contributed_to
+              - issue_assigned_to_me
     user:
       type: object
+      additionalProperties: false
       required:
         - id
         - login
-        - admin
         - firstname
         - lastname
-        - mail
         - created_on
         - updated_on
         - last_login_on
         - passwd_changed_on
-        - twofa_scheme
-        - api_key
-        - status
       properties:
         id:
           type: integer
@@ -4244,8 +5173,10 @@ components:
           type: string
           format: date-time
           nullable: true
+        avatar_url:
+          type: string
         twofa_scheme:
-          type: object
+          type: string
           nullable: true
         api_key:
           type: string
@@ -4255,6 +5186,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
+        auth_source:
+          $ref: '#/components/schemas/id_name'
         groups:
           type: array
           items:
@@ -4263,6 +5196,7 @@ components:
           type: array
           items:
             type: object
+            additionalProperties: false
             required:
               - id
               - project
@@ -4276,6 +5210,7 @@ components:
                 type: array
                 items:
                   type: object
+                  additionalProperties: false
                   required:
                     - id
                     - name
@@ -4288,10 +5223,9 @@ components:
                       type: boolean
     time_entry:
       type: object
+      additionalProperties: false
       required:
         - id
-        - user
-        - activity
         - hours
         - comments
         - spent_on
@@ -4304,6 +5238,7 @@ components:
           $ref: '#/components/schemas/id_name'
         issue:
           type: object
+          additionalProperties: false
           required:
             - id
           properties:
@@ -4331,42 +5266,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
-    attachment:
-      type: object
-      required:
-        - id
-        - filename
-        - filesize
-        - content_type
-        - description
-        - content_url
-        - author
-        - created_on
-      properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        filesize:
-          type: integer
-        content_type:
-          type: string
-        description:
-          type: string
-        content_url:
-          type: string
-        thumbnail_url:
-          type: string
-        author:
-          $ref: '#/components/schemas/id_name'
-        created_on:
-          type: string
-          format: data-time
     news_comment:
       type: object
+      additionalProperties: false
       required:
         - id
-        - author
         - content
       properties:
         id:
@@ -4377,10 +5281,9 @@ components:
           type: string
     news:
       type: object
+      additionalProperties: false
       required:
         - id
-        - project
-        - author
         - title
         - description
         - created_on
@@ -4410,6 +5313,7 @@ components:
             $ref: '#/components/schemas/news_comment'
     issue_relation:
       type: object
+      additionalProperties: false
       required:
         - id
         - issue_id
@@ -4425,19 +5329,29 @@ components:
           type: integer
         relation_type:
           type: string
+          enum:
+            - relates
+            - duplicates
+            - duplicated
+            - blocks
+            - blocked
+            - precedes
+            - follows
+            - copied_to
+            - copied_from
         delay:
           type: integer
           nullable: true
     version.simple:
       type: object
+      additionalProperties: false
       required:
         - id
-        - project
         - name
+        - description
         - status
         - due_date
         - sharing
-        - description
         - wiki_page_title
         - created_on
         - updated_on
@@ -4484,14 +5398,14 @@ components:
           format: date-time
     version:
       type: object
+      additionalProperties: false
       required:
         - id
-        - project
         - name
+        - description
         - status
         - due_date
         - sharing
-        - description
         - wiki_page_title
         - created_on
         - updated_on
@@ -4540,8 +5454,9 @@ components:
         updated_on:
           type: string
           format: date-time
-    wiki_pages:
+    wiki_page.simple:
       type: object
+      additionalProperties: false
       required:
         - title
         - version
@@ -4549,9 +5464,10 @@ components:
         - updated_on
       properties:
         title:
-          type: integer
+          type: string
         parent:
           type: object
+          additionalProperties: false
           required:
             - title
           properties:
@@ -4567,11 +5483,11 @@ components:
           format: date-time
     wiki_page:
       type: object
+      additionalProperties: false
       required:
         - title
         - text
         - version
-        - author
         - comments
         - created_on
         - updated_on
@@ -4580,6 +5496,7 @@ components:
           type: string
         parent:
           type: object
+          additionalProperties: false
           required:
             - title
           properties:
@@ -4594,6 +5511,8 @@ components:
         comments:
           type: string
           nullable: true
+        project:
+          $ref: '#/components/schemas/id_name'
         created_on:
           type: string
           format: date-time
@@ -4606,6 +5525,7 @@ components:
             $ref: '#/components/schemas/attachment'
     query:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -4621,8 +5541,32 @@ components:
         project_id:
           type: integer
           nullable: true
+    issue_status:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - is_closed
+        - description
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_closed:
+          type: boolean
+        description:
+          type: string
+          nullable: true
     tracker:
       type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - description
+        - enabled_standard_fields
       properties:
         id:
           type: integer
@@ -4639,9 +5583,9 @@ components:
             type: string
     issue_category:
       type: object
+      additionalProperties: false
       required:
         - id
-        - project
         - name
       properties:
         id:
@@ -4654,6 +5598,7 @@ components:
           $ref: '#/components/schemas/id_name'
     issue_priority:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -4674,6 +5619,7 @@ components:
             $ref: '#/components/schemas/custom_field_value'
     time_entry_activity:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -4694,6 +5640,7 @@ components:
             $ref: '#/components/schemas/custom_field_value'
     document_category:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -4714,11 +5661,12 @@ components:
             $ref: '#/components/schemas/custom_field_value'
     role:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
         - assignable
-        - issue_visibility
+        - issues_visibility
         - time_entries_visibility
         - users_visibility
         - permissions
@@ -4741,6 +5689,7 @@ components:
             type: string
     group.simple:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -4749,12 +5698,15 @@ components:
           type: integer
         name:
           type: string
+        builtin:
+          type: string
         custom_fields:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
     group:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -4762,6 +5714,8 @@ components:
         id:
           type: integer
         name:
+          type: string
+        builtin:
           type: string
         custom_fields:
           type: array
@@ -4775,6 +5729,7 @@ components:
           type: array
           items:
             type: object
+            additionalProperties: false
             required:
               - id
               - project
@@ -4787,14 +5742,33 @@ components:
               roles:
                 type: array
                 items:
-                  $ref: '#/components/schemas/id_name'
+                  $ref: '#/components/schemas/membership_role'
     custom_field:
       type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - description
+        - field_format
+        - regexp
+        - min_length
+        - max_length
+        - is_required
+        - is_filter
+        - searchable
+        - multiple
+        - default_value
+        - visible
+        - editable
       properties:
         id:
           type: integer
         name:
           type: string
+        description:
+          type: string
+          nullable: true
         customized_type:
           type: string
           enum:
@@ -4823,6 +5797,7 @@ components:
             - date
             - bool
             - text
+            - progressbar
         regexp:
           type: string
         min_length:
@@ -4844,6 +5819,8 @@ components:
           nullable: true
         visible:
           type: boolean
+        editable:
+          type: boolean
         trackers:
           type: array
           items:
@@ -4851,11 +5828,12 @@ components:
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/role'
+            $ref: '#/components/schemas/id_name'
         possible_values:
           type: array
           items:
             type: object
+            additionalProperties: false
             properties:
               value:
                 type: string
@@ -4863,6 +5841,7 @@ components:
                 type: string
     search:
       type: object
+      additionalProperties: false
       required:
         - id
         - title
@@ -4881,11 +5860,13 @@ components:
           type: string
         description:
           type: string
+          nullable: true
         datetime:
           type: string
           format: date-time
     file:
       type: object
+      additionalProperties: false
       required:
         - id
         - filename
@@ -4893,7 +5874,6 @@ components:
         - content_type
         - description
         - content_url
-        - author
         - created_on
         - digest
         - downloads
@@ -4908,6 +5888,7 @@ components:
           type: string
         description:
           type: string
+          nullable: true
         content_url:
           type: string
         thumbnail_url:
@@ -4925,10 +5906,13 @@ components:
           type: integer
     my_account:
       type: object
+      additionalProperties: false
       required:
         - user
       properties:
         user:
+          type: object
+          additionalProperties: false
           required:
             - id
             - login
@@ -4958,6 +5942,7 @@ components:
             last_login_on:
               type: string
               format: date-time
+              nullable: true
             api_key:
               type: string
             custom_fields:

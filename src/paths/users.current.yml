@@ -17,6 +17,7 @@ get:
           enum:
             - memberships
             - groups
+            - auth_source
       explode: false
   responses:
     200:
@@ -25,6 +26,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - user
             properties:

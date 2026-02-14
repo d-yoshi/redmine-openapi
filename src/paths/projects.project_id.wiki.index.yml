@@ -16,10 +16,11 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - wiki_pages
             properties:
               wiki_pages:
                 type: array
                 items:
-                  $ref: ../components/schemas/wiki_pages.yml
+                  $ref: ../components/schemas/wiki_page.simple.yml

@@ -31,9 +31,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             user:
               type: object
+              additionalProperties: false
               properties:
                 login:
                   type: string

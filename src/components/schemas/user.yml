@@ -1,18 +1,14 @@
 type: object
+additionalProperties: false
 required:
   - id
   - login
-  - admin
   - firstname
   - lastname
-  - mail
   - created_on
   - updated_on
   - last_login_on
   - passwd_changed_on
-  - twofa_scheme
-  - api_key
-  - status
 properties:
   id:
     type: integer
@@ -40,8 +36,10 @@ properties:
     type: string
     format: date-time
     nullable: true
+  avatar_url:
+    type: string
   twofa_scheme:
-    type: object
+    type: string
     nullable: true
   api_key:
     type: string
@@ -51,6 +49,8 @@ properties:
     type: array
     items:
       $ref: ./custom_field_value.yml
+  auth_source:
+    $ref: ./id_name.yml
   groups:
     type: array
     items:
@@ -59,6 +59,7 @@ properties:
     type: array
     items:
       type: object
+      additionalProperties: false
       required:
         - id
         - project
@@ -72,6 +73,7 @@ properties:
           type: array
           items:
             type: object
+            additionalProperties: false
             required:
               - id
               - name

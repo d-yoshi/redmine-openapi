@@ -1,11 +1,7 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - project
-  - tracker
-  - status
-  - priority
-  - author
   - subject
   - description
   - start_date
@@ -25,7 +21,7 @@ properties:
   tracker:
     $ref: ./id_name.yml
   status:
-    $ref: ./issue_status.yml
+    $ref: ./issue_status.simple.yml
   priority:
     $ref: ./id_name.yml
   author:
@@ -34,6 +30,14 @@ properties:
     $ref: ./id_name.yml
   category:
     $ref: ./id_name.yml
+  fixed_version:
+    $ref: ./id_name.yml
+  parent:
+    type: object
+    additionalProperties: false
+    properties:
+      id:
+        type: integer
   subject:
     type: string
   description:
@@ -41,12 +45,16 @@ properties:
     nullable: true
   start_date:
     type: string
+    format: date
     nullable: true
   due_date:
     type: string
+    format: date
     nullable: true
   done_ratio:
     type: integer
+    minimum: 0
+    maximum: 100
   is_private:
     type: boolean
   estimated_hours:

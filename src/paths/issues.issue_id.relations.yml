@@ -16,6 +16,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - relations
             properties:
@@ -40,11 +41,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - relation
           properties:
             relation:
               type: object
+              additionalProperties: false
               required:
                 - issue_to_id
                 - relation_type
@@ -73,6 +76,7 @@ post:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - relation
             properties:

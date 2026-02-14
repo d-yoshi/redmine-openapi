@@ -1,4 +1,5 @@
 type: object
+additionalProperties: false
 properties:
   hide_mail:
     type: boolean
@@ -42,7 +43,10 @@ properties:
     type: integer
     nullable: true
   auto_watch_on:
-    type: string
-    enum:
-      - issue_contributed_to
-    nullable: true
+    type: array
+    items:
+      type: string
+      enum:
+        - issue_created
+        - issue_contributed_to
+        - issue_assigned_to_me

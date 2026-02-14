@@ -20,6 +20,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - news
             properties:
@@ -48,11 +49,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - news
           properties:
             news:
               type: object
+              additionalProperties: false
               properties:
                 title:
                   type: string
@@ -64,6 +67,7 @@ post:
                   type: array
                   items:
                     type: object
+                    additionalProperties: false
                     properties:
                       token:
                         type: string

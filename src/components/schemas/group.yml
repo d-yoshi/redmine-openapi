@@ -1,4 +1,5 @@
 type: object
+additionalProperties: false
 required:
   - id
   - name
@@ -6,6 +7,8 @@ properties:
   id:
     type: integer
   name:
+    type: string
+  builtin:
     type: string
   custom_fields:
     type: array
@@ -19,6 +22,7 @@ properties:
     type: array
     items:
       type: object
+      additionalProperties: false
       required:
         - id
         - project
@@ -31,4 +35,4 @@ properties:
         roles:
           type: array
           items:
-            $ref: ./id_name.yml
+            $ref: ./membership_role.yml

@@ -16,6 +16,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - time_entry
             properties:
@@ -38,11 +39,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             time_entry:
               type: object
-              required:
-                - hours
+              additionalProperties: false
               properties:
                 issue_id:
                   type: integer

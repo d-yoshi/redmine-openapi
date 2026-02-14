@@ -18,6 +18,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - issue_categories
             properties:
@@ -44,11 +45,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - issue_category
           properties:
             issue_category:
               type: object
+              additionalProperties: false
               required:
                 - name
               properties:
@@ -63,6 +66,7 @@ post:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - issue_category
             properties:

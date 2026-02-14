@@ -3,10 +3,11 @@ get:
     - Issues
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
-  summary: List issues
-  operationId: getIssues
+  summary: List issues by project
+  operationId: getIssuesByProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/limit.yml
     - $ref: ../components/parameters/query/nometa.yml
@@ -28,13 +29,6 @@ get:
             - relations
       explode: false
     - name: issue_id
-      in: query
-      schema:
-        type: array
-        items:
-          type: string
-      explode: false
-    - name: project_id
       in: query
       schema:
         type: array
@@ -256,10 +250,11 @@ post:
     - Issues
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
-  summary: Create issue
-  operationId: createIssue
+  summary: Create issue under project
+  operationId: createIssueUnderProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   requestBody:
     content:
@@ -274,13 +269,8 @@ post:
               type: object
               additionalProperties: false
               required:
-                - project_id
                 - subject
               properties:
-                project_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
                 tracker_id:
                   type: integer
                 status_id:

@@ -1,9 +1,11 @@
 type: object
+additionalProperties: false
 required:
   - id
   - name
   - identifier
   - description
+  - homepage
   - status
   - is_public
   - inherit_members

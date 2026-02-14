@@ -1,4 +1,5 @@
 type: object
+additionalProperties: false
 required:
   - id
   - issue_id
@@ -14,6 +15,16 @@ properties:
     type: integer
   relation_type:
     type: string
+    enum:
+      - relates
+      - duplicates
+      - duplicated
+      - blocks
+      - blocked
+      - precedes
+      - follows
+      - copied_to
+      - copied_from
   delay:
     type: integer
     nullable: true

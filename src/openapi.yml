@@ -9,7 +9,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 0.16.0
+  version: 1.0.0
 
 servers:
   - url: /
@@ -29,6 +29,9 @@ paths:
 
   /issues/{issue_id}.{format}:
     $ref: ./paths/issues.issue_id.yml
+
+  /projects/{project_id}/issues.{format}:
+    $ref: ./paths/projects.project_id.issues.yml
 
   /issues/{issue_id}/watchers.{format}:
     $ref: ./paths/issues.issue_id.watchers.yml
@@ -74,6 +77,12 @@ paths:
 
   /time_entries/{time_entry_id}.{format}:
     $ref: ./paths/time_entries.time_entry_id.yml
+
+  /projects/{project_id}/time_entries.{format}:
+    $ref: ./paths/projects.project_id.time_entries.yml
+
+  /issues/{issue_id}/time_entries.{format}:
+    $ref: ./paths/issues.issue_id.time_entries.yml
 
   /news.{format}:
     $ref: ./paths/news.yml
@@ -162,11 +171,14 @@ paths:
   /search.{format}:
     $ref: ./paths/search.yml
 
+  /projects/{project_id}/search.{format}:
+    $ref: ./paths/projects.project_id.search.yml
+
   /projects/{project_id}/files.{format}:
     $ref: ./paths/projects.project_id.files.yml
 
   /my/account.{format}:
-    $ref: ./paths/my_account.yml
+    $ref: ./paths/my.account.yml
 
   /journals/{journal_id}.{format}:
     $ref: ./paths/journals.journal_id.yml

@@ -1,5 +1,8 @@
 type: object
 additionalProperties:
-  description: "value: string? | string[]"
-example:
-  0: string
+  oneOf:
+    - type: string
+      nullable: true
+    - type: array
+      items:
+        type: string

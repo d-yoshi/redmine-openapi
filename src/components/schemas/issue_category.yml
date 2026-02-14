@@ -1,7 +1,7 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - project
   - name
 properties:
   id:

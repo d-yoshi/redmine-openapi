@@ -1,15 +1,16 @@
 type: array
 items:
   type: object
+  additionalProperties: false
   required:
     - id
-    # - value
   properties:
     id:
-      type: number
-  # Workaround: Some generators do not support "oneOf".
-  additionalProperties:
-    description: "value: string? | string[]"
-  example:
-    id: 0
-    value: "string"
+      type: integer
+    value:
+      oneOf:
+        - type: string
+          nullable: true
+        - type: array
+          items:
+            type: string

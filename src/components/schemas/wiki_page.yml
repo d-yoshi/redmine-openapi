@@ -1,9 +1,9 @@
 type: object
+additionalProperties: false
 required:
   - title
   - text
   - version
-  - author
   - comments
   - created_on
   - updated_on
@@ -12,6 +12,7 @@ properties:
     type: string
   parent:
     type: object
+    additionalProperties: false
     required:
       - title
     properties:
@@ -26,6 +27,8 @@ properties:
   comments:
     type: string
     nullable: true
+  project:
+    $ref: ./id_name.yml
   created_on:
     type: string
     format: date-time

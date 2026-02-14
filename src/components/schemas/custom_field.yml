@@ -1,9 +1,28 @@
 type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - description
+  - field_format
+  - regexp
+  - min_length
+  - max_length
+  - is_required
+  - is_filter
+  - searchable
+  - multiple
+  - default_value
+  - visible
+  - editable
 properties:
   id:
     type: integer
   name:
     type: string
+  description:
+    type: string
+    nullable: true
   customized_type:
     type: string
     enum:
@@ -32,6 +51,7 @@ properties:
       - date
       - bool
       - text
+      - progressbar
   regexp:
     type: string
   min_length:
@@ -53,6 +73,8 @@ properties:
     nullable: true
   visible:
     type: boolean
+  editable:
+    type: boolean
   trackers:
     type: array
     items:
@@ -60,11 +82,12 @@ properties:
   roles:
     type: array
     items:
-      $ref: ./role.yml
+      $ref: ./id_name.yml
   possible_values:
     type: array
     items:
       type: object
+      additionalProperties: false
       properties:
         value:
           type: string

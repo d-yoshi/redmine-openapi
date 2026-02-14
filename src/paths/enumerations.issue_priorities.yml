@@ -15,6 +15,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - issue_priorities
             properties:

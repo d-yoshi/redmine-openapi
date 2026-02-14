@@ -15,6 +15,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - groups
             properties:
@@ -38,11 +39,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - group
           properties:
             group:
               type: object
+              additionalProperties: false
               properties:
                 name:
                   type: string
@@ -61,6 +64,7 @@ post:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             properties:
               group:
                 $ref: ../components/schemas/group.simple.yml

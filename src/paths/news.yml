@@ -19,6 +19,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - news
             properties:

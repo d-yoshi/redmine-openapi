@@ -4,13 +4,13 @@
 
 ## Overview
 
-This OpenAPI specification file was created by manual scraping the official api docs and experimentation.
+This OpenAPI specification file was created based on the official API docs and verified against Redmine's source code and integration tests.
 
 ## Docs
 
 ```
-Redmine: 5.0.x
 OpenAPI: 3.0.3
+Tested with: Redmine 6.1.1
 ```
 
 https://d-yoshi.github.io/redmine-openapi/

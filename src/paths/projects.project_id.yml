@@ -29,6 +29,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - project
             properties:
@@ -51,9 +52,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             project:
               type: object
+              additionalProperties: false
               properties:
                 name:
                   type: string
@@ -74,6 +77,9 @@ put:
                   type: integer
                   nullable: true
                 default_version_id:
+                  type: integer
+                  nullable: true
+                default_issue_query_id:
                   type: integer
                   nullable: true
                 tracker_ids:

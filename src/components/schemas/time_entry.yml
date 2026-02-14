@@ -1,8 +1,7 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - user
-  - activity
   - hours
   - comments
   - spent_on
@@ -15,6 +14,7 @@ properties:
     $ref: ./id_name.yml
   issue:
     type: object
+    additionalProperties: false
     required:
       - id
     properties:

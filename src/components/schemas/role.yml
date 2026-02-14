@@ -1,9 +1,10 @@
 type: object
+additionalProperties: false
 required:
   - id
   - name
   - assignable
-  - issue_visibility
+  - issues_visibility
   - time_entries_visibility
   - users_visibility
   - permissions

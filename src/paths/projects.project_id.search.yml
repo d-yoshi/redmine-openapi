@@ -3,10 +3,11 @@ get:
     - Search
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
-  summary: Search
-  operationId: search
+  summary: Search within project
+  operationId: searchByProject
   parameters:
     - $ref: ../components/parameters/path/format.yml
+    - $ref: ../components/parameters/path/project_id.yml
     - $ref: ../components/parameters/query/limit.yml
     - $ref: ../components/parameters/query/offset.yml
     - $ref: ../components/parameters/query/nometa.yml

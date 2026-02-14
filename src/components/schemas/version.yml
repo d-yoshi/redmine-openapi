@@ -1,12 +1,12 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - project
   - name
+  - description
   - status
   - due_date
   - sharing
-  - description
   - wiki_page_title
   - created_on
   - updated_on

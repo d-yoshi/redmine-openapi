@@ -20,6 +20,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - memberships
             properties:
@@ -50,11 +51,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - membership
           properties:
             membership:
               type: object
+              additionalProperties: false
               required:
                 - user_id
                 - role_ids
@@ -72,6 +75,7 @@ post:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - membership
             properties:

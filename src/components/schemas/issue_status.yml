@@ -1,8 +1,10 @@
 type: object
+additionalProperties: false
 required:
   - id
   - name
   - is_closed
+  - description
 properties:
   id:
     type: integer
@@ -10,3 +12,6 @@ properties:
     type: string
   is_closed:
     type: boolean
+  description:
+    type: string
+    nullable: true

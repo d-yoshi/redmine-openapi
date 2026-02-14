@@ -1,8 +1,11 @@
 type: object
+additionalProperties: false
 required:
   - user
 properties:
   user:
+    type: object
+    additionalProperties: false
     required:
       - id
       - login
@@ -32,6 +35,7 @@ properties:
       last_login_on:
         type: string
         format: date-time
+        nullable: true
       api_key:
         type: string
       custom_fields:

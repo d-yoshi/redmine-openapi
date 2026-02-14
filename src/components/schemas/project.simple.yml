@@ -1,9 +1,11 @@
 type: object
+additionalProperties: false
 required:
   - id
   - name
   - identifier
   - description
+  - homepage
   - status
   - is_public
   - inherit_members
@@ -17,6 +19,9 @@ properties:
   identifier:
     type: string
   description:
+    type: string
+    nullable: true
+  homepage:
     type: string
     nullable: true
   parent:

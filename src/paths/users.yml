@@ -12,6 +12,15 @@ get:
     - $ref: ../components/parameters/query/nometa.yml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
     - $ref: ../components/parameters/header/x_redmine_nometa.yml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - auth_source
+      explode: false
     - name: status
       in: query
       schema:
@@ -31,6 +40,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - users
             properties:
@@ -60,11 +70,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - user
           properties:
             user:
               type: object
+              additionalProperties: false
               required:
                 - login
                 - firstname
@@ -122,6 +134,9 @@ post:
         application/json:
           schema:
             type: object
+            additionalProperties: false
+            required:
+              - user
             properties:
               user:
                 $ref: ../components/schemas/user.yml

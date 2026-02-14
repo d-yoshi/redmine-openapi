@@ -26,6 +26,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - group
             properties:
@@ -48,9 +49,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             group:
               type: object
+              additionalProperties: false
               properties:
                 name:
                   type: string

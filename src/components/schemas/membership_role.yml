@@ -2,11 +2,11 @@ type: object
 additionalProperties: false
 required:
   - id
-  - content
+  - name
 properties:
   id:
     type: integer
-  author:
-    $ref: ./id_name.yml
-  content:
+  name:
     type: string
+  inherited:
+    type: boolean

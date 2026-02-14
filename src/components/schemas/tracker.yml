@@ -1,4 +1,10 @@
 type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - description
+  - enabled_standard_fields
 properties:
   id:
     type: integer

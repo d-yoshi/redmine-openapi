@@ -1,4 +1,5 @@
 type: object
+additionalProperties: false
 required:
   - id
   - filename
@@ -6,7 +7,6 @@ required:
   - content_type
   - description
   - content_url
-  - author
   - created_on
 properties:
   id:
@@ -19,6 +19,7 @@ properties:
     type: string
   description:
     type: string
+    nullable: true
   content_url:
     type: string
   thumbnail_url:
@@ -27,4 +28,4 @@ properties:
     $ref: ./id_name.yml
   created_on:
     type: string
-    format: data-time
+    format: date-time

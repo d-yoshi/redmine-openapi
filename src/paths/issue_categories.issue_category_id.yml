@@ -16,6 +16,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - issue_category
             properties:
@@ -38,9 +39,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             issue_category:
               type: object
+              additionalProperties: false
               properties:
                 name:
                   type: string

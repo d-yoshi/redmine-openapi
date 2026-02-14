@@ -16,6 +16,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - membership
             properties:
@@ -38,9 +39,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             membership:
               type: object
+              additionalProperties: false
               required:
                 - role_ids
               properties:

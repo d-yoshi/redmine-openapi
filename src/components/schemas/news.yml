@@ -1,8 +1,7 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - project
-  - author
   - title
   - description
   - created_on

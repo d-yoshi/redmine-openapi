@@ -31,6 +31,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - issue
             properties:
@@ -53,12 +54,16 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             issue:
               type: object
+              additionalProperties: false
               properties:
                 project_id:
-                  type: integer
+                  oneOf:
+                    - type: integer
+                    - type: string
                 tracker_id:
                   type: integer
                 status_id:
@@ -82,7 +87,6 @@ put:
                   type: integer
                   minimum: 0
                   maximum: 100
-                  multipleOf: 10
                 category_id:
                   type: integer
                   nullable: true

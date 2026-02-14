@@ -14,9 +14,12 @@ get:
     - name: include
       in: query
       schema:
-        type: string
-        enum:
-          - attachments
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+      explode: false
   responses:
     200:
       description: ""
@@ -24,6 +27,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - wiki_page
             properties:

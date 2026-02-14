@@ -2,11 +2,12 @@ type: object
 additionalProperties: false
 required:
   - id
-  - content
+  - name
+  - is_closed
 properties:
   id:
     type: integer
-  author:
-    $ref: ./id_name.yml
-  content:
+  name:
     type: string
+  is_closed:
+    type: boolean

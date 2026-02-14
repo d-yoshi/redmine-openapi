@@ -2,4 +2,6 @@ name: repository_id
 in: path
 required: true
 schema:
-  type: integer
+  oneOf:
+    - type: integer
+    - type: string

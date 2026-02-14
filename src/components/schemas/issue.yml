@@ -1,11 +1,7 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - project
-  - tracker
-  - status
-  - priority
-  - author
   - subject
   - description
   - start_date
@@ -25,7 +21,7 @@ properties:
   tracker:
     $ref: ./id_name.yml
   status:
-    $ref: ./issue_status.yml
+    $ref: ./issue_status.simple.yml
   priority:
     $ref: ./id_name.yml
   author:
@@ -34,6 +30,14 @@ properties:
     $ref: ./id_name.yml
   category:
     $ref: ./id_name.yml
+  fixed_version:
+    $ref: ./id_name.yml
+  parent:
+    type: object
+    additionalProperties: false
+    properties:
+      id:
+        type: integer
   subject:
     type: string
   description:
@@ -41,12 +45,16 @@ properties:
     nullable: true
   start_date:
     type: string
+    format: date
     nullable: true
   due_date:
     type: string
+    format: date
     nullable: true
   done_ratio:
     type: integer
+    minimum: 0
+    maximum: 100
   is_private:
     type: boolean
   estimated_hours:
@@ -76,15 +84,23 @@ properties:
   changesets:
     type: array
     items:
-      type: string
+      type: object
+      additionalProperties: false
+      properties:
+        revision:
+          type: string
+        user:
+          $ref: ./id_name.yml
+        comments:
+          type: string
+        committed_on:
+          type: string
+          format: date-time
   children:
     type: array
     items:
       type: object
-      required:
-        - id
-        - tracker
-        - subject
+      additionalProperties: false
       properties:
         id:
           type: integer
@@ -95,40 +111,12 @@ properties:
   attachments:
     type: array
     items:
-      type: object
-      required:
-        - id
-        - filename
-        - filesize
-        - content_type
-        - description
-        - content_url
-        - author
-        - created_on
-      properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        filesize:
-          type: integer
-        content_type:
-          type: string
-        description:
-          type: string
-        content_url:
-          type: string
-        author:
-          $ref: ./id_name.yml
-        created_on:
-          type: string
-          format: data-time
-        thumbnail_url:
-          type: string
+      $ref: ./attachment.yml
   relations:
     type: array
     items:
       type: object
+      additionalProperties: false
       properties:
         id:
           type: integer
@@ -138,6 +126,16 @@ properties:
           type: integer
         relation_type:
           type: string
+          enum:
+            - relates
+            - duplicates
+            - duplicated
+            - blocks
+            - blocked
+            - precedes
+            - follows
+            - copied_to
+            - copied_from
         delay:
           type: integer
           nullable: true
@@ -145,13 +143,7 @@ properties:
     type: array
     items:
       type: object
-      required:
-        - id
-        - user
-        - notes
-        - created_on
-        - private_notes
-        - details
+      additionalProperties: false
       properties:
         id:
           type: integer
@@ -162,17 +154,18 @@ properties:
         created_on:
           type: string
           format: date-time
+        updated_on:
+          type: string
+          format: date-time
+        updated_by:
+          $ref: ./id_name.yml
         private_notes:
           type: boolean
         details:
           type: array
           items:
             type: object
-            required:
-              - property
-              - name
-              - old_value
-              - new_value
+            additionalProperties: false
             properties:
               property:
                 type: string
@@ -191,4 +184,4 @@ properties:
   allowed_statuses:
     type: array
     items:
-      $ref: ./issue_status.yml
+      $ref: ./issue_status.simple.yml

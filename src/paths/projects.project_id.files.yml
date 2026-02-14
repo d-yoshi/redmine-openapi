@@ -16,6 +16,7 @@ get:
         application/json:
           schema:
             type: object
+            additionalProperties: false
             required:
               - files
             properties:
@@ -40,11 +41,13 @@ post:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           required:
             - file
           properties:
             file:
               type: object
+              additionalProperties: false
               required:
                 - token
               properties:

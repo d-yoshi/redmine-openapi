@@ -12,9 +12,11 @@ put:
       application/json:
         schema:
           type: object
+          additionalProperties: false
           properties:
             journal:
               type: object
+              additionalProperties: false
               properties:
                 notes:
                   type: string
