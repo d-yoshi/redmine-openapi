@@ -3,3 +3,4 @@ extends:
 
 rules:
   operation-4xx-response: off
+  no-unused-components: off

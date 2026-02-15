@@ -60,3 +60,5 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""

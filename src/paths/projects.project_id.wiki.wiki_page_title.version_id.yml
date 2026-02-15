@@ -33,3 +33,5 @@ get:
             properties:
               wiki_page:
                 $ref: ../components/schemas/wiki_page.yml
+    404:
+      description: ""

@@ -22,6 +22,8 @@ get:
             properties:
               version:
                 $ref: ../components/schemas/version.yml
+    404:
+      description: ""
 
 put:
   tags:
@@ -83,6 +85,8 @@ put:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -104,3 +108,5 @@ delete:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""

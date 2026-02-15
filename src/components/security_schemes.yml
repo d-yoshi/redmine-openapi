@@ -1,13 +1,21 @@
-BasicAuth:
+Basic:
   type: http
   scheme: basic
 
-ApiKeyAuth:
+ApiKey:
   type: apiKey
   in: header
   name: X-Redmine-API-Key
 
-ApiKeyInQueryAuth:
+ApiKeyInQuery:
   type: apiKey
   in: query
   name: key
+
+OAuth2:
+  type: oauth2
+  flows:
+    authorizationCode:
+      authorizationUrl: /oauth/authorize
+      tokenUrl: /oauth/token
+      scopes: {}

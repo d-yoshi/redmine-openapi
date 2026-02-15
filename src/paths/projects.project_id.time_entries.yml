@@ -132,6 +132,8 @@ get:
                 type: integer
               limit:
                 type: integer
+    404:
+      description: ""
 
 post:
   tags:
@@ -195,3 +197,5 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""

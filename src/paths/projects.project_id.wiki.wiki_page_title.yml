@@ -32,6 +32,8 @@ get:
             properties:
               wiki_page:
                 $ref: ../components/schemas/wiki_page.yml
+    404:
+      description: ""
 
 put:
   tags:
@@ -95,6 +97,8 @@ put:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -110,4 +114,6 @@ delete:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
+      description: ""
+    404:
       description: ""

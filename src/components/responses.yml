@@ -1,0 +1,8 @@
+Unauthorized:
+  description: Authentication required. Returns 401 when API authentication is enabled but no valid credentials are provided, or 403 when the REST API is disabled.
+
+Forbidden:
+  description: Insufficient permissions. Returns 403 when the authenticated user is not authorized for the requested action.
+
+PreconditionFailed:
+  description: Invalid X-Redmine-Switch-User header. Returns 412 when the specified user does not exist or is not active. Only applicable to admin users using the X-Redmine-Switch-User header.

@@ -22,6 +22,8 @@ get:
             properties:
               relation:
                 $ref: ../components/schemas/issue_relation.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -37,9 +39,5 @@ delete:
   responses:
     204:
       description: ""
-    422:
+    404:
       description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yml

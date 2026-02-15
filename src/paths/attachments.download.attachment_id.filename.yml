@@ -15,3 +15,5 @@ get:
           schema:
             type: string
             format: binary
+    404:
+      description: ""

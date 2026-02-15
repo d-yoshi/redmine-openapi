@@ -33,6 +33,8 @@ get:
             properties:
               user:
                 $ref: ../components/schemas/user.yml
+    404:
+      description: ""
 
 put:
   tags:
@@ -113,6 +115,8 @@ put:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -127,4 +131,12 @@ delete:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yml
+    404:
       description: ""

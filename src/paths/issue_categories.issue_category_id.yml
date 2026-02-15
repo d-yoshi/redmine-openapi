@@ -22,6 +22,8 @@ get:
             properties:
               issue_category:
                 $ref: ../components/schemas/issue_category.yml
+    404:
+      description: ""
 
 put:
   tags:
@@ -58,6 +60,8 @@ put:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -76,4 +80,6 @@ delete:
         type: integer
   responses:
     204:
+      description: ""
+    404:
       description: ""

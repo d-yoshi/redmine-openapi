@@ -28,6 +28,8 @@ get:
                   $ref: ../components/schemas/issue_category.yml
               total_count:
                 type: integer
+    404:
+      description: ""
 
 post:
   tags:
@@ -78,3 +80,5 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""

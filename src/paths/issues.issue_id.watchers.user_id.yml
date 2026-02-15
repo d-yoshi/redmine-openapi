@@ -13,3 +13,5 @@ delete:
   responses:
     204:
       description: ""
+    404:
+      description: ""

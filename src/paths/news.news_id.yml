@@ -30,6 +30,8 @@ get:
             properties:
               news:
                 $ref: ../components/schemas/news.yml
+    404:
+      description: ""
 
 put:
   tags:
@@ -74,6 +76,14 @@ put:
   responses:
     204:
       description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -86,4 +96,6 @@ delete:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
+      description: ""
+    404:
       description: ""

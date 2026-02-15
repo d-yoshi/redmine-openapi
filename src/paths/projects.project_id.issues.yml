@@ -244,6 +244,8 @@ get:
                 type: integer
               limit:
                 type: integer
+    404:
+      description: ""
 
 post:
   tags:
@@ -334,3 +336,11 @@ post:
             properties:
               issue:
                 $ref: ../components/schemas/issue.simple.yml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yml
+    404:
+      description: ""

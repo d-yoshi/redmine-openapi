@@ -22,6 +22,8 @@ get:
             properties:
               time_entry:
                 $ref: ../components/schemas/time_entry.yml
+    404:
+      description: ""
 
 put:
   tags:
@@ -73,6 +75,8 @@ put:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    404:
+      description: ""
 
 delete:
   tags:
@@ -87,4 +91,6 @@ delete:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yml
   responses:
     204:
+      description: ""
+    404:
       description: ""

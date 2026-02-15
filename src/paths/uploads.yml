@@ -46,3 +46,9 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yml

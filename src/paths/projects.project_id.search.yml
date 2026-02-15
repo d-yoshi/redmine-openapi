@@ -116,3 +116,5 @@ get:
                 type: integer
               limit:
                 type: integer
+    404:
+      description: ""

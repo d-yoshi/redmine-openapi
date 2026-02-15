@@ -22,3 +22,5 @@ get:
             properties:
               role:
                 $ref: ../components/schemas/role.yml
+    404:
+      description: ""
