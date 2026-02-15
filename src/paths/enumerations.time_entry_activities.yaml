@@ -1,0 +1,25 @@
+get:
+  tags:
+    - Enumerations
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2
+  summary: List time entry activities
+  operationId: getTimeEntryActivities
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - time_entry_activities
+            properties:
+              time_entry_activities:
+                type: array
+                items:
+                  $ref: ../components/schemas/time_entry_activity.yaml

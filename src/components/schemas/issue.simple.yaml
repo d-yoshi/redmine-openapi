@@ -1,0 +1,83 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - subject
+  - description
+  - start_date
+  - due_date
+  - done_ratio
+  - is_private
+  - estimated_hours
+  - total_estimated_hours
+  - created_on
+  - updated_on
+  - closed_on
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./id_name.yaml
+  tracker:
+    $ref: ./id_name.yaml
+  status:
+    $ref: ./issue_status.simple.yaml
+  priority:
+    $ref: ./id_name.yaml
+  author:
+    $ref: ./id_name.yaml
+  assigned_to:
+    $ref: ./id_name.yaml
+  category:
+    $ref: ./id_name.yaml
+  fixed_version:
+    $ref: ./id_name.yaml
+  parent:
+    type: object
+    additionalProperties: false
+    properties:
+      id:
+        type: integer
+  subject:
+    type: string
+  description:
+    type: string
+    nullable: true
+  start_date:
+    type: string
+    format: date
+    nullable: true
+  due_date:
+    type: string
+    format: date
+    nullable: true
+  done_ratio:
+    type: integer
+    minimum: 0
+    maximum: 100
+  is_private:
+    type: boolean
+  estimated_hours:
+    type: number
+    nullable: true
+  total_estimated_hours:
+    type: number
+    nullable: true
+  spent_hours:
+    type: number
+  total_spent_hours:
+    type: number
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yaml
+  created_on:
+    type: string
+    format: date-time
+  updated_on:
+    type: string
+    format: date-time
+  closed_on:
+    type: string
+    format: date-time
+    nullable: true

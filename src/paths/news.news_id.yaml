@@ -1,0 +1,101 @@
+get:
+  tags:
+    - News
+  summary: Show news
+  operationId: getNews
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/news_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+            - comments
+      explode: false
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - news
+            properties:
+              news:
+                $ref: ../components/schemas/news.yaml
+    404:
+      description: ""
+
+put:
+  tags:
+    - News
+  summary: Update news
+  operationId: updateNews
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/news_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            news:
+              type: object
+              additionalProperties: false
+              properties:
+                title:
+                  type: string
+                summary:
+                  type: string
+                description:
+                  type: string
+                uploads:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      token:
+                        type: string
+                      filename:
+                        type: string
+                      description:
+                        type: string
+                      content_type:
+                        type: string
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - News
+  summary: Delete news
+  operationId: deleteNews
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/news_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

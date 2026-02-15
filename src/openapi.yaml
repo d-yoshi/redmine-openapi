@@ -1,0 +1,203 @@
+openapi: 3.0.3
+
+info:
+  title: Redmine API
+  description: Unofficial OpenAPI specification for the Redmine API.
+  contact:
+    name: d-yoshi/redmine-openapi
+    url: https://github.com/d-yoshi/redmine-openapi
+  license:
+    name: MIT
+    url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
+  version: 1.1.0
+
+servers:
+  - url: /
+
+externalDocs:
+  description: Redmine API Official Developer Guide
+  url: https://www.redmine.org/projects/redmine/wiki/Rest_api
+
+security:
+  - Basic: []
+  - ApiKey: []
+  - ApiKeyInQuery: []
+  - OAuth2: []
+
+paths:
+  /issues.{format}:
+    $ref: ./paths/issues.yaml
+
+  /issues/{issue_id}.{format}:
+    $ref: ./paths/issues.issue_id.yaml
+
+  /projects/{project_id}/issues.{format}:
+    $ref: ./paths/projects.project_id.issues.yaml
+
+  /issues/{issue_id}/watchers.{format}:
+    $ref: ./paths/issues.issue_id.watchers.yaml
+
+  /issues/{issue_id}/watchers/{user_id}.{format}:
+    $ref: ./paths/issues.issue_id.watchers.user_id.yaml
+
+  /projects.{format}:
+    $ref: ./paths/projects.yaml
+
+  /projects/{project_id}.{format}:
+    $ref: ./paths/projects.project_id.yaml
+
+  /projects/{project_id}/archive.{format}:
+    $ref: ./paths/projects.project_id.archive.yaml
+
+  /projects/{project_id}/unarchive.{format}:
+    $ref: ./paths/projects.project_id.unarchive.yaml
+
+  /projects/{project_id}/memberships.{format}:
+    $ref: ./paths/projects.project_id.memberships.yaml
+
+  /memberships/{membership_id}.{format}:
+    $ref: ./paths/memberships.membership_id.yaml
+
+  /projects/{project_id}/close.{format}:
+    $ref: ./paths/projects.project_id.close.yaml
+
+  /projects/{project_id}/reopen.{format}:
+    $ref: ./paths/projects.project_id.reopen.yaml
+
+  /users.{format}:
+    $ref: ./paths/users.yaml
+
+  /users/{user_id}.{format}:
+    $ref: ./paths/users.user_id.yaml
+
+  /users/current.{format}:
+    $ref: ./paths/users.current.yaml
+
+  /time_entries.{format}:
+    $ref: ./paths/time_entries.yaml
+
+  /time_entries/{time_entry_id}.{format}:
+    $ref: ./paths/time_entries.time_entry_id.yaml
+
+  /projects/{project_id}/time_entries.{format}:
+    $ref: ./paths/projects.project_id.time_entries.yaml
+
+  /issues/{issue_id}/time_entries.{format}:
+    $ref: ./paths/issues.issue_id.time_entries.yaml
+
+  /news.{format}:
+    $ref: ./paths/news.yaml
+
+  /news/{news_id}.{format}:
+    $ref: ./paths/news.news_id.yaml
+
+  /projects/{project_id}/news.{format}:
+    $ref: ./paths/projects.project_id.news.yaml
+
+  /issues/{issue_id}/relations.{format}:
+    $ref: ./paths/issues.issue_id.relations.yaml
+
+  /relations/{issue_relation_id}.{format}:
+    $ref: ./paths/relations.issue_relation_id.yaml
+
+  /projects/{project_id}/versions.{format}:
+    $ref: ./paths/projects.project_id.versions.yaml
+
+  /versions/{version_id}.{format}:
+    $ref: ./paths/versions.version_id.yaml
+
+  /projects/{project_id}/wiki/index.{format}:
+    $ref: ./paths/projects.project_id.wiki.index.yaml
+
+  /projects/{project_id}/wiki/{wiki_page_title}.{format}:
+    $ref: ./paths/projects.project_id.wiki.wiki_page_title.yaml
+
+  /projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}:
+    $ref: ./paths/projects.project_id.wiki.wiki_page_title.version_id.yaml
+
+  /queries.{format}:
+    $ref: ./paths/queries.yaml
+
+  /attachments/{attachment_id}.{format}:
+    $ref: ./paths/attachments.attachment_id.yaml
+
+  /attachments/download/{attachment_id}/{filename}:
+    $ref: ./paths/attachments.download.attachment_id.filename.yaml
+
+  /attachments/thumbnail/{attachment_id}:
+    $ref: ./paths/attachments.thumbnail.attachment_id.yaml
+
+  /issue_statuses.{format}:
+    $ref: ./paths/issue_statuses.yaml
+
+  /trackers.{format}:
+    $ref: ./paths/trackers.yaml
+
+  /projects/{project_id}/issue_categories.{format}:
+    $ref: ./paths/projects.project_id.issue_categories.yaml
+
+  /enumerations/issue_priorities.{format}:
+    $ref: ./paths/enumerations.issue_priorities.yaml
+
+  /enumerations/time_entry_activities.{format}:
+    $ref: ./paths/enumerations.time_entry_activities.yaml
+
+  /enumerations/document_categories.{format}:
+    $ref: ./paths/enumerations.document_categories.yaml
+
+  /issue_categories/{issue_category_id}.{format}:
+    $ref: ./paths/issue_categories.issue_category_id.yaml
+
+  /roles.{format}:
+    $ref: ./paths/roles.yaml
+
+  /roles/{role_id}.{format}:
+    $ref: ./paths/roles.role_id.yaml
+
+  /groups.{format}:
+    $ref: ./paths/groups.yaml
+
+  /groups/{group_id}.{format}:
+    $ref: ./paths/groups.group_id.yaml
+
+  /groups/{group_id}/users.{format}:
+    $ref: ./paths/groups.group_id.users.yaml
+
+  /groups/{group_id}/users/{user_id}.{format}:
+    $ref: ./paths/groups.group_id.users.user_id.yaml
+
+  /custom_fields.{format}:
+    $ref: ./paths/custom_fields.yaml
+
+  /search.{format}:
+    $ref: ./paths/search.yaml
+
+  /projects/{project_id}/search.{format}:
+    $ref: ./paths/projects.project_id.search.yaml
+
+  /projects/{project_id}/files.{format}:
+    $ref: ./paths/projects.project_id.files.yaml
+
+  /my/account.{format}:
+    $ref: ./paths/my.account.yaml
+
+  /journals/{journal_id}.{format}:
+    $ref: ./paths/journals.journal_id.yaml
+
+  /uploads.{format}:
+    $ref: ./paths/uploads.yaml
+
+  /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues.{format}:
+    $ref: ./paths/projects.project_id.repository.repository_id.revisions.revision.issues.yaml
+
+  /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues/{issue_id}.{format}:
+    $ref: ./paths/projects.project_id.repository.repository_id.revisions.revision.issues.issue_id.yaml
+
+components:
+  securitySchemes:
+    $ref: ./components/security_schemes.yaml
+  responses:
+    $ref: ./components/responses.yaml
+
+tags:
+  $ref: ./tags.yaml

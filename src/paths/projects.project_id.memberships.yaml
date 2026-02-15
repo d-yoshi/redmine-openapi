@@ -1,0 +1,93 @@
+get:
+  tags:
+    - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET
+  summary: List memberships
+  operationId: getMemberships
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - memberships
+            properties:
+              memberships:
+                type: array
+                items:
+                  $ref: ../components/schemas/membership.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+    404:
+      description: ""
+
+post:
+  tags:
+    - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST
+  summary: Create membership
+  operationId: createMembership
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - membership
+          properties:
+            membership:
+              type: object
+              additionalProperties: false
+              required:
+                - user_id
+                - role_ids
+              properties:
+                user_id:
+                  type: integer
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - membership
+            properties:
+              membership:
+                $ref: ../components/schemas/membership.yaml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""

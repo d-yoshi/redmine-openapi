@@ -1,0 +1,35 @@
+get:
+  tags:
+    - Queries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries#GET
+  summary: List queries
+  operationId: getQueries
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - queries
+            properties:
+              queries:
+                type: array
+                items:
+                  $ref: ../components/schemas/query.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer

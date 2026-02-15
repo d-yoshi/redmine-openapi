@@ -1,0 +1,112 @@
+get:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
+  summary: Show version
+  operationId: getVersions
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/version_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - version
+            properties:
+              version:
+                $ref: ../components/schemas/version.yaml
+    404:
+      description: ""
+
+put:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT
+  summary: Update version
+  operationId: updateVersion
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/version_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            version:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - open
+                    - locked
+                    - closed
+                sharing:
+                  type: string
+                  enum:
+                    - none
+                    - descendants
+                    - hierarchy
+                    - tree
+                    - system
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
+                description:
+                  type: string
+                wiki_page_title:
+                  type: string
+                  nullable: true
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE
+  summary: Delete version
+  operationId: deleteVersion
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/version_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""

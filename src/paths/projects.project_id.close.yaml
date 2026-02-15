@@ -1,0 +1,14 @@
+put:
+  tags:
+    - Projects
+  summary: Close project
+  operationId: closeProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

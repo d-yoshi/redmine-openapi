@@ -1,0 +1,25 @@
+get:
+  tags:
+    - Roles
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET
+  summary: List roles
+  operationId: getRoles
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - roles
+            properties:
+              roles:
+                type: array
+                items:
+                  $ref: ../components/schemas/id_name.yaml

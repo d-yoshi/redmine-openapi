@@ -1,0 +1,117 @@
+get:
+  tags:
+    - Search
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
+  summary: Search
+  operationId: search
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - name: q
+      in: query
+      schema:
+        type: string
+      required: true
+    - name: scope
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - my_projects
+          - bookmarks
+          - subprojects
+    - name: all_words
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: titles_only
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: issues
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: news
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: wiki_pages
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: projects
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: documents
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: changesets
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: messages
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: open_issues
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: attachments
+      in: query
+      schema:
+        type: string
+        enum:
+          - "0"
+          - "1"
+          - "only"
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - results
+            properties:
+              results:
+                type: array
+                items:
+                  $ref: ../components/schemas/search.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer

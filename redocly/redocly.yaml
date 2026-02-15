@@ -1,0 +1,8 @@
+extends:
+  - recommended-strict
+
+plugins:
+  - ./plugins/common-responses.js
+
+decorators:
+  common-responses/inject-common-responses: on

@@ -1,0 +1,31 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - filename
+  - filesize
+  - content_type
+  - description
+  - content_url
+  - created_on
+properties:
+  id:
+    type: integer
+  filename:
+    type: string
+  filesize:
+    type: integer
+  content_type:
+    type: string
+  description:
+    type: string
+    nullable: true
+  content_url:
+    type: string
+  thumbnail_url:
+    type: string
+  author:
+    $ref: ./id_name.yaml
+  created_on:
+    type: string
+    format: date-time

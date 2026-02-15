@@ -1,0 +1,44 @@
+type: object
+additionalProperties: false
+required:
+  - user
+properties:
+  user:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - login
+      - admin
+      - firstname
+      - lastname
+      - mail
+      - created_on
+      - last_login_on
+      - api_key
+    properties:
+      id:
+        type: integer
+      login:
+        type: string
+      admin:
+        type: boolean
+      firstname:
+        type: string
+      lastname:
+        type: string
+      mail:
+        type: string
+      created_on:
+        type: string
+        format: date-time
+      last_login_on:
+        type: string
+        format: date-time
+        nullable: true
+      api_key:
+        type: string
+      custom_fields:
+        type: array
+        items:
+          $ref: ./custom_field_value.yaml

@@ -1,0 +1,22 @@
+put:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
+  summary: Archive project
+  operationId: archiveProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""

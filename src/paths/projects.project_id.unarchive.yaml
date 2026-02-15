@@ -1,0 +1,16 @@
+put:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Unarchiving-a-project
+  summary: Unarchive project
+  operationId: unarchiveProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

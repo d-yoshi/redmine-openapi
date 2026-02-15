@@ -1,0 +1,17 @@
+delete:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
+  summary: Remove watcher
+  operationId: removeWatcher
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_id.yaml
+    - $ref: ../components/parameters/path/user_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

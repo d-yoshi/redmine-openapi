@@ -1,0 +1,89 @@
+get:
+  tags:
+    - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2
+  summary: Show membership
+  operationId: getMembership
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/membership_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - membership
+            properties:
+              membership:
+                $ref: ../components/schemas/membership.yaml
+    404:
+      description: ""
+
+put:
+  tags:
+    - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
+  summary: Update membership
+  operationId: updateMembership
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/membership_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            membership:
+              type: object
+              additionalProperties: false
+              required:
+                - role_ids
+              properties:
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE
+  summary: Delete membership
+  operationId: deleteMembership
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/membership_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""

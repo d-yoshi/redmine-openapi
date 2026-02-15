@@ -1,0 +1,35 @@
+get:
+  tags:
+    - News
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
+  summary: List news
+  operationId: getNewsList
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - news
+            properties:
+              news:
+                type: array
+                items:
+                  $ref: ../components/schemas/news.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer

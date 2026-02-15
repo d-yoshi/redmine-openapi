@@ -1,0 +1,19 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - project
+  - roles
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./id_name.yaml
+  user:
+    $ref: ./id_name.yaml
+  group:
+    $ref: ./id_name.yaml
+  roles:
+    type: array
+    items:
+      $ref: ./membership_role.yaml

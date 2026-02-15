@@ -1,0 +1,37 @@
+get:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-an-old-version-of-a-wiki-page
+  summary: Show wiki page by specific version
+  operationId: getWikiPageByVersion
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/path/wiki_page_title.yaml
+    - $ref: ../components/parameters/path/version_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+      explode: false
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - wiki_page
+            properties:
+              wiki_page:
+                $ref: ../components/schemas/wiki_page.yaml
+    404:
+      description: ""

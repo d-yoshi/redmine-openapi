@@ -1,0 +1,12 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - content
+properties:
+  id:
+    type: integer
+  author:
+    $ref: ./id_name.yaml
+  content:
+    type: string

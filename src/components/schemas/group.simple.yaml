@@ -1,0 +1,16 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  builtin:
+    type: string
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yaml

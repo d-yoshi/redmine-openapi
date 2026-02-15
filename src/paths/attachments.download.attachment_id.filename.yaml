@@ -1,0 +1,19 @@
+get:
+  tags:
+    - Attachments
+  summary: Download attachment file
+  operationId: downloadAttachmentFile
+  parameters:
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/path/filename.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        "*/*":
+          schema:
+            type: string
+            format: binary
+    404:
+      description: ""

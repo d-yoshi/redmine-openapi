@@ -1,0 +1,43 @@
+get:
+  tags:
+    - Issue Relations
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2
+  summary: Show issue relation
+  operationId: getIssueRelation
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_relation_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - relation
+            properties:
+              relation:
+                $ref: ../components/schemas/issue_relation.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Issue Relations
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE
+  summary: Delete issue relation
+  operationId: deleteIssueRelation
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_relation_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

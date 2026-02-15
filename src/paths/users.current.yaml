@@ -1,0 +1,34 @@
+get:
+  tags:
+    - Users
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2
+  summary: Show current user
+  operationId: getCurrentUser
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - memberships
+            - groups
+            - auth_source
+      explode: false
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - user
+            properties:
+              user:
+                $ref: ../components/schemas/user.yaml

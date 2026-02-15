@@ -1,6 +1,0 @@
-extends:
-  - recommended-strict
-
-rules:
-  operation-4xx-response: off
-  no-unused-components: off

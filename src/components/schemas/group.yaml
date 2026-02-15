@@ -1,0 +1,38 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  builtin:
+    type: string
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yaml
+  users:
+    type: array
+    items:
+      $ref: ./id_name.yaml
+  memberships:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - project
+        - roles
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: ./id_name.yaml
+        roles:
+          type: array
+          items:
+            $ref: ./membership_role.yaml

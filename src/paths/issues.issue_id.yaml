@@ -1,0 +1,150 @@
+get:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Showing-an-issue
+  summary: Show issue
+  operationId: getIssue
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - children
+            - attachments
+            - relations
+            - changesets
+            - journals
+            - watchers
+            - allowed_statuses
+      explode: false
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - issue
+            properties:
+              issue:
+                $ref: ../components/schemas/issue.yaml
+    404:
+      description: ""
+
+put:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
+  summary: Update issue
+  operationId: updateIssue
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            issue:
+              type: object
+              additionalProperties: false
+              properties:
+                project_id:
+                  oneOf:
+                    - type: integer
+                    - type: string
+                tracker_id:
+                  type: integer
+                status_id:
+                  type: integer
+                priority_id:
+                  type: integer
+                subject:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                start_date:
+                  type: string
+                  format: date
+                  nullable: true
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
+                done_ratio:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                category_id:
+                  type: integer
+                  nullable: true
+                fixed_version_id:
+                  type: integer
+                  nullable: true
+                assigned_to_id:
+                  type: integer
+                  nullable: true
+                parent_issue_id:
+                  type: integer
+                  nullable: true
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+                watcher_user_ids:
+                  type: array
+                  items:
+                    type: integer
+                is_private:
+                  type: boolean
+                estimated_hours:
+                  type: number
+                  nullable: true
+                notes:
+                  type: string
+                private_notes:
+                  type: string
+                uploads:
+                  $ref: ../components/schemas/request/uploads.yaml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Deleting-an-issue
+  summary: Delete issue
+  operationId: deleteIssue
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

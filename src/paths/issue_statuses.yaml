@@ -1,0 +1,25 @@
+get:
+  tags:
+    - Issue Statuses
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET
+  summary: List issue statuses
+  operationId: getIssueStatuses
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - issue_statuses
+            properties:
+              issue_statuses:
+                type: array
+                items:
+                  $ref: ../components/schemas/issue_status.yaml

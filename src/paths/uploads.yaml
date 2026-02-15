@@ -1,0 +1,54 @@
+post:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files
+  summary: Upload attachment file
+  operationId: uploadAttachmentFile
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: filename
+      in: query
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - upload
+            properties:
+              upload:
+                type: object
+                additionalProperties: false
+                required:
+                  - id
+                  - token
+                properties:
+                  id:
+                    type: integer
+                  token:
+                    type: string
+    406:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml

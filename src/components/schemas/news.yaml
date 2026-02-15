@@ -1,0 +1,31 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - title
+  - description
+  - created_on
+properties:
+  id:
+    type: integer
+  project:
+    $ref: ./id_name.yaml
+  author:
+    $ref: ./id_name.yaml
+  title:
+    type: string
+  summary:
+    type: string
+  description:
+    type: string
+  created_on:
+    type: string
+    format: date-time
+  attachments:
+    type: array
+    items:
+      $ref: ./attachment.yaml
+  comments:
+    type: array
+    items:
+      $ref: ./news_comment.yaml

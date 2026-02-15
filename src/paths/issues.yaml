@@ -1,0 +1,352 @@
+get:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
+  summary: List issues
+  operationId: getIssues
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - name: sort
+      in: query
+      schema:
+        type: string
+        example: "id:desc"
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+            - relations
+      explode: false
+    - name: issue_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: project_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: subproject_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: tracker_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: status_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: assigned_to_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: parent_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: cf_x
+      in: query
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          cf_0: string
+    - name: author_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: member_of_group
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: assigned_to_role
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: fixed_version_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: fixed_version.due_date
+      in: query
+      schema:
+        type: string
+    - name: fixed_version.status
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: category_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: subject
+      in: query
+      schema:
+        type: string
+    - name: description
+      in: query
+      schema:
+        type: string
+    - name: notes
+      in: query
+      schema:
+        type: string
+    - name: created_on
+      in: query
+      schema:
+        type: string
+    - name: updated_on
+      in: query
+      schema:
+        type: string
+    - name: closed_on
+      in: query
+      schema:
+        type: string
+    - name: start_date
+      in: query
+      schema:
+        type: string
+    - name: due_date
+      in: query
+      schema:
+        type: string
+    - name: estimated_hours
+      in: query
+      schema:
+        type: string
+    - name: spent_time
+      in: query
+      schema:
+        type: string
+    - name: done_ratio
+      in: query
+      schema:
+        type: string
+    - name: is_private
+      in: query
+      schema:
+        type: string
+    - name: attachment
+      in: query
+      schema:
+        type: string
+    - name: attachment_description
+      in: query
+      schema:
+        type: string
+    - name: watcher_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: updated_by
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: last_updated_by
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: project.status
+      in: query
+      schema:
+        type: integer
+    - name: relation_type
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: child_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: query_id
+      in: query
+      schema:
+        type: integer
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - issues
+            properties:
+              issues:
+                type: array
+                items:
+                  $ref: ../components/schemas/issue.simple.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+
+post:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
+  summary: Create issue
+  operationId: createIssue
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - issue
+          properties:
+            issue:
+              type: object
+              additionalProperties: false
+              required:
+                - project_id
+                - subject
+              properties:
+                project_id:
+                  oneOf:
+                    - type: integer
+                    - type: string
+                tracker_id:
+                  type: integer
+                status_id:
+                  type: integer
+                priority_id:
+                  type: integer
+                subject:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                start_date:
+                  type: string
+                  format: date
+                  nullable: true
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
+                done_ratio:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                category_id:
+                  type: integer
+                  nullable: true
+                fixed_version_id:
+                  type: integer
+                  nullable: true
+                assigned_to_id:
+                  type: integer
+                  nullable: true
+                parent_issue_id:
+                  type: integer
+                  nullable: true
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+                watcher_user_ids:
+                  type: array
+                  items:
+                    type: integer
+                is_private:
+                  type: boolean
+                estimated_hours:
+                  type: number
+                  nullable: true
+                uploads:
+                  $ref: ../components/schemas/request/uploads.yaml
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - issue
+            properties:
+              issue:
+                $ref: ../components/schemas/issue.simple.yaml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml

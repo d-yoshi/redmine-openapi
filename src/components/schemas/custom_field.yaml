@@ -1,0 +1,95 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - description
+  - field_format
+  - regexp
+  - min_length
+  - max_length
+  - is_required
+  - is_filter
+  - searchable
+  - multiple
+  - default_value
+  - visible
+  - editable
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  description:
+    type: string
+    nullable: true
+  customized_type:
+    type: string
+    enum:
+      - issue
+      - time_entry
+      - project
+      - version
+      - document
+      - user
+      - group
+      - time_entry_activity
+      - issue_priority
+      - document_category
+  field_format:
+    type: string
+    enum:
+      - enumeration
+      - string
+      - version
+      - attachment
+      - user
+      - list
+      - link
+      - float
+      - int
+      - date
+      - bool
+      - text
+      - progressbar
+  regexp:
+    type: string
+  min_length:
+    type: integer
+    nullable: true
+  max_length:
+    type: integer
+    nullable: true
+  is_required:
+    type: boolean
+  is_filter:
+    type: boolean
+  searchable:
+    type: boolean
+  multiple:
+    type: boolean
+  default_value:
+    type: string
+    nullable: true
+  visible:
+    type: boolean
+  editable:
+    type: boolean
+  trackers:
+    type: array
+    items:
+      $ref: ./id_name.yaml
+  roles:
+    type: array
+    items:
+      $ref: ./id_name.yaml
+  possible_values:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      properties:
+        value:
+          type: string
+        label:
+          type: string

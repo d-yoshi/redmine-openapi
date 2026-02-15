@@ -1,0 +1,130 @@
+get:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project
+  summary: Show project
+  operationId: getProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - trackers
+            - issue_categories
+            - time_entry_activities
+            - enabled_modules
+            - issue_custom_fields
+      explode: false
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - project
+            properties:
+              project:
+                $ref: ../components/schemas/project.yaml
+    404:
+      description: ""
+
+put:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
+  summary: Update project
+  operationId: updateProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            project:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                homepage:
+                  type: string
+                  nullable: true
+                is_public:
+                  type: boolean
+                parent_id:
+                  type: integer
+                  nullable: true
+                inherit_members:
+                  type: boolean
+                default_assigned_to_id:
+                  type: integer
+                  nullable: true
+                default_version_id:
+                  type: integer
+                  nullable: true
+                default_issue_query_id:
+                  type: integer
+                  nullable: true
+                tracker_ids:
+                  type: array
+                  items:
+                    type: integer
+                enabled_module_names:
+                  type: array
+                  items:
+                    type: string
+                issue_custom_field_ids:
+                  type: array
+                  items:
+                    type: integer
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
+  summary: Delete project
+  operationId: deleteProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

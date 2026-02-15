@@ -1,0 +1,179 @@
+get:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects
+  summary: List projects
+  operationId: getProjects
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - name: include
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - trackers
+            - issue_categories
+            - time_entry_activities
+            - enabled_modules
+            - issue_custom_fields
+      explode: false
+    - name: status
+      in: query
+      schema:
+        type: array
+        items:
+          type: integer
+      explode: false
+    - name: id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: name
+      in: query
+      schema:
+        type: string
+    - name: description
+      in: query
+      schema:
+        type: string
+    - name: parent_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: is_public
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - "0"
+            - "1"
+      explode: false
+    - name: created_on
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - projects
+            properties:
+              projects:
+                type: array
+                items:
+                  $ref: ../components/schemas/project.simple.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+
+post:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
+  summary: Create project
+  operationId: createProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - project
+          properties:
+            project:
+              type: object
+              additionalProperties: false
+              required:
+                - name
+                - identifier
+              properties:
+                name:
+                  type: string
+                identifier:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                homepage:
+                  type: string
+                  nullable: true
+                is_public:
+                  type: boolean
+                parent_id:
+                  type: integer
+                  nullable: true
+                inherit_members:
+                  type: boolean
+                default_assigned_to_id:
+                  type: integer
+                  nullable: true
+                default_version_id:
+                  type: integer
+                  nullable: true
+                default_issue_query_id:
+                  type: integer
+                  nullable: true
+                tracker_ids:
+                  type: array
+                  items:
+                    type: integer
+                enabled_module_names:
+                  type: array
+                  items:
+                    type: string
+                issue_custom_field_ids:
+                  type: array
+                  items:
+                    type: integer
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - project
+            properties:
+              project:
+                $ref: ../components/schemas/project.yaml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml

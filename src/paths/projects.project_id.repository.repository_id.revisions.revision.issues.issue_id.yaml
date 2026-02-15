@@ -1,0 +1,17 @@
+delete:
+  tags:
+    - Repositories
+  summary: Remove related issue
+  operationId: removeRelatedIssue
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/path/repository_id.yaml
+    - $ref: ../components/parameters/path/revision.yaml
+    - $ref: ../components/parameters/path/issue_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

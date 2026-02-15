@@ -1,0 +1,204 @@
+get:
+  tags:
+    - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries
+  summary: List time entries
+  operationId: getTimeEntries
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/query/offset.yaml
+    - $ref: ../components/parameters/query/limit.yaml
+    - $ref: ../components/parameters/query/nometa.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - name: user_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: project_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: spent_on
+      in: query
+      schema:
+        type: string
+        format: date
+    - name: from
+      in: query
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      schema:
+        type: string
+        format: date
+    - name: subproject_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: issue_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: issue.tracker_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: issue.status_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: issue.fixed_version_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: issue.category_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: author_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: activity_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: project.status
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: comments
+      in: query
+      schema:
+        type: string
+    - name: hours
+      in: query
+      schema:
+        type: string
+    - name: sort
+      in: query
+      schema:
+        type: string
+        example: "spent_on:desc"
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - time_entries
+            properties:
+              time_entries:
+                type: array
+                items:
+                  $ref: ../components/schemas/time_entry.yaml
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+
+post:
+  tags:
+    - Time Entries
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
+  summary: Create time entry
+  operationId: createTimeEntry
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - time_entry
+          properties:
+            time_entry:
+              type: object
+              additionalProperties: false
+              required:
+                - hours
+              properties:
+                issue_id:
+                  type: integer
+                project_id:
+                  type: integer
+                spent_on:
+                  type: string
+                  format: date
+                hours:
+                  type: number
+                activity_id:
+                  type: integer
+                comments:
+                  type: string
+                user_id:
+                  type: integer
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - time_entry
+            properties:
+              time_entry:
+                $ref: ../components/schemas/time_entry.yaml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml

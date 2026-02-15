@@ -1,0 +1,5 @@
+services:
+  redmine:
+    image: redmine:6.1.1
+    ports:
+      - 3000:3000

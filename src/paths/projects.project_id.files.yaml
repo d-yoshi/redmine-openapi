@@ -1,0 +1,72 @@
+get:
+  tags:
+    - Files
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET
+  summary: List files
+  operationId: getFiles
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - files
+            properties:
+              files:
+                type: array
+                items:
+                  $ref: ../components/schemas/file.yaml
+    404:
+      description: ""
+
+post:
+  tags:
+    - Files
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST
+  summary: Create file
+  operationId: createFile
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - file
+          properties:
+            file:
+              type: object
+              additionalProperties: false
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                version_id:
+                  type: integer
+                filename:
+                  type: string
+                description:
+                  type: string
+                content_type:
+                  type: string
+  responses:
+    204:
+      description: ""
+    400:
+      description: ""
+    404:
+      description: ""

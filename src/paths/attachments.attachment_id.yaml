@@ -1,0 +1,83 @@
+get:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET
+  summary: Show attachment
+  operationId: getAttachment
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - attachment
+            properties:
+              attachment:
+                $ref: ../components/schemas/attachment.yaml
+    404:
+      description: ""
+
+patch:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
+  summary: Update attachment
+  operationId: updateAttachment
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            attachment:
+              type: object
+              additionalProperties: false
+              properties:
+                filename:
+                  type: string
+                content_type:
+                  type: string
+                description:
+                  type: string
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE
+  summary: Delete attachment
+  operationId: deleteAttachment
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

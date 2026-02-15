@@ -1,0 +1,76 @@
+get:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET
+  summary: List groups
+  operationId: getGroups
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - groups
+            properties:
+              groups:
+                type: array
+                items:
+                  $ref: ../components/schemas/group.simple.yaml
+
+post:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST
+  summary: Create group
+  operationId: createGroup
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - group
+          properties:
+            group:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+                user_ids:
+                  type: array
+                  items:
+                    type: integer
+                custom_fields:
+                  $ref: ../components/schemas/request/custom_fields.yaml
+                custom_field_values:
+                  $ref: ../components/schemas/request/custom_field_values.yaml
+  responses:
+    201:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              group:
+                $ref: ../components/schemas/group.simple.yaml
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml

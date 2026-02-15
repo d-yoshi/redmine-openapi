@@ -1,0 +1,25 @@
+get:
+  tags:
+    - Enumerations
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3
+  summary: List document categories
+  operationId: getDocumentCategories
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - document_categories
+            properties:
+              document_categories:
+                type: array
+                items:
+                  $ref: ../components/schemas/document_category.yaml

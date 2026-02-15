@@ -1,0 +1,14 @@
+put:
+  tags:
+    - Projects
+  summary: Reopen project
+  operationId: reopenProject
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

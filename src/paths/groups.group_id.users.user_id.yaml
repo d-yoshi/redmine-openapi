@@ -1,0 +1,17 @@
+delete:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE-2
+  summary: Remove user from group
+  operationId: removeUserFromGroup
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/group_id.yaml
+    - $ref: ../components/parameters/path/user_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""

@@ -1,0 +1,20 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - is_default
+  - active
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  is_default:
+    type: boolean
+  active:
+    type: boolean
+  custom_fields:
+    type: array
+    items:
+      $ref: ./custom_field_value.yaml

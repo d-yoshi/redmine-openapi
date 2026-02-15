@@ -1,0 +1,18 @@
+get:
+  tags:
+    - Attachments
+  summary: Download thumbnail
+  operationId: downloadThumbnail
+  parameters:
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        image/png:
+          schema:
+            type: string
+            format: binary
+    404:
+      description: ""

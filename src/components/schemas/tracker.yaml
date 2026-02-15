@@ -1,0 +1,21 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - description
+  - enabled_standard_fields
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  default_status:
+    $ref: ./id_name.yaml
+  description:
+    type: string
+    nullable: true
+  enabled_standard_fields:
+    type: array
+    items:
+      type: string

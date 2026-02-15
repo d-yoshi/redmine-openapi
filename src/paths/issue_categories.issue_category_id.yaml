@@ -1,0 +1,85 @@
+get:
+  tags:
+    - Issue Categories
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2
+  summary: Show issue category
+  operationId: getIssueCategory
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_category_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  responses:
+    200:
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - issue_category
+            properties:
+              issue_category:
+                $ref: ../components/schemas/issue_category.yaml
+    404:
+      description: ""
+
+put:
+  tags:
+    - Issue Categories
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT
+  summary: Update issue category
+  operationId: updateIssueCategory
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_category_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          properties:
+            issue_category:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+                assigned_to_id:
+                  type: integer
+  responses:
+    204:
+      description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
+    404:
+      description: ""
+
+delete:
+  tags:
+    - Issue Categories
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#DELETE
+  summary: Delete issue category
+  operationId: deleteIssueCategory
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/issue_category_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: reassign_to_id
+      in: query
+      schema:
+        type: integer
+  responses:
+    204:
+      description: ""
+    404:
+      description: ""
