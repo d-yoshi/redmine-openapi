@@ -10,7 +10,7 @@ This OpenAPI specification file was created based on the official API docs and v
 
 ```
 OpenAPI: 3.0.3
-Tested with: Redmine 6.1.1
+Tested against: Redmine 6.1
 ```
 
 https://d-yoshi.github.io/redmine-openapi/
