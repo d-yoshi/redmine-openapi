@@ -19,4 +19,11 @@ test("Roles", async (t) => {
     });
     assertStatus(200, response);
   });
+
+  await t.test("GET /roles/{role_id}.json returns 404", async () => {
+    const response = await client.GET("/roles/{role_id}.{format}", {
+      params: { path: { format: "json", role_id: 999999 } },
+    });
+    assertStatus(404, response);
+  });
 });

@@ -600,7 +600,7 @@ paths:
                     notes:
                       type: string
                     private_notes:
-                      type: string
+                      type: boolean
                     uploads:
                       $ref: '#/components/schemas/uploads'
       responses:
@@ -2140,7 +2140,32 @@ paths:
             items:
               type: string
           explode: false
+        - name: issue.parent_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue.category_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue.subject
+          in: query
+          schema:
+            type: string
+        - name: user.group
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: user.role
           in: query
           schema:
             type: array
@@ -2463,7 +2488,32 @@ paths:
             items:
               type: string
           explode: false
+        - name: issue.parent_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
         - name: issue.category_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: issue.subject
+          in: query
+          schema:
+            type: string
+        - name: user.group
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - name: user.role
           in: query
           schema:
             type: array
@@ -2900,6 +2950,9 @@ paths:
                 news:
                   type: object
                   additionalProperties: false
+                  required:
+                    - title
+                    - description
                   properties:
                     title:
                       type: string
@@ -3189,6 +3242,8 @@ paths:
                     wiki_page_title:
                       type: string
                       nullable: true
+                    default_project_version:
+                      type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
@@ -3300,6 +3355,8 @@ paths:
                     wiki_page_title:
                       type: string
                       nullable: true
+                    default_project_version:
+                      type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
@@ -3485,10 +3542,6 @@ paths:
           description: ''
         '409':
           description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errors'
         '412':
           $ref: '#/components/responses/PreconditionFailed'
         '422':
@@ -3741,6 +3794,10 @@ paths:
       parameters:
         - $ref: '#/components/parameters/attachment_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
+        - name: size
+          in: query
+          schema:
+            type: integer
       responses:
         '200':
           description: ''
@@ -4241,6 +4298,8 @@ paths:
                       type: array
                       items:
                         type: integer
+                    twofa_required:
+                      type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
@@ -4253,9 +4312,11 @@ paths:
               schema:
                 type: object
                 additionalProperties: false
+                required:
+                  - group
                 properties:
                   group:
-                    $ref: '#/components/schemas/group.simple'
+                    $ref: '#/components/schemas/group'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -4339,6 +4400,8 @@ paths:
                       type: array
                       items:
                         type: integer
+                    twofa_required:
+                      type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
@@ -4971,6 +5034,10 @@ paths:
           in: query
           schema:
             type: string
+        - name: content_type
+          in: query
+          schema:
+            type: string
       requestBody:
         content:
           application/octet-stream:
@@ -5005,10 +5072,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '406':
           description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errors'
         '412':
           $ref: '#/components/responses/PreconditionFailed'
         '422':
@@ -5051,6 +5114,12 @@ paths:
           description: ''
         '412':
           $ref: '#/components/responses/PreconditionFailed'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
   /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues/{issue_id}.{format}:
     delete:
       tags:
@@ -5203,7 +5272,7 @@ components:
       in: path
       required: true
       schema:
-        type: number
+        type: integer
     filename:
       name: filename
       in: path
@@ -5295,6 +5364,39 @@ components:
             - type: array
               items:
                 type: string
+    attachment:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - filename
+        - filesize
+        - content_type
+        - description
+        - content_url
+        - created_on
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        content_url:
+          type: string
+        thumbnail_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/id_name'
+        created_on:
+          type: string
+          format: date-time
     issue.simple:
       type: object
       additionalProperties: false
@@ -5379,6 +5481,37 @@ components:
           type: string
           format: date-time
           nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment'
+        relations:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              id:
+                type: integer
+              issue_id:
+                type: integer
+              issue_to_id:
+                type: integer
+              relation_type:
+                type: string
+                enum:
+                  - relates
+                  - duplicates
+                  - duplicated
+                  - blocks
+                  - blocked
+                  - precedes
+                  - follows
+                  - copied_to
+                  - copied_from
+              delay:
+                type: integer
+                nullable: true
     custom_fields:
       type: array
       items:
@@ -5429,38 +5562,6 @@ components:
           type: array
           items:
             type: string
-    attachment:
-      type: object
-      additionalProperties: false
-      required:
-        - id
-        - filename
-        - filesize
-        - content_type
-        - description
-        - content_url
-        - created_on
-      properties:
-        id:
-          type: integer
-        filename:
-          type: string
-        filesize:
-          type: integer
-        content_type:
-          type: string
-        description:
-          type: string
-          nullable: true
-        content_url:
-          type: string
-        thumbnail_url:
-          type: string
-        author:
-          $ref: '#/components/schemas/id_name'
-        created_on:
-          type: string
-          format: date-time
     issue:
       type: object
       additionalProperties: false

@@ -27,6 +27,7 @@ test("Groups", async (t) => {
         group: {
           name: `test-group-${Date.now()}`,
           user_ids: [userId],
+          twofa_required: false,
         },
       },
     });
@@ -50,6 +51,7 @@ test("Groups", async (t) => {
       body: {
         group: {
           name: `test-group-updated-${Date.now()}`,
+          twofa_required: false,
         },
       },
     });

@@ -76,7 +76,32 @@ get:
         items:
           type: string
       explode: false
+    - name: issue.parent_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
     - name: issue.category_id
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: issue.subject
+      in: query
+      schema:
+        type: string
+    - name: user.group
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    - name: user.role
       in: query
       schema:
         type: array

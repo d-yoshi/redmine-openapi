@@ -34,6 +34,7 @@ test("Versions", async (t) => {
             sharing: "none",
             due_date: "2026-12-31",
             wiki_page_title: "",
+            default_project_version: false,
           },
         },
       }
@@ -60,10 +61,11 @@ test("Versions", async (t) => {
         version: {
           name: "v1.0-updated",
           description: "Updated release",
-          status: "locked",
+          status: "closed",
           sharing: "descendants",
           due_date: "2027-01-31",
           wiki_page_title: "",
+          default_project_version: true,
         },
       },
     });

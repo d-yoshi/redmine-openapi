@@ -121,6 +121,24 @@ test("Projects", async (t) => {
     assertStatus(200, response);
   });
 
+  await t.test("GET /projects.json with all includes", async () => {
+    const response = await client.GET("/projects.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          include: [
+            "trackers",
+            "issue_categories",
+            "time_entry_activities",
+            "enabled_modules",
+            "issue_custom_fields",
+          ],
+        },
+      },
+    });
+    assertStatus(200, response);
+  });
+
   await t.test("PUT /projects/{project_id}/close.json", async () => {
     const response = await client.PUT(
       "/projects/{project_id}/close.{format}",

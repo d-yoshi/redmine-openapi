@@ -117,7 +117,7 @@ put:
                 notes:
                   type: string
                 private_notes:
-                  type: string
+                  type: boolean
                 uploads:
                   $ref: ../components/schemas/request/uploads.yaml
   responses:

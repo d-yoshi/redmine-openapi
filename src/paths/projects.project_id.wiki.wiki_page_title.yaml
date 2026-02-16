@@ -87,10 +87,6 @@ put:
       description: ""
     409:
       description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
     422:
       description: ""
       content:

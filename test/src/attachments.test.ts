@@ -1,4 +1,4 @@
-import { before, after, describe, test } from "node:test";
+import { test } from "node:test";
 
 import { client, assertStatus } from "./helpers.js";
 
@@ -8,98 +8,84 @@ const MINIMAL_PNG = Buffer.from(
   "base64"
 );
 
-describe("Attachments", async () => {
-  let projectId: number;
-  let issueId: number;
-  let attachmentId: number;
-  let imageAttachmentId: number;
-
-  before(async () => {
-    const projectIdentifier = `att-${Date.now()}`;
-    const projectResponse = await client.POST("/projects.{format}", {
-      params: { path: { format: "json" } },
-      body: {
-        project: {
-          name: projectIdentifier,
-          identifier: projectIdentifier,
-        },
+test("Attachments", async (t) => {
+  const projectIdentifier = `att-${Date.now()}`;
+  const projectResponse = await client.POST("/projects.{format}", {
+    params: { path: { format: "json" } },
+    body: {
+      project: {
+        name: projectIdentifier,
+        identifier: projectIdentifier,
       },
-    });
-    assertStatus(201, projectResponse);
-    projectId = projectResponse.data!.project.id;
-
-    const uploadResponse = await client.POST("/uploads.{format}", {
-      params: {
-        path: { format: "json" },
-        query: { filename: "test.txt" },
-      },
-      body: "file content",
-      bodySerializer: (body) => body,
-      headers: { "Content-Type": "application/octet-stream" },
-    });
-    assertStatus(201, uploadResponse);
-    const token = uploadResponse.data!.upload.token;
-
-    const pngUploadResponse = await client.POST("/uploads.{format}", {
-      params: {
-        path: { format: "json" },
-        query: { filename: "test.png" },
-      },
-      body: MINIMAL_PNG as any,
-      bodySerializer: (body: any) => body,
-      headers: { "Content-Type": "application/octet-stream" },
-    });
-    assertStatus(201, pngUploadResponse);
-    const pngToken = pngUploadResponse.data!.upload.token;
-
-    const issueResponse = await client.POST("/issues.{format}", {
-      params: { path: { format: "json" } },
-      body: {
-        issue: {
-          project_id: projectId,
-          subject: "issue with attachment",
-          uploads: [
-            {
-              token,
-              filename: "test.txt",
-              description: "test attachment",
-              content_type: "text/plain",
-            },
-            {
-              token: pngToken,
-              filename: "test.png",
-              description: "test image",
-              content_type: "image/png",
-            },
-          ],
-        },
-      },
-    });
-    assertStatus(201, issueResponse);
-    issueId = issueResponse.data!.issue.id;
-
-    const getIssueResponse = await client.GET(
-      "/issues/{issue_id}.{format}",
-      {
-        params: {
-          path: { format: "json", issue_id: issueId },
-          query: { include: ["attachments"] },
-        },
-      }
-    );
-    assertStatus(200, getIssueResponse);
-    const attachments = getIssueResponse.data!.issue.attachments!;
-    attachmentId = attachments.find((a) => a.filename === "test.txt")!.id;
-    imageAttachmentId = attachments.find((a) => a.filename === "test.png")!.id;
+    },
   });
+  assertStatus(201, projectResponse);
+  const projectId = projectResponse.data!.project.id;
 
-  after(async () => {
-    await client.DELETE("/projects/{project_id}.{format}", {
-      params: { path: { format: "json", project_id: projectId } },
-    });
+  const uploadResponse = await client.POST("/uploads.{format}", {
+    params: {
+      path: { format: "json" },
+      query: { filename: "test.txt" },
+    },
+    body: "file content",
+    bodySerializer: (body) => body,
+    headers: { "Content-Type": "application/octet-stream" },
   });
+  assertStatus(201, uploadResponse);
+  const token = uploadResponse.data!.upload.token;
 
-  test("POST /uploads.json", async () => {
+  const pngUploadResponse = await client.POST("/uploads.{format}", {
+    params: {
+      path: { format: "json" },
+      query: { filename: "test.png" },
+    },
+    body: MINIMAL_PNG as any,
+    bodySerializer: (body: any) => body,
+    headers: { "Content-Type": "application/octet-stream" },
+  });
+  assertStatus(201, pngUploadResponse);
+  const pngToken = pngUploadResponse.data!.upload.token;
+
+  const issueResponse = await client.POST("/issues.{format}", {
+    params: { path: { format: "json" } },
+    body: {
+      issue: {
+        project_id: projectId,
+        subject: "issue with attachment",
+        uploads: [
+          {
+            token,
+            filename: "test.txt",
+            description: "test attachment",
+            content_type: "text/plain",
+          },
+          {
+            token: pngToken,
+            filename: "test.png",
+            description: "test image",
+            content_type: "image/png",
+          },
+        ],
+      },
+    },
+  });
+  assertStatus(201, issueResponse);
+
+  const getIssueResponse = await client.GET(
+    "/issues/{issue_id}.{format}",
+    {
+      params: {
+        path: { format: "json", issue_id: issueResponse.data!.issue.id },
+        query: { include: ["attachments"] },
+      },
+    }
+  );
+  assertStatus(200, getIssueResponse);
+  const attachments = getIssueResponse.data!.issue.attachments!;
+  const attachmentId = attachments.find((a) => a.filename === "test.txt")!.id;
+  const imageAttachmentId = attachments.find((a) => a.filename === "test.png")!.id;
+
+  await t.test("POST /uploads.json", async () => {
     const response = await client.POST("/uploads.{format}", {
       params: {
         path: { format: "json" },
@@ -112,7 +98,7 @@ describe("Attachments", async () => {
     assertStatus(201, response);
   });
 
-  test("GET /attachments/{attachment_id}.json", async () => {
+  await t.test("GET /attachments/{attachment_id}.json", async () => {
     const response = await client.GET(
       "/attachments/{attachment_id}.{format}",
       {
@@ -124,7 +110,7 @@ describe("Attachments", async () => {
     assertStatus(200, response);
   });
 
-  test("GET /attachments/download/{attachment_id}/{filename}", async () => {
+  await t.test("GET /attachments/download/{attachment_id}/{filename}", async () => {
     const response = await client.GET(
       "/attachments/download/{attachment_id}/{filename}",
       {
@@ -137,12 +123,13 @@ describe("Attachments", async () => {
     assertStatus(200, response);
   });
 
-  test("GET /attachments/thumbnail/{attachment_id}", async () => {
+  await t.test("GET /attachments/thumbnail/{attachment_id}", async () => {
     const response = await client.GET(
       "/attachments/thumbnail/{attachment_id}",
       {
         params: {
           path: { attachment_id: imageAttachmentId },
+          query: { size: 100 },
         },
         parseAs: "blob",
       }
@@ -150,7 +137,7 @@ describe("Attachments", async () => {
     assertStatus(200, response);
   });
 
-  test("PATCH /attachments/{attachment_id}.json", async () => {
+  await t.test("PATCH /attachments/{attachment_id}.json", async () => {
     const response = await client.PATCH(
       "/attachments/{attachment_id}.{format}",
       {
@@ -169,7 +156,7 @@ describe("Attachments", async () => {
     assertStatus(204, response);
   });
 
-  test("DELETE /attachments/{attachment_id}.json", async () => {
+  await t.test("DELETE /attachments/{attachment_id}.json", async () => {
     const response = await client.DELETE(
       "/attachments/{attachment_id}.{format}",
       {
@@ -179,5 +166,9 @@ describe("Attachments", async () => {
       }
     );
     assertStatus(204, response);
+  });
+
+  await client.DELETE("/projects/{project_id}.{format}", {
+    params: { path: { format: "json", project_id: projectId } },
   });
 });

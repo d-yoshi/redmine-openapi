@@ -2,4 +2,4 @@ name: attachment_id
 in: path
 required: true
 schema:
-  type: number
+  type: integer

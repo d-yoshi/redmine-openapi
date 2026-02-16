@@ -79,16 +79,36 @@ test("Issue Categories", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("DELETE /issue_categories/{issue_category_id}.json", async () => {
+  await t.test("DELETE /issue_categories/{issue_category_id}.json with reassign_to_id", async () => {
+    const otherResponse = await client.POST(
+      "/projects/{project_id}/issue_categories.{format}",
+      {
+        params: { path: { format: "json", project_id: projectIdentifier } },
+        body: { issue_category: { name: "category-other" } },
+      }
+    );
+    assertStatus(201, otherResponse);
+    const otherCategoryId = otherResponse.data!.issue_category.id;
+
     const response = await client.DELETE(
       "/issue_categories/{issue_category_id}.{format}",
       {
         params: {
           path: { format: "json", issue_category_id: categoryId },
+          query: { reassign_to_id: otherCategoryId },
         },
       }
     );
     assertStatus(204, response);
+
+    await client.DELETE(
+      "/issue_categories/{issue_category_id}.{format}",
+      {
+        params: {
+          path: { format: "json", issue_category_id: otherCategoryId },
+        },
+      }
+    );
   });
 
   await client.DELETE("/projects/{project_id}.{format}", {

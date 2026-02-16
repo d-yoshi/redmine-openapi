@@ -99,6 +99,21 @@ test("Time Entries", async (t) => {
     assertStatus(200, response);
   });
 
+  await t.test("GET /time_entries.json with filters", async () => {
+    const response = await client.GET("/time_entries.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          "issue.parent_id": ["*"],
+          "issue.subject": "issue-1",
+          "user.group": ["*"],
+          "user.role": ["*"],
+        },
+      },
+    });
+    assertStatus(200, response);
+  });
+
   await t.test("POST /projects/{project_id}/time_entries.json", async () => {
     const response = await client.POST(
       "/projects/{project_id}/time_entries.{format}",

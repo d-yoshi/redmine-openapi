@@ -12,6 +12,10 @@ post:
       in: query
       schema:
         type: string
+    - name: content_type
+      in: query
+      schema:
+        type: string
   requestBody:
     content:
       application/octet-stream:
@@ -42,10 +46,6 @@ post:
                     type: string
     406:
       description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
     422:
       description: ""
       content:

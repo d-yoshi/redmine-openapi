@@ -146,6 +146,28 @@ test("Wiki Pages", async (t) => {
     assertStatus(200, response);
   });
 
+  await t.test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json returns 409 on version conflict", async () => {
+    const response = await client.PUT(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "TestPage",
+          },
+        },
+        body: {
+          wiki_page: {
+            text: "Conflict attempt",
+            version: 1,
+          },
+        },
+      }
+    );
+    assertStatus(409, response);
+  });
+
   await t.test("GET /projects/{project_id}/wiki/index.json", async () => {
     const response = await client.GET(
       "/projects/{project_id}/wiki/index.{format}",

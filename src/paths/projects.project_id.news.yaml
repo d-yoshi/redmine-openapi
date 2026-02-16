@@ -58,6 +58,9 @@ post:
             news:
               type: object
               additionalProperties: false
+              required:
+                - title
+                - description
               properties:
                 title:
                   type: string

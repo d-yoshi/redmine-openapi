@@ -72,6 +72,8 @@ put:
                 wiki_page_title:
                   type: string
                   nullable: true
+                default_project_version:
+                  type: boolean
                 custom_fields:
                   $ref: ../components/schemas/request/custom_fields.yaml
                 custom_field_values:

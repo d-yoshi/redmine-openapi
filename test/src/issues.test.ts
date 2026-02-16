@@ -160,7 +160,7 @@ test("Issues", async (t) => {
           is_private: true,
           estimated_hours: 5,
           notes: "note-1",
-          private_notes: "false",
+          private_notes: false,
           watcher_user_ids: [1],
           uploads: [
             {
@@ -181,6 +181,55 @@ test("Issues", async (t) => {
       params: { path: { format: "json" } },
     });
     assertStatus(200, response);
+  });
+
+  await t.test("GET /issues.json with all includes", async () => {
+    const response = await client.GET("/issues.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { include: ["attachments", "relations"] },
+      },
+    });
+    assertStatus(200, response);
+  });
+
+  await t.test("GET /issues.json with filters", async () => {
+    const response = await client.GET("/issues.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          sort: "id:desc",
+          status_id: ["*"],
+          tracker_id: ["1"],
+          assigned_to_id: ["me"],
+          subject: "issue",
+          created_on: ">=2020-01-01",
+        },
+      },
+    });
+    assertStatus(200, response);
+  });
+
+  await t.test("GET /issues.json with pagination", async () => {
+    const response = await client.GET("/issues.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { offset: 0, limit: 1 },
+      },
+    });
+    assertStatus(200, response);
+  });
+
+  await t.test("POST /issues.json returns 422 for invalid data", async () => {
+    const response = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        issue: {
+          project_id: projectId,
+        } as any,
+      },
+    });
+    assertStatus(422, response);
   });
 
   await t.test("POST /projects/{project_id}/issues.json", async () => {
