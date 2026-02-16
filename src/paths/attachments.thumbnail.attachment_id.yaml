@@ -2,6 +2,7 @@ get:
   tags:
     - Attachments
   summary: Download thumbnail
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: downloadThumbnail
   parameters:
     - $ref: ../components/parameters/path/attachment_id.yaml

@@ -1664,6 +1664,7 @@ paths:
       tags:
         - Projects
       summary: Close project
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: closeProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1685,6 +1686,7 @@ paths:
       tags:
         - Projects
       summary: Reopen project
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: reopenProject
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2771,6 +2773,7 @@ paths:
       tags:
         - News
       summary: Show news
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: getNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2811,6 +2814,7 @@ paths:
       tags:
         - News
       summary: Update news
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: updateNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2868,6 +2872,7 @@ paths:
       tags:
         - News
       summary: Delete news
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: deleteNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -2933,6 +2938,7 @@ paths:
       tags:
         - News
       summary: Create news
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: createNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -3764,6 +3770,7 @@ paths:
       tags:
         - Attachments
       summary: Download attachment file
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: downloadAttachmentFile
       parameters:
         - $ref: '#/components/parameters/attachment_id'
@@ -3790,6 +3797,7 @@ paths:
       tags:
         - Attachments
       summary: Download thumbnail
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: downloadThumbnail
       parameters:
         - $ref: '#/components/parameters/attachment_id'
@@ -4987,6 +4995,7 @@ paths:
       tags:
         - Journals
       summary: Update journal
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: updateJournal
       parameters:
         - $ref: '#/components/parameters/format'
@@ -5085,6 +5094,7 @@ paths:
       tags:
         - Repositories
       summary: Add related issue
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: addRelatedIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -5125,6 +5135,7 @@ paths:
       tags:
         - Repositories
       summary: Remove related issue
+      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: removeRelatedIssue
       parameters:
         - $ref: '#/components/parameters/format'

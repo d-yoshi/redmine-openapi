@@ -2,6 +2,7 @@ put:
   tags:
     - Projects
   summary: Close project
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: closeProject
   parameters:
     - $ref: ../components/parameters/path/format.yaml

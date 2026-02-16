@@ -2,6 +2,7 @@ put:
   tags:
     - Journals
   summary: Update journal
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: updateJournal
   parameters:
     - $ref: ../components/parameters/path/format.yaml

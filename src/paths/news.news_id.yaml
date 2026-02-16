@@ -2,6 +2,7 @@ get:
   tags:
     - News
   summary: Show news
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: getNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -37,6 +38,7 @@ put:
   tags:
     - News
   summary: Update news
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: updateNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -89,6 +91,7 @@ delete:
   tags:
     - News
   summary: Delete news
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: deleteNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml

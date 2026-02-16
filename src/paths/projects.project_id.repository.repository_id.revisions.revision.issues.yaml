@@ -2,6 +2,7 @@ post:
   tags:
     - Repositories
   summary: Add related issue
+  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: addRelatedIssue
   parameters:
     - $ref: ../components/parameters/path/format.yaml
