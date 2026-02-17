@@ -2838,19 +2838,7 @@ paths:
                     description:
                       type: string
                     uploads:
-                      type: array
-                      items:
-                        type: object
-                        additionalProperties: false
-                        properties:
-                          token:
-                            type: string
-                          filename:
-                            type: string
-                          description:
-                            type: string
-                          content_type:
-                            type: string
+                      $ref: '#/components/schemas/uploads'
       responses:
         '204':
           description: ''
@@ -2967,19 +2955,7 @@ paths:
                     description:
                       type: string
                     uploads:
-                      type: array
-                      items:
-                        type: object
-                        additionalProperties: false
-                        properties:
-                          token:
-                            type: string
-                          filename:
-                            type: string
-                          description:
-                            type: string
-                          content_type:
-                            type: string
+                      $ref: '#/components/schemas/uploads'
       responses:
         '204':
           description: ''
