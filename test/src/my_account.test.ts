@@ -15,11 +15,21 @@ describe("My Account", async () => {
       params: { path: { format: "json" } },
       body: {
         user: {
+          login: "admin",
+          admin: true,
           firstname: "Redmine",
           lastname: "Admin",
           mail: "admin@example.net",
           language: "en",
+          auth_source_id: null,
           mail_notification: "only_my_events",
+          notified_project_ids: [],
+          must_change_passwd: false,
+          generate_password: false,
+          status: 1,
+          custom_fields: [],
+          custom_field_values: {},
+          group_ids: [],
         },
         pref: {
           hide_mail: true,
@@ -33,6 +43,8 @@ describe("My Account", async () => {
           history_default_tab: "notes",
           toolbar_language_options: "",
           auto_watch_on: ["issue_created", "issue_contributed_to", "issue_assigned_to_me"],
+          default_issue_query: null,
+          default_project_query: null,
         },
       },
     });

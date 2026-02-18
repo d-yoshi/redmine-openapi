@@ -25,7 +25,7 @@ test("Attachments", async (t) => {
   const uploadResponse = await client.POST("/uploads.{format}", {
     params: {
       path: { format: "json" },
-      query: { filename: "test.txt" },
+      query: { filename: "test.txt", content_type: "text/plain" },
     },
     body: "file content",
     bodySerializer: (body) => body,

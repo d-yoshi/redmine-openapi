@@ -93,12 +93,13 @@ test("Memberships", async (t) => {
     assertStatus(204, response);
   });
 
-  await t.test("GET /projects/{project_id}/memberships.json", async () => {
+  await t.test("GET /projects/{project_id}/memberships.json with pagination", async () => {
     const response = await client.GET(
       "/projects/{project_id}/memberships.{format}",
       {
         params: {
           path: { format: "json", project_id: projectIdentifier },
+          query: { offset: 0, limit: 25 },
         },
       }
     );

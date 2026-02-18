@@ -70,6 +70,9 @@ test("Projects", async (t) => {
           tracker_ids: [1],
           enabled_module_names: ["issue_tracking"],
           issue_custom_field_ids: [],
+          default_issue_query_id: null,
+          custom_fields: [],
+          custom_field_values: {},
         },
       },
     });
@@ -108,15 +111,28 @@ test("Projects", async (t) => {
           tracker_ids: [1],
           enabled_module_names: ["issue_tracking", "time_tracking"],
           issue_custom_field_ids: [],
+          identifier: "proj-updated",
+          parent_id: null,
+          default_issue_query_id: null,
+          custom_fields: [],
+          custom_field_values: {},
         },
       },
     });
     assertStatus(204, response);
   });
 
-  await t.test("GET /projects.json", async () => {
+  await t.test("GET /projects.json with filters", async () => {
     const response = await client.GET("/projects.{format}", {
-      params: { path: { format: "json" } },
+      params: {
+        path: { format: "json" },
+        query: {
+          status: [1],
+          is_public: ["1"],
+          offset: 0,
+          limit: 25,
+        },
+      },
     });
     assertStatus(200, response);
   });

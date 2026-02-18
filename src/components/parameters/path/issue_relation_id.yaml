@@ -1,4 +1,3 @@
-
 name: issue_relation_id
 in: path
 required: true

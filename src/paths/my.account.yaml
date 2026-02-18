@@ -41,8 +41,6 @@ put:
                   type: string
                 admin:
                   type: boolean
-                password:
-                  type: string
                 firstname:
                   type: string
                 lastname:

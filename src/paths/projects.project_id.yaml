@@ -60,6 +60,8 @@ put:
               type: object
               additionalProperties: false
               properties:
+                identifier:
+                  type: string
                 name:
                   type: string
                 description:

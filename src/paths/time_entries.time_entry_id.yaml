@@ -92,5 +92,11 @@ delete:
   responses:
     204:
       description: ""
+    422:
+      description: ""
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
     404:
       description: ""

@@ -35,6 +35,8 @@ test("Versions", async (t) => {
             due_date: "2026-12-31",
             wiki_page_title: "",
             default_project_version: false,
+            custom_fields: [],
+            custom_field_values: {},
           },
         },
       }
@@ -66,6 +68,8 @@ test("Versions", async (t) => {
           due_date: "2027-01-31",
           wiki_page_title: "",
           default_project_version: true,
+          custom_fields: [],
+          custom_field_values: {},
         },
       },
     });

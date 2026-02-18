@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 1.2.1+redmine6.1
+  version: 1.4.0+redmine6.1
 servers:
   - url: /
 security:
@@ -1317,6 +1317,8 @@ paths:
                   type: object
                   additionalProperties: false
                   properties:
+                    identifier:
+                      type: string
                     name:
                       type: string
                     description:
@@ -2417,6 +2419,12 @@ paths:
           description: ''
         '412':
           $ref: '#/components/responses/PreconditionFailed'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errors'
   /projects/{project_id}/time_entries.{format}:
     get:
       tags:
@@ -4232,6 +4240,12 @@ paths:
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
+        - name: builtin
+          in: query
+          schema:
+            type: string
+            enum:
+              - '1'
       responses:
         '200':
           description: ''
@@ -4909,8 +4923,6 @@ paths:
                       type: string
                     admin:
                       type: boolean
-                    password:
-                      type: string
                     firstname:
                       type: string
                     lastname:

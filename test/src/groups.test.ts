@@ -28,6 +28,8 @@ test("Groups", async (t) => {
           name: `test-group-${Date.now()}`,
           user_ids: [userId],
           twofa_required: false,
+          custom_fields: [],
+          custom_field_values: {},
         },
       },
     });
@@ -51,7 +53,10 @@ test("Groups", async (t) => {
       body: {
         group: {
           name: `test-group-updated-${Date.now()}`,
+          user_ids: [userId],
           twofa_required: false,
+          custom_fields: [],
+          custom_field_values: {},
         },
       },
     });
@@ -103,6 +108,16 @@ test("Groups", async (t) => {
   await t.test("GET /groups.json", async () => {
     const response = await client.GET("/groups.{format}", {
       params: { path: { format: "json" } },
+    });
+    assertStatus(200, response);
+  });
+
+  await t.test("GET /groups.json with builtin", async () => {
+    const response = await client.GET("/groups.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { builtin: "1" },
+      },
     });
     assertStatus(200, response);
   });

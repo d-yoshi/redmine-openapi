@@ -55,19 +55,37 @@ describe("Search", async () => {
           messages: 1,
           open_issues: 1,
           attachments: "1",
+          offset: 0,
+          limit: 25,
         },
       },
     });
     assertStatus(200, response);
   });
 
-  test("GET /projects/{project_id}/search.json", async () => {
+  test("GET /projects/{project_id}/search.json with all params", async () => {
     const response = await client.GET(
       "/projects/{project_id}/search.{format}",
       {
         params: {
           path: { format: "json", project_id: projectId },
-          query: { q: "test" },
+          query: {
+            q: "test",
+            scope: "all",
+            all_words: 1,
+            titles_only: 1,
+            issues: 1,
+            news: 1,
+            wiki_pages: 1,
+            projects: 1,
+            documents: 1,
+            changesets: 1,
+            messages: 1,
+            open_issues: 1,
+            attachments: "1",
+            offset: 0,
+            limit: 25,
+          },
         },
       }
     );

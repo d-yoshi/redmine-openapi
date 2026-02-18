@@ -22,6 +22,10 @@ test("Users", async (t) => {
           must_change_passwd: false,
           generate_password: false,
           status: 1,
+          auth_source_id: null,
+          notified_project_ids: [],
+          custom_fields: [],
+          custom_field_values: {},
         },
         send_information: false,
         pref: {
@@ -36,6 +40,8 @@ test("Users", async (t) => {
           history_default_tab: "notes",
           toolbar_language_options: "",
           auto_watch_on: ["issue_created", "issue_contributed_to", "issue_assigned_to_me"],
+          default_issue_query: null,
+          default_project_query: null,
         },
       },
     });
@@ -51,13 +57,6 @@ test("Users", async (t) => {
           include: ["memberships", "groups", "auth_source"],
         },
       },
-    });
-    assertStatus(200, response);
-  });
-
-  await t.test("GET /users/current.json", async () => {
-    const response = await client.GET("/users/current.{format}", {
-      params: { path: { format: "json" } },
     });
     assertStatus(200, response);
   });
@@ -80,6 +79,10 @@ test("Users", async (t) => {
           generate_password: false,
           status: 1,
           group_ids: [],
+          auth_source_id: null,
+          notified_project_ids: [],
+          custom_fields: [],
+          custom_field_values: {},
         },
         send_information: false,
         pref: {
@@ -94,15 +97,38 @@ test("Users", async (t) => {
           history_default_tab: "history",
           toolbar_language_options: "",
           auto_watch_on: [],
+          default_issue_query: null,
+          default_project_query: null,
         },
       },
     });
     assertStatus(204, response);
   });
 
-  await t.test("GET /users.json", async () => {
+  await t.test("GET /users/current.json with all includes", async () => {
+    const response = await client.GET("/users/current.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          include: ["memberships", "groups", "auth_source"],
+        },
+      },
+    });
+    assertStatus(200, response);
+  });
+
+  await t.test("GET /users.json with filters", async () => {
     const response = await client.GET("/users.{format}", {
-      params: { path: { format: "json" } },
+      params: {
+        path: { format: "json" },
+        query: {
+          status: 1,
+          name: "Admin",
+          include: ["auth_source"],
+          offset: 0,
+          limit: 25,
+        },
+      },
     });
     assertStatus(200, response);
   });

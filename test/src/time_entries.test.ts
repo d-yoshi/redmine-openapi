@@ -45,11 +45,14 @@ test("Time Entries", async (t) => {
       body: {
         time_entry: {
           issue_id: issueId,
+          project_id: projectId,
           hours: 1.5,
           activity_id: activityId,
           comments: "entry-1",
           spent_on: new Date().toISOString().slice(0, 10),
           user_id: 1,
+          custom_fields: [],
+          custom_field_values: {},
         },
       },
     });
@@ -85,6 +88,8 @@ test("Time Entries", async (t) => {
             activity_id: activityId,
             comments: "entry-1-updated",
             user_id: 1,
+            custom_fields: [],
+            custom_field_values: {},
           },
         },
       }
@@ -108,6 +113,13 @@ test("Time Entries", async (t) => {
           "issue.subject": "issue-1",
           "user.group": ["*"],
           "user.role": ["*"],
+          spent_on: ">=2020-01-01",
+          activity_id: [String(activityId)],
+          comments: "entry",
+          hours: ">=0",
+          sort: "spent_on:desc",
+          offset: 0,
+          limit: 25,
         },
       },
     });
@@ -129,6 +141,8 @@ test("Time Entries", async (t) => {
             comments: "project-scoped-entry",
             spent_on: new Date().toISOString().slice(0, 10),
             user_id: 1,
+            custom_fields: [],
+            custom_field_values: {},
           },
         },
       }
@@ -136,12 +150,20 @@ test("Time Entries", async (t) => {
     assertStatus(201, response);
   });
 
-  await t.test("GET /projects/{project_id}/time_entries.json", async () => {
+  await t.test("GET /projects/{project_id}/time_entries.json with filters", async () => {
     const response = await client.GET(
       "/projects/{project_id}/time_entries.{format}",
       {
         params: {
           path: { format: "json", project_id: projectId },
+          query: {
+            spent_on: ">=2020-01-01",
+            user_id: ["1"],
+            activity_id: [String(activityId)],
+            sort: "spent_on:desc",
+            offset: 0,
+            limit: 25,
+          },
         },
       }
     );
@@ -159,9 +181,12 @@ test("Time Entries", async (t) => {
           time_entry: {
             hours: 0.25,
             activity_id: activityId,
+            project_id: projectId,
             comments: "issue-scoped-entry",
             spent_on: new Date().toISOString().slice(0, 10),
             user_id: 1,
+            custom_fields: [],
+            custom_field_values: {},
           },
         },
       }

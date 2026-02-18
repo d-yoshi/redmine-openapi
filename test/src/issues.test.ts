@@ -98,6 +98,8 @@ test("Issues", async (t) => {
           is_private: false,
           estimated_hours: 2,
           watcher_user_ids: [1],
+          custom_fields: [],
+          custom_field_values: {},
           uploads: [
             {
               token: uploadToken,
@@ -162,6 +164,8 @@ test("Issues", async (t) => {
           notes: "note-1",
           private_notes: false,
           watcher_user_ids: [1],
+          custom_fields: [],
+          custom_field_values: {},
           uploads: [
             {
               token: updateUpload.token,
@@ -204,17 +208,24 @@ test("Issues", async (t) => {
           assigned_to_id: ["me"],
           subject: "issue",
           created_on: ">=2020-01-01",
+          issue_id: ["*"],
+          parent_id: ["*"],
+          author_id: ["*"],
+          fixed_version_id: ["*"],
+          category_id: ["*"],
+          done_ratio: ">=0",
+          is_private: "0",
         },
       },
     });
     assertStatus(200, response);
   });
 
-  await t.test("GET /issues.json with pagination", async () => {
+  await t.test("GET /issues.json with pagination and nometa", async () => {
     const response = await client.GET("/issues.{format}", {
       params: {
         path: { format: "json" },
-        query: { offset: 0, limit: 1 },
+        query: { offset: 0, limit: 1, nometa: 1 },
       },
     });
     assertStatus(200, response);
@@ -257,6 +268,8 @@ test("Issues", async (t) => {
             is_private: false,
             estimated_hours: 1,
             watcher_user_ids: [1],
+            custom_fields: [],
+            custom_field_values: {},
             uploads: [
               {
                 token: scopedUpload.token,
@@ -272,12 +285,20 @@ test("Issues", async (t) => {
     assertStatus(201, response);
   });
 
-  await t.test("GET /projects/{project_id}/issues.json", async () => {
+  await t.test("GET /projects/{project_id}/issues.json with filters", async () => {
     const response = await client.GET(
       "/projects/{project_id}/issues.{format}",
       {
         params: {
           path: { format: "json", project_id: projectId },
+          query: {
+            include: ["attachments", "relations"],
+            sort: "id:desc",
+            status_id: ["*"],
+            tracker_id: ["1"],
+            offset: 0,
+            limit: 25,
+          },
         },
       }
     );

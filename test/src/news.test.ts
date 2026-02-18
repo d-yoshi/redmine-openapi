@@ -109,19 +109,23 @@ test("News", async (t) => {
     assertStatus(204, response);
   });
 
-  await t.test("GET /news.json", async () => {
+  await t.test("GET /news.json with pagination", async () => {
     const response = await client.GET("/news.{format}", {
-      params: { path: { format: "json" } },
+      params: {
+        path: { format: "json" },
+        query: { offset: 0, limit: 25 },
+      },
     });
     assertStatus(200, response);
   });
 
-  await t.test("GET /projects/{project_id}/news.json", async () => {
+  await t.test("GET /projects/{project_id}/news.json with pagination", async () => {
     const response = await client.GET(
       "/projects/{project_id}/news.{format}",
       {
         params: {
           path: { format: "json", project_id: projectIdentifier },
+          query: { offset: 0, limit: 25 },
         },
       }
     );

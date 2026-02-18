@@ -8,6 +8,12 @@ get:
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: builtin
+      in: query
+      schema:
+        type: string
+        enum:
+          - "1"
   responses:
     200:
       description: ""
