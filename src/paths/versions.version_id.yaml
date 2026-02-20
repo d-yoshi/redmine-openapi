@@ -4,7 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
   summary: Show version
-  operationId: getVersions
+  operationId: getVersion
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/path/version_id.yaml

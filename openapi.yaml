@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 1.5.0+redmine6.1
+  version: 1.6.0+redmine6.1
 servers:
   - url: /
 security:
@@ -4078,7 +4078,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
       summary: Show version
-      operationId: getVersions
+      operationId: getVersion
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/version_id'
@@ -5379,7 +5379,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
       summary: Search
-      operationId: search
+      operationId: getSearch
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/limit'
@@ -5537,7 +5537,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET
       summary: Search within project
-      operationId: searchByProject
+      operationId: getSearchByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
