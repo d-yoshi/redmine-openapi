@@ -61,6 +61,27 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     Role.create!(name: 'Developer', permissions: [:add_issues, :edit_issues, :view_issues, :manage_issue_relations, :add_issue_notes])
   end
 
+  # Custom fields for testing various field types
+  tracker = Tracker.first
+  unless IssueCustomField.find_by(name: 'CF String')
+    IssueCustomField.create!(name: 'CF String', field_format: 'string', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Text', field_format: 'text', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Int', field_format: 'int', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Float', field_format: 'float', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Date', field_format: 'date', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Bool', field_format: 'bool', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Link', field_format: 'link', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF List', field_format: 'list', is_for_all: true, tracker_ids: [tracker.id],
+      possible_values: ['Alpha', 'Bravo', 'Charlie'])
+    IssueCustomField.create!(name: 'CF List Multi', field_format: 'list', multiple: true, is_for_all: true, tracker_ids: [tracker.id],
+      possible_values: ['Red', 'Green', 'Blue'])
+    IssueCustomField.create!(name: 'CF User', field_format: 'user', is_for_all: true, tracker_ids: [tracker.id])
+    IssueCustomField.create!(name: 'CF Version', field_format: 'version', is_for_all: true, tracker_ids: [tracker.id])
+    ProjectCustomField.create!(name: 'CF Project String', field_format: 'string', is_for_all: true)
+    TimeEntryCustomField.create!(name: 'CF TimeEntry String', field_format: 'string', is_for_all: true)
+    puts 'Custom fields created!'
+  end
+
   puts 'Setup completed!'
 RUBY
 

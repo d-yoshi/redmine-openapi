@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus } from "./helpers.js";
 
@@ -127,8 +128,8 @@ test("Projects", async (t) => {
       params: {
         path: { format: "json" },
         query: {
-          status: [1],
-          is_public: ["1"],
+          status: "1",
+          is_public: "1",
           offset: 0,
           limit: 25,
         },
@@ -165,6 +166,26 @@ test("Projects", async (t) => {
       }
     );
     assertStatus(204, response);
+  });
+
+  await t.test("GET /projects.json with multiple status values", async () => {
+    // Pipe-delimited multiple values: status=1|5 returns both active and closed projects
+    const response = await client.GET("/projects.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          status: "1|5",
+          limit: 25,
+        },
+      },
+    });
+    assertStatus(200, response);
+    const projects = response.data!.projects;
+    const statuses = new Set(projects.map((p) => p.status));
+    assert(
+      statuses.has(5),
+      `Expected closed projects (status=5) in results, got statuses: ${[...statuses]}`
+    );
   });
 
   await t.test("PUT /projects/{project_id}/reopen.json", async () => {

@@ -10,6 +10,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: builtin
       in: query
+      description: |-
+        Include built-in groups (e.g., "Anonymous", "Non member") in the response.
+        Set to `1` to include built-in groups. Without this parameter, only user-created groups are returned.
       schema:
         type: string
         enum:

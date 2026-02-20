@@ -11,6 +11,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
+      description: |-
+        Comma-separated list of associated data to include in the response.
+        Values: `children` (child issues), `attachments` (file attachments), `relations` (issue relations), `changesets` (associated VCS changesets), `journals` (change history and notes), `watchers` (users watching the issue), `allowed_statuses` (status transitions available for the current user)
       schema:
         type: array
         items:

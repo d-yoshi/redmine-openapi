@@ -11,6 +11,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
+      description: |-
+        Comma-separated list of associated data to include in the response.
+        Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
       schema:
         type: array
         items:

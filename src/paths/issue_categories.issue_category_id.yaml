@@ -76,6 +76,9 @@ delete:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: reassign_to_id
       in: query
+      description: |-
+        ID of another issue category to reassign issues to before deleting this category.
+        If the category has associated issues and this parameter is not provided, the issues will have their category unset.
       schema:
         type: integer
   responses:

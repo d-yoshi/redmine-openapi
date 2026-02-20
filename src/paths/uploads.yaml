@@ -10,10 +10,14 @@ post:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: filename
       in: query
+      description: |-
+        Filename for the uploaded file. If not provided, a random hexadecimal name is generated.
       schema:
         type: string
     - name: content_type
       in: query
+      description: |-
+        MIME type of the file (e.g., `application/pdf`, `image/png`). If not provided, auto-detected from the filename.
       schema:
         type: string
   requestBody:

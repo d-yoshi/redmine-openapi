@@ -11,6 +11,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
+      description: |-
+        Comma-separated list of associated data to include in the response.
+        Values: `users` (list of users in the group), `memberships` (project memberships with roles)
       schema:
         type: array
         items:

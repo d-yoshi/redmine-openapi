@@ -9,6 +9,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: size
       in: query
+      description: |-
+        Desired thumbnail size in pixels (max 800). Rounded up to the nearest 50px increment.
+        If not specified, the configured default thumbnail size is used.
       schema:
         type: integer
   responses:

@@ -122,7 +122,7 @@ test("Users", async (t) => {
       params: {
         path: { format: "json" },
         query: {
-          status: 1,
+          status: "1",
           name: "Admin",
           include: ["auth_source"],
           offset: 0,

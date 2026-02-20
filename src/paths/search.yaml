@@ -14,11 +14,17 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: q
       in: query
+      description: |-
+        Search query string. Tokenized into words for matching.
+        When `all_words` is enabled (default), all tokens must match. Otherwise, any token can match.
       schema:
         type: string
       required: true
     - name: scope
       in: query
+      description: |-
+        Search scope.
+        Values: `all` (all projects), `my_projects` (projects where current user is a member), `bookmarks` (bookmarked projects), `subprojects` (include subprojects, only effective for project-scoped search)
       schema:
         type: string
         enum:
@@ -28,66 +34,94 @@ get:
           - subprojects
     - name: all_words
       in: query
+      description: |-
+        Require all words to match. Default is `true` (all words must match).
+        Set to empty string to disable (any word matches). Any non-empty value enables this option.
       schema:
-        type: integer
-        enum:
-          - 1
+        type: string
     - name: titles_only
       in: query
+      description: |-
+        Search titles only. Default is `false`.
+        Any non-empty value enables this option.
       schema:
-        type: integer
-        enum:
-          - 1
+        type: string
     - name: issues
       in: query
+      description: |-
+        Include issues in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
       schema:
         type: integer
         enum:
           - 1
     - name: news
       in: query
+      description: |-
+        Include news in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
       schema:
         type: integer
         enum:
           - 1
     - name: wiki_pages
       in: query
+      description: |-
+        Include wiki pages in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
       schema:
         type: integer
         enum:
           - 1
     - name: projects
       in: query
+      description: |-
+        Include projects in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
+        Not available when searching within a specific project.
       schema:
         type: integer
         enum:
           - 1
     - name: documents
       in: query
+      description: |-
+        Include documents in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
       schema:
         type: integer
         enum:
           - 1
     - name: changesets
       in: query
+      description: |-
+        Include changesets in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
       schema:
         type: integer
         enum:
           - 1
     - name: messages
       in: query
+      description: |-
+        Include forum messages in search results. Any non-empty value enables this search type.
+        If no search type parameters are specified, all types are searched.
       schema:
         type: integer
         enum:
           - 1
     - name: open_issues
       in: query
+      description: |-
+        Only return open issues. Default is `false`.
+        Any non-empty value enables this option.
       schema:
-        type: integer
-        enum:
-          - 1
+        type: string
     - name: attachments
       in: query
+      description: |-
+        Search attachments. Default is `0` (do not search attachments).
+        Values: `0` (disabled), `1` (search attachments and content), `only` (search attachments only)
       schema:
         type: string
         enum:

@@ -10,6 +10,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
+      description: |-
+        Comma-separated list of associated data to include in the response.
+        Values: `attachments` (file attachments), `comments` (comments/replies on the news item)
       schema:
         type: array
         items:
