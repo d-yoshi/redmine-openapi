@@ -3535,7 +3535,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
       summary: List news
-      operationId: getNews
+      operationId: getNewsList
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/offset'
@@ -3689,7 +3689,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2
       summary: List news by project
-      operationId: getNewsByProject
+      operationId: getNewsListByProject
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/project_id'
