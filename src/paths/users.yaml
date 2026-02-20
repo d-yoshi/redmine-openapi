@@ -197,9 +197,14 @@ post:
                 language:
                   type: string
                 auth_source_id:
+                  description: |-
+                    External authentication source ID (e.g., LDAP). When set, the user authenticates via the external source and the password field is ignored. Set to null for local authentication.
                   type: integer
                   nullable: true
                 mail_notification:
+                  description: |-
+                    Email notification preference.
+                    Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things I watch or am involved in), `only_assigned` (only for things I am assigned to), `only_owner` (only for things I am the owner of), `none` (no events)
                   type: string
                   enum:
                     - all
@@ -209,20 +214,28 @@ post:
                     - only_owner
                     - none
                 notified_project_ids:
+                  description: |-
+                    Project IDs for which to receive email notifications. Only effective when mail_notification is set to `selected`.
                   type: array
                   items:
                     type: integer
                 must_change_passwd:
+                  description: Force the user to change their password at next login.
                   type: boolean
                 generate_password:
+                  description: |-
+                    Generate a random password automatically. When true, the password field is ignored. Only effective for locally authenticated users (auth_source_id is null).
                   type: boolean
                 status:
+                  description: "User account status: `1` (active), `2` (registered), `3` (locked)."
                   type: integer
                 custom_fields:
                   $ref: ../components/schemas/request/custom_fields.yaml
                 custom_field_values:
                   $ref: ../components/schemas/request/custom_field_values.yaml
             send_information:
+              description: |-
+                Set to true to send an account information email to the user. Not stored; only triggers email delivery.
               type: boolean
             pref:
               $ref: ../components/schemas/request/pref.yaml

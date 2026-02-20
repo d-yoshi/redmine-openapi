@@ -23,6 +23,7 @@ put:
                   type: string
                   nullable: true
                 private_notes:
+                  description: Mark the journal notes as private. Only visible to users with the "View private notes" permission.
                   type: boolean
   responses:
     204:

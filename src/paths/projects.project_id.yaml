@@ -79,25 +79,34 @@ put:
                   type: integer
                   nullable: true
                 inherit_members:
+                  description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
                   type: boolean
                 default_assigned_to_id:
+                  description: Default assignee for new issues in this project. Set to null to clear.
                   type: integer
                   nullable: true
                 default_version_id:
+                  description: Default target version for new issues in this project. Set to null to clear.
                   type: integer
                   nullable: true
                 default_issue_query_id:
+                  description: Default saved query for the project's issue list page. Set to null to clear.
                   type: integer
                   nullable: true
                 tracker_ids:
+                  description: IDs of trackers available in this project.
                   type: array
                   items:
                     type: integer
                 enabled_module_names:
+                  description: |-
+                    Enabled module names for this project.
+                    Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
                   type: array
                   items:
                     type: string
                 issue_custom_field_ids:
+                  description: IDs of issue custom fields enabled for this project. Custom fields with `is_for_all=true` are always available regardless of this setting.
                   type: array
                   items:
                     type: integer
