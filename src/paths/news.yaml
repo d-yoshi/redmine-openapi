@@ -4,7 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
   summary: List news
-  operationId: getNewsList
+  operationId: getNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/query/offset.yaml
