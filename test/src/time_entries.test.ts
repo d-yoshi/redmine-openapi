@@ -109,12 +109,12 @@ test("Time Entries", async (t) => {
       params: {
         path: { format: "json" },
         query: {
-          "issue.parent_id": ["*"],
+          "issue.parent_id": "*",
           "issue.subject": "issue-1",
-          "user.group": ["*"],
-          "user.role": ["*"],
+          "user.group": "*",
+          "user.role": "*",
           spent_on: ">=2020-01-01",
-          activity_id: [String(activityId)],
+          activity_id: String(activityId),
           comments: "entry",
           hours: ">=0",
           sort: "spent_on:desc",
@@ -158,8 +158,8 @@ test("Time Entries", async (t) => {
           path: { format: "json", project_id: projectId },
           query: {
             spent_on: ">=2020-01-01",
-            user_id: ["1"],
-            activity_id: [String(activityId)],
+            user_id: "1",
+            activity_id: String(activityId),
             sort: "spent_on:desc",
             offset: 0,
             limit: 25,

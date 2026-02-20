@@ -14,6 +14,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: include
       in: query
+      description: |-
+        Comma-separated list of associated data to include for each user.
+        Values: `auth_source` (authentication source information)
       schema:
         type: array
         items:
@@ -23,16 +26,112 @@ get:
       explode: false
     - name: status
       in: query
+      description: |-
+        Filter by user status.
+        Format: `[operator]value[|value2|...]`
+        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+        Values: `1` (active), `2` (registered), `3` (locked)
+        Examples: `1`, `1|2`, `!3`
       schema:
-        type: integer
+        type: string
     - name: name
       in: query
+      description: |-
+        Filter by name, login, or email (contains search).
+        The API always uses the `~` (contains) operator regardless of any operator prefix.
+        Examples: `john`, `admin`
       schema:
         type: string
     - name: group_id
       in: query
+      description: |-
+        Filter by group membership (legacy parameter).
+        Internally converted to `is_member_of_group` filter with `=` operator.
+        Value is the group ID.
       schema:
-        type: integer
+        type: string
+    - name: auth_source_id
+      in: query
+      description: |-
+        Filter by authentication source. Undocumented
+        Format: `[operator]value[|value2|...]`
+        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+        Examples: `1`, `!1`
+      schema:
+        type: string
+    - name: twofa_scheme
+      in: query
+      description: |-
+        Filter by two-factor authentication scheme. Undocumented
+        Format: `[operator]value[|value2|...]`
+        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+        Only available when two-factor authentication is enabled in Redmine settings.
+      schema:
+        type: string
+    - name: login
+      in: query
+      description: |-
+        Filter by login. Undocumented
+        Format: `[operator]value`
+        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Examples: `~admin`, `^john`
+      schema:
+        type: string
+    - name: firstname
+      in: query
+      description: |-
+        Filter by first name. Undocumented
+        Format: `[operator]value`
+        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Examples: `~John`, `=John`
+      schema:
+        type: string
+    - name: lastname
+      in: query
+      description: |-
+        Filter by last name. Undocumented
+        Format: `[operator]value`
+        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Examples: `~Doe`, `=Doe`
+      schema:
+        type: string
+    - name: mail
+      in: query
+      description: |-
+        Filter by email address. Undocumented
+        Format: `[operator]value`
+        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Examples: `~example.com`, `$@example.com`
+      schema:
+        type: string
+    - name: created_on
+      in: query
+      description: |-
+        Filter by creation date. Undocumented
+        Format: `[operator]value`
+        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        Examples: `>=2024-01-01`, `>t-30`, `lm`
+      schema:
+        type: string
+    - name: last_login_on
+      in: query
+      description: |-
+        Filter by last login date. Undocumented
+        Format: `[operator]value`
+        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        Examples: `>=2024-01-01`, `>t-30`, `!*`
+      schema:
+        type: string
+    - name: admin
+      in: query
+      description: |-
+        Filter by admin privilege. Undocumented
+        Format: `[operator]value`
+        Operators: `=` (default), `!` (not equal)
+        Values: `1` (admin), `0` (non-admin)
+        Examples: `1`, `!1`
+      schema:
+        type: string
   responses:
     200:
       description: ""

@@ -14,6 +14,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: include
       in: query
+      description: |-
+        Comma-separated list of associated data to include for each project.
+        Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
       schema:
         type: array
         items:
@@ -27,45 +30,78 @@ get:
       explode: false
     - name: status
       in: query
+      description: |-
+        Filter by project status.
+        Format: `[operator]value[|value2|...]`
+        Operators: `=` (default), `!` (not equal)
+        Values: `1` (active), `5` (closed)
+        Examples: `1`, `1|5`, `!1`
       schema:
-        type: array
-        items:
-          type: integer
-      explode: false
+        type: string
     - name: id
       in: query
+      description: |-
+        Filter by project ID.
+        Format: `[operator]value[|value2|...]`
+        Operators: `=` (default), `!` (not equal)
+        Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
+        Examples: `1|2|3`, `mine`, `!mine`, `mine|bookmarks`
       schema:
-        type: array
-        items:
-          type: string
-      explode: false
+        type: string
     - name: name
       in: query
+      description: |-
+        Filter by project name.
+        Format: `<operator>value`
+        Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Examples: `~keyword`, `^prefix`
       schema:
         type: string
     - name: description
       in: query
+      description: |-
+        Filter by project description.
+        Format: `<operator>value`
+        Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Examples: `~keyword`, `!~excluded`
       schema:
         type: string
     - name: parent_id
       in: query
+      description: |-
+        Filter by parent project.
+        Format: `[operator]value[|value2|...]`
+        Operators: `=` (default), `!` (not equal), `*` (any, i.e. is a subproject), `!*` (none, i.e. is a root project)
+        Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
+        Examples: `1|2`, `mine`, `*`, `!*`
       schema:
-        type: array
-        items:
-          type: string
-      explode: false
+        type: string
     - name: is_public
       in: query
+      description: |-
+        Filter by public/private status.
+        Format: `[operator]value`
+        Operators: `=` (default), `!` (not equal)
+        Values: `1` (public), `0` (private)
+        Examples: `1`, `!1`
       schema:
-        type: array
-        items:
-          type: string
-          enum:
-            - "0"
-            - "1"
-      explode: false
+        type: string
     - name: created_on
       in: query
+      description: |-
+        Filter by creation date.
+        Format: `<operator>[value]`
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+      schema:
+        type: string
+    - name: updated_on
+      in: query
+      description: |-
+        Filter by last updated date.
+        Format: `<operator>[value]`
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
       schema:
         type: string
   responses:

@@ -128,11 +128,17 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: sort
           in: query
+          description: |-
+            Sort order. Comma-separated list of `field` or `field:desc`. Default direction is ascending.
+            Examples: `id:desc`, `status:desc,id`
           schema:
             type: string
             example: id:desc
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include for each issue.
+            Values: `attachments` (file attachments), `relations` (issue relations)
           schema:
             type: array
             items:
@@ -143,53 +149,170 @@ paths:
           explode: false
         - name: issue_id
           in: query
+          description: |-
+            Filter by issue ID.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `1`, `>=100`, `><1|100`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: project_id
           in: query
+          description: |-
+            Filter by project.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
+            Examples: `1|2`, `mine`, `!mine`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: subproject_id
           in: query
+          description: |-
+            Filter by subproject.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: tracker_id
           in: query
+          description: |-
+            Filter by tracker.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: status_id
           in: query
+          description: |-
+            Filter by issue status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `o` (open), `=` (default), `!` (not equal), `c` (closed), `*` (any), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `o`, `1|2`, `c`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: priority_id
+          in: query
+          description: |-
+            Filter by priority.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!3`
+          schema:
+            type: string
         - name: assigned_to_id
           in: query
+          description: |-
+            Filter by assignee.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!*`, `!me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: author_id
+          in: query
+          description: |-
+            Filter by author.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!me`
+          schema:
+            type: string
+        - name: author.group
+          in: query
+          description: |-
+            Filter by author's group.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`
+          schema:
+            type: string
+        - name: author.role
+          in: query
+          description: |-
+            Filter by author's role.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`
+          schema:
+            type: string
+        - name: member_of_group
+          in: query
+          description: |-
+            Filter by assignee's group membership.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1`, `*`
+          schema:
+            type: string
+        - name: assigned_to_role
+          in: query
+          description: |-
+            Filter by assignee's role.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1`, `*`
+          schema:
+            type: string
+        - name: fixed_version_id
+          in: query
+          description: |-
+            Filter by target version.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!*`
+          schema:
+            type: string
+        - name: fixed_version.due_date
+          in: query
+          description: |-
+            Filter by target version's due date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`
+          schema:
+            type: string
+        - name: fixed_version.status
+          in: query
+          description: |-
+            Filter by target version's status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `open`, `locked`, `closed`
+            Examples: `open`, `open|locked`, `!closed`
+          schema:
+            type: string
+        - name: category_id
+          in: query
+          description: |-
+            Filter by category.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!*`
+          schema:
+            type: string
         - name: parent_id
           in: query
+          description: |-
+            Filter by parent issue.
+            Format: `[operator]value`
+            Operators: `=` (exact parent ID), `~` (descendant of, subtree search), `*` (any, i.e. is a subtask), `!*` (none, i.e. is a root issue)
+            Examples: `123`, `~123`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: child_id
+          in: query
+          description: |-
+            Filter by child issue.
+            Format: `[operator]value`
+            Operators: `=` (exact child ID), `~` (ancestor of, subtree search), `*` (any, i.e. has subtasks), `!*` (none, i.e. is a leaf issue)
+            Examples: `123`, `~123`, `*`, `!*`
+          schema:
+            type: string
         - name: cf_x
           in: query
           schema:
@@ -198,147 +321,263 @@ paths:
               type: string
             example:
               cf_0: string
-        - name: author_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: member_of_group
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: assigned_to_role
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: fixed_version_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: fixed_version.due_date
-          in: query
-          schema:
-            type: string
-        - name: fixed_version.status
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: category_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
         - name: subject
           in: query
+          description: |-
+            Filter by subject.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`
           schema:
             type: string
         - name: description
           in: query
+          description: |-
+            Filter by description.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `!~excluded`
           schema:
             type: string
         - name: notes
           in: query
+          description: |-
+            Filter by journal notes.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`
           schema:
             type: string
         - name: created_on
           in: query
+          description: |-
+            Filter by creation date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: updated_on
           in: query
+          description: |-
+            Filter by last updated date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: closed_on
           in: query
+          description: |-
+            Filter by closed date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: start_date
           in: query
+          description: |-
+            Filter by start date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`
           schema:
             type: string
         - name: due_date
           in: query
+          description: |-
+            Filter by due date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`
           schema:
             type: string
         - name: estimated_hours
           in: query
+          description: |-
+            Filter by estimated hours.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `>=5`, `><1|10`, `!*`
           schema:
             type: string
         - name: spent_time
           in: query
+          description: |-
+            Filter by total spent time.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `>=5`, `><1|10`, `!*`
           schema:
             type: string
         - name: done_ratio
           in: query
+          description: |-
+            Filter by done ratio (percentage).
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `>=50`, `><0|99`, `100`
           schema:
             type: string
         - name: is_private
           in: query
+          description: |-
+            Filter by private flag.
+            Format: `[operator]value`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (private), `0` (not private)
+            Examples: `1`, `0`
           schema:
             type: string
         - name: attachment
           in: query
+          description: |-
+            Filter by attachment filename.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~report`, `*.pdf`
           schema:
             type: string
         - name: attachment_description
           in: query
+          description: |-
+            Filter by attachment description.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~screenshot`
           schema:
             type: string
         - name: watcher_id
           in: query
+          description: |-
+            Filter by watcher.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: updated_by
           in: query
+          description: |-
+            Filter by user who updated the issue.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: last_updated_by
           in: query
+          description: |-
+            Filter by user who last updated the issue.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: project.status
           in: query
+          description: |-
+            Filter by project status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (active), `5` (closed)
+            Examples: `1`, `!5`
           schema:
-            type: integer
-        - name: relation_type
+            type: string
+        - name: relates
           in: query
+          description: |-
+            Filter by "relates to" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `=p` (same project), `=!p` (different project), `!p` (not in project), `*o` (related to open issue), `!o` (related to closed issue), `*` (any), `!*` (none)
+            Examples: `123`, `=p`, `*o`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: child_id
+            type: string
+        - name: duplicates
           in: query
+          description: |-
+            Filter by "duplicates" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: duplicated
+          in: query
+          description: |-
+            Filter by "duplicated by" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: blocks
+          in: query
+          description: |-
+            Filter by "blocks" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*o`
+          schema:
+            type: string
+        - name: blocked
+          in: query
+          description: |-
+            Filter by "blocked by" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*o`
+          schema:
+            type: string
+        - name: precedes
+          in: query
+          description: |-
+            Filter by "precedes" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: follows
+          in: query
+          description: |-
+            Filter by "follows" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: copied_to
+          in: query
+          description: |-
+            Filter by "copied to" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: copied_from
+          in: query
+          description: |-
+            Filter by "copied from" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: any_searchable
+          in: query
+          description: |-
+            Full-text search across all searchable fields.
+            Format: `<operator>value`
+            Operators: `~` (contains all words), `*~` (contains any word), `!~` (not contains)
+            Examples: `~keyword`, `*~foo bar`
+          schema:
+            type: string
         - name: query_id
           in: query
           schema:
@@ -489,6 +728,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `children` (child issues), `attachments` (file attachments), `relations` (issue relations), `changesets` (associated VCS changesets), `journals` (change history and notes), `watchers` (users watching the issue), `allowed_statuses` (status transitions available for the current user)
           schema:
             type: array
             items:
@@ -660,11 +902,17 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: sort
           in: query
+          description: |-
+            Sort order. Comma-separated list of `field` or `field:desc`. Default direction is ascending.
+            Examples: `id:desc`, `status:desc,id`
           schema:
             type: string
             example: id:desc
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include for each issue.
+            Values: `attachments` (file attachments), `relations` (issue relations)
           schema:
             type: array
             items:
@@ -675,46 +923,160 @@ paths:
           explode: false
         - name: issue_id
           in: query
+          description: |-
+            Filter by issue ID.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `1`, `>=100`, `><1|100`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: subproject_id
           in: query
+          description: |-
+            Filter by subproject.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: tracker_id
           in: query
+          description: |-
+            Filter by tracker.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: status_id
           in: query
+          description: |-
+            Filter by issue status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `o` (open), `=` (default), `!` (not equal), `c` (closed), `*` (any), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `o`, `1|2`, `c`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: priority_id
+          in: query
+          description: |-
+            Filter by priority.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!3`
+          schema:
+            type: string
         - name: assigned_to_id
           in: query
+          description: |-
+            Filter by assignee.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!*`, `!me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: author_id
+          in: query
+          description: |-
+            Filter by author.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!me`
+          schema:
+            type: string
+        - name: author.group
+          in: query
+          description: |-
+            Filter by author's group.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`
+          schema:
+            type: string
+        - name: author.role
+          in: query
+          description: |-
+            Filter by author's role.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`
+          schema:
+            type: string
+        - name: member_of_group
+          in: query
+          description: |-
+            Filter by assignee's group membership.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1`, `*`
+          schema:
+            type: string
+        - name: assigned_to_role
+          in: query
+          description: |-
+            Filter by assignee's role.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1`, `*`
+          schema:
+            type: string
+        - name: fixed_version_id
+          in: query
+          description: |-
+            Filter by target version.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!*`
+          schema:
+            type: string
+        - name: fixed_version.due_date
+          in: query
+          description: |-
+            Filter by target version's due date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`
+          schema:
+            type: string
+        - name: fixed_version.status
+          in: query
+          description: |-
+            Filter by target version's status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `open`, `locked`, `closed`
+            Examples: `open`, `open|locked`, `!closed`
+          schema:
+            type: string
+        - name: category_id
+          in: query
+          description: |-
+            Filter by category.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
+            Examples: `1|2`, `!*`
+          schema:
+            type: string
         - name: parent_id
           in: query
+          description: |-
+            Filter by parent issue.
+            Format: `[operator]value`
+            Operators: `=` (exact parent ID), `~` (descendant of, subtree search), `*` (any, i.e. is a subtask), `!*` (none, i.e. is a root issue)
+            Examples: `123`, `~123`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: child_id
+          in: query
+          description: |-
+            Filter by child issue.
+            Format: `[operator]value`
+            Operators: `=` (exact child ID), `~` (ancestor of, subtree search), `*` (any, i.e. has subtasks), `!*` (none, i.e. is a leaf issue)
+            Examples: `123`, `~123`, `*`, `!*`
+          schema:
+            type: string
         - name: cf_x
           in: query
           schema:
@@ -723,147 +1085,263 @@ paths:
               type: string
             example:
               cf_0: string
-        - name: author_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: member_of_group
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: assigned_to_role
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: fixed_version_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: fixed_version.due_date
-          in: query
-          schema:
-            type: string
-        - name: fixed_version.status
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: category_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
         - name: subject
           in: query
+          description: |-
+            Filter by subject.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`
           schema:
             type: string
         - name: description
           in: query
+          description: |-
+            Filter by description.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `!~excluded`
           schema:
             type: string
         - name: notes
           in: query
+          description: |-
+            Filter by journal notes.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`
           schema:
             type: string
         - name: created_on
           in: query
+          description: |-
+            Filter by creation date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: updated_on
           in: query
+          description: |-
+            Filter by last updated date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: closed_on
           in: query
+          description: |-
+            Filter by closed date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: start_date
           in: query
+          description: |-
+            Filter by start date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`
           schema:
             type: string
         - name: due_date
           in: query
+          description: |-
+            Filter by due date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `t`, `>t-7`
           schema:
             type: string
         - name: estimated_hours
           in: query
+          description: |-
+            Filter by estimated hours.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `>=5`, `><1|10`, `!*`
           schema:
             type: string
         - name: spent_time
           in: query
+          description: |-
+            Filter by total spent time.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `>=5`, `><1|10`, `!*`
           schema:
             type: string
         - name: done_ratio
           in: query
+          description: |-
+            Filter by done ratio (percentage).
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `>=50`, `><0|99`, `100`
           schema:
             type: string
         - name: is_private
           in: query
+          description: |-
+            Filter by private flag.
+            Format: `[operator]value`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (private), `0` (not private)
+            Examples: `1`, `0`
           schema:
             type: string
         - name: attachment
           in: query
+          description: |-
+            Filter by attachment filename.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~report`, `*.pdf`
           schema:
             type: string
         - name: attachment_description
           in: query
+          description: |-
+            Filter by attachment description.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~screenshot`
           schema:
             type: string
         - name: watcher_id
           in: query
+          description: |-
+            Filter by watcher.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: updated_by
           in: query
+          description: |-
+            Filter by user who updated the issue.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: last_updated_by
           in: query
+          description: |-
+            Filter by user who last updated the issue.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `me` (current user)
+            Examples: `1`, `me`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: project.status
           in: query
+          description: |-
+            Filter by project status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (active), `5` (closed)
+            Examples: `1`, `!5`
           schema:
-            type: integer
-        - name: relation_type
+            type: string
+        - name: relates
           in: query
+          description: |-
+            Filter by "relates to" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `=p` (same project), `=!p` (different project), `!p` (not in project), `*o` (related to open issue), `!o` (related to closed issue), `*` (any), `!*` (none)
+            Examples: `123`, `=p`, `*o`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: child_id
+            type: string
+        - name: duplicates
           in: query
+          description: |-
+            Filter by "duplicates" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
+        - name: duplicated
+          in: query
+          description: |-
+            Filter by "duplicated by" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: blocks
+          in: query
+          description: |-
+            Filter by "blocks" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*o`
+          schema:
+            type: string
+        - name: blocked
+          in: query
+          description: |-
+            Filter by "blocked by" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*o`
+          schema:
+            type: string
+        - name: precedes
+          in: query
+          description: |-
+            Filter by "precedes" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: follows
+          in: query
+          description: |-
+            Filter by "follows" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: copied_to
+          in: query
+          description: |-
+            Filter by "copied to" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: copied_from
+          in: query
+          description: |-
+            Filter by "copied from" relation.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
+            Examples: `123`, `*`
+          schema:
+            type: string
+        - name: any_searchable
+          in: query
+          description: |-
+            Full-text search across all searchable fields.
+            Format: `<operator>value`
+            Operators: `~` (contains all words), `*~` (contains any word), `!~` (not contains)
+            Examples: `~keyword`, `*~foo bar`
+          schema:
+            type: string
         - name: query_id
           in: query
           schema:
@@ -1075,6 +1553,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include for each project.
+            Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
           schema:
             type: array
             items:
@@ -1088,45 +1569,78 @@ paths:
           explode: false
         - name: status
           in: query
+          description: |-
+            Filter by project status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (active), `5` (closed)
+            Examples: `1`, `1|5`, `!1`
           schema:
-            type: array
-            items:
-              type: integer
-          explode: false
+            type: string
         - name: id
           in: query
+          description: |-
+            Filter by project ID.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
+            Examples: `1|2|3`, `mine`, `!mine`, `mine|bookmarks`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: name
           in: query
+          description: |-
+            Filter by project name.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`
           schema:
             type: string
         - name: description
           in: query
+          description: |-
+            Filter by project description.
+            Format: `<operator>value`
+            Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `!~excluded`
           schema:
             type: string
         - name: parent_id
           in: query
+          description: |-
+            Filter by parent project.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any, i.e. is a subproject), `!*` (none, i.e. is a root project)
+            Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
+            Examples: `1|2`, `mine`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: is_public
           in: query
+          description: |-
+            Filter by public/private status.
+            Format: `[operator]value`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (public), `0` (private)
+            Examples: `1`, `!1`
           schema:
-            type: array
-            items:
-              type: string
-              enum:
-                - '0'
-                - '1'
-          explode: false
+            type: string
         - name: created_on
           in: query
+          description: |-
+            Filter by creation date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+          schema:
+            type: string
+        - name: updated_on
+          in: query
+          description: |-
+            Filter by last updated date.
+            Format: `<operator>[value]`
+            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
           schema:
             type: string
       responses:
@@ -1263,6 +1777,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
           schema:
             type: array
             items:
@@ -1722,6 +2239,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include for each user.
+            Values: `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -1731,16 +2251,112 @@ paths:
           explode: false
         - name: status
           in: query
+          description: |-
+            Filter by user status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Values: `1` (active), `2` (registered), `3` (locked)
+            Examples: `1`, `1|2`, `!3`
           schema:
-            type: integer
+            type: string
         - name: name
           in: query
+          description: |-
+            Filter by name, login, or email (contains search).
+            The API always uses the `~` (contains) operator regardless of any operator prefix.
+            Examples: `john`, `admin`
           schema:
             type: string
         - name: group_id
           in: query
+          description: |-
+            Filter by group membership (legacy parameter).
+            Internally converted to `is_member_of_group` filter with `=` operator.
+            Value is the group ID.
           schema:
-            type: integer
+            type: string
+        - name: auth_source_id
+          in: query
+          description: |-
+            Filter by authentication source. Undocumented
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1`, `!1`
+          schema:
+            type: string
+        - name: twofa_scheme
+          in: query
+          description: |-
+            Filter by two-factor authentication scheme. Undocumented
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Only available when two-factor authentication is enabled in Redmine settings.
+          schema:
+            type: string
+        - name: login
+          in: query
+          description: |-
+            Filter by login. Undocumented
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~admin`, `^john`
+          schema:
+            type: string
+        - name: firstname
+          in: query
+          description: |-
+            Filter by first name. Undocumented
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~John`, `=John`
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          description: |-
+            Filter by last name. Undocumented
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~Doe`, `=Doe`
+          schema:
+            type: string
+        - name: mail
+          in: query
+          description: |-
+            Filter by email address. Undocumented
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~example.com`, `$@example.com`
+          schema:
+            type: string
+        - name: created_on
+          in: query
+          description: |-
+            Filter by creation date. Undocumented
+            Format: `[operator]value`
+            Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `>t-30`, `lm`
+          schema:
+            type: string
+        - name: last_login_on
+          in: query
+          description: |-
+            Filter by last login date. Undocumented
+            Format: `[operator]value`
+            Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+            Examples: `>=2024-01-01`, `>t-30`, `!*`
+          schema:
+            type: string
+        - name: admin
+          in: query
+          description: |-
+            Filter by admin privilege. Undocumented
+            Format: `[operator]value`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (admin), `0` (non-admin)
+            Examples: `1`, `!1`
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -1879,6 +2495,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `memberships` (project memberships with roles), `groups` (groups the user belongs to), `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -2037,6 +2656,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `memberships` (project memberships with roles), `groups` (groups the user belongs to), `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -2082,131 +2704,191 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: user_id
           in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: project_id
-          in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: spent_on
-          in: query
+          description: |-
+            Filter by user.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!*`
           schema:
             type: string
-            format: date
+        - name: project_id
+          in: query
+          description: |-
+            Filter by project.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
+            Examples: `1|2`, `mine`, `!mine`
+          schema:
+            type: string
+        - name: spent_on
+          in: query
+          description: |-
+            Filter by date spent.
+            Format: `[operator]value`
+            Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+            Examples: `=2024-01-01`, `>=2024-01-01`, `><2024-01-01|2024-12-31`, `>t-7`, `t`, `lw`
+          schema:
+            type: string
         - name: from
           in: query
+          description: |-
+            Shortcut for `spent_on` filter. When used with `to`, filters as between (`>=from` and `<=to`). When used alone, filters as `>=from`.
+            Format: `YYYY-MM-DD`
           schema:
             type: string
             format: date
         - name: to
           in: query
+          description: |-
+            Shortcut for `spent_on` filter. When used with `from`, filters as between (`>=from` and `<=to`). When used alone, filters as `<=to`.
+            Format: `YYYY-MM-DD`
           schema:
             type: string
             format: date
         - name: subproject_id
           in: query
+          description: |-
+            Filter by subproject.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue_id
           in: query
+          description: |-
+            Filter by issue.
+            Format: `[operator]value`
+            Operators: `=` (exact match), `~` (issue and its subtasks), `*` (any), `!*` (none)
+            Examples: `=1`, `~1`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.tracker_id
           in: query
+          description: |-
+            Filter by issue's tracker.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.status_id
           in: query
+          description: |-
+            Filter by issue's status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.fixed_version_id
           in: query
+          description: |-
+            Filter by issue's target version.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.parent_id
           in: query
+          description: |-
+            Filter by issue's parent.
+            Format: `[operator]value`
+            Operators: `=` (exact match), `~` (issue and its subtasks), `*` (any), `!*` (none)
+            Examples: `=1`, `~1`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.category_id
           in: query
+          description: |-
+            Filter by issue's category.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.subject
           in: query
+          description: |-
+            Filter by issue's subject.
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`, `$suffix`
           schema:
             type: string
         - name: user.group
           in: query
+          description: |-
+            Filter by user's group.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: user.role
           in: query
+          description: |-
+            Filter by user's role.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: author_id
           in: query
+          description: |-
+            Filter by author.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: activity_id
           in: query
+          description: |-
+            Filter by activity.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: project.status
           in: query
+          description: |-
+            Filter by project's status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (active), `5` (closed)
+            Examples: `1`, `!5`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: comments
           in: query
+          description: |-
+            Filter by comments.
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`
           schema:
             type: string
         - name: hours
           in: query
+          description: |-
+            Filter by hours.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `=8`, `>=4`, `><1|8`
           schema:
             type: string
         - name: sort
           in: query
+          description: |-
+            Sort order. Comma-separated list of `field` or `field:desc`. Default direction is ascending.
+            Examples: `spent_on:desc`, `hours:desc,spent_on`
           schema:
             type: string
             example: spent_on:desc
@@ -2443,124 +3125,181 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: user_id
           in: query
-          schema:
-            type: array
-            items:
-              type: string
-          explode: false
-        - name: spent_on
-          in: query
+          description: |-
+            Filter by user.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!*`
           schema:
             type: string
-            format: date
+        - name: spent_on
+          in: query
+          description: |-
+            Filter by date spent.
+            Format: `[operator]value`
+            Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+            Examples: `=2024-01-01`, `>=2024-01-01`, `><2024-01-01|2024-12-31`, `>t-7`, `t`, `lw`
+          schema:
+            type: string
         - name: from
           in: query
+          description: |-
+            Shortcut for `spent_on` filter. When used with `to`, filters as between (`>=from` and `<=to`). When used alone, filters as `>=from`.
+            Format: `YYYY-MM-DD`
           schema:
             type: string
             format: date
         - name: to
           in: query
+          description: |-
+            Shortcut for `spent_on` filter. When used with `from`, filters as between (`>=from` and `<=to`). When used alone, filters as `<=to`.
+            Format: `YYYY-MM-DD`
           schema:
             type: string
             format: date
         - name: subproject_id
           in: query
+          description: |-
+            Filter by subproject.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue_id
           in: query
+          description: |-
+            Filter by issue.
+            Format: `[operator]value`
+            Operators: `=` (exact match), `~` (issue and its subtasks), `*` (any), `!*` (none)
+            Examples: `=1`, `~1`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.tracker_id
           in: query
+          description: |-
+            Filter by issue's tracker.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.status_id
           in: query
+          description: |-
+            Filter by issue's status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.fixed_version_id
           in: query
+          description: |-
+            Filter by issue's target version.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.parent_id
           in: query
+          description: |-
+            Filter by issue's parent.
+            Format: `[operator]value`
+            Operators: `=` (exact match), `~` (issue and its subtasks), `*` (any), `!*` (none)
+            Examples: `=1`, `~1`, `*`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.category_id
           in: query
+          description: |-
+            Filter by issue's category.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: issue.subject
           in: query
+          description: |-
+            Filter by issue's subject.
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`, `$suffix`
           schema:
             type: string
         - name: user.group
           in: query
+          description: |-
+            Filter by user's group.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: user.role
           in: query
+          description: |-
+            Filter by user's role.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Examples: `1|2`, `*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: author_id
           in: query
+          description: |-
+            Filter by author.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Special values: `me` (current user)
+            Examples: `1`, `me`, `!*`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: activity_id
           in: query
+          description: |-
+            Filter by activity.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Examples: `1|2`, `!3`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: project.status
           in: query
+          description: |-
+            Filter by project's status.
+            Format: `[operator]value[|value2|...]`
+            Operators: `=` (default), `!` (not equal)
+            Values: `1` (active), `5` (closed)
+            Examples: `1`, `!5`
           schema:
-            type: array
-            items:
-              type: string
-          explode: false
+            type: string
         - name: comments
           in: query
+          description: |-
+            Filter by comments.
+            Format: `[operator]value`
+            Operators: `~` (contains, default), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            Examples: `~keyword`, `^prefix`
           schema:
             type: string
         - name: hours
           in: query
+          description: |-
+            Filter by hours.
+            Format: `[operator]value`
+            Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
+            Examples: `=8`, `>=4`, `><1|8`
           schema:
             type: string
         - name: sort
           in: query
+          description: |-
+            Sort order. Comma-separated list of `field` or `field:desc`. Default direction is ascending.
+            Examples: `spent_on:desc`, `hours:desc,spent_on`
           schema:
             type: string
             example: spent_on:desc
@@ -2789,6 +3528,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `attachments` (file attachments), `comments` (comments/replies on the news item)
           schema:
             type: array
             items:
@@ -3446,6 +4188,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `attachments` (file attachments)
           schema:
             type: array
             items:
@@ -3579,6 +4324,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `attachments` (file attachments)
           schema:
             type: array
             items:
@@ -3788,6 +4536,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: size
           in: query
+          description: |-
+            Desired thumbnail size in pixels (max 800). Rounded up to the nearest 50px increment.
+            If not specified, the configured default thumbnail size is used.
           schema:
             type: integer
       responses:
@@ -4151,6 +4902,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: reassign_to_id
           in: query
+          description: |-
+            ID of another issue category to reassign issues to before deleting this category.
+            If the category has associated issues and this parameter is not provided, the issues will have their category unset.
           schema:
             type: integer
       responses:
@@ -4242,6 +4996,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: builtin
           in: query
+          description: |-
+            Include built-in groups (e.g., "Anonymous", "Non member") in the response.
+            Set to `1` to include built-in groups. Without this parameter, only user-created groups are returned.
           schema:
             type: string
             enum:
@@ -4341,6 +5098,9 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: include
           in: query
+          description: |-
+            Comma-separated list of associated data to include in the response.
+            Values: `users` (list of users in the group), `memberships` (project memberships with roles)
           schema:
             type: array
             items:
@@ -4556,11 +5316,17 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: q
           in: query
+          description: |-
+            Search query string. Tokenized into words for matching.
+            When `all_words` is enabled (default), all tokens must match. Otherwise, any token can match.
           schema:
             type: string
           required: true
         - name: scope
           in: query
+          description: |-
+            Search scope.
+            Values: `all` (all projects), `my_projects` (projects where current user is a member), `bookmarks` (bookmarked projects), `subprojects` (include subprojects, only effective for project-scoped search)
           schema:
             type: string
             enum:
@@ -4570,66 +5336,94 @@ paths:
               - subprojects
         - name: all_words
           in: query
+          description: |-
+            Require all words to match. Default is `true` (all words must match).
+            Set to empty string to disable (any word matches). Any non-empty value enables this option.
           schema:
-            type: integer
-            enum:
-              - 1
+            type: string
         - name: titles_only
           in: query
+          description: |-
+            Search titles only. Default is `false`.
+            Any non-empty value enables this option.
           schema:
-            type: integer
-            enum:
-              - 1
+            type: string
         - name: issues
           in: query
+          description: |-
+            Include issues in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: news
           in: query
+          description: |-
+            Include news in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: wiki_pages
           in: query
+          description: |-
+            Include wiki pages in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: projects
           in: query
+          description: |-
+            Include projects in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
+            Not available when searching within a specific project.
           schema:
             type: integer
             enum:
               - 1
         - name: documents
           in: query
+          description: |-
+            Include documents in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: changesets
           in: query
+          description: |-
+            Include changesets in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: messages
           in: query
+          description: |-
+            Include forum messages in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: open_issues
           in: query
+          description: |-
+            Only return open issues. Default is `false`.
+            Any non-empty value enables this option.
           schema:
-            type: integer
-            enum:
-              - 1
+            type: string
         - name: attachments
           in: query
+          description: |-
+            Search attachments. Default is `0` (do not search attachments).
+            Values: `0` (disabled), `1` (search attachments and content), `only` (search attachments only)
           schema:
             type: string
             enum:
@@ -4681,80 +5475,102 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: q
           in: query
+          description: |-
+            Search query string. Tokenized into words for matching.
+            When `all_words` is enabled (default), all tokens must match. Otherwise, any token can match.
           schema:
             type: string
           required: true
         - name: scope
           in: query
+          description: |-
+            Search scope.
+            Values: `subprojects` (include subprojects of the specified project)
+            When not specified, only the specified project is searched.
           schema:
             type: string
             enum:
-              - all
-              - my_projects
-              - bookmarks
               - subprojects
         - name: all_words
           in: query
+          description: |-
+            Require all words to match. Default is `true` (all words must match).
+            Set to empty string to disable (any word matches). Any non-empty value enables this option.
           schema:
-            type: integer
-            enum:
-              - 1
+            type: string
         - name: titles_only
           in: query
+          description: |-
+            Search titles only. Default is `false`.
+            Any non-empty value enables this option.
           schema:
-            type: integer
-            enum:
-              - 1
+            type: string
         - name: issues
           in: query
+          description: |-
+            Include issues in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: news
           in: query
+          description: |-
+            Include news in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: wiki_pages
           in: query
-          schema:
-            type: integer
-            enum:
-              - 1
-        - name: projects
-          in: query
+          description: |-
+            Include wiki pages in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: documents
           in: query
+          description: |-
+            Include documents in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: changesets
           in: query
+          description: |-
+            Include changesets in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: messages
           in: query
+          description: |-
+            Include forum messages in search results. Any non-empty value enables this search type.
+            If no search type parameters are specified, all types are searched.
           schema:
             type: integer
             enum:
               - 1
         - name: open_issues
           in: query
+          description: |-
+            Only return open issues. Default is `false`.
+            Any non-empty value enables this option.
           schema:
-            type: integer
-            enum:
-              - 1
+            type: string
         - name: attachments
           in: query
+          description: |-
+            Search attachments. Default is `0` (do not search attachments).
+            Values: `0` (disabled), `1` (search attachments and content), `only` (search attachments only)
           schema:
             type: string
             enum:
@@ -5029,10 +5845,12 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: filename
           in: query
+          description: Filename for the uploaded file. If not provided, a random hexadecimal name is generated.
           schema:
             type: string
         - name: content_type
           in: query
+          description: MIME type of the file (e.g., `application/pdf`, `image/png`). If not provided, auto-detected from the filename.
           schema:
             type: string
       requestBody:
