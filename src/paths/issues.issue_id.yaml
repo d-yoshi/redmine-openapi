@@ -108,10 +108,6 @@ put:
                   $ref: ../components/schemas/request/custom_fields.yaml
                 custom_field_values:
                   $ref: ../components/schemas/request/custom_field_values.yaml
-                watcher_user_ids:
-                  type: array
-                  items:
-                    type: integer
                 is_private:
                   type: boolean
                 estimated_hours:
@@ -120,7 +116,13 @@ put:
                 notes:
                   type: string
                 private_notes:
+                  description: Mark the notes as private. Only visible to users with the "View private notes" permission.
                   type: boolean
+                deleted_attachment_ids:
+                  description: IDs of existing attachments to remove from this issue.
+                  type: array
+                  items:
+                    type: integer
                 uploads:
                   $ref: ../components/schemas/request/uploads.yaml
   responses:

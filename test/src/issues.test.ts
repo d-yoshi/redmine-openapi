@@ -141,6 +141,16 @@ test("Issues", async (t) => {
   });
 
   await t.test("PUT /issues/{issue_id}.json", async () => {
+    // Get attachment ID for deleted_attachment_ids testing
+    const getRes = await client.GET("/issues/{issue_id}.{format}", {
+      params: {
+        path: { format: "json", issue_id: issueId },
+        query: { include: ["attachments"] },
+      },
+    });
+    assertStatus(200, getRes);
+    const attachmentId = getRes.data!.issue.attachments![0].id;
+
     const updateUpload = await uploadFile("update-attachment.txt", "updated content");
     const response = await client.PUT("/issues/{issue_id}.{format}", {
       params: { path: { format: "json", issue_id: issueId } },
@@ -163,7 +173,7 @@ test("Issues", async (t) => {
           estimated_hours: 5,
           notes: "note-1",
           private_notes: false,
-          watcher_user_ids: [1],
+          deleted_attachment_ids: [attachmentId],
           custom_fields: [],
           custom_field_values: {},
           uploads: [

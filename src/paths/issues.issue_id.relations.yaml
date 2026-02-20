@@ -57,6 +57,9 @@ post:
                 issue_to_id:
                   type: integer
                 relation_type:
+                  description: |-
+                    Type of relation from this issue to the target issue.
+                    Values: `relates` (related to), `duplicates` (this duplicates target), `duplicated` (this is duplicated by target), `blocks` (this blocks target), `blocked` (this is blocked by target), `precedes` (this must finish before target starts), `follows` (this must start after target finishes), `copied_to` (this was copied to target), `copied_from` (this was copied from target)
                   type: string
                   enum:
                     - relates
@@ -69,6 +72,7 @@ post:
                     - copied_to
                     - copied_from
                 delay:
+                  description: Number of days of delay for `precedes`/`follows` relations. Ignored for other relation types.
                   type: integer
                   nullable: true
   responses:

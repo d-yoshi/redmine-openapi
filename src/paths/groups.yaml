@@ -59,10 +59,12 @@ post:
                 name:
                   type: string
                 user_ids:
+                  description: User IDs to add as members of this group.
                   type: array
                   items:
                     type: integer
                 twofa_required:
+                  description: Require two-factor authentication for all members of this group.
                   type: boolean
                 custom_fields:
                   $ref: ../components/schemas/request/custom_fields.yaml

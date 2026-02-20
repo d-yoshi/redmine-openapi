@@ -68,8 +68,11 @@ put:
                 comments:
                   type: string
                 version:
+                  description: |-
+                    Content version for optimistic locking. If specified and it does not match the current version, the server returns 409 Conflict to prevent overwriting concurrent changes.
                   type: integer
                 parent_title:
+                  description: Title of the parent wiki page. Sets this page as a child in the page hierarchy.
                   type: string
                 uploads:
                   $ref: ../components/schemas/request/uploads.yaml

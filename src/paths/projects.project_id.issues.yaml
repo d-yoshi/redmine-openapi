@@ -192,6 +192,10 @@ get:
         type: string
     - name: cf_x
       in: query
+      description: |-
+        Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
+        Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
+        Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
       schema:
         type: object
         additionalProperties:
@@ -457,6 +461,10 @@ get:
         type: string
     - name: query_id
       in: query
+      description: |-
+        ID of a saved query to apply. When specified, the saved query's filter criteria are used.
+        Other filter parameters in the same request are ignored.
+        Use GET /queries.json to retrieve available saved queries.
       schema:
         type: integer
   responses:

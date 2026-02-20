@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 1.4.0+redmine6.1
+  version: 1.5.0+redmine6.1
 servers:
   - url: /
 security:
@@ -315,6 +315,10 @@ paths:
             type: string
         - name: cf_x
           in: query
+          description: |-
+            Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
+            Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
+            Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
           schema:
             type: object
             additionalProperties:
@@ -580,6 +584,10 @@ paths:
             type: string
         - name: query_id
           in: query
+          description: |-
+            ID of a saved query to apply. When specified, the saved query's filter criteria are used.
+            Other filter parameters in the same request are ignored.
+            Use GET /queries.json to retrieve available saved queries.
           schema:
             type: integer
       responses:
@@ -830,10 +838,6 @@ paths:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
-                    watcher_user_ids:
-                      type: array
-                      items:
-                        type: integer
                     is_private:
                       type: boolean
                     estimated_hours:
@@ -842,7 +846,13 @@ paths:
                     notes:
                       type: string
                     private_notes:
+                      description: Mark the notes as private. Only visible to users with the "View private notes" permission.
                       type: boolean
+                    deleted_attachment_ids:
+                      description: IDs of existing attachments to remove from this issue.
+                      type: array
+                      items:
+                        type: integer
                     uploads:
                       $ref: '#/components/schemas/uploads'
       responses:
@@ -1079,6 +1089,10 @@ paths:
             type: string
         - name: cf_x
           in: query
+          description: |-
+            Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
+            Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
+            Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
           schema:
             type: object
             additionalProperties:
@@ -1344,6 +1358,10 @@ paths:
             type: string
         - name: query_id
           in: query
+          description: |-
+            ID of a saved query to apply. When specified, the saved query's filter criteria are used.
+            Other filter parameters in the same request are ignored.
+            Use GET /queries.json to retrieve available saved queries.
           schema:
             type: integer
       responses:
@@ -1712,25 +1730,34 @@ paths:
                       type: integer
                       nullable: true
                     inherit_members:
+                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
                       type: boolean
                     default_assigned_to_id:
+                      description: Default assignee for new issues in this project. Set to null to clear.
                       type: integer
                       nullable: true
                     default_version_id:
+                      description: Default target version for new issues in this project. Set to null to clear.
                       type: integer
                       nullable: true
                     default_issue_query_id:
+                      description: Default saved query for the project's issue list page. Set to null to clear.
                       type: integer
                       nullable: true
                     tracker_ids:
+                      description: IDs of trackers available in this project.
                       type: array
                       items:
                         type: integer
                     enabled_module_names:
+                      description: |-
+                        Enabled module names for this project.
+                        Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
                       type: array
                       items:
                         type: string
                     issue_custom_field_ids:
+                      description: IDs of issue custom fields enabled for this project. Custom fields with `is_for_all=true` are always available regardless of this setting.
                       type: array
                       items:
                         type: integer
@@ -1850,25 +1877,34 @@ paths:
                       type: integer
                       nullable: true
                     inherit_members:
+                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
                       type: boolean
                     default_assigned_to_id:
+                      description: Default assignee for new issues in this project. Set to null to clear.
                       type: integer
                       nullable: true
                     default_version_id:
+                      description: Default target version for new issues in this project. Set to null to clear.
                       type: integer
                       nullable: true
                     default_issue_query_id:
+                      description: Default saved query for the project's issue list page. Set to null to clear.
                       type: integer
                       nullable: true
                     tracker_ids:
+                      description: IDs of trackers available in this project.
                       type: array
                       items:
                         type: integer
                     enabled_module_names:
+                      description: |-
+                        Enabled module names for this project.
+                        Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
                       type: array
                       items:
                         type: string
                     issue_custom_field_ids:
+                      description: IDs of issue custom fields enabled for this project. Custom fields with `is_for_all=true` are always available regardless of this setting.
                       type: array
                       items:
                         type: integer
@@ -2427,9 +2463,13 @@ paths:
                     language:
                       type: string
                     auth_source_id:
+                      description: External authentication source ID (e.g., LDAP). When set, the user authenticates via the external source and the password field is ignored. Set to null for local authentication.
                       type: integer
                       nullable: true
                     mail_notification:
+                      description: |-
+                        Email notification preference.
+                        Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things I watch or am involved in), `only_assigned` (only for things I am assigned to), `only_owner` (only for things I am the owner of), `none` (no events)
                       type: string
                       enum:
                         - all
@@ -2439,20 +2479,25 @@ paths:
                         - only_owner
                         - none
                     notified_project_ids:
+                      description: Project IDs for which to receive email notifications. Only effective when mail_notification is set to `selected`.
                       type: array
                       items:
                         type: integer
                     must_change_passwd:
+                      description: Force the user to change their password at next login.
                       type: boolean
                     generate_password:
+                      description: Generate a random password automatically. When true, the password field is ignored. Only effective for locally authenticated users (auth_source_id is null).
                       type: boolean
                     status:
+                      description: 'User account status: `1` (active), `2` (registered), `3` (locked).'
                       type: integer
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
                 send_information:
+                  description: Set to true to send an account information email to the user. Not stored; only triggers email delivery.
                   type: boolean
                 pref:
                   $ref: '#/components/schemas/pref'
@@ -2565,9 +2610,13 @@ paths:
                     language:
                       type: string
                     auth_source_id:
+                      description: External authentication source ID (e.g., LDAP). When set, the user authenticates via the external source and the password field is ignored. Set to null for local authentication.
                       type: integer
                       nullable: true
                     mail_notification:
+                      description: |-
+                        Email notification preference.
+                        Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things I watch or am involved in), `only_assigned` (only for things I am assigned to), `only_owner` (only for things I am the owner of), `none` (no events)
                       type: string
                       enum:
                         - all
@@ -2577,24 +2626,30 @@ paths:
                         - only_owner
                         - none
                     notified_project_ids:
+                      description: Project IDs for which to receive email notifications. Only effective when mail_notification is set to `selected`.
                       type: array
                       items:
                         type: integer
                     must_change_passwd:
+                      description: Force the user to change their password at next login.
                       type: boolean
                     generate_password:
+                      description: Generate a random password automatically. When true, the password field is ignored. Only effective for locally authenticated users (auth_source_id is null).
                       type: boolean
                     status:
+                      description: 'User account status: `1` (active), `2` (registered), `3` (locked).'
                       type: integer
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
                     group_ids:
+                      description: Group IDs to assign the user to. Admin-only. Replaces all current group memberships (not append).
                       type: array
                       items:
                         type: integer
                 send_information:
+                  description: Set to true to send an account information email to the user. Not stored; only triggers email delivery.
                   type: boolean
                 pref:
                   $ref: '#/components/schemas/pref'
@@ -3788,6 +3843,9 @@ paths:
                     issue_to_id:
                       type: integer
                     relation_type:
+                      description: |-
+                        Type of relation from this issue to the target issue.
+                        Values: `relates` (related to), `duplicates` (this duplicates target), `duplicated` (this is duplicated by target), `blocks` (this blocks target), `blocked` (this is blocked by target), `precedes` (this must finish before target starts), `follows` (this must start after target finishes), `copied_to` (this was copied to target), `copied_from` (this was copied from target)
                       type: string
                       enum:
                         - relates
@@ -3800,6 +3858,7 @@ paths:
                         - copied_to
                         - copied_from
                     delay:
+                      description: Number of days of delay for `precedes`/`follows` relations. Ignored for other relation types.
                       type: integer
                       nullable: true
       responses:
@@ -3958,6 +4017,9 @@ paths:
                         - locked
                         - closed
                     sharing:
+                      description: |-
+                        Version sharing scope.
+                        Values: `none` (not shared), `descendants` (with subprojects), `hierarchy` (with ancestors and descendants), `tree` (with entire project tree), `system` (with all projects)
                       type: string
                       enum:
                         - none
@@ -3972,9 +4034,11 @@ paths:
                     description:
                       type: string
                     wiki_page_title:
+                      description: Title of a wiki page to associate with this version. Set to null to clear.
                       type: string
                       nullable: true
                     default_project_version:
+                      description: Set to true to make this the default target version for new issues in the project.
                       type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
@@ -4071,6 +4135,9 @@ paths:
                         - locked
                         - closed
                     sharing:
+                      description: |-
+                        Version sharing scope.
+                        Values: `none` (not shared), `descendants` (with subprojects), `hierarchy` (with ancestors and descendants), `tree` (with entire project tree), `system` (with all projects)
                       type: string
                       enum:
                         - none
@@ -4085,9 +4152,11 @@ paths:
                     description:
                       type: string
                     wiki_page_title:
+                      description: Title of a wiki page to associate with this version. Set to null to clear.
                       type: string
                       nullable: true
                     default_project_version:
+                      description: Set to true to make this the default target version for new issues in the project.
                       type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
@@ -4249,8 +4318,10 @@ paths:
                     comments:
                       type: string
                     version:
+                      description: Content version for optimistic locking. If specified and it does not match the current version, the server returns 409 Conflict to prevent overwriting concurrent changes.
                       type: integer
                     parent_title:
+                      description: Title of the parent wiki page. Sets this page as a child in the page hierarchy.
                       type: string
                     uploads:
                       $ref: '#/components/schemas/uploads'
@@ -5050,10 +5121,12 @@ paths:
                     name:
                       type: string
                     user_ids:
+                      description: User IDs to add as members of this group.
                       type: array
                       items:
                         type: integer
                     twofa_required:
+                      description: Require two-factor authentication for all members of this group.
                       type: boolean
                     custom_fields:
                       $ref: '#/components/schemas/custom_fields'
@@ -5820,6 +5893,7 @@ paths:
                       type: string
                       nullable: true
                     private_notes:
+                      description: Mark the journal notes as private. Only visible to users with the "View private notes" permission.
                       type: boolean
       responses:
         '204':
