@@ -29,8 +29,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
-          cache-dependency-path: ".github/workflows/docs.yaml"
       - uses: actions/configure-pages@v5
         id: setup
       - name: build docs
@@ -38,15 +36,15 @@ jobs:
           mkdir dist
           cp -r redocly/assets/* dist
           npx @redocly/cli@latest build-docs --config redocly/redocly.yaml dist -t redocly/build-docs-template.hbs --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
-          `cat <<EOT > dist/sitemap.xml
+          cat > dist/sitemap.xml <<EOT
           <?xml version="1.0" encoding="UTF-8"?>
-          <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-          <url>
-          <loc>${{ steps.setup.outputs.base_url }}/</loc>
-          <lastmod>$(date +"%Y-%m-%dT%H:%M:%S%:z")</lastmod>
-          </url>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+              <loc>${{ steps.setup.outputs.base_url }}/</loc>
+              <lastmod>$(date +"%Y-%m-%dT%H:%M:%S%:z")</lastmod>
+            </url>
           </urlset>
-          EOT`
+          EOT
       - uses: actions/upload-pages-artifact@v3
         with:
           path: "dist"

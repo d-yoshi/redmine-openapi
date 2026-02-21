@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/ci.yaml"
       - "src/**"
+      - "redocly/**"
       - "test/**"
     tags-ignore:
       - "**"
