@@ -3,6 +3,16 @@ extends:
 
 plugins:
   - ./plugins/common-responses.js
+  - ./plugins/remove-additional-properties.js
 
 decorators:
   common-responses/inject-common-responses: on
+  remove-additional-properties/remove-additional-properties-false: on
+
+apis:
+  strict:
+    root: ../src/openapi.yaml
+    decorators:
+      remove-additional-properties/remove-additional-properties-false: off
+  dist:
+    root: ../src/openapi.yaml

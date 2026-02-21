@@ -37,7 +37,7 @@ jobs:
         run: |
           mkdir dist
           cp -r redocly/assets/* dist
-          npx @redocly/cli@latest build-docs --config redocly/redocly.yaml openapi.yaml -t redocly/build-docs-template.hbs --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
+          npx @redocly/cli@latest build-docs --config redocly/redocly.yaml dist -t redocly/build-docs-template.hbs --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
           `cat <<EOT > dist/sitemap.xml
           <?xml version="1.0" encoding="UTF-8"?>
           <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
