@@ -109,9 +109,9 @@ RUBY
 echo "  Revision: $REPO_REVISION"
 
 if [ -z "$OPENAPI_PATH" ]; then
-  OPENAPI_PATH="$REPO_ROOT/openapi.yaml"
-  echo "=== Bundling OpenAPI spec ==="
-  npx --yes @redocly/cli@latest bundle --config "$REPO_ROOT/redocly/redocly.yaml" "$REPO_ROOT/src/openapi.yaml" -o "$OPENAPI_PATH"
+  OPENAPI_PATH="$SCRIPT_DIR/dist/openapi.strict.yaml"
+  echo "=== Bundling OpenAPI spec (strict) ==="
+  npx --yes @redocly/cli@latest bundle --config "$REPO_ROOT/redocly/redocly.yaml" strict -o "$OPENAPI_PATH"
 fi
 
 SCHEMA_PATH="${SCHEMA_PATH:-$SCRIPT_DIR/dist/openapi-typescript/schema.d.ts}"
