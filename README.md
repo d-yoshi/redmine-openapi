@@ -4,7 +4,7 @@
 
 ## Overview
 
-This OpenAPI specification file was created based on the official API docs and verified against Redmine's source code and integration tests.
+An OpenAPI specification for the Redmine API, built from official docs and source code, tested against a running Redmine instance.
 
 ## Docs
 
