@@ -50,8 +50,8 @@ jobs:
           cache-dependency-path: "test/package-lock.json"
       - run: npm ci
         working-directory: test
-      - name: simple/detail schema sync
-        run: node check-simple-detail-sync.mjs
+      - name: summary/detail schema sync
+        run: node check-summary-detail-sync.mjs
         working-directory: test
       - run: ./run-test.sh
         working-directory: test

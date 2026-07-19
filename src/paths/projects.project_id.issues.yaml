@@ -481,7 +481,7 @@ get:
               issues:
                 type: array
                 items:
-                  $ref: ../components/schemas/issue.simple.yaml
+                  $ref: ../components/schemas/issue.summary.yaml
               total_count:
                 type: integer
               offset:
@@ -585,7 +585,7 @@ post:
               - issue
             properties:
               issue:
-                $ref: ../components/schemas/issue.simple.yaml
+                $ref: ../components/schemas/issue.summary.yaml
     422:
       description: ""
       content:

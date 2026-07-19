@@ -23,6 +23,6 @@ get:
               wiki_pages:
                 type: array
                 items:
-                  $ref: ../components/schemas/wiki_page.simple.yaml
+                  $ref: ../components/schemas/wiki_page.summary.yaml
     404:
       description: ""

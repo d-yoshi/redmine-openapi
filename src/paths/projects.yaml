@@ -118,7 +118,7 @@ get:
               projects:
                 type: array
                 items:
-                  $ref: ../components/schemas/project.simple.yaml
+                  $ref: ../components/schemas/project.summary.yaml
               total_count:
                 type: integer
               offset:

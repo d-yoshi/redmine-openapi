@@ -21,7 +21,7 @@ properties:
   tracker:
     $ref: ./id_name.yaml
   status:
-    $ref: ./issue_status.simple.yaml
+    $ref: ./issue_status.summary.yaml
   priority:
     $ref: ./id_name.yaml
   author:

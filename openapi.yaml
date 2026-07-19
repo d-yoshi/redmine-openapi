@@ -603,7 +603,7 @@ paths:
                   issues:
                     type: array
                     items:
-                      $ref: '#/components/schemas/issue.simple'
+                      $ref: '#/components/schemas/issue.summary'
                   total_count:
                     type: integer
                   offset:
@@ -713,7 +713,7 @@ paths:
                   - issue
                 properties:
                   issue:
-                    $ref: '#/components/schemas/issue.simple'
+                    $ref: '#/components/schemas/issue.summary'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1378,7 +1378,7 @@ paths:
                   issues:
                     type: array
                     items:
-                      $ref: '#/components/schemas/issue.simple'
+                      $ref: '#/components/schemas/issue.summary'
                   total_count:
                     type: integer
                   offset:
@@ -1484,7 +1484,7 @@ paths:
                   - issue
                 properties:
                   issue:
-                    $ref: '#/components/schemas/issue.simple'
+                    $ref: '#/components/schemas/issue.summary'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1675,7 +1675,7 @@ paths:
                   projects:
                     type: array
                     items:
-                      $ref: '#/components/schemas/project.simple'
+                      $ref: '#/components/schemas/project.summary'
                   total_count:
                     type: integer
                   offset:
@@ -2390,7 +2390,7 @@ paths:
                   users:
                     type: array
                     items:
-                      $ref: '#/components/schemas/user.simple'
+                      $ref: '#/components/schemas/user.summary'
                   total_count:
                     type: integer
                   offset:
@@ -3934,7 +3934,7 @@ paths:
                   versions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/version.simple'
+                      $ref: '#/components/schemas/version.summary'
                   total_count:
                     type: integer
         '401':
@@ -4185,7 +4185,7 @@ paths:
                   wiki_pages:
                     type: array
                     items:
-                      $ref: '#/components/schemas/wiki_page.simple'
+                      $ref: '#/components/schemas/wiki_page.summary'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -5037,7 +5037,7 @@ paths:
                   groups:
                     type: array
                     items:
-                      $ref: '#/components/schemas/group.simple'
+                      $ref: '#/components/schemas/group.summary'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -6148,7 +6148,7 @@ components:
           type: integer
         name:
           type: string
-    issue_status.simple:
+    issue_status.summary:
       type: object
       required:
         - id
@@ -6213,7 +6213,7 @@ components:
         created_on:
           type: string
           format: date-time
-    issue.simple:
+    issue.summary:
       type: object
       required:
         - id
@@ -6236,7 +6236,7 @@ components:
         tracker:
           $ref: '#/components/schemas/id_name'
         status:
-          $ref: '#/components/schemas/issue_status.simple'
+          $ref: '#/components/schemas/issue_status.summary'
         priority:
           $ref: '#/components/schemas/id_name'
         author:
@@ -6395,7 +6395,7 @@ components:
         tracker:
           $ref: '#/components/schemas/id_name'
         status:
-          $ref: '#/components/schemas/issue_status.simple'
+          $ref: '#/components/schemas/issue_status.summary'
         priority:
           $ref: '#/components/schemas/id_name'
         author:
@@ -6552,8 +6552,8 @@ components:
         allowed_statuses:
           type: array
           items:
-            $ref: '#/components/schemas/issue_status.simple'
-    project.simple:
+            $ref: '#/components/schemas/issue_status.summary'
+    project.summary:
       type: object
       required:
         - id
@@ -6716,7 +6716,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/membership_role'
-    user.simple:
+    user.summary:
       type: object
       required:
         - id
@@ -7022,7 +7022,7 @@ components:
         delay:
           type: integer
           nullable: true
-    version.simple:
+    version.summary:
       type: object
       required:
         - id
@@ -7132,7 +7132,7 @@ components:
         updated_on:
           type: string
           format: date-time
-    wiki_page.simple:
+    wiki_page.summary:
       type: object
       required:
         - title
@@ -7353,7 +7353,7 @@ components:
           type: array
           items:
             type: string
-    group.simple:
+    group.summary:
       type: object
       required:
         - id

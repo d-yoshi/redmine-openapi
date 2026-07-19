@@ -146,7 +146,7 @@ get:
               users:
                 type: array
                 items:
-                  $ref: ../components/schemas/user.simple.yaml
+                  $ref: ../components/schemas/user.summary.yaml
               total_count:
                 type: integer
               offset:

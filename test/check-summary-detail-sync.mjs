@@ -1,5 +1,5 @@
-// Verifies that each *.simple.yaml schema stays in sync with its detail
-// counterpart (*.yaml): every field of the simple schema must exist in the
+// Verifies that each *.summary.yaml schema stays in sync with its detail
+// counterpart (*.yaml): every field of the summary schema must exist in the
 // detail schema with an identical definition. The two files are intentionally
 // duplicated because additionalProperties:false cannot be composed with
 // allOf in OpenAPI 3.0; the check guards against one-sided edits.
@@ -17,14 +17,14 @@ const schemaDir = path.join(
 const load = (f) => yaml.load(fs.readFileSync(f, "utf8"));
 
 let failures = 0;
-for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".simple.yaml"))) {
-  const detailFile = file.replace(".simple.yaml", ".yaml");
+for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".summary.yaml"))) {
+  const detailFile = file.replace(".summary.yaml", ".yaml");
   const detailPath = path.join(schemaDir, detailFile);
   if (!fs.existsSync(detailPath)) continue;
 
-  const simple = load(path.join(schemaDir, file));
+  const summary = load(path.join(schemaDir, file));
   const detail = load(detailPath);
-  for (const [key, def] of Object.entries(simple.properties ?? {})) {
+  for (const [key, def] of Object.entries(summary.properties ?? {})) {
     const detailDef = (detail.properties ?? {})[key];
     if (detailDef === undefined) {
       console.error(`${detailFile}: missing field "${key}" defined in ${file}`);
@@ -37,7 +37,7 @@ for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".simple.y
 }
 
 if (failures > 0) {
-  console.error(`\n${failures} simple/detail mismatch(es) found. Apply the same change to both files.`);
+  console.error(`\n${failures} summary/detail mismatch(es) found. Apply the same change to both files.`);
   process.exit(1);
 }
-console.log("simple/detail schemas are in sync.");
+console.log("summary/detail schemas are in sync.");
