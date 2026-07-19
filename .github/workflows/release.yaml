@@ -14,11 +14,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -112,7 +112,7 @@ jobs:
     outputs:
       deploy: ${{ steps.guard.outputs.deploy }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Skip maintenance-line releases
@@ -124,11 +124,11 @@ jobs:
             echo "Tag is not on main; skipping docs deployment."
             echo "deploy=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.guard.outputs.deploy == 'true'
         with:
           node-version: 24
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
         if: steps.guard.outputs.deploy == 'true'
         id: setup
       - name: build docs
@@ -146,7 +146,7 @@ jobs:
             </url>
           </urlset>
           EOT
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: steps.guard.outputs.deploy == 'true'
         with:
           path: "dist"
@@ -165,5 +165,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v5
         id: deployment
