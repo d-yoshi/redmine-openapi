@@ -49,4 +49,3 @@ properties:
       enum:
         - issue_created
         - issue_contributed_to
-        - issue_assigned_to_me

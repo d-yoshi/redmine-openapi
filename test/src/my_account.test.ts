@@ -42,7 +42,7 @@ describe("My Account", async () => {
           recently_used_projects: 3,
           history_default_tab: "notes",
           toolbar_language_options: "",
-          auto_watch_on: ["issue_created", "issue_contributed_to", "issue_assigned_to_me"],
+          auto_watch_on: ["issue_created", "issue_contributed_to"],
           default_issue_query: null,
           default_project_query: null,
         },
