@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 2.0.0+redmine.6.1.3
+  version: 3.0.0+redmine.6.1.3
 servers:
   - url: /
 security:
@@ -4272,6 +4272,22 @@ paths:
                     parent_title:
                       description: Title of the parent wiki page. Sets this page as a child in the page hierarchy.
                       type: string
+                    title:
+                      description: New title for the page (rename). Requires the rename_wiki_pages permission.
+                      type: string
+                    redirect_existing_links:
+                      description: When renaming with title, controls whether the old title keeps redirecting to the new one. Only the string "0" disables the redirect; any other value (including boolean false) leaves it enabled.
+                      type: string
+                      enum:
+                        - '0'
+                        - '1'
+                    is_start_page:
+                      description: Make this page the start page of the wiki. Requires the manage_wiki permission.
+                      type: boolean
+                    deleted_attachment_ids:
+                      type: array
+                      items:
+                        type: integer
                     uploads:
                       $ref: '#/components/schemas/uploads'
       responses:
@@ -6806,7 +6822,6 @@ components:
             enum:
               - issue_created
               - issue_contributed_to
-              - issue_assigned_to_me
     user:
       type: object
       required:
