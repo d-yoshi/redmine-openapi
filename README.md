@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yaml/badge.svg)](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yaml)
 
-An OpenAPI 3.0.3 specification for the Redmine REST API, built from the official docs and source code, and tested against a running Redmine instance.
+An OpenAPI 3.0.3 specification for the Redmine API, built from the official docs and source code, and tested against a running Redmine instance.
 
 **Tested against: Redmine 6.1.3**
 
@@ -33,4 +33,4 @@ You can also check out a release tag with git, or fetch `openapi.yaml` from a ta
 
 ## Reference
 
-- [Redmine REST API Official Developer Guide](https://www.redmine.org/projects/redmine/wiki/Rest_api)
+- [Redmine API Official Developer Guide](https://www.redmine.org/projects/redmine/wiki/Rest_api)
