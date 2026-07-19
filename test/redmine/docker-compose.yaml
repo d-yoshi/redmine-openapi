@@ -1,6 +1,6 @@
 services:
   redmine:
-    # Pinned to the verified patch release; REDMINE_IMAGE overrides it (canary runs)
+    # Pinned to the verified patch release; REDMINE_IMAGE overrides it
     image: ${REDMINE_IMAGE:-redmine:6.1.3}
     ports:
       - 3000:3000

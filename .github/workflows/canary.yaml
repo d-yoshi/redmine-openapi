@@ -1,20 +1,13 @@
 name: Canary
 
-# Weekly check for new Redmine releases (the regular CI is pinned to a
-# specific patch and cannot see them). A cheap Docker Hub tag-list comparison
-# runs first; the full test suite runs only when a new patch of the pinned
-# series is detected. A release of a NEWER SERIES (e.g. 6.2 or 7.0) is
-# reported as an issue without running tests — supporting it is a scope
-# decision (see VERSIONING.md). Opens an issue on detection (and on
-# detection failure); never blocks the regular pipeline.
+# Weekly check for new Redmine releases on Docker Hub (the regular CI is
+# pinned to a specific patch and cannot see them). The full test suite runs
+# only when a new patch of the pinned series appears; a newer series
+# (e.g. 6.2 or 7.0) is reported as an issue without running tests. Never
+# blocks the regular pipeline.
 #
-# Detection is image-driven (Docker Hub): it fires when an image becomes
-# available — the moment this repo can act on it. Source-tag releases that
-# have no image yet are surfaced by the /sync-redmine skill instead.
-#
-# Tag-list comparison is used instead of digest comparison on purpose:
-# official images are rebuilt regularly (base image updates), so the digest
-# of the rolling tag changes even when the Redmine version does not.
+# Tags are compared instead of image digests on purpose: official images
+# are rebuilt regularly, so the digest changes even when the version does not.
 on:
   schedule:
     - cron: "0 21 * * 0" # Monday 06:00 JST
@@ -41,12 +34,12 @@ jobs:
         run: |
           PINNED=$( (grep -oE 'redmine:[0-9][0-9.]*' test/redmine/docker-compose.yaml | head -1 | cut -d: -f2) || true)
           SERIES=${PINNED%.*}
-          # Latest patch of the pinned series (server-side name filter)
+          # Latest patch of the pinned series
           LATEST=$( (curl -fsSL "https://hub.docker.com/v2/repositories/library/redmine/tags?page_size=100&name=${SERIES}." \
             | jq -r '.results[].name' \
             | grep -E "^${SERIES//./\\.}\.[0-9]+$" \
             | sort -V | tail -1) || true)
-          # Newest x.y.z release tag overall — detects a newer series (6.2, 7.0, ...)
+          # Newest release tag overall — detects a newer series
           NEWEST=$( (curl -fsSL "https://hub.docker.com/v2/repositories/library/redmine/tags?page_size=100" \
             | jq -r '.results[].name' \
             | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
@@ -118,10 +111,10 @@ jobs:
             BODY="The canary could not determine the pinned or latest Redmine version (pinned: \`${PINNED:-unknown}\`, latest: \`${LATEST:-unknown}\`); version-drift detection is not working. See the workflow run: $RUN_URL"
           elif [ "$TEST_RESULT" = "success" ]; then
             TITLE="Canary: Redmine $LATEST is available (pinned: $PINNED) — tests pass"
-            BODY="Docker Hub has \`redmine:$LATEST\` while the test pin is \`$PINNED\`. The full test suite passes against $LATEST, so this looks like a routine bump: update the pin, README, and info.description in one PR (see VERSIONING.md). Workflow run: $RUN_URL"
+            BODY="Docker Hub has \`redmine:$LATEST\` while the test pin is \`$PINNED\`. The full test suite passes against $LATEST, so this looks like a routine bump: update the pin, README, and info.description in one PR. Workflow run: $RUN_URL"
           else
             TITLE="Canary: Redmine $LATEST is available (pinned: $PINNED) — tests FAIL"
-            BODY="Docker Hub has \`redmine:$LATEST\` while the test pin is \`$PINNED\`, and the test suite does not pass against $LATEST (result: $TEST_RESULT). The new patch likely changed API behavior; spec updates are needed along with the bump (see VERSIONING.md). Workflow run: $RUN_URL"
+            BODY="Docker Hub has \`redmine:$LATEST\` while the test pin is \`$PINNED\`, and the test suite does not pass against $LATEST (result: $TEST_RESULT). The new patch likely changed API behavior; spec updates are needed along with the bump. Workflow run: $RUN_URL"
           fi
           if gh issue list --state open --json title --jq '.[].title' | grep -Fxq "$TITLE"; then
             echo "Issue already open: $TITLE"
@@ -139,7 +132,7 @@ jobs:
         run: |
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           TITLE="Canary: Redmine $NEW_SERIES_TAG is available (new series, pinned: $PINNED)"
-          BODY="Docker Hub now has \`redmine:$NEW_SERIES_TAG\`, a newer series than the pinned \`$PINNED\`. Supporting a new series is a scope decision, not a routine bump: per VERSIONING.md, main moves to the new series with a MAJOR version bump and the current series continues on its maintenance branch. No tests were run against it. Keep this issue open to suppress re-filing while the decision is pending. Workflow run: $RUN_URL"
+          BODY="Docker Hub now has \`redmine:$NEW_SERIES_TAG\`, a newer series than the pinned \`$PINNED\`. Supporting a new series is a scope decision, not a routine bump: main would move to the new series with a MAJOR version bump while the current series continues on a maintenance branch. No tests were run against it. Keep this issue open to suppress re-filing while the decision is pending. Workflow run: $RUN_URL"
           if gh issue list --state open --json title --jq '.[].title' | grep -Fxq "$TITLE"; then
             echo "Issue already open: $TITLE"
             exit 0
