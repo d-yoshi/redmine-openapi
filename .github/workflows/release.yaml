@@ -1,17 +1,18 @@
 name: Release
 
-# Creates a GitHub Release when a release tag (e.g. 2.0.0+redmine.6.1.3) is pushed.
+# Creates a GitHub Release when a release tag (e.g. 2.0.0+redmine.6.1.3) is
+# pushed, then publishes the docs site so it always matches the latest
+# release. Tags not on main (maintenance lines) skip the docs jobs.
 on:
   push:
     tags:
       - "*redmine*"
 
-permissions:
-  contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -102,3 +103,67 @@ jobs:
             --verify-tag \
             --title "$GITHUB_REF_NAME" \
             --notes-file /tmp/notes.md
+
+  docs-build:
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      contents: read
+    outputs:
+      deploy: ${{ steps.guard.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Skip maintenance-line releases
+        id: guard
+        run: |
+          if git merge-base --is-ancestor HEAD origin/main; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag is not on main; skipping docs deployment."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.deploy == 'true'
+        with:
+          node-version: 24
+      - uses: actions/configure-pages@v5
+        if: steps.guard.outputs.deploy == 'true'
+        id: setup
+      - name: build docs
+        if: steps.guard.outputs.deploy == 'true'
+        run: |
+          mkdir dist
+          cp -r redocly/assets/* dist
+          npx @redocly/cli@latest build-docs --config redocly/redocly.yaml dist -t redocly/build-docs-template.hbs --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
+          cat > dist/sitemap.xml <<EOT
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+              <loc>${{ steps.setup.outputs.base_url }}/</loc>
+              <lastmod>$(date +"%Y-%m-%dT%H:%M:%S%:z")</lastmod>
+            </url>
+          </urlset>
+          EOT
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.guard.outputs.deploy == 'true'
+        with:
+          path: "dist"
+
+  docs-deploy:
+    runs-on: ubuntu-latest
+    needs: docs-build
+    if: needs.docs-build.outputs.deploy == 'true'
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

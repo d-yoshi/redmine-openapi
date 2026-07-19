@@ -1,5 +1,3 @@
-# NOTE: docs.yaml triggers on this workflow BY NAME (workflow_run: workflows: [CI]).
-# Renaming this workflow silently stops the docs deployment — update both together.
 name: CI
 
 on:
