@@ -1,4 +1,5 @@
 import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus, uploadFile } from "./helpers.js";
 
@@ -164,6 +165,154 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(409, response);
+  });
+
+  test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (delete attachment)", async () => {
+    const getResponse = await client.GET(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "TestPage",
+          },
+          query: { include: ["attachments"] },
+        },
+      }
+    );
+    assertStatus(200, getResponse);
+    const attachmentId = getResponse.data!.wiki_page.attachments![0].id;
+
+    const response = await client.PUT(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "TestPage",
+          },
+        },
+        body: {
+          wiki_page: {
+            text: "Updated wiki page content",
+            deleted_attachment_ids: [attachmentId],
+          },
+        },
+      }
+    );
+    assertStatus(204, response);
+
+    const verifyResponse = await client.GET(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "TestPage",
+          },
+          query: { include: ["attachments"] },
+        },
+      }
+    );
+    assertStatus(200, verifyResponse);
+    assert.strictEqual(
+      verifyResponse.data!.wiki_page.attachments!.length,
+      0,
+      "Expected the attachment to be deleted"
+    );
+  });
+
+  test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (rename)", async () => {
+    const createResponse = await client.PUT(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "RenameSource",
+          },
+        },
+        body: { wiki_page: { text: "Page to be renamed" } },
+      }
+    );
+    assertStatus(201, createResponse);
+
+    // With the redirect left enabled the old title would answer with a 302
+    // canonical redirect, which the spec does not model. Only the string "0"
+    // disables it (Redmine compares against the form value), making the old
+    // title a clean 404
+    const renameResponse = await client.PUT(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "RenameSource",
+          },
+        },
+        body: {
+          wiki_page: {
+            text: "Page to be renamed",
+            title: "RenameTarget",
+            redirect_existing_links: "0",
+          },
+        },
+      }
+    );
+    assertStatus(204, renameResponse);
+
+    const newTitleResponse = await client.GET(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "RenameTarget",
+          },
+        },
+      }
+    );
+    assertStatus(200, newTitleResponse);
+    assert.strictEqual(newTitleResponse.data!.wiki_page.title, "RenameTarget");
+
+    const oldTitleResponse = await client.GET(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "RenameSource",
+          },
+        },
+      }
+    );
+    assertStatus(404, oldTitleResponse);
+  });
+
+  test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (set start page)", async () => {
+    const response = await client.PUT(
+      "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
+      {
+        params: {
+          path: {
+            format: "json",
+            project_id: projectIdentifier,
+            wiki_page_title: "TestPage",
+          },
+        },
+        body: {
+          wiki_page: { text: "Updated wiki page content", is_start_page: true },
+        },
+      }
+    );
+    assertStatus(204, response);
   });
 
   test("GET /projects/{project_id}/wiki/index.json", async () => {
