@@ -83,7 +83,7 @@ jobs:
           {
             echo "## oasdiff changelog vs \`$PREV_TAG\`"
             echo '```'
-            docker run --rm -v /tmp:/tmp -v "$PWD":/repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
+            docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 

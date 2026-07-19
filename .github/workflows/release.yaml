@@ -60,7 +60,7 @@ jobs:
         run: |
           git show "$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
           set +e
-          docker run --rm -v /tmp:/tmp -v "$PWD":/repo tufin/oasdiff breaking --fail-on ERR /tmp/previous.yaml /repo/openapi.yaml
+          docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo tufin/oasdiff breaking --fail-on ERR /tmp/previous.yaml /repo/openapi.yaml
           RC=$?
           set -e
           if [ "$RC" -eq 0 ]; then
@@ -89,7 +89,7 @@ jobs:
             if [ -n "$PREV_TAG" ]; then
               echo "## Changes since $PREV_TAG"
               echo '```'
-              docker run --rm -v /tmp:/tmp -v "$PWD":/repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
+              docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
               echo '```'
             fi
           } > /tmp/notes.md
