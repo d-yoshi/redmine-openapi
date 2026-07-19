@@ -102,6 +102,20 @@ client.use({
   },
 });
 
+export const uploadFile = async (filename: string, content: string) => {
+  const response = await client.POST("/uploads.{format}", {
+    params: {
+      path: { format: "json" },
+      query: { filename },
+    },
+    body: content,
+    bodySerializer: (body) => body,
+    headers: { "Content-Type": "application/octet-stream" },
+  });
+  assertStatus(201, response);
+  return response.data!.upload;
+};
+
 export const assertStatus = (
   expectedStatus: number,
   fetchResponse: { data?: unknown; error?: unknown; response: Response }

@@ -62,4 +62,12 @@ describe("Journals", async () => {
     });
     assertStatus(204, response);
   });
+
+  test("PUT /journals/{journal_id}.json returns 404", async () => {
+    const response = await client.PUT("/journals/{journal_id}.{format}", {
+      params: { path: { format: "json", journal_id: 999999 } },
+      body: { journal: { notes: "missing" } },
+    });
+    assertStatus(404, response);
+  });
 });

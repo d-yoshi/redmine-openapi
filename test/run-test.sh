@@ -34,6 +34,26 @@ until curl -s "$REDMINE_URL" > /dev/null 2>&1; do
 done
 echo "  Redmine is up!"
 
+echo "=== Verifying Redmine version ==="
+# The pinned version declared in docker-compose.yaml is the source of truth;
+# README must state the same version, and the running container must match it
+# (unless REDMINE_IMAGE overrides the image for canary runs).
+PINNED_VERSION=$(grep -oE 'redmine:[0-9][0-9.]*' "$SCRIPT_DIR/redmine/docker-compose.yaml" | head -1 | cut -d: -f2)
+README_VERSION=$(grep -oE 'Tested against: Redmine [0-9.]+' "$REPO_ROOT/README.md" | grep -oE '[0-9.]+$')
+if [ "$README_VERSION" != "$PINNED_VERSION" ]; then
+  echo "  README (Tested against: $README_VERSION) does not match docker-compose pin ($PINNED_VERSION)"
+  exit 1
+fi
+ACTUAL_VERSION=$(docker exec "$REDMINE_CONTAINER" rails runner \
+  'puts [Redmine::VERSION::MAJOR, Redmine::VERSION::MINOR, Redmine::VERSION::TINY].join(".")' 2>/dev/null | tr -d '\r' | tail -1)
+echo "  Redmine version: $ACTUAL_VERSION"
+if [ -n "$REDMINE_IMAGE" ]; then
+  echo "  (image overridden via REDMINE_IMAGE=$REDMINE_IMAGE; skipping strict version match)"
+elif [ "$ACTUAL_VERSION" != "$PINNED_VERSION" ]; then
+  echo "  Running Redmine ($ACTUAL_VERSION) does not match the pinned version ($PINNED_VERSION)"
+  exit 1
+fi
+
 echo "=== Setting up Redmine ==="
 docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
   admin = User.find_by(login: '$REDMINE_ADMIN_LOGIN')
@@ -55,6 +75,14 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
   end
   if TimeEntryActivity.count == 0
     TimeEntryActivity.create!(name: 'Development', is_default: true)
+  end
+  if DocumentCategory.count == 0
+    DocumentCategory.create!(name: 'Documentation')
+  end
+  # Saved query so that GET /queries returns a non-empty list and
+  # the query_id filter can be exercised
+  unless IssueQuery.find_by(name: 'Seed Query')
+    IssueQuery.create!(name: 'Seed Query', user_id: 1, visibility: Query::VISIBILITY_PUBLIC)
   end
   if Role.givable.count == 0
     Role.create!(name: 'Manager', permissions: Redmine::AccessControl.permissions.map(&:name))

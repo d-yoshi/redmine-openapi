@@ -33,6 +33,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST
   summary: Create file
+  description: An invalid or unknown upload token results in 404, not 400 — the controller's 400 render references an API template that does not exist, and the MissingTemplate handler responds with 404.
   operationId: createFile
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -65,8 +66,6 @@ post:
                   type: string
   responses:
     204:
-      description: ""
-    400:
       description: ""
     404:
       description: ""

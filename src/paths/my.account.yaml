@@ -22,6 +22,7 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount#PUT
   summary: Update my account
+  description: Requests authenticated via OAuth are rejected with 403, regardless of the token's scopes.
   operationId: updateMyAccount
   parameters:
     - $ref: ../components/parameters/path/format.yaml

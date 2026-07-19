@@ -61,4 +61,17 @@ post:
           schema:
             $ref: ../components/schemas/errors.yaml
     404:
-      description: ""
+      description: Returned with a framework-generated body when the issue does not exist (the issue lookup is not rescued by the controller).
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - status
+              - error
+            properties:
+              status:
+                type: integer
+              error:
+                type: string

@@ -23,4 +23,4 @@ get:
             type: string
             format: binary
     404:
-      description: ""
+      description: The body is empty for clients sending Accept:application/json; browsers (Accept:*/*) receive an HTML error page instead.

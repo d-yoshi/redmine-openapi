@@ -50,4 +50,12 @@ describe("My Account", async () => {
     });
     assertStatus(204, response);
   });
+
+  test("PUT /my/account.json returns 422 for invalid data", async () => {
+    const response = await client.PUT("/my/account.{format}", {
+      params: { path: { format: "json" } },
+      body: { user: { mail: "not-an-email" } },
+    });
+    assertStatus(422, response);
+  });
 });

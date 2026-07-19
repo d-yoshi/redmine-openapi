@@ -1,3 +1,5 @@
+# NOTE: docs.yaml triggers on this workflow BY NAME (workflow_run: workflows: [CI]).
+# Renaming this workflow silently stops the docs deployment — update both together.
 name: CI
 
 on:
@@ -11,6 +13,16 @@ on:
       - "**"
     branches:
       - "**"
+  pull_request:
+    paths:
+      - ".github/workflows/ci.yaml"
+      - "src/**"
+      - "redocly/**"
+      - "test/**"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   bundle:
@@ -19,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: bundle
         run: npx @redocly/cli@latest bundle --config redocly/redocly.yaml dist -o openapi.yaml
       - name: lint
@@ -35,15 +47,48 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: "npm"
           cache-dependency-path: "test/package-lock.json"
-      - run: |
-          npm ci
-          ./run-test.sh
+      - run: npm ci
+        working-directory: test
+      - run: ./run-test.sh
+        working-directory: test
+      - name: type check
+        run: npx tsc --noEmit
         working-directory: test
 
-  commit:
+  # Informational: show changes against the latest release tag (never fails the build)
+  spec-diff:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: oasdiff changelog against latest release tag
+        run: |
+          # Nearest release tag among the ancestors of HEAD (branch-aware)
+          PREV_TAG=$(git describe --tags --abbrev=0 --match '*+redmine*' HEAD 2>/dev/null || true)
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous release tag found; skipping diff." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git show "$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
+          npx @redocly/cli@latest bundle --config redocly/redocly.yaml dist -o openapi.yaml
+          {
+            echo "## oasdiff changelog vs \`$PREV_TAG\`"
+            echo '```'
+            docker run --rm -v /tmp:/tmp -v "$PWD":/repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  commit-bundle:
+    if: github.event_name == 'push'
     needs:
       - bundle
       - test

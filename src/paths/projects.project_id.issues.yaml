@@ -490,6 +490,12 @@ get:
                 type: integer
     404:
       description: ""
+    422:
+      description: Returned when a filter parameter has an invalid value.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml
 
 post:
   tags:

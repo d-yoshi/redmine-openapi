@@ -1,4 +1,5 @@
 import { describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus } from "./helpers.js";
 
@@ -31,5 +32,10 @@ describe("Enumerations", async () => {
       }
     );
     assertStatus(200, response);
+    // The seeded category guarantees the item schema is exercised
+    assert(
+      response.data!.document_categories.length > 0,
+      "Expected at least one document category"
+    );
   });
 });

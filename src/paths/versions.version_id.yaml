@@ -110,10 +110,6 @@ delete:
     204:
       description: ""
     422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
+      description: Returned without a body when the version is not deletable (e.g. issues are assigned to it).
     404:
       description: ""

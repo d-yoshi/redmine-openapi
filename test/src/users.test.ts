@@ -1,11 +1,19 @@
-import { test } from "node:test";
+import { after, describe, test } from "node:test";
 
 import { client, assertStatus } from "./helpers.js";
 
-test("Users", async (t) => {
+describe("Users", () => {
   let userId: number;
 
-  await t.test("POST /users.json", async () => {
+  after(async () => {
+    if (userId) {
+      await client.DELETE("/users/{user_id}.{format}", {
+        params: { path: { format: "json", user_id: userId } },
+      });
+    }
+  });
+
+  test("POST /users.json", async () => {
     const ts = Date.now();
     const response = await client.POST("/users.{format}", {
       params: { path: { format: "json" } },
@@ -49,7 +57,7 @@ test("Users", async (t) => {
     userId = response.data!.user.id;
   });
 
-  await t.test("GET /users/{user_id}.json with all includes", async () => {
+  test("GET /users/{user_id}.json with all includes", async () => {
     const response = await client.GET("/users/{user_id}.{format}", {
       params: {
         path: { format: "json", user_id: userId },
@@ -61,7 +69,7 @@ test("Users", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("PUT /users/{user_id}.json", async () => {
+  test("PUT /users/{user_id}.json", async () => {
     const ts = Date.now();
     const response = await client.PUT("/users/{user_id}.{format}", {
       params: { path: { format: "json", user_id: userId } },
@@ -105,7 +113,7 @@ test("Users", async (t) => {
     assertStatus(204, response);
   });
 
-  await t.test("GET /users/current.json with all includes", async () => {
+  test("GET /users/current.json with all includes", async () => {
     const response = await client.GET("/users/current.{format}", {
       params: {
         path: { format: "json" },
@@ -117,7 +125,7 @@ test("Users", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("GET /users.json with filters", async () => {
+  test("GET /users.json with filters", async () => {
     const response = await client.GET("/users.{format}", {
       params: {
         path: { format: "json" },
@@ -133,17 +141,115 @@ test("Users", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("DELETE /users/{user_id}.json", async () => {
+  test("GET /users.json with remaining filters", async () => {
+    const ts = Date.now();
+    const groupResponse = await client.POST("/groups.{format}", {
+      params: { path: { format: "json" } },
+      body: { group: { name: `user-filter-group-${ts}` } },
+    });
+    assertStatus(201, groupResponse);
+    const groupId = groupResponse.data!.group.id;
+
+    const response = await client.GET("/users.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          login: "~user",
+          firstname: "~Ali",
+          lastname: "~Doe",
+          mail: "~example",
+          created_on: ">=2020-01-01",
+          last_login_on: "*",
+          admin: "0",
+          auth_source_id: "!*",
+          twofa_scheme: "!*",
+        },
+      },
+    });
+    assertStatus(200, response);
+
+    const groupFilterResponse = await client.GET("/users.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { group_id: String(groupId) },
+      },
+    });
+    assertStatus(200, groupFilterResponse);
+
+    await client.DELETE("/groups/{group_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId } },
+    });
+  });
+
+  test("GET /users.json returns 422 for invalid filter value", async () => {
+    const response = await client.GET("/users.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { created_on: "invalid-date" },
+      },
+    });
+    assertStatus(422, response);
+  });
+
+  test("POST /users.json returns 422 for invalid data", async () => {
+    const response = await client.POST("/users.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        user: {
+          login: "admin",
+          firstname: "Duplicate",
+          lastname: "Login",
+          mail: "duplicate-login@example.com",
+        },
+      },
+    });
+    assertStatus(422, response);
+  });
+
+  test("GET /users/{user_id}.json returns 404", async () => {
+    const response = await client.GET("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: 999999 } },
+    });
+    assertStatus(404, response);
+  });
+
+  test("PUT /users/{user_id}.json returns 404", async () => {
+    const response = await client.PUT("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: 999999 } },
+      body: { user: { firstname: "Missing" } },
+    });
+    assertStatus(404, response);
+  });
+
+  test("PUT /users/{user_id}.json returns 422 for invalid data", async () => {
+    const response = await client.PUT("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: userId } },
+      body: { user: { mail: "not-an-email" } },
+    });
+    assertStatus(422, response);
+  });
+
+  test("DELETE /users/{user_id}.json returns 404", async () => {
+    const response = await client.DELETE("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: 999999 } },
+    });
+    assertStatus(404, response);
+  });
+
+  test("DELETE /users/{user_id}.json returns 422 for own account", async () => {
+    // Admin (user 1) is the only active administrator, so the account is
+    // not deletable; Redmine responds 422 with an empty body
+    const response = await client.DELETE("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: 1 } },
+    });
+    assertStatus(422, response);
+  });
+
+  test("DELETE /users/{user_id}.json", async () => {
     const response = await client.DELETE("/users/{user_id}.{format}", {
       params: { path: { format: "json", user_id: userId } },
     });
     assertStatus(204, response);
     userId = 0;
   });
-
-  if (userId) {
-    await client.DELETE("/users/{user_id}.{format}", {
-      params: { path: { format: "json", user_id: userId } },
-    });
-  }
 });

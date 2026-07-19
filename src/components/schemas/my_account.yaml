@@ -15,7 +15,6 @@ properties:
       - mail
       - created_on
       - last_login_on
-      - api_key
     properties:
       id:
         type: integer
@@ -38,6 +37,7 @@ properties:
         nullable: true
       api_key:
         type: string
+        description: Not returned when the request is authenticated via OAuth.
       custom_fields:
         type: array
         items:

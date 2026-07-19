@@ -1,0 +1,110 @@
+name: Release
+
+# Creates a GitHub Release when a release tag (e.g. 2.0.0+redmine.6.1.3) is pushed.
+# Gates (see VERSIONING.md):
+#   1. The committed openapi.yaml must match a fresh bundle of src/
+#   2. The tag name must equal info.version in the bundled spec
+#   3. If oasdiff finds breaking changes vs the previous release tag,
+#      the MAJOR version must have been bumped
+on:
+  push:
+    tags:
+      - "*+redmine*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify tag format
+        run: |
+          if ! echo "$GITHUB_REF_NAME" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\+redmine\.[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Tag '$GITHUB_REF_NAME' does not match the release format '<major>.<minor>.<patch>+redmine.<x.y.z>' (see VERSIONING.md)."
+            exit 1
+          fi
+
+      - name: Verify bundle freshness
+        run: |
+          npx @redocly/cli@latest bundle --config redocly/redocly.yaml dist -o /tmp/fresh.yaml
+          if ! diff -u openapi.yaml /tmp/fresh.yaml; then
+            echo "::error::Committed openapi.yaml does not match a fresh bundle of src/. Tag a commit where the bundle is up to date."
+            exit 1
+          fi
+
+      - name: Verify tag matches info.version
+        run: |
+          VERSION=$(grep -m1 -E '^  version:' openapi.yaml | awk '{print $2}')
+          if [ "$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag ($GITHUB_REF_NAME) does not match info.version ($VERSION) in openapi.yaml."
+            exit 1
+          fi
+
+      - name: Find previous release tag
+        id: prev
+        run: |
+          # Nearest release tag among the ANCESTORS of the tagged commit, so a
+          # maintenance-branch release is compared against its own line
+          # (e.g. 1.7.0+redmine6.1), never against a newer main-line release
+          PREV_TAG=$(git describe --tags --abbrev=0 --match '*+redmine*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          echo "tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
+          echo "Previous release tag: ${PREV_TAG:-<none>}"
+
+      - name: Enforce version bump floor
+        if: steps.prev.outputs.tag != ''
+        env:
+          PREV_TAG: ${{ steps.prev.outputs.tag }}
+        run: |
+          git show "$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
+          set +e
+          docker run --rm -v /tmp:/tmp -v "$PWD":/repo tufin/oasdiff breaking --fail-on ERR /tmp/previous.yaml /repo/openapi.yaml
+          RC=$?
+          set -e
+          if [ "$RC" -eq 0 ]; then
+            echo "No breaking changes vs $PREV_TAG."
+          elif [ "$RC" -eq 1 ]; then
+            # oasdiff exits 1 when breaking changes are found
+            NEW_MAJOR=${GITHUB_REF_NAME%%.*}
+            OLD_MAJOR=${PREV_TAG%%.*}
+            if [ "$NEW_MAJOR" -le "$OLD_MAJOR" ]; then
+              echo "::error::Breaking changes detected vs $PREV_TAG but MAJOR was not bumped ($OLD_MAJOR -> $NEW_MAJOR). See VERSIONING.md."
+              exit 1
+            fi
+            echo "Breaking changes present and MAJOR bumped ($OLD_MAJOR -> $NEW_MAJOR); OK."
+          else
+            echo "::error::oasdiff failed with exit code $RC (tool error, not a breaking-change verdict)."
+            exit 1
+          fi
+
+      - name: Build release notes
+        env:
+          PREV_TAG: ${{ steps.prev.outputs.tag }}
+        run: |
+          {
+            grep -m1 -oE 'Tested against: Redmine [0-9.]+' README.md
+            echo
+            if [ -n "$PREV_TAG" ]; then
+              echo "## Changes since $PREV_TAG"
+              echo '```'
+              docker run --rm -v /tmp:/tmp -v "$PWD":/repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
+              echo '```'
+            fi
+          } > /tmp/notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" openapi.yaml \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file /tmp/notes.md

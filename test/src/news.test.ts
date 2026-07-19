@@ -1,39 +1,36 @@
-import { test } from "node:test";
+import { before, after, describe, test } from "node:test";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, uploadFile } from "./helpers.js";
 
-const uploadFile = async (filename: string, content: string) => {
-  const response = await client.POST("/uploads.{format}", {
-    params: {
-      path: { format: "json" },
-      query: { filename },
-    },
-    body: content,
-    bodySerializer: (body) => body,
-    headers: { "Content-Type": "application/octet-stream" },
-  });
-  assertStatus(201, response);
-  return response.data!.upload;
-};
-
-test("News", async (t) => {
+describe("News", () => {
   const projectIdentifier = `news-${Date.now()}`;
-  const projectResponse = await client.POST("/projects.{format}", {
-    params: { path: { format: "json" } },
-    body: {
-      project: {
-        name: projectIdentifier,
-        identifier: projectIdentifier,
-        enabled_module_names: ["news"],
-      },
-    },
-  });
-  assertStatus(201, projectResponse);
-  const projectId = projectResponse.data!.project.id;
-
+  let projectId: number;
   let newsId: number;
 
-  await t.test("POST /projects/{project_id}/news.json", async () => {
+  before(async () => {
+    const projectResponse = await client.POST("/projects.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        project: {
+          name: projectIdentifier,
+          identifier: projectIdentifier,
+          enabled_module_names: ["news"],
+        },
+      },
+    });
+    assertStatus(201, projectResponse);
+    projectId = projectResponse.data!.project.id;
+  });
+
+  after(async () => {
+    if (projectId) {
+      await client.DELETE("/projects/{project_id}.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+      });
+    }
+  });
+
+  test("POST /projects/{project_id}/news.json", async () => {
     const upload = await uploadFile("news-attachment.txt", "file content");
     const response = await client.POST(
       "/projects/{project_id}/news.{format}",
@@ -72,7 +69,7 @@ test("News", async (t) => {
     newsId = listResponse.data!.news[0].id;
   });
 
-  await t.test("GET /news/{news_id}.json with all includes", async () => {
+  test("GET /news/{news_id}.json with all includes", async () => {
     const response = await client.GET("/news/{news_id}.{format}", {
       params: {
         path: { format: "json", news_id: newsId },
@@ -84,7 +81,7 @@ test("News", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("PUT /news/{news_id}.json", async () => {
+  test("PUT /news/{news_id}.json", async () => {
     const upload = await uploadFile("news-update-attachment.txt", "updated");
     const response = await client.PUT("/news/{news_id}.{format}", {
       params: {
@@ -109,7 +106,7 @@ test("News", async (t) => {
     assertStatus(204, response);
   });
 
-  await t.test("GET /news.json with pagination", async () => {
+  test("GET /news.json with pagination", async () => {
     const response = await client.GET("/news.{format}", {
       params: {
         path: { format: "json" },
@@ -119,7 +116,7 @@ test("News", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("GET /projects/{project_id}/news.json with pagination", async () => {
+  test("GET /projects/{project_id}/news.json with pagination", async () => {
     const response = await client.GET(
       "/projects/{project_id}/news.{format}",
       {
@@ -132,16 +129,74 @@ test("News", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("DELETE /news/{news_id}.json", async () => {
+  test("POST /projects/{project_id}/news.json returns 404 for nonexistent project", async () => {
+    const response = await client.POST(
+      "/projects/{project_id}/news.{format}",
+      {
+        params: { path: { format: "json", project_id: "nonexistent-project" } },
+        body: { news: { title: "missing", description: "missing" } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("POST /projects/{project_id}/news.json returns 422 for invalid data", async () => {
+    const response = await client.POST(
+      "/projects/{project_id}/news.{format}",
+      {
+        params: { path: { format: "json", project_id: projectIdentifier } },
+        body: { news: { title: "", description: "no title" } },
+      }
+    );
+    assertStatus(422, response);
+  });
+
+  test("GET /projects/{project_id}/news.json returns 404 for nonexistent project", async () => {
+    const response = await client.GET(
+      "/projects/{project_id}/news.{format}",
+      {
+        params: { path: { format: "json", project_id: "nonexistent-project" } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("GET /news/{news_id}.json returns 404", async () => {
+    const response = await client.GET("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: 999999 } },
+    });
+    assertStatus(404, response);
+  });
+
+  test("PUT /news/{news_id}.json returns 404", async () => {
+    const response = await client.PUT("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: 999999 } },
+      body: { news: { title: "missing" } },
+    });
+    assertStatus(404, response);
+  });
+
+  test("PUT /news/{news_id}.json returns 422 for invalid data", async () => {
+    const response = await client.PUT("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: newsId } },
+      body: { news: { title: "" } },
+    });
+    assertStatus(422, response);
+  });
+
+  test("DELETE /news/{news_id}.json returns 404", async () => {
+    const response = await client.DELETE("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: 999999 } },
+    });
+    assertStatus(404, response);
+  });
+
+  test("DELETE /news/{news_id}.json", async () => {
     const response = await client.DELETE("/news/{news_id}.{format}", {
       params: {
         path: { format: "json", news_id: newsId },
       },
     });
     assertStatus(204, response);
-  });
-
-  await client.DELETE("/projects/{project_id}.{format}", {
-    params: { path: { format: "json", project_id: projectId } },
   });
 });

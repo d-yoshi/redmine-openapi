@@ -1,45 +1,58 @@
-import { test } from "node:test";
+import { before, after, describe, test } from "node:test";
 
 import { client, assertStatus } from "./helpers.js";
 
-test("Time Entries", async (t) => {
-  const projectName = `time-${Date.now()}`;
-  const projectResponse = await client.POST("/projects.{format}", {
-    params: { path: { format: "json" } },
-    body: {
-      project: {
-        name: projectName,
-        identifier: projectName,
-        enabled_module_names: ["time_tracking", "issue_tracking"],
-      },
-    },
-  });
-  assertStatus(201, projectResponse);
-  const projectId = projectResponse.data!.project.id;
-
-  const issueResponse = await client.POST("/issues.{format}", {
-    params: { path: { format: "json" } },
-    body: {
-      issue: {
-        project_id: projectId,
-        tracker_id: 1,
-        subject: "issue-1",
-      },
-    },
-  });
-  assertStatus(201, issueResponse);
-  const issueId = issueResponse.data!.issue.id;
-
-  const activitiesResponse = await client.GET(
-    "/enumerations/time_entry_activities.{format}",
-    { params: { path: { format: "json" } } }
-  );
-  assertStatus(200, activitiesResponse);
-  const activityId = activitiesResponse.data!.time_entry_activities[0].id;
-
+describe("Time Entries", () => {
+  let projectId: number;
+  let issueId: number;
+  let activityId: number;
   let timeEntryId: number;
 
-  await t.test("POST /time_entries.json", async () => {
+  before(async () => {
+    const projectName = `time-${Date.now()}`;
+    const projectResponse = await client.POST("/projects.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        project: {
+          name: projectName,
+          identifier: projectName,
+          enabled_module_names: ["time_tracking", "issue_tracking"],
+        },
+      },
+    });
+    assertStatus(201, projectResponse);
+    projectId = projectResponse.data!.project.id;
+
+    const issueResponse = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        issue: {
+          project_id: projectId,
+          tracker_id: 1,
+          subject: "issue-1",
+        },
+      },
+    });
+    assertStatus(201, issueResponse);
+    issueId = issueResponse.data!.issue.id;
+
+    const activitiesResponse = await client.GET(
+      "/enumerations/time_entry_activities.{format}",
+      { params: { path: { format: "json" } } }
+    );
+    assertStatus(200, activitiesResponse);
+    activityId = activitiesResponse.data!.time_entry_activities[0].id;
+  });
+
+  after(async () => {
+    if (projectId) {
+      await client.DELETE("/projects/{project_id}.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+      });
+    }
+  });
+
+  test("POST /time_entries.json", async () => {
     const response = await client.POST("/time_entries.{format}", {
       params: { path: { format: "json" } },
       body: {
@@ -60,7 +73,7 @@ test("Time Entries", async (t) => {
     timeEntryId = response.data!.time_entry.id;
   });
 
-  await t.test("GET /time_entries/{time_entry_id}.json", async () => {
+  test("GET /time_entries/{time_entry_id}.json", async () => {
     const response = await client.GET(
       "/time_entries/{time_entry_id}.{format}",
       {
@@ -72,7 +85,7 @@ test("Time Entries", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("PUT /time_entries/{time_entry_id}.json", async () => {
+  test("PUT /time_entries/{time_entry_id}.json", async () => {
     const response = await client.PUT(
       "/time_entries/{time_entry_id}.{format}",
       {
@@ -97,14 +110,14 @@ test("Time Entries", async (t) => {
     assertStatus(204, response);
   });
 
-  await t.test("GET /time_entries.json", async () => {
+  test("GET /time_entries.json", async () => {
     const response = await client.GET("/time_entries.{format}", {
       params: { path: { format: "json" } },
     });
     assertStatus(200, response);
   });
 
-  await t.test("GET /time_entries.json with filters", async () => {
+  test("GET /time_entries.json with filters", async () => {
     const response = await client.GET("/time_entries.{format}", {
       params: {
         path: { format: "json" },
@@ -126,7 +139,7 @@ test("Time Entries", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("POST /projects/{project_id}/time_entries.json", async () => {
+  test("POST /projects/{project_id}/time_entries.json", async () => {
     const response = await client.POST(
       "/projects/{project_id}/time_entries.{format}",
       {
@@ -150,7 +163,7 @@ test("Time Entries", async (t) => {
     assertStatus(201, response);
   });
 
-  await t.test("GET /projects/{project_id}/time_entries.json with filters", async () => {
+  test("GET /projects/{project_id}/time_entries.json with filters", async () => {
     const response = await client.GET(
       "/projects/{project_id}/time_entries.{format}",
       {
@@ -170,7 +183,7 @@ test("Time Entries", async (t) => {
     assertStatus(200, response);
   });
 
-  await t.test("POST /issues/{issue_id}/time_entries.json", async () => {
+  test("POST /issues/{issue_id}/time_entries.json", async () => {
     const response = await client.POST(
       "/issues/{issue_id}/time_entries.{format}",
       {
@@ -194,7 +207,133 @@ test("Time Entries", async (t) => {
     assertStatus(201, response);
   });
 
-  await t.test("DELETE /time_entries/{time_entry_id}.json", async () => {
+  test("GET /time_entries.json with remaining filters", async () => {
+    const response = await client.GET("/time_entries.{format}", {
+      params: {
+        path: { format: "json" },
+        query: {
+          project_id: String(projectId),
+          subproject_id: "!*",
+          issue_id: String(issueId),
+          "issue.tracker_id": "1",
+          "issue.status_id": "*",
+          "issue.fixed_version_id": "!*",
+          "issue.category_id": "!*",
+          user_id: "me",
+          author_id: "me",
+          from: "2020-01-01",
+          to: "2030-12-31",
+        },
+      },
+    });
+    assertStatus(200, response);
+  });
+
+  test("POST /time_entries.json returns 422 for invalid data", async () => {
+    const response = await client.POST("/time_entries.{format}", {
+      params: { path: { format: "json" } },
+      body: { time_entry: { issue_id: issueId } as any },
+    });
+    assertStatus(422, response);
+  });
+
+  test("GET /time_entries/{time_entry_id}.json returns 404", async () => {
+    const response = await client.GET(
+      "/time_entries/{time_entry_id}.{format}",
+      {
+        params: { path: { format: "json", time_entry_id: 999999 } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("PUT /time_entries/{time_entry_id}.json returns 404", async () => {
+    const response = await client.PUT(
+      "/time_entries/{time_entry_id}.{format}",
+      {
+        params: { path: { format: "json", time_entry_id: 999999 } },
+        body: { time_entry: { hours: 1 } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("PUT /time_entries/{time_entry_id}.json returns 422 for invalid data", async () => {
+    const response = await client.PUT(
+      "/time_entries/{time_entry_id}.{format}",
+      {
+        params: { path: { format: "json", time_entry_id: timeEntryId } },
+        body: { time_entry: { spent_on: "invalid-date" } },
+      }
+    );
+    assertStatus(422, response);
+  });
+
+  test("DELETE /time_entries/{time_entry_id}.json returns 404", async () => {
+    const response = await client.DELETE(
+      "/time_entries/{time_entry_id}.{format}",
+      {
+        params: { path: { format: "json", time_entry_id: 999999 } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("GET /projects/{project_id}/time_entries.json returns 404 for nonexistent project", async () => {
+    const response = await client.GET(
+      "/projects/{project_id}/time_entries.{format}",
+      {
+        params: { path: { format: "json", project_id: "nonexistent-project" } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("POST /projects/{project_id}/time_entries.json returns 404 for nonexistent project", async () => {
+    const response = await client.POST(
+      "/projects/{project_id}/time_entries.{format}",
+      {
+        params: { path: { format: "json", project_id: "nonexistent-project" } },
+        body: { time_entry: { hours: 1, activity_id: activityId } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("POST /projects/{project_id}/time_entries.json returns 422 for invalid data", async () => {
+    const response = await client.POST(
+      "/projects/{project_id}/time_entries.{format}",
+      {
+        params: { path: { format: "json", project_id: projectId } },
+        body: { time_entry: {} as any },
+      }
+    );
+    assertStatus(422, response);
+  });
+
+  test("POST /issues/{issue_id}/time_entries.json returns 404 for nonexistent issue", async () => {
+    const response = await client.POST(
+      "/issues/{issue_id}/time_entries.{format}",
+      {
+        params: { path: { format: "json", issue_id: 999999 } },
+        body: { time_entry: { hours: 1, activity_id: activityId } },
+      }
+    );
+    assertStatus(404, response);
+  });
+
+  test("POST /issues/{issue_id}/time_entries.json returns 422 for invalid data", async () => {
+    const response = await client.POST(
+      "/issues/{issue_id}/time_entries.{format}",
+      {
+        params: { path: { format: "json", issue_id: issueId } },
+        body: { time_entry: {} as any },
+      }
+    );
+    assertStatus(422, response);
+  });
+
+  test("DELETE /time_entries/{time_entry_id}.json", async () => {
     const response = await client.DELETE(
       "/time_entries/{time_entry_id}.{format}",
       {
@@ -204,9 +343,5 @@ test("Time Entries", async (t) => {
       }
     );
     assertStatus(204, response);
-  });
-
-  await client.DELETE("/projects/{project_id}.{format}", {
-    params: { path: { format: "json", project_id: projectId } },
   });
 });

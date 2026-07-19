@@ -31,6 +31,7 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
   summary: Update membership
+  description: "Warning: sending an empty role_ids returns 422 but still destroys the membership — role assignments are saved immediately and a member left without roles is removed."
   operationId: updateMembership
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -80,10 +81,6 @@ delete:
     204:
       description: ""
     422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
+      description: Returned without a body when the membership is not deletable (e.g. inherited from a group).
     404:
       description: ""

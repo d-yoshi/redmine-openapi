@@ -151,10 +151,6 @@ delete:
     204:
       description: ""
     422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
+      description: Returned without a body when the user tries to delete their own account and it is not deletable (e.g. the only active administrator).
     404:
       description: ""

@@ -17,4 +17,9 @@ get:
             type: string
             format: binary
     404:
-      description: ""
+      description: Returned as an HTML error page regardless of the Accept header — the route pins the request format to html.
+      content:
+        text/html:
+          schema:
+            type: string
+            format: binary

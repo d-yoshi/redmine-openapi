@@ -63,6 +63,19 @@ describe("Search", async () => {
     assertStatus(200, response);
   });
 
+  test("GET /projects/{project_id}/search.json returns 404 for nonexistent project", async () => {
+    const response = await client.GET(
+      "/projects/{project_id}/search.{format}",
+      {
+        params: {
+          path: { format: "json", project_id: "nonexistent-project" },
+          query: { q: "test" },
+        },
+      }
+    );
+    assertStatus(404, response);
+  });
+
   test("GET /projects/{project_id}/search.json with all params", async () => {
     const response = await client.GET(
       "/projects/{project_id}/search.{format}",
