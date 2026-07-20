@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 2.0.0+redmine.6.1.3
+  version: 2.0.1+redmine.6.1.3
 servers:
   - url: /
 security:
@@ -38,7 +38,7 @@ tags:
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
   - name: News
-    description: 'Status: Prototype, Availability: 1.1'
+    description: 'Status: Stable, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_News
   - name: Issue Relations
@@ -104,7 +104,7 @@ tags:
   - name: Journals
     description: 'Status: Alpha, Availability: 5.0'
     externalDocs:
-      url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueJournals
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals
   - name: Repositories
     description: Undocumented
 externalDocs:
@@ -3509,7 +3509,7 @@ paths:
       tags:
         - News
       externalDocs:
-        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Listing-news
       summary: List news
       operationId: getNewsList
       parameters:
@@ -3549,8 +3549,9 @@ paths:
     get:
       tags:
         - News
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Showing-a-news-item
       summary: Show news
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: getNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -3592,8 +3593,9 @@ paths:
     put:
       tags:
         - News
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Updating-a-news-item
       summary: Update news
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: updateNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -3636,8 +3638,9 @@ paths:
     delete:
       tags:
         - News
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Deleting-a-news-item
       summary: Delete news
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: deleteNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -3659,7 +3662,7 @@ paths:
       tags:
         - News
       externalDocs:
-        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Listing-news
       summary: List news by project
       operationId: getNewsListByProject
       parameters:
@@ -3701,8 +3704,9 @@ paths:
     post:
       tags:
         - News
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Creating-a-news-item
       summary: Create news
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: createNews
       parameters:
         - $ref: '#/components/parameters/format'
@@ -5805,8 +5809,10 @@ paths:
     put:
       tags:
         - Journals
+      externalDocs:
+        url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals#Updating-a-journal
       summary: Update journal
-      description: 'Undocumented: This operation is not listed in the official documentation.'
+      description: The journal is deleted when it is updated with empty `notes` and has no property changes (`details`).
       operationId: updateJournal
       parameters:
         - $ref: '#/components/parameters/format'
