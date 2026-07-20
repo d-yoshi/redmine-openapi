@@ -2,7 +2,7 @@ get:
   tags:
     - News
   externalDocs:
-    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Listing-news
   summary: List news by project
   operationId: getNewsListByProject
   parameters:
@@ -40,8 +40,9 @@ get:
 post:
   tags:
     - News
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Creating-a-news-item
   summary: Create news
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: createNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml

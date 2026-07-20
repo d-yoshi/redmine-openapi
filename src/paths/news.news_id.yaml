@@ -1,8 +1,9 @@
 get:
   tags:
     - News
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Showing-a-news-item
   summary: Show news
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: getNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -40,8 +41,9 @@ get:
 put:
   tags:
     - News
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Updating-a-news-item
   summary: Update news
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: updateNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -81,8 +83,9 @@ put:
 delete:
   tags:
     - News
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Deleting-a-news-item
   summary: Delete news
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: deleteNews
   parameters:
     - $ref: ../components/parameters/path/format.yaml

@@ -2,7 +2,7 @@ get:
   tags:
     - News
   externalDocs:
-    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#GET
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Listing-news
   summary: List news
   operationId: getNewsList
   parameters:
