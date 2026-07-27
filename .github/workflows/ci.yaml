@@ -73,8 +73,9 @@ jobs:
           node-version: 24
       - name: oasdiff changelog against latest release tag
         run: |
-          # Nearest release tag among the ancestors of HEAD (branch-aware)
-          PREV_TAG=$(git describe --tags --abbrev=0 --match '*+redmine*' HEAD 2>/dev/null || true)
+          # Nearest release tag among the ancestors of HEAD (branch-aware).
+          # The second pattern matches the retired format (transition period)
+          PREV_TAG=$(git describe --tags --abbrev=0 --match '[0-9]*-r[0-9]*' --match '*+redmine*' HEAD 2>/dev/null || true)
           if [ -z "$PREV_TAG" ]; then
             echo "No previous release tag found; skipping diff." >> "$GITHUB_STEP_SUMMARY"
             exit 0

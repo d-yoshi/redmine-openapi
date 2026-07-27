@@ -1,11 +1,16 @@
 name: Release
 
-# Creates a GitHub Release when a release tag (e.g. 2.0.0+redmine.6.1.3) is
-# pushed, then publishes the docs site so it always matches the latest
-# release. Tags not on main (maintenance lines) skip the docs jobs.
+# Creates a GitHub Release when a release tag (e.g. 6.1.3-r2) is pushed, then
+# publishes the docs site so it always matches the latest release. Tags not on
+# main (maintenance lines) are released with --latest=false and skip the docs
+# jobs.
 on:
   push:
     tags:
+      # Current format: <redmine x.y.z>-rN
+      - "[0-9]+.[0-9]+.[0-9]+-r[0-9]+"
+      # Retired format — still triggers so an accidental old-style push fails
+      # loudly at the format gate instead of silently creating nothing
       - "*redmine*"
 
 jobs:
@@ -24,8 +29,17 @@ jobs:
 
       - name: Verify tag format
         run: |
-          if ! echo "$GITHUB_REF_NAME" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\+redmine\.[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::Tag '$GITHUB_REF_NAME' does not match the release format '<major>.<minor>.<patch>+redmine.<x.y.z>'."
+          if ! echo "$GITHUB_REF_NAME" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+-r[1-9][0-9]*$'; then
+            echo "::error::Tag '$GITHUB_REF_NAME' does not match the release format '<redmine x.y.z>-r<N>' (N starts at 1)."
+            exit 1
+          fi
+
+      - name: Verify tag targets the pinned Redmine version
+        run: |
+          TAG_TARGET=${GITHUB_REF_NAME%-r*}
+          PINNED=$(grep -oE 'redmine:[0-9][0-9.]*' test/redmine/docker-compose.yaml | head -1 | cut -d: -f2)
+          if [ "$TAG_TARGET" != "$PINNED" ]; then
+            echo "::error::Tag targets Redmine $TAG_TARGET but docker-compose pins redmine:$PINNED."
             exit 1
           fi
 
@@ -49,12 +63,46 @@ jobs:
         id: prev
         run: |
           # Ancestors only, so a maintenance-branch release is compared against
-          # its own line, never against a newer main-line release
-          PREV_TAG=$(git describe --tags --abbrev=0 --match '*+redmine*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          # its own line, never against a newer main-line release. The second
+          # pattern matches the retired format (transition period).
+          PREV_TAG=$(git describe --tags --abbrev=0 --match '[0-9]*-r[0-9]*' --match '*+redmine*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)
           echo "tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
           echo "Previous release tag: ${PREV_TAG:-<none>}"
 
-      - name: Enforce version bump floor
+      - name: Enforce revision ordering
+        if: steps.prev.outputs.tag != ''
+        env:
+          PREV_TAG: ${{ steps.prev.outputs.tag }}
+        run: |
+          case "$PREV_TAG" in
+            *+redmine*)
+              echo "Previous tag ($PREV_TAG) uses the retired format; skipping the ordering check."
+              exit 0
+              ;;
+          esac
+          PREV_TARGET=${PREV_TAG%-r*}
+          PREV_N=${PREV_TAG##*-r}
+          NEW_TARGET=${GITHUB_REF_NAME%-r*}
+          NEW_N=${GITHUB_REF_NAME##*-r}
+          if [ "$NEW_TARGET" = "$PREV_TARGET" ]; then
+            if [ "$NEW_N" -ne $((PREV_N + 1)) ]; then
+              echo "::error::Same Redmine target as $PREV_TAG; the next revision must be r$((PREV_N + 1)), got r$NEW_N."
+              exit 1
+            fi
+          else
+            NEWER=$(printf '%s\n%s\n' "$PREV_TARGET" "$NEW_TARGET" | sort -V | tail -1)
+            if [ "$NEWER" != "$NEW_TARGET" ]; then
+              echo "::error::Tag targets Redmine $NEW_TARGET, which is older than the previous release's target $PREV_TARGET."
+              exit 1
+            fi
+            if [ "$NEW_N" -ne 1 ]; then
+              echo "::error::First release for Redmine $NEW_TARGET must be ${NEW_TARGET}-r1, got r$NEW_N."
+              exit 1
+            fi
+          fi
+
+      - name: Detect breaking changes
+        id: breaking
         if: steps.prev.outputs.tag != ''
         env:
           PREV_TAG: ${{ steps.prev.outputs.tag }}
@@ -65,16 +113,12 @@ jobs:
           RC=$?
           set -e
           if [ "$RC" -eq 0 ]; then
-            echo "No breaking changes vs $PREV_TAG."
+            echo "breaking=false" >> "$GITHUB_OUTPUT"
           elif [ "$RC" -eq 1 ]; then
-            # oasdiff exits 1 when breaking changes are found
-            NEW_MAJOR=${GITHUB_REF_NAME%%.*}
-            OLD_MAJOR=${PREV_TAG%%.*}
-            if [ "$NEW_MAJOR" -le "$OLD_MAJOR" ]; then
-              echo "::error::Breaking changes detected vs $PREV_TAG but MAJOR was not bumped ($OLD_MAJOR -> $NEW_MAJOR)."
-              exit 1
-            fi
-            echo "Breaking changes present and MAJOR bumped ($OLD_MAJOR -> $NEW_MAJOR); OK."
+            # oasdiff exits 1 when breaking changes are found; the revision
+            # number carries no compatibility signal, so the warning goes into
+            # the release notes instead of failing the release
+            echo "breaking=true" >> "$GITHUB_OUTPUT"
           else
             echo "::error::oasdiff failed with exit code $RC (tool error, not a breaking-change verdict)."
             exit 1
@@ -83,14 +127,19 @@ jobs:
       - name: Build release notes
         env:
           PREV_TAG: ${{ steps.prev.outputs.tag }}
+          BREAKING: ${{ steps.breaking.outputs.breaking }}
         run: |
           {
-            grep -m1 -oE 'Tested against: Redmine [0-9.]+' README.md
+            echo "Tested against: Redmine ${GITHUB_REF_NAME%-r*}"
             echo
+            if [ "$BREAKING" = "true" ]; then
+              echo "**⚠️ Breaking for consumers of $PREV_TAG: regenerated clients or validators may break. Breaking entries (\`error\` in the changelog below) are often corrections of the spec, not behavior changes in Redmine itself.**"
+              echo
+            fi
             if [ -n "$PREV_TAG" ]; then
               echo "## Changes since $PREV_TAG"
               echo
-              echo "Generated by [oasdiff](https://github.com/oasdiff/oasdiff): \`error\` = breaking for spec consumers (regenerated clients or validators may break), \`warning\`/\`info\` = non-breaking. Breaking entries are often corrections of the spec, not behavior changes in Redmine itself."
+              echo "Generated by [oasdiff](https://github.com/oasdiff/oasdiff): \`error\` = breaking for spec consumers (regenerated clients or validators may break), \`warning\`/\`info\` = non-breaking."
               echo
               echo '```'
               docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
@@ -102,8 +151,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # Only a release on main may take "latest" (the /releases/latest
+          # download URL); a maintenance-line release must never steal it
+          if git merge-base --is-ancestor HEAD origin/main; then
+            LATEST=--latest
+          else
+            LATEST=--latest=false
+          fi
           gh release create "$GITHUB_REF_NAME" openapi.yaml \
-            --verify-tag \
+            --verify-tag "$LATEST" \
             --title "$GITHUB_REF_NAME" \
             --notes-file /tmp/notes.md
 

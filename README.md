@@ -24,7 +24,9 @@ Specific version:
 https://github.com/d-yoshi/redmine-openapi/releases/download/<tag>/openapi.yaml
 ```
 
-Release tags are `<spec-version>+redmine.<x.y.z>`, where the build metadata is the Redmine version the release was verified against (older tags predate this format). If you run an older Redmine, pick the release whose notes match your version — the notes of each [release](https://github.com/d-yoshi/redmine-openapi/releases) state the verified Redmine version.
+Release tags are `<redmine-version>-r<N>` (e.g. `6.1.3-r2`): the Redmine version the release was verified against, plus the revision number of the spec for that Redmine version (`-r1` is the first release). If you run an older Redmine, pick the release whose tag matches your version — for older tags in retired formats (`2.0.1+redmine.6.1.3` and earlier), the notes of each [release](https://github.com/d-yoshi/redmine-openapi/releases) state the verified Redmine version. Revisions may contain breaking corrections; each release's notes flag breaking changes and include a machine-generated changelog.
+
+Tags are not SemVer — a SemVer parser reads `-rN` as a pre-release. Pin exact tags, and avoid reusing the spec's `info.version` as a package version for generated clients.
 
 You can also check out a release tag with git, or fetch `openapi.yaml` from a tag via a raw URL.
 
