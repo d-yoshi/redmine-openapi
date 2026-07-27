@@ -109,6 +109,11 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     TimeEntryCustomField.create!(name: 'CF TimeEntry String', field_format: 'string', is_for_all: true)
     puts 'Custom fields created!'
   end
+  unless IssueCustomField.find_by(name: 'CF Date Offset')
+    IssueCustomField.create!(name: 'CF Date Offset', field_format: 'date', is_for_all: true, tracker_ids: [tracker.id],
+      default_value_mode: 'date_offset', default_value: '5')
+    puts 'Date offset custom field created!'
+  end
 
   puts 'Setup completed!'
 RUBY

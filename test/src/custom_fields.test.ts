@@ -26,6 +26,25 @@ describe("Custom Fields", async () => {
     assert(issueCf, "Expected at least one issue custom field with trackers");
     assert(Array.isArray(issueCf!.trackers), "trackers should be an array");
     assert(Array.isArray(issueCf!.roles), "roles should be an array");
+    assert(Array.isArray(issueCf!.projects), "projects should be an array");
+    assert.strictEqual(typeof issueCf!.is_for_all, "boolean");
+
+    // Date fields expose default_value_mode; with date_offset, default_value
+    // holds the offset in days instead of a date
+    const dateCf = customFields.find((cf) => cf.name === "CF Date");
+    assert(dateCf, "Expected the seeded 'CF Date' custom field");
+    assert.strictEqual(dateCf!.default_value_mode, "fixed_date");
+    const dateOffsetCf = customFields.find((cf) => cf.name === "CF Date Offset");
+    assert(dateOffsetCf, "Expected the seeded 'CF Date Offset' custom field");
+    assert.strictEqual(dateOffsetCf!.default_value_mode, "date_offset");
+    assert.strictEqual(dateOffsetCf!.default_value, "5");
+    const stringCf = customFields.find((cf) => cf.name === "CF String");
+    assert(stringCf, "Expected the seeded 'CF String' custom field");
+    assert.strictEqual(
+      stringCf!.default_value_mode,
+      undefined,
+      "Non-date custom fields should not have default_value_mode"
+    );
 
     // Verify list field has possible_values
     const listCf = customFields.find(
@@ -45,22 +64,27 @@ describe("Custom Fields", async () => {
     const multiCf = customFields.find((cf) => cf.multiple === true);
     assert(multiCf, "Expected at least one multiple custom field");
 
-    // Verify non-issue custom fields do NOT have trackers/roles
+    // Verify non-issue custom fields do NOT have trackers/projects.
+    // Since Redmine 7.0, roles are also returned for time_entry/project/version
+    // custom fields (previously issue custom fields only)
     const projectCf = customFields.find(
       (cf) => cf.customized_type === "project"
     );
-    if (projectCf) {
-      assert.strictEqual(
-        projectCf.trackers,
-        undefined,
-        "Project custom field should not have trackers"
-      );
-      assert.strictEqual(
-        projectCf.roles,
-        undefined,
-        "Project custom field should not have roles"
-      );
-    }
+    assert(projectCf, "Expected the seeded project custom field");
+    assert.strictEqual(
+      projectCf!.trackers,
+      undefined,
+      "Project custom field should not have trackers"
+    );
+    assert.strictEqual(
+      projectCf!.projects,
+      undefined,
+      "Project custom field should not have projects"
+    );
+    assert(
+      Array.isArray(projectCf!.roles),
+      "Project custom field should have roles"
+    );
   });
 
   // Test custom fields in issues (various types)

@@ -4,7 +4,7 @@
 
 An OpenAPI 3.0.3 specification for the Redmine API, built from the official docs and source code, and tested against a running Redmine instance.
 
-**Tested against: Redmine 6.1.3**
+**Tested against: Redmine 7.0.0**
 
 ## Documentation
 

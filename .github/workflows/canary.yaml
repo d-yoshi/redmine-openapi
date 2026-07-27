@@ -132,7 +132,7 @@ jobs:
         run: |
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           TITLE="Canary: Redmine $NEW_SERIES_TAG is available (new series, pinned: $PINNED)"
-          BODY="Docker Hub now has \`redmine:$NEW_SERIES_TAG\`, a newer series than the pinned \`$PINNED\`. Supporting a new series is a scope decision, not a routine bump: main would move to the new series with a MAJOR version bump while the current series continues on a maintenance branch. No tests were run against it. Keep this issue open to suppress re-filing while the decision is pending. Workflow run: $RUN_URL"
+          BODY="Docker Hub now has \`redmine:$NEW_SERIES_TAG\`, a newer series than the pinned \`$PINNED\`. Supporting a new series is a scope decision, not a routine bump: main would move to the new series (first release: \`${NEW_SERIES_TAG}-r1\`) while the current series continues on a maintenance branch. No tests were run against it. Keep this issue open to suppress re-filing while the decision is pending. Workflow run: $RUN_URL"
           if gh issue list --state open --json title --jq '.[].title' | grep -Fxq "$TITLE"; then
             echo "Issue already open: $TITLE"
             exit 0

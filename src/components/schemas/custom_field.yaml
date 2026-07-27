@@ -9,6 +9,7 @@ required:
   - min_length
   - max_length
   - is_required
+  - is_for_all
   - is_filter
   - searchable
   - multiple
@@ -62,6 +63,8 @@ properties:
     nullable: true
   is_required:
     type: boolean
+  is_for_all:
+    type: boolean
   is_filter:
     type: boolean
   searchable:
@@ -71,10 +74,20 @@ properties:
   default_value:
     type: string
     nullable: true
+  default_value_mode:
+    type: string
+    enum:
+      - fixed_date
+      - date_offset
+    description: Only returned for date custom fields. When date_offset, default_value holds the offset in days from the current date.
   visible:
     type: boolean
   editable:
     type: boolean
+  projects:
+    type: array
+    items:
+      $ref: ./id_name.yaml
   trackers:
     type: array
     items:

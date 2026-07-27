@@ -31,3 +31,26 @@ post:
             $ref: ../components/schemas/errors.yaml
     404:
       description: ""
+delete:
+  tags:
+    - Groups
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups
+  summary: Remove users from group
+  operationId: removeUsersFromGroup
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/group_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: user_ids[]
+      in: query
+      required: true
+      schema:
+        type: array
+        items:
+          type: integer
+  responses:
+    204:
+      description: ""
+    404:
+      description: Group not found, or none of the given users are members of the group.

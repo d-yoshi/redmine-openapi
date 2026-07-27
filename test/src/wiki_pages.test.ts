@@ -123,6 +123,11 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(200, response);
+
+    const wikiPage = response.data!.wiki_page;
+    assert(wikiPage.project, "Expected wiki page to include its project");
+    assert.strictEqual(typeof wikiPage.project!.id, "number");
+    assert.strictEqual(typeof wikiPage.project!.name, "string");
   });
 
   test("GET /projects/{project_id}/wiki/{wiki_page_title}/{version_id}.json", async () => {

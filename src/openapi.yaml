@@ -2,7 +2,7 @@ openapi: 3.0.3
 
 info:
   title: Redmine API
-  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 6.1.3
+  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.0
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
