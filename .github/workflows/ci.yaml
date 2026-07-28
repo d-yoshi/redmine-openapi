@@ -7,6 +7,10 @@ on:
       - "src/**"
       - "redocly/**"
       - "test/**"
+      # Tool versions live in the root manifest; a toolchain bump must not
+      # merge with zero CI
+      - "package.json"
+      - "package-lock.json"
     tags-ignore:
       - "**"
     branches:
@@ -17,6 +21,8 @@ on:
       - "src/**"
       - "redocly/**"
       - "test/**"
+      - "package.json"
+      - "package-lock.json"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -25,39 +31,53 @@ concurrency:
 jobs:
   bundle:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-      - name: bundle
-        run: npx @redocly/cli@latest bundle --config redocly/redocly.yaml dist -o openapi.yaml
-      - name: lint
-        run: npx @redocly/cli@latest lint --config redocly/redocly.yaml openapi.yaml
-      - uses: actions/upload-artifact@v7
-        with:
-          name: openapi
-          path: openapi.yaml
-
-  test:
-    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: "npm"
-          cache-dependency-path: "test/package-lock.json"
       - run: npm ci
-        working-directory: test
-      - name: summary/detail schema sync
-        run: node check-summary-detail-sync.mjs
-        working-directory: test
-      - run: ./run-test.sh
-        working-directory: test
-      - name: type check
-        run: npx tsc --noEmit
-        working-directory: test
+      - name: bundle
+        run: npm run bundle
+      - name: lint
+        run: npm run lint
+      - uses: actions/upload-artifact@v7
+        with:
+          name: openapi
+          path: openapi.yaml
+
+  # No Docker: fails a PR on a shell lint, schema, spec or type error without
+  # waiting for the integration job. run-test.sh runs the same script, so this is
+  # earlier feedback rather than an extra gate.
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: "npm"
+      - run: npm ci
+      - run: ./test/check.sh
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: "npm"
+      - run: npm ci
+      # Runs check.sh, then the suite, then check-api-coverage.mjs — so a failure
+      # here can also mean a declared operation, response or query parameter is
+      # unexercised
+      - name: static checks, integration tests and API coverage
+        run: ./test/run-test.sh
 
   # Informational: show changes against the latest release tag (never fails the build)
   spec-diff:
@@ -71,6 +91,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: "npm"
+      - run: npm ci
       - name: oasdiff changelog against latest release tag
         run: |
           # Nearest release tag among the ancestors of HEAD (branch-aware).
@@ -81,7 +103,7 @@ jobs:
             exit 0
           fi
           git show "$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
-          npx @redocly/cli@latest bundle --config redocly/redocly.yaml dist -o openapi.yaml
+          npm run bundle
           {
             echo "## oasdiff changelog vs \`$PREV_TAG\`"
             echo '```'
@@ -93,6 +115,7 @@ jobs:
     if: github.event_name == 'push'
     needs:
       - bundle
+      - static
       - test
     runs-on: ubuntu-latest
     steps:

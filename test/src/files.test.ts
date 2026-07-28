@@ -39,9 +39,12 @@ describe("Files", async () => {
   });
 
   after(async () => {
-    await client.DELETE("/projects/{project_id}.{format}", {
-      params: { path: { format: "json", project_id: projectId } },
-    });
+    if (projectId) {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+      });
+      assertStatus(204, response);
+    }
   });
 
   test("POST /projects/{project_id}/files.json", async () => {
@@ -50,8 +53,8 @@ describe("Files", async () => {
         path: { format: "json" },
         query: { filename: "project-file.txt" },
       },
-      body: "file content" as any,
-      bodySerializer: (body: any) => body,
+      body: "file content",
+      bodySerializer: (body) => body,
       headers: { "Content-Type": "application/octet-stream" },
     });
     assertStatus(201, uploadResponse);
@@ -87,6 +90,11 @@ describe("Files", async () => {
       }
     );
     assertStatus(200, response);
+    // An empty array would validate nothing about the item schema
+    assert(
+      response.data!.files.some((file) => file.filename === "project-file.txt"),
+      "Expected the uploaded file in the project's file list"
+    );
   });
 
   test("GET /projects/{project_id}/files.json (null content_type)", async () => {
@@ -97,8 +105,8 @@ describe("Files", async () => {
         path: { format: "json" },
         query: { filename: "file-without-extension" },
       },
-      body: "file content" as any,
-      bodySerializer: (body: any) => body,
+      body: "file content",
+      bodySerializer: (body) => body,
       headers: { "Content-Type": "application/octet-stream" },
     });
     assertStatus(201, uploadResponse);

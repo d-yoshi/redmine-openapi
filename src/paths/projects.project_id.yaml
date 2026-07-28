@@ -65,6 +65,9 @@ put:
               properties:
                 identifier:
                   type: string
+                  description: |
+                    Accepted but ignored: a project's identifier cannot be changed
+                    once the project exists, and the request still succeeds.
                 name:
                   type: string
                 description:

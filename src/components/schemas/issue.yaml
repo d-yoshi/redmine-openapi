@@ -144,12 +144,24 @@ properties:
     items:
       type: object
       additionalProperties: false
+      # issues/show.api.rsb renders every field below unconditionally; `user` and
+      # `updated_by` are guarded with `unless ... nil?` and are therefore optional
+      # (updated_by only appears once a journal has been edited)
+      required:
+        - id
+        - notes
+        - created_on
+        - updated_on
+        - private_notes
+        - details
       properties:
         id:
           type: integer
         user:
           $ref: ./id_name.yaml
         notes:
+          # Empty string, not null, for a journal that only records property
+          # changes
           type: string
         created_on:
           type: string
@@ -166,6 +178,11 @@ properties:
           items:
             type: object
             additionalProperties: false
+            required:
+              - property
+              - name
+              - old_value
+              - new_value
             properties:
               property:
                 type: string

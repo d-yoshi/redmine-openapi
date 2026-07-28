@@ -49,9 +49,10 @@ describe("Issue Relations", () => {
 
   after(async () => {
     if (projectId) {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     }
   });
 

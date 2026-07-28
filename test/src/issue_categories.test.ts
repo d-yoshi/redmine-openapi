@@ -1,6 +1,7 @@
 import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, currentUserId } from "./helpers.js";
 
 describe("Issue Categories", () => {
   const projectIdentifier = `cat-${Date.now()}`;
@@ -23,9 +24,10 @@ describe("Issue Categories", () => {
 
   after(async () => {
     if (projectId) {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     }
   });
 
@@ -39,7 +41,7 @@ describe("Issue Categories", () => {
         body: {
           issue_category: {
             name: "category-1",
-            assigned_to_id: 1,
+            assigned_to_id: await currentUserId(),
           },
         },
       }
@@ -70,7 +72,7 @@ describe("Issue Categories", () => {
         body: {
           issue_category: {
             name: "category-updated",
-            assigned_to_id: 1,
+            assigned_to_id: await currentUserId(),
           },
         },
       }
@@ -175,6 +177,22 @@ describe("Issue Categories", () => {
     assertStatus(201, otherResponse);
     const otherCategoryId = otherResponse.data!.issue_category.id;
 
+    // Without an issue carrying the category, IssueCategory#destroy reassigns
+    // zero rows, and the controller resolves an unknown reassign_to_id to nil and
+    // proceeds — so a dropped parameter would return the same 204.
+    const issueResponse = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        issue: {
+          project_id: projectId,
+          subject: "issue to be reassigned",
+          category_id: categoryId,
+        },
+      },
+    });
+    assertStatus(201, issueResponse);
+    const issueId = issueResponse.data!.issue.id;
+
     const response = await client.DELETE(
       "/issue_categories/{issue_category_id}.{format}",
       {
@@ -186,13 +204,14 @@ describe("Issue Categories", () => {
     );
     assertStatus(204, response);
 
-    await client.DELETE(
-      "/issue_categories/{issue_category_id}.{format}",
-      {
-        params: {
-          path: { format: "json", issue_category_id: otherCategoryId },
-        },
-      }
+    const issueAfterResponse = await client.GET("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId } },
+    });
+    assertStatus(200, issueAfterResponse);
+    assert.strictEqual(
+      issueAfterResponse.data!.issue.category?.id,
+      otherCategoryId,
+      "Expected the issue to be reassigned to the surviving category"
     );
   });
 });

@@ -11,12 +11,34 @@ const _require = createRequire(import.meta.url);
 const OpenAPIResponseValidator =
   _require("openapi-response-validator").default;
 
+/**
+ * openapi-response-validator's own `responses` type only describes the OpenAPI 2
+ * shape (`{ schema }`, with schema required), but its runtime also reads the
+ * OpenAPI 3 shape — `getSchemas` in dist/index.js falls back to
+ * `content[<first media type>].schema`. Passing an OpenAPI 3 responses object is
+ * therefore correct usage of a package whose declarations are too narrow, so the
+ * shape we actually pass is declared here instead of cast to the wrong one.
+ *
+ * Note the runtime validates the *first* declared media type only; no response
+ * in this spec declares more than one.
+ */
+type ResponseValidatorArgs = Omit<OpenAPIResponseValidatorArgs, "responses"> & {
+  responses: OpenAPIV3.ResponsesObject;
+};
+
 import type { paths } from "../dist/openapi-typescript/schema.d.ts";
+
+/** Re-exported so a test can type its filter object without importing paths. */
+export type IssuesQuery = NonNullable<
+  paths["/issues.{format}"]["get"]["parameters"]["query"]
+>;
 
 const REDMINE_URL = process.env.REDMINE_URL;
 const REDMINE_ADMIN_LOGIN = process.env.REDMINE_ADMIN_LOGIN;
 const REDMINE_ADMIN_PASSWORD = process.env.REDMINE_ADMIN_PASSWORD;
 const OPENAPI_PATH = process.env.OPENAPI_PATH;
+// When set, every request/response pair is recorded for check-api-coverage.mjs
+const OBSERVED_LOG = process.env.OBSERVED_LOG;
 
 if (
   !REDMINE_URL ||
@@ -54,7 +76,17 @@ client.use({
     const method = request.method.toLowerCase();
     const status = response.status;
 
-    const responses = openapi.paths[schemaPath]?.[method]?.responses;
+    if (OBSERVED_LOG) {
+      fs.appendFileSync(
+        OBSERVED_LOG,
+        `${method.toUpperCase()} ${schemaPath} ${status} ${request.url}\n`
+      );
+    }
+
+    const pathItem = openapi.paths[schemaPath] as
+      | Record<string, OpenAPIV3.OperationObject | undefined>
+      | undefined;
+    const responses = pathItem?.[method]?.responses;
     if (!responses) {
       throw new Error(
         `No OpenAPI spec found for ${method.toUpperCase()} ${schemaPath}`
@@ -68,7 +100,7 @@ client.use({
       );
     }
 
-    const args: OpenAPIResponseValidatorArgs = {
+    const args: ResponseValidatorArgs = {
       responses,
       components: openapi.components,
     };
@@ -129,4 +161,97 @@ export const assertStatus = (
     console.error("Response:", JSON.stringify(error ?? data, null, 2));
   }
   assert.strictEqual(status, expectedStatus);
+};
+
+const memoize = <T>(fetch: () => Promise<T>) => {
+  let cached: Promise<T> | undefined;
+  return () => (cached ??= fetch());
+};
+
+/**
+ * An after hook that stopped at the first failed deletion would leak every
+ * resource behind it, so all steps run before any failure is raised.
+ */
+export const runCleanup = async (steps: Array<() => Promise<void>>) => {
+  const failures: string[] = [];
+  for (const step of steps) {
+    try {
+      await step();
+    } catch (error) {
+      failures.push(String(error));
+    }
+  }
+  assert.strictEqual(failures.length, 0, `cleanup failed:\n${failures.join("\n")}`);
+};
+
+// The ids below are looked up rather than hardcoded: run-test.sh seeds trackers,
+// roles and enumerations only when the database has none, so on an image that
+// ships default data these ids come from the image and need not start at 1.
+
+export const currentUserId = memoize(async () => {
+  const response = await client.GET("/users/current.{format}", {
+    params: { path: { format: "json" } },
+  });
+  assertStatus(200, response);
+  return response.data!.user.id;
+});
+
+export const someTrackerId = memoize(async () => {
+  const response = await client.GET("/trackers.{format}", {
+    params: { path: { format: "json" } },
+  });
+  assertStatus(200, response);
+  const tracker = response.data!.trackers[0];
+  assert(tracker, "Expected at least one tracker to exist");
+  return tracker.id;
+});
+
+export const someRoleId = memoize(async () => {
+  const response = await client.GET("/roles.{format}", {
+    params: { path: { format: "json" } },
+  });
+  assertStatus(200, response);
+  const role = response.data!.roles[0];
+  assert(role, "Expected at least one givable role to exist");
+  return role.id;
+});
+
+export const someStatusId = memoize(async () => {
+  const response = await client.GET("/issue_statuses.{format}", {
+    params: { path: { format: "json" } },
+  });
+  assertStatus(200, response);
+  const status = response.data!.issue_statuses[0];
+  assert(status, "Expected at least one issue status to exist");
+  return status.id;
+});
+
+export const somePriorityId = memoize(async () => {
+  const response = await client.GET("/enumerations/issue_priorities.{format}", {
+    params: { path: { format: "json" } },
+  });
+  assertStatus(200, response);
+  const priority = response.data!.issue_priorities[0];
+  assert(priority, "Expected at least one issue priority to exist");
+  return priority.id;
+});
+
+/** Shared so the group and membership suites cannot drift apart. */
+export const createTestUser = async (prefix: string) => {
+  // One timestamp for both: two Date.now() calls can straddle a millisecond
+  const ts = Date.now();
+  const response = await client.POST("/users.{format}", {
+    params: { path: { format: "json" } },
+    body: {
+      user: {
+        login: `${prefix}-${ts}`,
+        firstname: prefix,
+        lastname: "User",
+        mail: `${prefix}-${ts}@example.com`,
+        password: "password123!",
+      },
+    },
+  });
+  assertStatus(201, response);
+  return response.data!.user.id;
 };

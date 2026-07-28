@@ -45,8 +45,10 @@ describe("Attachments", () => {
         path: { format: "json" },
         query: { filename: "test.png" },
       },
-      body: MINIMAL_PNG as any,
-      bodySerializer: (body: any) => body,
+      // The spec types the body as a binary string; a Buffer is a valid BodyInit
+      // at runtime, so the cast is scoped to the body alone
+      body: MINIMAL_PNG as unknown as string,
+      bodySerializer: (body) => body,
       headers: { "Content-Type": "application/octet-stream" },
     });
     assertStatus(201, pngUploadResponse);
@@ -94,9 +96,10 @@ describe("Attachments", () => {
 
   after(async () => {
     if (projectId) {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     }
   });
 
@@ -163,12 +166,28 @@ describe("Attachments", () => {
           attachment: {
             filename: "renamed.txt",
             description: "updated description",
-            content_type: "text/plain",
+            // Different from the upload's text/plain: re-sending the current
+            // value would pass even if Redmine dropped the attribute
+            content_type: "text/markdown",
           },
         },
       }
     );
     assertStatus(204, response);
+
+    // attachments#update answers 204 for any attribute it ignores, so the new
+    // values are read back
+    const getResponse = await client.GET(
+      "/attachments/{attachment_id}.{format}",
+      {
+        params: { path: { format: "json", attachment_id: attachmentId } },
+      }
+    );
+    assertStatus(200, getResponse);
+    const attachment = getResponse.data!.attachment;
+    assert.strictEqual(attachment.filename, "renamed.txt");
+    assert.strictEqual(attachment.description, "updated description");
+    assert.strictEqual(attachment.content_type, "text/markdown");
   });
 
   test("GET /attachments/{attachment_id}.json for a thumbnailable attachment", async () => {

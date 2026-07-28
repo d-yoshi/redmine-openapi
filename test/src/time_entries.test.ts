@@ -1,14 +1,23 @@
 import { before, after, describe, test } from "node:test";
 
-import { client, assertStatus } from "./helpers.js";
+import {
+  client,
+  assertStatus,
+  currentUserId,
+  someTrackerId,
+} from "./helpers.js";
 
 describe("Time Entries", () => {
   let projectId: number;
   let issueId: number;
   let activityId: number;
   let timeEntryId: number;
+  let trackerId: number;
+  let userId: number;
 
   before(async () => {
+    trackerId = await someTrackerId();
+    userId = await currentUserId();
     const projectName = `time-${Date.now()}`;
     const projectResponse = await client.POST("/projects.{format}", {
       params: { path: { format: "json" } },
@@ -28,7 +37,7 @@ describe("Time Entries", () => {
       body: {
         issue: {
           project_id: projectId,
-          tracker_id: 1,
+          tracker_id: trackerId,
           subject: "issue-1",
         },
       },
@@ -46,9 +55,10 @@ describe("Time Entries", () => {
 
   after(async () => {
     if (projectId) {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     }
   });
 
@@ -63,7 +73,7 @@ describe("Time Entries", () => {
           activity_id: activityId,
           comments: "entry-1",
           spent_on: new Date().toISOString().slice(0, 10),
-          user_id: 1,
+          user_id: userId,
           custom_fields: [],
           custom_field_values: {},
         },
@@ -100,7 +110,7 @@ describe("Time Entries", () => {
             hours: 2.5,
             activity_id: activityId,
             comments: "entry-1-updated",
-            user_id: 1,
+            user_id: userId,
             custom_fields: [],
             custom_field_values: {},
           },
@@ -153,7 +163,7 @@ describe("Time Entries", () => {
             activity_id: activityId,
             comments: "project-scoped-entry",
             spent_on: new Date().toISOString().slice(0, 10),
-            user_id: 1,
+            user_id: userId,
             custom_fields: [],
             custom_field_values: {},
           },
@@ -171,7 +181,7 @@ describe("Time Entries", () => {
           path: { format: "json", project_id: projectId },
           query: {
             spent_on: ">=2020-01-01",
-            user_id: "1",
+            user_id: String(userId),
             activity_id: String(activityId),
             sort: "spent_on:desc",
             offset: 0,
@@ -197,7 +207,7 @@ describe("Time Entries", () => {
             project_id: projectId,
             comments: "issue-scoped-entry",
             spent_on: new Date().toISOString().slice(0, 10),
-            user_id: 1,
+            user_id: userId,
             custom_fields: [],
             custom_field_values: {},
           },
@@ -215,7 +225,7 @@ describe("Time Entries", () => {
           project_id: String(projectId),
           subproject_id: "!*",
           issue_id: String(issueId),
-          "issue.tracker_id": "1",
+          "issue.tracker_id": String(trackerId),
           "issue.status_id": "*",
           "issue.fixed_version_id": "!*",
           "issue.category_id": "!*",

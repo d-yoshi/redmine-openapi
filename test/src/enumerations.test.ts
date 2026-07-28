@@ -12,6 +12,11 @@ describe("Enumerations", async () => {
       }
     );
     assertStatus(200, response);
+    // An empty array would validate nothing about the item schema
+    assert(
+      response.data!.issue_priorities.length > 0,
+      "Expected at least one issue priority"
+    );
   });
 
   test("GET /enumerations/time_entry_activities.json", async () => {
@@ -22,6 +27,10 @@ describe("Enumerations", async () => {
       }
     );
     assertStatus(200, response);
+    assert(
+      response.data!.time_entry_activities.length > 0,
+      "Expected at least one time entry activity"
+    );
   });
 
   test("GET /enumerations/document_categories.json", async () => {

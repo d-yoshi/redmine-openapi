@@ -1,4 +1,5 @@
 import { describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus } from "./helpers.js";
 
@@ -10,7 +11,10 @@ describe("Roles", () => {
       params: { path: { format: "json" } },
     });
     assertStatus(200, response);
-    roleId = response.data!.roles[0].id;
+    const role = response.data!.roles[0];
+    // Otherwise the empty case fails with a bare TypeError further down
+    assert(role, "Expected at least one givable role; run-test.sh seeds two");
+    roleId = role.id;
   });
 
   test("GET /roles/{role_id}.json", async () => {

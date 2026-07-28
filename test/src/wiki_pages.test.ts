@@ -24,9 +24,10 @@ describe("Wiki Pages", () => {
 
   after(async () => {
     if (projectId) {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     }
   });
 
@@ -302,6 +303,9 @@ describe("Wiki Pages", () => {
   });
 
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (set start page)", async () => {
+    // Not verified beyond the status: no API response exposes which page is the
+    // start page. Note that WikiPage#is_start_page= coerces with
+    // `arg == "1" || arg == true`, so 1 or "true" is dropped and still returns 204.
     const response = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {

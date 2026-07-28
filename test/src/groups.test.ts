@@ -1,40 +1,42 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, createTestUser, runCleanup } from "./helpers.js";
 
 describe("Groups", () => {
-  let userId: number;
   let groupId: number;
+  // Global: not reclaimed by deleting the group, so the hooks own them —
+  // creating them inside a test leaks them when a later assertion there fails.
+  let userId: number;
+  let extraUserId: number;
+  let bulkUserIds: number[] = [];
 
   before(async () => {
-    const userResponse = await client.POST("/users.{format}", {
-      params: { path: { format: "json" } },
-      body: {
-        user: {
-          login: `grpuser-${Date.now()}`,
-          firstname: "Group",
-          lastname: "User",
-          mail: `grpuser-${Date.now()}@example.com`,
-          password: "password123!",
-        },
-      },
-    });
-    assertStatus(201, userResponse);
-    userId = userResponse.data!.user.id;
+    userId = await createTestUser("grpuser");
+    extraUserId = await createTestUser("grpuser2");
+    // One push per await: assigning after both would leak the first user's id
+    // when the second creation fails
+    bulkUserIds.push(await createTestUser("grpbulk1"));
+    bulkUserIds.push(await createTestUser("grpbulk2"));
   });
 
   after(async () => {
-    if (groupId) {
-      await client.DELETE("/groups/{group_id}.{format}", {
-        params: { path: { format: "json", group_id: groupId } },
-      });
-    }
-    if (userId) {
-      await client.DELETE("/users/{user_id}.{format}", {
-        params: { path: { format: "json", user_id: userId } },
-      });
-    }
+    await runCleanup([
+      async () => {
+        if (!groupId) return;
+        const response = await client.DELETE("/groups/{group_id}.{format}", {
+          params: { path: { format: "json", group_id: groupId } },
+        });
+        assertStatus(204, response);
+      },
+      ...[userId, extraUserId, ...bulkUserIds].map((id) => async () => {
+        if (!id) return;
+        const response = await client.DELETE("/users/{user_id}.{format}", {
+          params: { path: { format: "json", user_id: id } },
+        });
+        assertStatus(204, response);
+      }),
+    ]);
   });
 
   test("POST /groups.json", async () => {
@@ -81,33 +83,14 @@ describe("Groups", () => {
   });
 
   test("POST /groups/{group_id}/users.json (add user)", async () => {
-    const newUserResponse = await client.POST("/users.{format}", {
-      params: { path: { format: "json" } },
-      body: {
-        user: {
-          login: `grpuser2-${Date.now()}`,
-          firstname: "Group2",
-          lastname: "User2",
-          mail: `grpuser2-${Date.now()}@example.com`,
-          password: "password123!",
-        },
-      },
-    });
-    assertStatus(201, newUserResponse);
-    const newUserId = newUserResponse.data!.user.id;
-
     const response = await client.POST(
       "/groups/{group_id}/users.{format}",
       {
         params: { path: { format: "json", group_id: groupId } },
-        body: { user_id: newUserId },
+        body: { user_id: extraUserId },
       }
     );
     assertStatus(204, response);
-
-    await client.DELETE("/users/{user_id}.{format}", {
-      params: { path: { format: "json", user_id: newUserId } },
-    });
   });
 
   test("DELETE /groups/{group_id}/users/{user_id}.json (remove user)", async () => {
@@ -123,74 +106,84 @@ describe("Groups", () => {
   });
 
   // Rails only parses repeated bracketed keys (user_ids[]=1&user_ids[]=2) as an
-  // array; the client's global serializer would join values with commas
-  const userIdsSerializer = (q: Record<string, unknown>) =>
-    (q["user_ids[]"] as number[]).map((id) => `user_ids[]=${id}`).join("&");
+  // array; the client's global serializer would join values with commas. Other
+  // keys pass through, so adding a query parameter here cannot silently drop it.
+  const repeatArraysSerializer = (query: Record<string, unknown>) =>
+    Object.entries(query)
+      .flatMap(([key, value]) =>
+        Array.isArray(value)
+          ? value.map((item) => `${key}=${item}`)
+          : [`${key}=${value}`]
+      )
+      .join("&");
+
+  const groupUserIds = async () => {
+    const response = await client.GET("/groups/{group_id}.{format}", {
+      params: {
+        path: { format: "json", group_id: groupId },
+        query: { include: ["users"] },
+      },
+    });
+    assertStatus(200, response);
+    const users = response.data!.group.users;
+    assert(users, "Expected include=users to return a users array");
+    return users.map((user) => user.id);
+  };
 
   test("DELETE /groups/{group_id}/users.json (bulk remove)", async () => {
-    const ids: number[] = [];
-    for (const n of [1, 2]) {
-      const userResponse = await client.POST("/users.{format}", {
-        params: { path: { format: "json" } },
-        body: {
-          user: {
-            login: `grpbulk${n}-${Date.now()}`,
-            firstname: `Bulk${n}`,
-            lastname: "User",
-            mail: `grpbulk${n}-${Date.now()}@example.com`,
-            password: "password123!",
-          },
-        },
-      });
-      assertStatus(201, userResponse);
-      ids.push(userResponse.data!.user.id);
-    }
-    for (const id of ids) {
+    for (const id of bulkUserIds) {
       const addResponse = await client.POST("/groups/{group_id}/users.{format}", {
         params: { path: { format: "json", group_id: groupId } },
         body: { user_id: id },
       });
       assertStatus(204, addResponse);
     }
+    const membersBefore = await groupUserIds();
+    for (const id of bulkUserIds) {
+      assert(
+        membersBefore.includes(id),
+        `Expected user ${id} to be a member first`
+      );
+    }
 
     const response = await client.DELETE("/groups/{group_id}/users.{format}", {
       params: {
         path: { format: "json", group_id: groupId },
-        query: { "user_ids[]": ids },
+        query: { "user_ids[]": bulkUserIds },
       },
-      querySerializer: userIdsSerializer,
+      querySerializer: repeatArraysSerializer,
     });
     assertStatus(204, response);
 
-    const groupResponse = await client.GET("/groups/{group_id}.{format}", {
-      params: {
-        path: { format: "json", group_id: groupId },
-        query: { include: ["users"] },
-      },
-    });
-    assertStatus(200, groupResponse);
-    const remaining = (groupResponse.data!.group.users ?? []).map((u) => u.id);
-    for (const id of ids) {
+    const remaining = await groupUserIds();
+    for (const id of bulkUserIds) {
       assert(
         !remaining.includes(id),
         `Expected user ${id} to be removed from the group`
       );
     }
-
-    for (const id of ids) {
-      await client.DELETE("/users/{user_id}.{format}", {
-        params: { path: { format: "json", user_id: id } },
-      });
-    }
+    // Otherwise "the listed ids are gone" would also hold for a request that
+    // emptied the group
+    assert(
+      remaining.includes(extraUserId),
+      "Expected the unlisted member to remain in the group"
+    );
   });
 
   test("DELETE /groups/{group_id}/users.json returns 404 when no given user is a member", async () => {
+    // A missing group produces the same 404, so confirm the group exists first;
+    // otherwise this test passes even when the group was never created
+    const groupResponse = await client.GET("/groups/{group_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId } },
+    });
+    assertStatus(200, groupResponse);
+
     const response = await client.DELETE("/groups/{group_id}/users.{format}", {
       params: {
         path: { format: "json", group_id: groupId },
         query: { "user_ids[]": [999999] },
       },
-      querySerializer: userIdsSerializer,
+      querySerializer: repeatArraysSerializer,
     });
     assertStatus(404, response);
   });
@@ -201,7 +194,7 @@ describe("Groups", () => {
         path: { format: "json", group_id: 999999 },
         query: { "user_ids[]": [userId] },
       },
-      querySerializer: userIdsSerializer,
+      querySerializer: repeatArraysSerializer,
     });
     assertStatus(404, response);
   });
@@ -211,6 +204,10 @@ describe("Groups", () => {
       params: { path: { format: "json" } },
     });
     assertStatus(200, response);
+    assert(
+      response.data!.groups.some((group) => group.id === groupId),
+      "Expected the created group in the list"
+    );
   });
 
   test("GET /groups.json with builtin", async () => {
@@ -246,7 +243,7 @@ describe("Groups", () => {
     });
     assertStatus(200, response);
     assert(
-      response.data!.user.groups!.some((g) => g.id === groupId),
+      response.data!.user.groups!.some((group) => group.id === groupId),
       "Expected the user to belong to the group"
     );
   });

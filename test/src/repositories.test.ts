@@ -1,7 +1,7 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, someTrackerId } from "./helpers.js";
 
 describe("Repositories", () => {
   const projectId = "repo-test";
@@ -20,7 +20,7 @@ describe("Repositories", () => {
         issue: {
           project_id: projectId,
           subject: `Repo test issue ${Date.now()}`,
-          tracker_id: 1,
+          tracker_id: await someTrackerId(),
         },
       },
     });
@@ -30,9 +30,10 @@ describe("Repositories", () => {
 
   after(async () => {
     if (issueId) {
-      await client.DELETE("/issues/{issue_id}.{format}", {
+      const response = await client.DELETE("/issues/{issue_id}.{format}", {
         params: { path: { format: "json", issue_id: issueId } },
       });
+      assertStatus(204, response);
     }
   });
 

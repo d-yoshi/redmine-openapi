@@ -1,25 +1,48 @@
-import { after, describe, test } from "node:test";
+import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, currentUserId } from "./helpers.js";
 
 describe("Users", () => {
   let userId: number;
+  let userLogin: string;
+  // Global: the hooks own it, so an assertion failure mid-test cannot leave it
+  // behind. An interrupted run leaves its container in place and the next
+  // `docker compose up -d` reuses that database, so leaks do outlive a run.
+  let filterGroupId: number;
+
+  before(async () => {
+    const response = await client.POST("/groups.{format}", {
+      params: { path: { format: "json" } },
+      body: { group: { name: `user-filter-group-${Date.now()}` } },
+    });
+    assertStatus(201, response);
+    filterGroupId = response.data!.group.id;
+  });
 
   after(async () => {
     if (userId) {
-      await client.DELETE("/users/{user_id}.{format}", {
+      const response = await client.DELETE("/users/{user_id}.{format}", {
         params: { path: { format: "json", user_id: userId } },
       });
+      assertStatus(204, response);
+    }
+    if (filterGroupId) {
+      const response = await client.DELETE("/groups/{group_id}.{format}", {
+        params: { path: { format: "json", group_id: filterGroupId } },
+      });
+      assertStatus(204, response);
     }
   });
 
   test("POST /users.json", async () => {
     const ts = Date.now();
+    userLogin = `user-${ts}`;
     const response = await client.POST("/users.{format}", {
       params: { path: { format: "json" } },
       body: {
         user: {
-          login: `user-${ts}`,
+          login: userLogin,
           firstname: "Alice",
           lastname: "Doe",
           mail: `user-${ts}@example.com`,
@@ -71,11 +94,12 @@ describe("Users", () => {
 
   test("PUT /users/{user_id}.json", async () => {
     const ts = Date.now();
+    userLogin = `user-upd-${ts}`;
     const response = await client.PUT("/users/{user_id}.{format}", {
       params: { path: { format: "json", user_id: userId } },
       body: {
         user: {
-          login: `user-upd-${ts}`,
+          login: userLogin,
           admin: false,
           password: "newpassword123!",
           firstname: "Bob",
@@ -142,14 +166,6 @@ describe("Users", () => {
   });
 
   test("GET /users.json with remaining filters", async () => {
-    const ts = Date.now();
-    const groupResponse = await client.POST("/groups.{format}", {
-      params: { path: { format: "json" } },
-      body: { group: { name: `user-filter-group-${ts}` } },
-    });
-    assertStatus(201, groupResponse);
-    const groupId = groupResponse.data!.group.id;
-
     const response = await client.GET("/users.{format}", {
       params: {
         path: { format: "json" },
@@ -171,14 +187,10 @@ describe("Users", () => {
     const groupFilterResponse = await client.GET("/users.{format}", {
       params: {
         path: { format: "json" },
-        query: { group_id: String(groupId) },
+        query: { group_id: String(filterGroupId) },
       },
     });
     assertStatus(200, groupFilterResponse);
-
-    await client.DELETE("/groups/{group_id}.{format}", {
-      params: { path: { format: "json", group_id: groupId } },
-    });
   });
 
   test("GET /users.json returns 422 for invalid filter value", async () => {
@@ -192,11 +204,13 @@ describe("Users", () => {
   });
 
   test("POST /users.json returns 422 for invalid data", async () => {
+    // Duplicate login — reuses the one created above rather than assuming a
+    // particular account exists on this Redmine
     const response = await client.POST("/users.{format}", {
       params: { path: { format: "json" } },
       body: {
         user: {
-          login: "admin",
+          login: userLogin,
           firstname: "Duplicate",
           lastname: "Login",
           mail: "duplicate-login@example.com",
@@ -237,10 +251,28 @@ describe("Users", () => {
   });
 
   test("DELETE /users/{user_id}.json returns 422 for own account", async () => {
-    // Admin (user 1) is the only active administrator, so the account is
-    // not deletable; Redmine responds 422 with an empty body
+    // Redmine refuses to delete the authenticated account only while it is the
+    // last active administrator and Setting.unsubscribe is on — its default
+    // (users_controller#destroy → User#own_account_deletable?). With a second
+    // active admin the same request destroys the account the suite authenticates
+    // as, unrecoverably, so the precondition is asserted rather than assumed.
+    const ownId = await currentUserId();
+    const adminsResponse = await client.GET("/users.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { status: "1", admin: "1" },
+      },
+    });
+    assertStatus(200, adminsResponse);
+    assert.deepStrictEqual(
+      adminsResponse.data!.users.map((user) => user.id),
+      [ownId],
+      "This test only returns 422 while the authenticated account is the last " +
+        "active administrator; another active admin would make Redmine delete it"
+    );
+
     const response = await client.DELETE("/users/{user_id}.{format}", {
-      params: { path: { format: "json", user_id: 1 } },
+      params: { path: { format: "json", user_id: ownId } },
     });
     assertStatus(422, response);
   });

@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: "npm"
+      - run: npm ci
 
       - name: Verify tag format
         run: |
@@ -44,9 +46,14 @@ jobs:
           fi
 
       - name: Verify bundle freshness
+        # Rebundles in place with the canonical script; the checkout is clean at
+        # this point, so any diff means the committed bundle is stale. On success
+        # the file is byte-identical, so later steps see the committed content.
         run: |
-          npx @redocly/cli@latest bundle --config redocly/redocly.yaml dist -o /tmp/fresh.yaml
-          if ! diff -u openapi.yaml /tmp/fresh.yaml; then
+          # git diff cannot see an untracked file, so require it to be tracked
+          git ls-files --error-unmatch openapi.yaml
+          npm run bundle
+          if ! git diff --exit-code -- openapi.yaml; then
             echo "::error::Committed openapi.yaml does not match a fresh bundle of src/. Tag a commit where the bundle is up to date."
             exit 1
           fi
@@ -187,6 +194,9 @@ jobs:
         if: steps.guard.outputs.deploy == 'true'
         with:
           node-version: 24
+          cache: "npm"
+      - run: npm ci
+        if: steps.guard.outputs.deploy == 'true'
       - uses: actions/configure-pages@v6
         if: steps.guard.outputs.deploy == 'true'
         id: setup
@@ -195,7 +205,7 @@ jobs:
         run: |
           mkdir dist
           cp -r redocly/assets/* dist
-          npx @redocly/cli@latest build-docs --config redocly/redocly.yaml dist -t redocly/build-docs-template.hbs --templateOptions.basePath "${{ steps.setup.outputs.base_path }}" -o dist/index.html
+          npm run docs -- --templateOptions.basePath "${{ steps.setup.outputs.base_path }}"
           cat > dist/sitemap.xml <<EOT
           <?xml version="1.0" encoding="UTF-8"?>
           <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

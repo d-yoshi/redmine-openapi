@@ -1,7 +1,16 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus, uploadFile } from "./helpers.js";
+import {
+  client,
+  assertStatus,
+  uploadFile,
+  currentUserId,
+  someTrackerId,
+  someStatusId,
+  somePriorityId,
+  type IssuesQuery,
+} from "./helpers.js";
 
 const createProject = async (options?: { trackerIds?: number[] }) => {
   const projectName = `issues-${Date.now()}`;
@@ -28,6 +37,10 @@ const deleteProject = async (projectId: number) => {
 
 describe("Issues", () => {
   let projectId: number;
+  let trackerId: number;
+  let userId: number;
+  let statusId: number;
+  let priorityId: number;
   let categoryId: number;
   let versionId: number;
   let parentIssueId: number;
@@ -35,7 +48,11 @@ describe("Issues", () => {
   let issueId: number;
 
   before(async () => {
-    const project = await createProject({ trackerIds: [1] });
+    trackerId = await someTrackerId();
+    userId = await currentUserId();
+    statusId = await someStatusId();
+    priorityId = await somePriorityId();
+    const project = await createProject({ trackerIds: [trackerId] });
     projectId = project.id;
 
     const categoryResponse = await client.POST(
@@ -61,7 +78,7 @@ describe("Issues", () => {
     const parentResponse = await client.POST("/issues.{format}", {
       params: { path: { format: "json" } },
       body: {
-        issue: { project_id: projectId, tracker_id: 1, subject: "parent" },
+        issue: { project_id: projectId, tracker_id: trackerId, subject: "parent" },
       },
     });
     assertStatus(201, parentResponse);
@@ -83,21 +100,21 @@ describe("Issues", () => {
       body: {
         issue: {
           project_id: projectId,
-          tracker_id: 1,
-          status_id: 1,
-          priority_id: 1,
+          tracker_id: trackerId,
+          status_id: statusId,
+          priority_id: priorityId,
           subject: "issue-1",
           description: "description",
           start_date: new Date().toISOString().slice(0, 10),
           due_date: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
           done_ratio: 10,
-          assigned_to_id: 1,
+          assigned_to_id: userId,
           category_id: categoryId,
           fixed_version_id: versionId,
           parent_issue_id: parentIssueId,
           is_private: false,
           estimated_hours: 2,
-          watcher_user_ids: [1],
+          watcher_user_ids: [userId],
           custom_fields: [],
           custom_field_values: {},
           uploads: [
@@ -157,9 +174,9 @@ describe("Issues", () => {
       body: {
         issue: {
           project_id: projectId,
-          tracker_id: 1,
-          status_id: 1,
-          priority_id: 1,
+          tracker_id: trackerId,
+          status_id: statusId,
+          priority_id: priorityId,
           subject: "issue-1-updated",
           description: "updated description",
           start_date: new Date().toISOString().slice(0, 10),
@@ -167,7 +184,7 @@ describe("Issues", () => {
           done_ratio: 50,
           category_id: categoryId,
           fixed_version_id: versionId,
-          assigned_to_id: 1,
+          assigned_to_id: userId,
           parent_issue_id: parentIssueId,
           is_private: true,
           estimated_hours: 5,
@@ -214,7 +231,7 @@ describe("Issues", () => {
         query: {
           sort: "id:desc",
           status_id: "*",
-          tracker_id: "1",
+          tracker_id: String(trackerId),
           assigned_to_id: "me",
           subject: "issue",
           created_on: ">=2020-01-01",
@@ -250,46 +267,51 @@ describe("Issues", () => {
       (cf) => cf.name === "CF String"
     )!.id;
 
+    // `satisfies` makes an undeclared filter name a compile error. Casting the
+    // whole object instead would lose that, and Redmine answers 200 for unknown
+    // filter names — so nothing would catch a typo. Only the dynamic `cf_<id>`
+    // key needs the cast; the generated types spell that family as `cf_x`.
+    const filters = {
+      project_id: String(projectId),
+      subproject_id: "!*",
+      priority_id: "*",
+      "author.group": "*",
+      "author.role": "*",
+      member_of_group: "*",
+      assigned_to_role: "*",
+      "fixed_version.due_date": "*",
+      "fixed_version.status": "*",
+      child_id: "*",
+      description: "~description",
+      notes: "~note",
+      updated_on: ">=2020-01-01",
+      closed_on: ">=2020-01-01",
+      start_date: ">=2020-01-01",
+      due_date: ">=2020-01-01",
+      estimated_hours: ">=0",
+      spent_time: ">=0",
+      attachment: "*",
+      attachment_description: "*",
+      watcher_id: "me",
+      updated_by: "me",
+      last_updated_by: "me",
+      "project.status": "1",
+      relates: "!*",
+      duplicates: "!*",
+      duplicated: "!*",
+      blocks: "!*",
+      blocked: "!*",
+      precedes: "!*",
+      follows: "!*",
+      copied_to: "!*",
+      copied_from: "!*",
+      any_searchable: "~test",
+    } satisfies IssuesQuery;
+
     const response = await client.GET("/issues.{format}", {
       params: {
         path: { format: "json" },
-        query: {
-          project_id: String(projectId),
-          subproject_id: "!*",
-          priority_id: "*",
-          "author.group": "*",
-          "author.role": "*",
-          member_of_group: "*",
-          assigned_to_role: "*",
-          "fixed_version.due_date": "*",
-          "fixed_version.status": "*",
-          child_id: "*",
-          description: "~description",
-          notes: "~note",
-          updated_on: ">=2020-01-01",
-          closed_on: ">=2020-01-01",
-          start_date: ">=2020-01-01",
-          due_date: ">=2020-01-01",
-          estimated_hours: ">=0",
-          spent_time: ">=0",
-          attachment: "*",
-          attachment_description: "*",
-          watcher_id: "me",
-          updated_by: "me",
-          last_updated_by: "me",
-          "project.status": "1",
-          relates: "!*",
-          duplicates: "!*",
-          duplicated: "!*",
-          blocks: "!*",
-          blocked: "!*",
-          precedes: "!*",
-          follows: "!*",
-          copied_to: "!*",
-          copied_from: "!*",
-          any_searchable: "~test",
-          [`cf_${cfId}`]: "*",
-        } as any,
+        query: { ...filters, [`cf_${cfId}`]: "*" } as IssuesQuery,
       },
     });
     assertStatus(200, response);
@@ -400,9 +422,9 @@ describe("Issues", () => {
         },
         body: {
           issue: {
-            tracker_id: 1,
-            status_id: 1,
-            priority_id: 1,
+            tracker_id: trackerId,
+            status_id: statusId,
+            priority_id: priorityId,
             subject: "project-scoped-issue",
             description: "created via project-scoped endpoint",
             start_date: new Date().toISOString().slice(0, 10),
@@ -410,11 +432,11 @@ describe("Issues", () => {
             done_ratio: 0,
             category_id: categoryId,
             fixed_version_id: versionId,
-            assigned_to_id: 1,
+            assigned_to_id: userId,
             parent_issue_id: parentIssueId,
             is_private: false,
             estimated_hours: 1,
-            watcher_user_ids: [1],
+            watcher_user_ids: [userId],
             custom_fields: [],
             custom_field_values: {},
             uploads: [
@@ -442,7 +464,7 @@ describe("Issues", () => {
             include: ["attachments", "relations"],
             sort: "id:desc",
             status_id: "*",
-            tracker_id: "1",
+            tracker_id: String(trackerId),
             offset: 0,
             limit: 25,
           },

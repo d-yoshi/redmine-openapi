@@ -1,7 +1,13 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import {
+  client,
+  assertStatus,
+  currentUserId,
+  someRoleId,
+  someTrackerId,
+} from "./helpers.js";
 
 describe("Custom Fields", async () => {
   test("GET /custom_fields.json", async () => {
@@ -110,19 +116,17 @@ describe("Custom Fields", async () => {
       assertStatus(201, projectRes);
       projectId = projectRes.data!.project.id;
 
-      // Get first role ID
-      const rolesRes = await client.GET("/roles.{format}", {
-        params: { path: { format: "json" } },
-      });
-      assertStatus(200, rolesRes);
-      const roleId = rolesRes.data!.roles[0].id;
-
-      // Add admin user as project member (needed for user custom field)
+      // The user custom field's possible values are the project's members
       const memberRes = await client.POST(
         "/projects/{project_id}/memberships.{format}",
         {
           params: { path: { format: "json", project_id: projectId } },
-          body: { membership: { user_id: 1, role_ids: [roleId] } },
+          body: {
+            membership: {
+              user_id: await currentUserId(),
+              role_ids: [await someRoleId()],
+            },
+          },
         }
       );
       assertStatus(201, memberRes);
@@ -150,9 +154,11 @@ describe("Custom Fields", async () => {
     });
 
     after(async () => {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      if (!projectId) return;
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     });
 
     test("POST /issues.json with various custom field types (custom_fields format)", async () => {
@@ -161,7 +167,7 @@ describe("Custom Fields", async () => {
         body: {
           issue: {
             project_id: projectId,
-            tracker_id: 1,
+            tracker_id: await someTrackerId(),
             subject: "CF test - custom_fields format",
             custom_fields: [
               { id: cfIds["CF String"], value: "hello" },
@@ -173,7 +179,7 @@ describe("Custom Fields", async () => {
               { id: cfIds["CF Link"], value: "https://example.com" },
               { id: cfIds["CF List"], value: "Alpha" },
               { id: cfIds["CF List Multi"], value: ["Red", "Blue"] },
-              { id: cfIds["CF User"], value: "1" },
+              { id: cfIds["CF User"], value: String(await currentUserId()) },
               { id: cfIds["CF Version"], value: String(versionId) },
             ],
           },
@@ -208,7 +214,7 @@ describe("Custom Fields", async () => {
       assert(multiValue.includes("Blue"), "Expected 'Blue' in multi-value");
 
       // User and version fields return ID as string
-      assert.strictEqual(findCf("CF User")?.value, "1");
+      assert.strictEqual(findCf("CF User")?.value, String(await currentUserId()));
       assert.strictEqual(findCf("CF Version")?.value, String(versionId));
     });
 
@@ -269,7 +275,7 @@ describe("Custom Fields", async () => {
         body: {
           issue: {
             project_id: projectId,
-            tracker_id: 1,
+            tracker_id: await someTrackerId(),
             subject: "CF test - null values",
             custom_fields: [
               { id: cfIds["CF String"], value: null },
@@ -321,9 +327,10 @@ describe("Custom Fields", async () => {
 
     after(async () => {
       if (projectId) {
-        await client.DELETE("/projects/{project_id}.{format}", {
+        const response = await client.DELETE("/projects/{project_id}.{format}", {
           params: { path: { format: "json", project_id: projectId } },
         });
+        assertStatus(204, response);
       }
     });
 
@@ -399,7 +406,11 @@ describe("Custom Fields", async () => {
       const issueRes = await client.POST("/issues.{format}", {
         params: { path: { format: "json" } },
         body: {
-          issue: { project_id: projectId, tracker_id: 1, subject: "time-cf-test" },
+          issue: {
+            project_id: projectId,
+            tracker_id: await someTrackerId(),
+            subject: "time-cf-test",
+          },
         },
       });
       assertStatus(201, issueRes);
@@ -414,9 +425,11 @@ describe("Custom Fields", async () => {
     });
 
     after(async () => {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      if (!projectId) return;
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     });
 
     test("POST /time_entries.json with custom_fields", async () => {

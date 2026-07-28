@@ -1,4 +1,5 @@
 import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus, uploadFile } from "./helpers.js";
 
@@ -24,9 +25,10 @@ describe("News", () => {
 
   after(async () => {
     if (projectId) {
-      await client.DELETE("/projects/{project_id}.{format}", {
+      const response = await client.DELETE("/projects/{project_id}.{format}", {
         params: { path: { format: "json", project_id: projectId } },
       });
+      assertStatus(204, response);
     }
   });
 
@@ -66,7 +68,9 @@ describe("News", () => {
       }
     );
     assertStatus(200, listResponse);
-    newsId = listResponse.data!.news[0].id;
+    const news = listResponse.data!.news[0];
+    assert(news, "Expected the created news entry in the project's list");
+    newsId = news.id;
   });
 
   test("GET /news/{news_id}.json with all includes", async () => {
@@ -74,11 +78,19 @@ describe("News", () => {
       params: {
         path: { format: "json", news_id: newsId },
         query: {
+          // `comments` is always empty and is not asserted below: news comments
+          // cannot be created through the API at all (comments_controller has no
+          // accept_api_auth), so that schema has no real data to validate against
           include: ["attachments", "comments"],
         },
       },
     });
     assertStatus(200, response);
+    assert.strictEqual(
+      response.data!.news.attachments?.length,
+      1,
+      "Expected the uploaded attachment in include=attachments"
+    );
   });
 
   test("PUT /news/{news_id}.json", async () => {

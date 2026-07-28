@@ -72,20 +72,19 @@ jobs:
     needs: check
     if: needs.check.outputs.new_patch == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: "npm"
-          cache-dependency-path: "test/package-lock.json"
       - name: Run tests against the new patch image
         env:
           REDMINE_IMAGE: redmine:${{ needs.check.outputs.latest }}
-        working-directory: test
         run: |
           npm ci
-          ./run-test.sh
+          ./test/run-test.sh
 
   report:
     needs:
