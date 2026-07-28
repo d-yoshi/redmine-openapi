@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 7.0.0-r1
+  version: 7.0.0-r2
 servers:
   - url: /
 security:
@@ -1857,6 +1857,9 @@ paths:
                   properties:
                     identifier:
                       type: string
+                      description: |
+                        Accepted but ignored: a project's identifier cannot be changed
+                        once the project exists, and the request still succeeds.
                     name:
                       type: string
                     description:
@@ -6548,6 +6551,13 @@ components:
           type: array
           items:
             type: object
+            required:
+              - id
+              - notes
+              - created_on
+              - updated_on
+              - private_notes
+              - details
             properties:
               id:
                 type: integer
@@ -6569,6 +6579,11 @@ components:
                 type: array
                 items:
                   type: object
+                  required:
+                    - property
+                    - name
+                    - old_value
+                    - new_value
                   properties:
                     property:
                       type: string
