@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Redmine API
-  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.0
+  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.1
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
@@ -5844,7 +5844,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals#Updating-a-journal
       summary: Update journal
-      description: The journal is deleted when it is updated with empty `notes` and has no property changes (`details`).
+      description: A journal left with empty `notes` and no property changes (`details`) is kept and can still be updated, but is omitted from the issue's `include=journals` response until it has notes again.
       operationId: updateJournal
       parameters:
         - $ref: '#/components/parameters/format'
@@ -7201,6 +7201,8 @@ components:
               type: string
         version:
           type: integer
+        project:
+          $ref: '#/components/schemas/id_name'
         created_on:
           type: string
           format: date-time

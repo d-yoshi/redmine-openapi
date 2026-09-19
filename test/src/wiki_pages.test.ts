@@ -337,6 +337,17 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(200, response);
+
+    // `project` is optional in the schema (guarded in index.api.rsb), so its
+    // presence is asserted here rather than by the response validator
+    const pages = response.data!.wiki_pages;
+    assert(pages.length > 0, "Expected the created wiki pages to be listed");
+    for (const page of pages) {
+      assert.deepStrictEqual(page.project, {
+        id: projectId,
+        name: projectIdentifier,
+      });
+    }
   });
 
   test("GET /projects/{project_id}/wiki/index.json returns 404 for nonexistent project", async () => {

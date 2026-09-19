@@ -95,20 +95,34 @@ describe("Journals", () => {
     assert.strictEqual(journal.private_notes, true);
   });
 
-  test("PUT /journals/{journal_id}.json with empty notes destroys the journal", async () => {
-    // journals_controller#update destroys a journal left with no notes and no
-    // property changes, and still answers 204
-    const throwawayJournalId = await addNote("note to be emptied");
+  test("PUT /journals/{journal_id}.json with empty notes hides the journal", async () => {
+    // A journal left with no notes and no property changes is kept but
+    // omitted from include=journals (issue.rb visible_journals_with_index
+    // renders only journals with notes or visible details). Redmine < 7.0.1
+    // destroyed the record instead; updating it again would answer 404 there,
+    // so the refill below is what pins the 7.0.1 behavior.
+    const emptiedJournalId = await addNote("note to be emptied");
 
     const response = await client.PUT("/journals/{journal_id}.{format}", {
-      params: { path: { format: "json", journal_id: throwawayJournalId } },
+      params: { path: { format: "json", journal_id: emptiedJournalId } },
       body: { journal: { notes: "" } },
     });
     assertStatus(204, response);
 
     assert(
-      !(await journalIds()).includes(throwawayJournalId),
-      "Expected the journal to be destroyed once its notes were emptied"
+      !(await journalIds()).includes(emptiedJournalId),
+      "Expected the emptied journal to be omitted from include=journals"
+    );
+
+    const refillResponse = await client.PUT("/journals/{journal_id}.{format}", {
+      params: { path: { format: "json", journal_id: emptiedJournalId } },
+      body: { journal: { notes: "refilled note" } },
+    });
+    assertStatus(204, refillResponse);
+
+    assert(
+      (await journalIds()).includes(emptiedJournalId),
+      "Expected the refilled journal to reappear in include=journals"
     );
   });
 

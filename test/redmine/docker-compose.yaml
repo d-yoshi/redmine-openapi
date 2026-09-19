@@ -1,6 +1,6 @@
 services:
   redmine:
     # Pinned to the verified patch release; REDMINE_IMAGE overrides it
-    image: ${REDMINE_IMAGE:-redmine:7.0.0}
+    image: ${REDMINE_IMAGE:-redmine:7.0.1}
     ports:
       - 3000:3000

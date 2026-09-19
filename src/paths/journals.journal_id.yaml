@@ -4,7 +4,7 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals#Updating-a-journal
   summary: Update journal
-  description: The journal is deleted when it is updated with empty `notes` and has no property changes (`details`).
+  description: A journal left with empty `notes` and no property changes (`details`) is kept and can still be updated, but is omitted from the issue's `include=journals` response until it has notes again.
   operationId: updateJournal
   parameters:
     - $ref: ../components/parameters/path/format.yaml

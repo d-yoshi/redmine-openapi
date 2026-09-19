@@ -18,6 +18,8 @@ properties:
         type: string
   version:
     type: integer
+  project:
+    $ref: ./id_name.yaml
   created_on:
     type: string
     format: date-time
