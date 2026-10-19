@@ -13,9 +13,7 @@ describe("Projects", () => {
   let mainProjectId: number;
   let mainProjectIdentifier: string;
   let postProjectId: number;
-  // Root projects: not reclaimed by deleting mainProjectId, so the hooks own
-  // them — otherwise a failed assertion leaves them in the database that an
-  // interrupted run hands to the next one.
+  // These root projects survive deletion of mainProjectId and need separate cleanup.
   let sharedProjectId: number;
   let otherProjectId: number;
 
@@ -167,6 +165,9 @@ describe("Projects", () => {
       },
     });
     assertStatus(200, response);
+    for (const field of ["trackers", "issue_categories", "time_entry_activities", "enabled_modules", "issue_custom_fields"] as const) {
+      assert(response.data!.project[field]?.length, `Expected populated ${field}`);
+    }
   });
 
   test("PUT /projects/{project_id}.json", async () => {
@@ -226,6 +227,7 @@ describe("Projects", () => {
       params: {
         path: { format: "json" },
         query: {
+          id: String(mainProjectId),
           include: [
             "trackers",
             "issue_categories",
@@ -237,6 +239,11 @@ describe("Projects", () => {
       },
     });
     assertStatus(200, response);
+    const project = response.data!.projects.find((project) => project.id === mainProjectId);
+    assert(project, "Expected a populated project summary");
+    for (const field of ["trackers", "issue_categories", "time_entry_activities", "enabled_modules", "issue_custom_fields"] as const) {
+      assert(project[field]?.length, `Expected populated ${field}`);
+    }
   });
 
   test("PUT /projects/{project_id}/close.json", async () => {
@@ -252,9 +259,6 @@ describe("Projects", () => {
   });
 
   test("GET /projects.json with multiple status values", async () => {
-    // Pipe-delimited multiple values: status=1|5 returns both active and closed
-    // projects. Scoped by id so the result cannot depend on unrelated projects,
-    // or on where these two land in a paginated, name-ordered list.
     const response = await client.GET("/projects.{format}", {
       params: {
         path: { format: "json" },
@@ -404,8 +408,6 @@ describe("Projects", () => {
   });
 
   test("PUT /projects/{project_id}/archive.json returns 422 when not archivable", async () => {
-    // The `before` fixture assigns an issue from outside this project's tree to
-    // its system-shared version, which blocks archiving
     const response = await client.PUT(
       "/projects/{project_id}/archive.{format}",
       {

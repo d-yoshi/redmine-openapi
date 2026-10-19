@@ -1,4 +1,5 @@
 import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus } from "./helpers.js";
 
@@ -86,6 +87,17 @@ describe("Versions", () => {
       },
     });
     assertStatus(204, response);
+
+    const readback = await client.GET("/versions/{version_id}.{format}", {
+      params: { path: { format: "json", version_id: versionId } },
+    });
+    assertStatus(200, readback);
+    const version = readback.data!.version;
+    assert.strictEqual(version.name, "v1.0-updated");
+    assert.strictEqual(version.description, "Updated release");
+    assert.strictEqual(version.status, "closed");
+    assert.strictEqual(version.sharing, "descendants");
+    assert.strictEqual(version.due_date, "2027-01-31");
   });
 
   test("GET /projects/{project_id}/versions.json", async () => {
@@ -98,6 +110,7 @@ describe("Versions", () => {
       }
     );
     assertStatus(200, response);
+    assert(response.data!.versions.some((version) => version.id === versionId));
   });
 
   test("GET /projects/{project_id}/versions.json returns 404 for nonexistent project", async () => {

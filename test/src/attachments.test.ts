@@ -166,8 +166,6 @@ describe("Attachments", () => {
           attachment: {
             filename: "renamed.txt",
             description: "updated description",
-            // Different from the upload's text/plain: re-sending the current
-            // value would pass even if Redmine dropped the attribute
             content_type: "text/markdown",
           },
         },
@@ -175,8 +173,6 @@ describe("Attachments", () => {
     );
     assertStatus(204, response);
 
-    // attachments#update answers 204 for any attribute it ignores, so the new
-    // values are read back
     const getResponse = await client.GET(
       "/attachments/{attachment_id}.{format}",
       {

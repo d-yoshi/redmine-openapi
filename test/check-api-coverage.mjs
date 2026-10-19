@@ -1,11 +1,5 @@
-// Verifies that the suite exercises what the spec declares: every operation,
-// every response status, and every query parameter name. Reads the log helpers.ts
-// writes when OBSERVED_LOG is set, so coverage is measured from real requests
-// rather than by grepping the sources.
-//
-// Unreachable responses go in UNREACHABLE with a reason. That list is checked for
-// staleness both ways — an entry the spec no longer declares, or one the suite now
-// reaches, fails the check — so it cannot silently rot.
+// Compare declared operations, statuses and query names with the request log
+// produced by helpers.ts. Unreachable responses need a reason in UNREACHABLE.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,14 +7,8 @@ import yaml from "js-yaml";
 
 const METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
 
-// Injected into every operation by redocly/plugins/common-responses.js. The
-// tests authenticate with fixed Basic credentials, so 401/412 are unreachable
-// and 403 is only reachable on the few operations that check a permission.
-//
-// Limitation: because these are excluded wholesale, this check does not notice
-// if the one test that does assert a 403 (watchers.test.ts) is removed. Making
-// it notice would mean listing per-operation which injected statuses are
-// expected, which is not worth the bookkeeping for a single case.
+// Globally injected statuses are excluded: fixed Basic credentials cannot
+// exercise them all. Dedicated permission tests cover selected 403 responses.
 const AUTO_INJECTED = new Set(["401", "403", "412"]);
 
 const UNREACHABLE = [

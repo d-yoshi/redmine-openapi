@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Redmine API
-  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.1
+  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.2
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
@@ -18,95 +18,72 @@ security:
   - OAuth2: []
 tags:
   - name: Issues
-    description: 'Status: Stable, Availability: 1.0'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues
   - name: Projects
-    description: 'Status: Stable, Availability: 1.0'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects
   - name: Project Memberships
-    description: 'Status: Alpha, Availability: 1.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships
   - name: Users
-    description: 'Status: Stable, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Users
   - name: Time Entries
-    description: 'Status: Stable, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
   - name: News
-    description: 'Status: Stable, Availability: 1.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_News
   - name: Issue Relations
-    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations
   - name: Versions
-    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions
   - name: Wiki Pages
-    description: 'Status: Alpha, Availability: 2.2'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages
   - name: Queries
-    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries
   - name: Attachments
-    description: 'Status: Beta, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments
   - name: Issue Statuses
-    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses
   - name: Trackers
-    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers
   - name: Enumerations
-    description: 'Status: Alpha, Availability: 2.2'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations
   - name: Issue Categories
-    description: 'Status: Alpha, Availability: 1.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories
   - name: Roles
-    description: 'Status: Alpha, Availability: 1.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles
   - name: Groups
-    description: 'Status: Alpha, Availability: 2.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups
   - name: Custom Fields
-    description: 'Status: Alpha, Availability: 2.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields
   - name: Search
-    description: 'Status: Alpha, Availability: 3.3'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Search
   - name: Files
-    description: 'Status: Alpha, Availability: 3.4'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Files
   - name: My Account
-    description: 'Status: Alpha, Availability: 4.1'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount
   - name: Journals
-    description: 'Status: Alpha, Availability: 5.0'
     externalDocs:
       url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals
   - name: Repositories
-    description: Undocumented
 externalDocs:
   description: Redmine API Official Developer Guide
   url: https://www.redmine.org/projects/redmine/wiki/Rest_api
@@ -153,7 +130,8 @@ paths:
             Filter by issue ID.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `1`, `>=100`, `><1|100`
+            For equality, separate multiple IDs with commas. A pipe separates range bounds, not IDs in an equality list.
+            Examples: `1`, `1,2`, `>=100`, `><1|100`
           schema:
             type: string
         - name: project_id
@@ -317,6 +295,7 @@ paths:
           in: query
           description: |-
             Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
+            Available only for custom fields enabled as filters and visible to the current user.
             Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
             Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
           schema:
@@ -682,6 +661,9 @@ paths:
                       type: integer
                       nullable: true
                     assigned_to_id:
+                      description: |-
+                        ID of the assignee. If omitted or null, Redmine uses the first assignable default assignee, checking the category before the project.
+                        Default assignees that cannot be assigned (e.g. locked users) are skipped.
                       type: integer
                       nullable: true
                     parent_issue_id:
@@ -742,7 +724,8 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `children` (child issues), `attachments` (file attachments), `relations` (issue relations), `changesets` (associated VCS changesets), `journals` (change history and notes), `watchers` (users watching the issue), `allowed_statuses` (status transitions available for the current user)
+            Values: `children` (child issues and their descendants, limited to issues visible to the current user), `attachments` (file attachments), `relations` (issue relations), `changesets` (associated VCS changesets), `journals` (change history and notes), `watchers` (users watching the issue), `allowed_statuses` (status transitions available for the current user)
+            The `children` field is omitted for leaf issues. For non-leaf issues, it may be empty when none of their children are visible.
           schema:
             type: array
             items:
@@ -938,7 +921,8 @@ paths:
             Filter by issue ID.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `1`, `>=100`, `><1|100`
+            For equality, separate multiple IDs with commas. A pipe separates range bounds, not IDs in an equality list.
+            Examples: `1`, `1,2`, `>=100`, `><1|100`
           schema:
             type: string
         - name: subproject_id
@@ -1092,6 +1076,7 @@ paths:
           in: query
           description: |-
             Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
+            Available only for custom fields enabled as filters and visible to the current user.
             Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
             Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
           schema:
@@ -1453,6 +1438,9 @@ paths:
                       type: integer
                       nullable: true
                     assigned_to_id:
+                      description: |-
+                        ID of the assignee. If omitted or null, Redmine uses the first assignable default assignee, checking the category before the project.
+                        Default assignees that cannot be assigned (e.g. locked users) are skipped.
                       type: integer
                       nullable: true
                     parent_issue_id:
@@ -2531,7 +2519,7 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `memberships` (project memberships with roles), `groups` (groups the user belongs to), `auth_source` (authentication source information)
+            Values: `memberships` (project memberships with roles, limited to projects visible to the current user), `groups` (groups the user belongs to), `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -2695,7 +2683,7 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `memberships` (project memberships with roles), `groups` (groups the user belongs to), `auth_source` (authentication source information)
+            Values: `memberships` (project memberships with roles, limited to projects visible to the current user), `groups` (groups the user belongs to), `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -5126,7 +5114,7 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `users` (list of users in the group), `memberships` (project memberships with roles)
+            Values: `users` (list of users in the group), `memberships` (project memberships with roles, limited to projects visible to the current user)
           schema:
             type: array
             items:
@@ -6410,6 +6398,22 @@ components:
             type: string
           content_type:
             type: string
+    issue_child:
+      type: object
+      required:
+        - id
+        - subject
+      properties:
+        id:
+          type: integer
+        tracker:
+          $ref: '#/components/schemas/id_name'
+        subject:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/issue_child'
     issue:
       type: object
       required:
@@ -6509,14 +6513,7 @@ components:
         children:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-              tracker:
-                $ref: '#/components/schemas/id_name'
-              subject:
-                type: string
+            $ref: '#/components/schemas/issue_child'
         attachments:
           type: array
           items:
@@ -6930,6 +6927,7 @@ components:
           items:
             $ref: '#/components/schemas/id_name'
         memberships:
+          description: Project memberships visible to the current user. Memberships in archived projects are excluded.
           type: array
           items:
             type: object
@@ -7442,6 +7440,7 @@ components:
           items:
             $ref: '#/components/schemas/id_name'
         memberships:
+          description: Project memberships visible to the current user. Memberships in archived projects are excluded.
           type: array
           items:
             type: object

@@ -1,0 +1,16 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - subject
+properties:
+  id:
+    type: integer
+  tracker:
+    $ref: ./id_name.yaml
+  subject:
+    type: string
+  children:
+    type: array
+    items:
+      $ref: ./issue_child.yaml

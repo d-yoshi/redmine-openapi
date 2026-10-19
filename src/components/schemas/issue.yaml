@@ -99,15 +99,7 @@ properties:
   children:
     type: array
     items:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-        tracker:
-          $ref: ./id_name.yaml
-        subject:
-          type: string
+      $ref: ./issue_child.yaml
   attachments:
     type: array
     items:

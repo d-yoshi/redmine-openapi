@@ -1,14 +1,11 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus, currentUserId } from "./helpers.js";
+import { client, assertStatus, currentUserId, runCleanup } from "./helpers.js";
 
 describe("Users", () => {
   let userId: number;
   let userLogin: string;
-  // Global: the hooks own it, so an assertion failure mid-test cannot leave it
-  // behind. An interrupted run leaves its container in place and the next
-  // `docker compose up -d` reuses that database, so leaks do outlive a run.
   let filterGroupId: number;
 
   before(async () => {
@@ -21,18 +18,22 @@ describe("Users", () => {
   });
 
   after(async () => {
-    if (userId) {
-      const response = await client.DELETE("/users/{user_id}.{format}", {
-        params: { path: { format: "json", user_id: userId } },
-      });
-      assertStatus(204, response);
-    }
-    if (filterGroupId) {
-      const response = await client.DELETE("/groups/{group_id}.{format}", {
-        params: { path: { format: "json", group_id: filterGroupId } },
-      });
-      assertStatus(204, response);
-    }
+    await runCleanup([
+      async () => {
+        if (!userId) return;
+        const response = await client.DELETE("/users/{user_id}.{format}", {
+          params: { path: { format: "json", user_id: userId } },
+        });
+        assertStatus(204, response);
+      },
+      async () => {
+        if (!filterGroupId) return;
+        const response = await client.DELETE("/groups/{group_id}.{format}", {
+          params: { path: { format: "json", group_id: filterGroupId } },
+        });
+        assertStatus(204, response);
+      },
+    ]);
   });
 
   test("POST /users.json", async () => {
@@ -81,6 +82,11 @@ describe("Users", () => {
   });
 
   test("GET /users/{user_id}.json with all includes", async () => {
+    const addResponse = await client.POST("/groups/{group_id}/users.{format}", {
+      params: { path: { format: "json", group_id: filterGroupId } },
+      body: { user_id: userId },
+    });
+    assertStatus(204, addResponse);
     const response = await client.GET("/users/{user_id}.{format}", {
       params: {
         path: { format: "json", user_id: userId },
@@ -90,6 +96,9 @@ describe("Users", () => {
       },
     });
     assertStatus(200, response);
+    assert(response.data!.user.groups?.some((group) => group.id === filterGroupId));
+    assert(Array.isArray(response.data!.user.memberships));
+    assert(!Object.hasOwn(response.data!.user, "auth_source"));
   });
 
   test("PUT /users/{user_id}.json", async () => {
@@ -110,7 +119,7 @@ describe("Users", () => {
           must_change_passwd: false,
           generate_password: false,
           status: 1,
-          group_ids: [],
+          group_ids: [filterGroupId],
           auth_source_id: null,
           notified_project_ids: [],
           custom_fields: [],
@@ -135,6 +144,15 @@ describe("Users", () => {
       },
     });
     assertStatus(204, response);
+
+    const readback = await client.GET("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: userId }, query: { include: ["groups"] } },
+    });
+    assertStatus(200, readback);
+    assert.strictEqual(readback.data!.user.login, userLogin);
+    assert.strictEqual(readback.data!.user.firstname, "Bob");
+    assert.strictEqual(readback.data!.user.mail, `user-upd-${ts}@example.com`);
+    assert(readback.data!.user.groups?.some((group) => group.id === filterGroupId));
   });
 
   test("GET /users/current.json with all includes", async () => {
@@ -149,13 +167,46 @@ describe("Users", () => {
     assertStatus(200, response);
   });
 
+  test("include=auth_source returns a configured source and omits it without include", async () => {
+    const query = { name: "api-ldap-fixture" };
+    const list = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query: { ...query, include: ["auth_source"] } },
+    });
+    assertStatus(200, list);
+    assert.strictEqual(list.data!.users.length, 1);
+    const user = list.data!.users[0];
+    assert.strictEqual(user.login, "api-ldap-fixture");
+    assert(user.auth_source, "Expected the seeded LDAP authentication source");
+    assert.strictEqual(user.auth_source.name, "API test LDAP");
+
+    const detail = await client.GET("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: user.id }, query: { include: ["auth_source"] } },
+    });
+    assertStatus(200, detail);
+    assert.deepStrictEqual(detail.data!.user.auth_source, user.auth_source);
+
+    const withoutInclude = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query },
+    });
+    assertStatus(200, withoutInclude);
+    assert.strictEqual(withoutInclude.data!.users.length, 1);
+    assert.strictEqual(withoutInclude.data!.users[0].id, user.id);
+    assert(!Object.hasOwn(withoutInclude.data!.users[0], "auth_source"));
+
+    const detailWithoutInclude = await client.GET("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: user.id } },
+    });
+    assertStatus(200, detailWithoutInclude);
+    assert(!Object.hasOwn(detailWithoutInclude.data!.user, "auth_source"));
+  });
+
   test("GET /users.json with filters", async () => {
     const response = await client.GET("/users.{format}", {
       params: {
         path: { format: "json" },
         query: {
           status: "1",
-          name: "Admin",
+          name: userLogin.slice("user-".length),
           include: ["auth_source"],
           offset: 0,
           limit: 25,
@@ -163,6 +214,18 @@ describe("Users", () => {
       },
     });
     assertStatus(200, response);
+    assert.deepStrictEqual(response.data!.users.map((user) => user.id), [userId]);
+  });
+
+  test("GET /users.json name treats an operator prefix as literal text", async () => {
+    const response = await client.GET("/users.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { name: `~${userLogin.slice("user-".length)}` },
+      },
+    });
+    assertStatus(200, response);
+    assert.deepStrictEqual(response.data!.users, []);
   });
 
   test("GET /users.json with remaining filters", async () => {
@@ -191,6 +254,7 @@ describe("Users", () => {
       },
     });
     assertStatus(200, groupFilterResponse);
+    assert.deepStrictEqual(groupFilterResponse.data!.users.map((user) => user.id), [userId]);
   });
 
   test("GET /users.json returns 422 for invalid filter value", async () => {

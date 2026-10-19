@@ -1,20 +1,21 @@
-import { describe, test } from "node:test";
+import { before, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, someRoleId } from "./helpers.js";
 
 describe("Roles", () => {
   let roleId: number;
+
+  before(async () => {
+    roleId = await someRoleId();
+  });
 
   test("GET /roles.json", async () => {
     const response = await client.GET("/roles.{format}", {
       params: { path: { format: "json" } },
     });
     assertStatus(200, response);
-    const role = response.data!.roles[0];
-    // Otherwise the empty case fails with a bare TypeError further down
-    assert(role, "Expected at least one givable role; run-test.sh seeds two");
-    roleId = role.id;
+    assert(response.data!.roles.some((role) => role.id === roleId));
   });
 
   test("GET /roles/{role_id}.json", async () => {

@@ -9,6 +9,7 @@ import {
   someTrackerId,
   someStatusId,
   somePriorityId,
+  someRoleId,
   type IssuesQuery,
 } from "./helpers.js";
 
@@ -46,6 +47,7 @@ describe("Issues", () => {
   let parentIssueId: number;
   let uploadToken: string;
   let issueId: number;
+  let relationId: number;
 
   before(async () => {
     trackerId = await someTrackerId();
@@ -54,6 +56,15 @@ describe("Issues", () => {
     priorityId = await somePriorityId();
     const project = await createProject({ trackerIds: [trackerId] });
     projectId = project.id;
+
+    const membershipResponse = await client.POST(
+      "/projects/{project_id}/memberships.{format}",
+      {
+        params: { path: { format: "json", project_id: projectId } },
+        body: { membership: { user_id: userId, role_ids: [await someRoleId()] } },
+      }
+    );
+    assertStatus(201, membershipResponse);
 
     const categoryResponse = await client.POST(
       "/projects/{project_id}/issue_categories.{format}",
@@ -130,13 +141,40 @@ describe("Issues", () => {
     });
     assertStatus(201, response);
     issueId = response.data!.issue.id;
+    assert.strictEqual(response.data!.issue.assigned_to?.id, userId);
+    assert.strictEqual(response.data!.issue.category?.id, categoryId);
+    assert.strictEqual(response.data!.issue.fixed_version?.id, versionId);
+    assert.strictEqual(response.data!.issue.parent?.id, parentIssueId);
+  });
+
+  test("GET /issues/{issue_id}.json omits include-only fields without include", async () => {
+    const response = await client.GET("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId } },
+    });
+    assertStatus(200, response);
+    for (const field of ["children", "attachments", "relations", "changesets", "journals", "watchers", "allowed_statuses"]) {
+      assert(!Object.hasOwn(response.data!.issue, field), `Unexpected ${field} without include`);
+    }
   });
 
   test("GET /issues/{issue_id}.json with all includes", async () => {
-    await client.PUT("/issues/{issue_id}.{format}", {
+    const noteResponse = await client.PUT("/issues/{issue_id}.{format}", {
       params: { path: { format: "json", issue_id: issueId } },
       body: { issue: { notes: "journal-1" } },
     });
+    assertStatus(204, noteResponse);
+
+    const relatedResponse = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: { issue: { project_id: projectId, subject: "related issue" } },
+    });
+    assertStatus(201, relatedResponse);
+    const relationResponse = await client.POST("/issues/{issue_id}/relations.{format}", {
+      params: { path: { format: "json", issue_id: issueId } },
+      body: { relation: { issue_to_id: relatedResponse.data!.issue.id, relation_type: "relates" } },
+    });
+    assertStatus(201, relationResponse);
+    relationId = relationResponse.data!.relation.id;
 
     const response = await client.GET("/issues/{issue_id}.{format}", {
       params: {
@@ -155,10 +193,17 @@ describe("Issues", () => {
       },
     });
     assertStatus(200, response);
+    const issue = response.data!.issue;
+    assert(!Object.hasOwn(issue, "children"), "Leaf issues omit children even with include=children");
+    assert(issue.attachments?.some((attachment) => attachment.filename === "attachment.txt"));
+    assert(issue.relations?.some((relation) => relation.id === relationId));
+    assert(Array.isArray(issue.changesets));
+    assert(issue.journals?.some((journal) => journal.notes === "journal-1"));
+    assert(issue.watchers?.some((watcher) => watcher.id === userId));
+    assert(Array.isArray(issue.allowed_statuses));
   });
 
   test("PUT /issues/{issue_id}.json", async () => {
-    // Get attachment ID for deleted_attachment_ids testing
     const getRes = await client.GET("/issues/{issue_id}.{format}", {
       params: {
         path: { format: "json", issue_id: issueId },
@@ -205,23 +250,44 @@ describe("Issues", () => {
       },
     });
     assertStatus(204, response);
+
+    const readback = await client.GET("/issues/{issue_id}.{format}", {
+      params: {
+        path: { format: "json", issue_id: issueId },
+        query: { include: ["attachments", "journals"] },
+      },
+    });
+    assertStatus(200, readback);
+    const issue = readback.data!.issue;
+    assert.strictEqual(issue.subject, "issue-1-updated");
+    assert.strictEqual(issue.description, "updated description");
+    assert.strictEqual(issue.is_private, true);
+    assert.strictEqual(issue.estimated_hours, 5);
+    assert.strictEqual(issue.done_ratio, 50);
+    assert.deepStrictEqual(issue.attachments!.map((attachment) => attachment.filename), ["update-attachment.txt"]);
+    assert(issue.journals?.some((journal) => journal.notes === "note-1"));
   });
 
   test("GET /issues.json", async () => {
     const response = await client.GET("/issues.{format}", {
-      params: { path: { format: "json" } },
+      params: { path: { format: "json" }, query: { project_id: String(projectId), status_id: "*" } },
     });
     assertStatus(200, response);
+    assert(response.data!.issues.some((issue) => issue.id === issueId));
   });
 
   test("GET /issues.json with all includes", async () => {
     const response = await client.GET("/issues.{format}", {
       params: {
         path: { format: "json" },
-        query: { include: ["attachments", "relations"] },
+        query: { include: ["attachments", "relations"], issue_id: String(issueId), status_id: "*" },
       },
     });
     assertStatus(200, response);
+    const issue = response.data!.issues.find((issue) => issue.id === issueId);
+    assert(issue, "Expected a populated issue summary");
+    assert(issue.attachments?.some((attachment) => attachment.filename === "update-attachment.txt"));
+    assert(issue.relations?.some((relation) => relation.id === relationId));
   });
 
   test("GET /issues.json with filters", async () => {
@@ -248,15 +314,32 @@ describe("Issues", () => {
     assertStatus(200, response);
   });
 
-  test("GET /issues.json with pagination and nometa", async () => {
-    const response = await client.GET("/issues.{format}", {
-      params: {
-        path: { format: "json" },
-        query: { offset: 0, limit: 1, nometa: 1 },
-      },
+  for (const nometaIn of ["query", "header"] as const) {
+    test(`GET /issues.json with pagination and nometa ${nometaIn}`, async () => {
+      const page = { project_id: String(projectId), status_id: "*", sort: "id:asc", offset: 1, limit: 1 };
+      const withMeta = await client.GET("/issues.{format}", {
+        params: { path: { format: "json" }, query: page },
+      });
+      assertStatus(200, withMeta);
+      assert.deepStrictEqual(withMeta.data!.issues.map((issue) => issue.id), [issueId]);
+      assert.strictEqual(withMeta.data!.offset, 1);
+      assert.strictEqual(withMeta.data!.limit, 1);
+      assert.strictEqual(withMeta.data!.total_count, 3);
+
+      const response = await client.GET("/issues.{format}", {
+        params: {
+          path: { format: "json" },
+          query: nometaIn === "query" ? { ...page, nometa: 1 } : page,
+          header: nometaIn === "header" ? { "X-Redmine-Nometa": 1 } : undefined,
+        },
+      });
+      assertStatus(200, response);
+      assert.deepStrictEqual(response.data!.issues.map((issue) => issue.id), [issueId]);
+      for (const field of ["total_count", "offset", "limit"]) {
+        assert(!Object.hasOwn(response.data!, field), `Unexpected ${field} with nometa ${nometaIn}`);
+      }
     });
-    assertStatus(200, response);
-  });
+  }
 
   test("GET /issues.json with remaining filters", async () => {
     const cfResponse = await client.GET("/custom_fields.{format}", {
@@ -267,10 +350,6 @@ describe("Issues", () => {
       (cf) => cf.name === "CF String"
     )!.id;
 
-    // `satisfies` makes an undeclared filter name a compile error. Casting the
-    // whole object instead would lose that, and Redmine answers 200 for unknown
-    // filter names — so nothing would catch a typo. Only the dynamic `cf_<id>`
-    // key needs the cast; the generated types spell that family as `cf_x`.
     const filters = {
       project_id: String(projectId),
       subproject_id: "!*",
@@ -306,12 +385,14 @@ describe("Issues", () => {
       copied_to: "!*",
       copied_from: "!*",
       any_searchable: "~test",
+      // form/explode serializes the map keys as actual query parameter names.
+      cf_x: { [`cf_${cfId}`]: "*" },
     } satisfies IssuesQuery;
 
     const response = await client.GET("/issues.{format}", {
       params: {
         path: { format: "json" },
-        query: { ...filters, [`cf_${cfId}`]: "*" } as IssuesQuery,
+        query: filters,
       },
     });
     assertStatus(200, response);
@@ -404,9 +485,10 @@ describe("Issues", () => {
     const response = await client.POST("/issues.{format}", {
       params: { path: { format: "json" } },
       body: {
+        // @ts-expect-error Deliberately omit the required subject field.
         issue: {
           project_id: projectId,
-        } as any,
+        },
       },
     });
     assertStatus(422, response);

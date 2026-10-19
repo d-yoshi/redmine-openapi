@@ -56,6 +56,7 @@ properties:
     items:
       $ref: ./id_name.yaml
   memberships:
+    description: Project memberships visible to the current user. Memberships in archived projects are excluded.
     type: array
     items:
       type: object

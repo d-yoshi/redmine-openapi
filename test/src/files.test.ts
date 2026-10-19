@@ -90,7 +90,6 @@ describe("Files", async () => {
       }
     );
     assertStatus(200, response);
-    // An empty array would validate nothing about the item schema
     assert(
       response.data!.files.some((file) => file.filename === "project-file.txt"),
       "Expected the uploaded file in the project's file list"

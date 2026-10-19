@@ -1,112 +1,89 @@
 - name: Issues
-  description: "Status: Stable, Availability: 1.0"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues
 
 - name: Projects
-  description: "Status: Stable, Availability: 1.0"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects
 
 - name: Project Memberships
-  description: "Status: Alpha, Availability: 1.4"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships
 
 - name: Users
-  description: "Status: Stable, Availability: 1.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Users
 
 - name: Time Entries
-  description: "Status: Stable, Availability: 1.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
 
 - name: News
-  description: "Status: Stable, Availability: 1.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_News
 
 - name: Issue Relations
-  description: "Status: Alpha, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations
 
 - name: Versions
-  description: "Status: Alpha, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions
 
 - name: Wiki Pages
-  description: "Status: Alpha, Availability: 2.2"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages
 
 - name: Queries
-  description: "Status: Alpha, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Queries
 
 - name: Attachments
-  description: "Status: Beta, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments
 
 - name: Issue Statuses
-  description: "Status: Alpha, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses
 
 - name: Trackers
-  description: "Status: Alpha, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Trackers
 
 - name: Enumerations
-  description: "Status: Alpha, Availability: 2.2"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations
 
 - name: Issue Categories
-  description: "Status: Alpha, Availability: 1.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories
 
 - name: Roles
-  description: "Status: Alpha, Availability: 1.4"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Roles
 
 - name: Groups
-  description: "Status: Alpha, Availability: 2.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Groups
 
 - name: Custom Fields
-  description: "Status: Alpha, Availability: 2.4"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields
 
 - name: Search
-  description: "Status: Alpha, Availability: 3.3"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Search
 
 - name: Files
-  description: "Status: Alpha, Availability: 3.4"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Files
 
 - name: My Account
-  description: "Status: Alpha, Availability: 4.1"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_MyAccount
 
 - name: Journals
-  description: "Status: Alpha, Availability: 5.0"
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals
 
 - name: Repositories
-  description: "Undocumented"

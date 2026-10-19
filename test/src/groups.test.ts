@@ -5,8 +5,6 @@ import { client, assertStatus, createTestUser, runCleanup } from "./helpers.js";
 
 describe("Groups", () => {
   let groupId: number;
-  // Global: not reclaimed by deleting the group, so the hooks own them —
-  // creating them inside a test leaks them when a later assertion there fails.
   let userId: number;
   let extraUserId: number;
   let bulkUserIds: number[] = [];
@@ -14,8 +12,7 @@ describe("Groups", () => {
   before(async () => {
     userId = await createTestUser("grpuser");
     extraUserId = await createTestUser("grpuser2");
-    // One push per await: assigning after both would leak the first user's id
-    // when the second creation fails
+    // Track each user immediately so cleanup can run if the next creation fails.
     bulkUserIds.push(await createTestUser("grpbulk1"));
     bulkUserIds.push(await createTestUser("grpbulk2"));
   });
@@ -64,14 +61,17 @@ describe("Groups", () => {
       },
     });
     assertStatus(200, response);
+    assert.deepStrictEqual(response.data!.group.users!.map((user) => user.id), [userId]);
+    assert(Array.isArray(response.data!.group.memberships));
   });
 
   test("PUT /groups/{group_id}.json", async () => {
+    const name = `test-group-updated-${Date.now()}`;
     const response = await client.PUT("/groups/{group_id}.{format}", {
       params: { path: { format: "json", group_id: groupId } },
       body: {
         group: {
-          name: `test-group-updated-${Date.now()}`,
+          name,
           user_ids: [userId],
           twofa_required: false,
           custom_fields: [],
@@ -80,6 +80,13 @@ describe("Groups", () => {
       },
     });
     assertStatus(204, response);
+
+    const readback = await client.GET("/groups/{group_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId }, query: { include: ["users"] } },
+    });
+    assertStatus(200, readback);
+    assert.strictEqual(readback.data!.group.name, name);
+    assert.deepStrictEqual(readback.data!.group.users!.map((user) => user.id), [userId]);
   });
 
   test("POST /groups/{group_id}/users.json (add user)", async () => {
@@ -106,8 +113,7 @@ describe("Groups", () => {
   });
 
   // Rails only parses repeated bracketed keys (user_ids[]=1&user_ids[]=2) as an
-  // array; the client's global serializer would join values with commas. Other
-  // keys pass through, so adding a query parameter here cannot silently drop it.
+  // array; the client's global serializer would join values with commas.
   const repeatArraysSerializer = (query: Record<string, unknown>) =>
     Object.entries(query)
       .flatMap(([key, value]) =>
@@ -162,8 +168,6 @@ describe("Groups", () => {
         `Expected user ${id} to be removed from the group`
       );
     }
-    // Otherwise "the listed ids are gone" would also hold for a request that
-    // emptied the group
     assert(
       remaining.includes(extraUserId),
       "Expected the unlisted member to remain in the group"
@@ -208,6 +212,7 @@ describe("Groups", () => {
       response.data!.groups.some((group) => group.id === groupId),
       "Expected the created group in the list"
     );
+    assert(response.data!.groups.every((group) => !Object.hasOwn(group, "builtin")));
   });
 
   test("GET /groups.json with builtin", async () => {
@@ -218,6 +223,11 @@ describe("Groups", () => {
       },
     });
     assertStatus(200, response);
+    assert.deepStrictEqual(
+      response.data!.groups.filter((group) => group.builtin).map((group) => group.builtin).sort(),
+      ["anonymous", "non_member"]
+    );
+    assert(response.data!.groups.some((group) => group.id === groupId));
   });
 
   test("POST /groups/{group_id}/users.json returns 422 for a user already in the group", async () => {

@@ -78,9 +78,7 @@ describe("News", () => {
       params: {
         path: { format: "json", news_id: newsId },
         query: {
-          // `comments` is always empty and is not asserted below: news comments
-          // cannot be created through the API at all (comments_controller has no
-          // accept_api_auth), so that schema has no real data to validate against
+          // News comments cannot be created through the API; only an empty array is exercised.
           include: ["attachments", "comments"],
         },
       },
@@ -116,6 +114,19 @@ describe("News", () => {
       },
     });
     assertStatus(204, response);
+
+    const readback = await client.GET("/news/{news_id}.{format}", {
+      params: {
+        path: { format: "json", news_id: newsId },
+        query: { include: ["attachments"] },
+      },
+    });
+    assertStatus(200, readback);
+    const news = readback.data!.news;
+    assert.strictEqual(news.title, "news-1-updated");
+    assert.strictEqual(news.summary, "summary-1-updated");
+    assert.strictEqual(news.description, "description-1-updated");
+    assert(news.attachments?.some((attachment) => attachment.filename === "news-update-attachment.txt"));
   });
 
   test("GET /news.json with pagination", async () => {

@@ -12,7 +12,6 @@ describe("Queries", async () => {
       },
     });
     assertStatus(200, response);
-    // The seeded query guarantees the query item schema is exercised
     assert(
       response.data!.queries.some((q) => q.name === "Seed Query"),
       "Expected seeded query 'Seed Query' in the list"

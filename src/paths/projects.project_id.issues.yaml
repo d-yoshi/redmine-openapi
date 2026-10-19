@@ -40,7 +40,8 @@ get:
         Filter by issue ID.
         Format: `[operator]value`
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-        Examples: `1`, `>=100`, `><1|100`
+        For equality, separate multiple IDs with commas. A pipe separates range bounds, not IDs in an equality list.
+        Examples: `1`, `1,2`, `>=100`, `><1|100`
       schema:
         type: string
     - name: subproject_id
@@ -194,6 +195,7 @@ get:
       in: query
       description: |-
         Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
+        Available only for custom fields enabled as filters and visible to the current user.
         Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
         Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
       schema:
@@ -553,6 +555,9 @@ post:
                   type: integer
                   nullable: true
                 assigned_to_id:
+                  description: |-
+                    ID of the assignee. If omitted or null, Redmine uses the first assignable default assignee, checking the category before the project.
+                    Default assignees that cannot be assigned (e.g. locked users) are skipped.
                   type: integer
                   nullable: true
                 parent_issue_id:

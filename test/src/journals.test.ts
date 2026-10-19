@@ -78,8 +78,6 @@ describe("Journals", () => {
     });
     assertStatus(204, response);
 
-    // PUT has no body, so a Redmine that ignored the attributes would also
-    // answer 204; the change is read back instead
     const getResponse = await client.GET("/issues/{issue_id}.{format}", {
       params: {
         path: { format: "json", issue_id: issueId },
@@ -96,11 +94,8 @@ describe("Journals", () => {
   });
 
   test("PUT /journals/{journal_id}.json with empty notes hides the journal", async () => {
-    // A journal left with no notes and no property changes is kept but
-    // omitted from include=journals (issue.rb visible_journals_with_index
-    // renders only journals with notes or visible details). Redmine < 7.0.1
-    // destroyed the record instead; updating it again would answer 404 there,
-    // so the refill below is what pins the 7.0.1 behavior.
+    // Empty journals are retained but omitted from include=journals.
+    // Refill the same record to distinguish omission from deletion.
     const emptiedJournalId = await addNote("note to be emptied");
 
     const response = await client.PUT("/journals/{journal_id}.{format}", {

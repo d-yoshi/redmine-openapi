@@ -1,21 +1,13 @@
 #!/bin/bash
-# Everything that can be verified without a running Redmine: shell lint, schema
-# consistency, the spec bundle the tests validate against, its generated types,
-# and the type check of the tests themselves.
-#
-# Split out of run-test.sh so this loop costs seconds instead of a container
-# start, and so a local run gates on the same things CI does. run-test.sh calls
-# this first; run it directly while editing schemas or tests.
-#
+# Static checks shared by local runs and CI; no Redmine container required.
 # Requires `npm ci` at the repository root (npm workspaces).
 set -e -u -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$SCRIPT_DIR/.."
 
-# Every tool is a devDependency of the workspace root, so versions come from
-# package.json and package-lock.json. Called by path rather than through npx so
-# resolution cannot fall back to the registry.
+# Use the locked workspace tools directly so resolution cannot fall back to
+# the registry.
 BIN="$REPO_ROOT/node_modules/.bin"
 
 # Fixed paths: helpers.ts imports the generated schema from this exact location,
@@ -23,8 +15,6 @@ BIN="$REPO_ROOT/node_modules/.bin"
 OPENAPI_PATH="$SCRIPT_DIR/dist/openapi.strict.yaml"
 SCHEMA_PATH="$SCRIPT_DIR/dist/openapi-typescript/schema.d.ts"
 
-# Named here rather than left to a bare "command not found" or
-# ERR_MODULE_NOT_FOUND further down
 if [ ! -x "$BIN/redocly" ] || [ ! -x "$BIN/tsc" ]; then
   echo "Dependencies are not installed. Run 'npm ci' in $REPO_ROOT first."
   exit 1
@@ -38,8 +28,6 @@ if command -v shellcheck > /dev/null 2>&1; then
   shellcheck -x -P SCRIPTDIR "$SCRIPT_DIR/check.sh" "$SCRIPT_DIR/run-test.sh"
   echo "  shellcheck: clean"
 elif [ -n "${CI:-}" ]; then
-  # Skipping is fine on a developer machine, but on CI it would mean the gate
-  # quietly stopped running
   echo "  shellcheck is not installed on this CI runner"
   exit 1
 else
@@ -74,16 +62,10 @@ echo "=== Linting the bundled spec ==="
 "$BIN/redocly" lint --config "$REPO_ROOT/redocly/redocly.yaml" "$OPENAPI_PATH"
 
 echo "=== Generating OpenAPI TypeScript schema ==="
-# Always regenerated: a timestamp or hash comparison would only be a proxy for
-# "was this generated from the spec we are about to test against", and getting it
-# wrong types the tests against a different spec than the one they validate
-# responses with. Regenerating unconditionally removes that state entirely.
+# Always regenerate so request types and response validation use the same spec.
 "$BIN/openapi-typescript" "$OPENAPI_PATH" -o "$SCHEMA_PATH"
 
 echo "=== Type checking the tests ==="
-# Checks test/src against the generated types, so a request naming a parameter,
-# enum value or body field the spec does not declare fails here rather than
-# silently passing at runtime.
 "$BIN/tsc" --noEmit -p "$SCRIPT_DIR/tsconfig.json"
 
 echo "=== Static checks passed ==="

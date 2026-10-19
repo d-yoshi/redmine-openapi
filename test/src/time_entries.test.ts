@@ -1,4 +1,5 @@
 import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import {
   client,
@@ -81,6 +82,9 @@ describe("Time Entries", () => {
     });
     assertStatus(201, response);
     timeEntryId = response.data!.time_entry.id;
+    assert.strictEqual(response.data!.time_entry.hours, 1.5);
+    assert.strictEqual(response.data!.time_entry.issue?.id, issueId);
+    assert.strictEqual(response.data!.time_entry.user?.id, userId);
   });
 
   test("GET /time_entries/{time_entry_id}.json", async () => {
@@ -118,13 +122,21 @@ describe("Time Entries", () => {
       }
     );
     assertStatus(204, response);
+
+    const readback = await client.GET("/time_entries/{time_entry_id}.{format}", {
+      params: { path: { format: "json", time_entry_id: timeEntryId } },
+    });
+    assertStatus(200, readback);
+    assert.strictEqual(readback.data!.time_entry.hours, 2.5);
+    assert.strictEqual(readback.data!.time_entry.comments, "entry-1-updated");
   });
 
   test("GET /time_entries.json", async () => {
     const response = await client.GET("/time_entries.{format}", {
-      params: { path: { format: "json" } },
+      params: { path: { format: "json" }, query: { project_id: String(projectId) } },
     });
     assertStatus(200, response);
+    assert(response.data!.time_entries.some((entry) => entry.id === timeEntryId));
   });
 
   test("GET /time_entries.json with filters", async () => {
@@ -242,7 +254,8 @@ describe("Time Entries", () => {
   test("POST /time_entries.json returns 422 for invalid data", async () => {
     const response = await client.POST("/time_entries.{format}", {
       params: { path: { format: "json" } },
-      body: { time_entry: { issue_id: issueId } as any },
+      // @ts-expect-error Deliberately omit the required hours field.
+      body: { time_entry: { issue_id: issueId } },
     });
     assertStatus(422, response);
   });
@@ -315,7 +328,8 @@ describe("Time Entries", () => {
       "/projects/{project_id}/time_entries.{format}",
       {
         params: { path: { format: "json", project_id: projectId } },
-        body: { time_entry: {} as any },
+        // @ts-expect-error Deliberately omit the required hours field.
+        body: { time_entry: {} },
       }
     );
     assertStatus(422, response);
@@ -337,7 +351,8 @@ describe("Time Entries", () => {
       "/issues/{issue_id}/time_entries.{format}",
       {
         params: { path: { format: "json", issue_id: issueId } },
-        body: { time_entry: {} as any },
+        // @ts-expect-error Deliberately omit the required hours field.
+        body: { time_entry: {} },
       }
     );
     assertStatus(422, response);

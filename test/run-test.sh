@@ -1,13 +1,7 @@
 #!/bin/bash
 # Integration test against a Redmine this script starts and destroys itself.
 #
-# The static half — shell lint, schema sync, the spec bundle, its generated types
-# and the type check — lives in check.sh and runs first, so a mistake those can
-# catch does not cost a container start and a full suite run.
-#
-# pipefail: values captured through pipes would otherwise mask a failing
-# generator behind a succeeding tail/cut, turning setup failures into test ones.
-# nounset: a mistyped variable would otherwise expand to an empty string.
+# check.sh runs first so static errors are caught before starting the container.
 set -e -u -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -15,7 +9,6 @@ REPO_ROOT="$SCRIPT_DIR/.."
 REDMINE_ADMIN_LOGIN="admin"
 REDMINE_ADMIN_PASSWORD="adminadmin"
 
-# Pinned by the workspace root's package.json / package-lock.json
 BIN="$REPO_ROOT/node_modules/.bin"
 
 "$SCRIPT_DIR/check.sh"
@@ -52,8 +45,6 @@ fi
 echo "  Redmine URL: $REDMINE_URL"
 
 echo "=== Waiting for Redmine to be ready ==="
-# Bounded: an unreachable Redmine would otherwise hold a CI runner until the
-# platform's own job limit.
 WAIT_TIMEOUT=300
 WAITED=0
 until curl -s "$REDMINE_URL" > /dev/null 2>&1; do
@@ -122,6 +113,28 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     Role.create!(name: 'Manager', permissions: Redmine::AccessControl.permissions.map(&:name))
     Role.create!(name: 'Developer', permissions: [:add_issues, :edit_issues, :view_issues, :manage_issue_relations, :add_issue_notes])
   end
+  # A fixed role for the visibility regressions, independent of image defaults.
+  # view_members is public. 'default' still allows own or assigned private issues.
+  role = Role.find_or_initialize_by(name: 'API visibility viewer')
+  role.permissions = [:view_issues]
+  role.issues_visibility = 'default'
+  role.users_visibility = 'all'
+  role.save!
+
+  # Expose auth_source metadata without authenticating against LDAP.
+  ldap = AuthSourceLdap.find_or_create_by!(name: 'API test LDAP') do |source|
+    source.host = 'ldap.invalid'
+    source.port = 389
+    source.attr_login = 'uid'
+  end
+  User.find_or_create_by!(login: 'api-ldap-fixture') do |user|
+    user.firstname = 'API'
+    user.lastname = 'LDAP fixture'
+    user.mail = 'api-ldap-fixture@example.com'
+    user.auth_source = ldap
+    user.status = User::STATUS_ACTIVE
+    user.admin = false
+  end
 
   # Enabled for every tracker so the tests need not assume a particular id.
   tracker_ids = Tracker.ids
@@ -143,6 +156,7 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     TimeEntryCustomField.create!(name: 'CF TimeEntry String', field_format: 'string', is_for_all: true)
     puts 'Custom fields created!'
   end
+  IssueCustomField.find_by!(name: 'CF String').update!(is_filter: true)
   unless IssueCustomField.find_by(name: 'CF Date Offset')
     IssueCustomField.create!(name: 'CF Date Offset', field_format: 'date', is_for_all: true, tracker_ids: tracker_ids,
       default_value_mode: 'date_offset', default_value: '5')

@@ -1,4 +1,5 @@
 import { before, after, describe, test } from "node:test";
+import assert from "node:assert/strict";
 
 import { client, assertStatus } from "./helpers.js";
 
@@ -98,6 +99,7 @@ describe("Issue Relations", () => {
       }
     );
     assertStatus(200, response);
+    assert(response.data!.relations.some((relation) => relation.id === relationId));
   });
 
   test("POST /issues/{issue_id}/relations.json returns 404 for nonexistent issue", async () => {

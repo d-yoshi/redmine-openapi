@@ -78,6 +78,12 @@ describe("Issue Categories", () => {
       }
     );
     assertStatus(204, response);
+
+    const readback = await client.GET("/issue_categories/{issue_category_id}.{format}", {
+      params: { path: { format: "json", issue_category_id: categoryId } },
+    });
+    assertStatus(200, readback);
+    assert.strictEqual(readback.data!.issue_category.name, "category-updated");
   });
 
   test("GET /projects/{project_id}/issue_categories.json", async () => {
@@ -90,6 +96,7 @@ describe("Issue Categories", () => {
       }
     );
     assertStatus(200, response);
+    assert(response.data!.issue_categories.some((category) => category.id === categoryId));
   });
 
   test("POST /projects/{project_id}/issue_categories.json returns 404 for nonexistent project", async () => {

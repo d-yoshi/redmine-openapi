@@ -12,7 +12,6 @@ describe("Enumerations", async () => {
       }
     );
     assertStatus(200, response);
-    // An empty array would validate nothing about the item schema
     assert(
       response.data!.issue_priorities.length > 0,
       "Expected at least one issue priority"
@@ -41,7 +40,6 @@ describe("Enumerations", async () => {
       }
     );
     assertStatus(200, response);
-    // The seeded category guarantees the item schema is exercised
     assert(
       response.data!.document_categories.length > 0,
       "Expected at least one document category"

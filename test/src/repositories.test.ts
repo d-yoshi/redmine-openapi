@@ -64,7 +64,7 @@ describe("Repositories", () => {
     });
     assertStatus(200, response);
     assert(
-      response.data!.issue.changesets!.length > 0,
+      response.data!.issue.changesets!.some((changeset) => changeset.revision === revision),
       "Expected the issue to have an associated changeset"
     );
   });

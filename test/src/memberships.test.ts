@@ -13,8 +13,6 @@ describe("Memberships", () => {
   const projectIdentifier = `mem-${Date.now()}`;
   let projectId: number;
   let membershipId: number;
-  // Global: not reclaimed by deleting the project, so the hooks own them —
-  // creating them inside a test leaks them when an assertion there fails first.
   let userId: number;
   let roleLessUserId: number;
   let putUserId: number;
@@ -107,8 +105,6 @@ describe("Memberships", () => {
   });
 
   test("PUT /memberships/{membership_id}.json", async () => {
-    // Re-sending the role it already has would return 204 even if Redmine
-    // ignored role_ids entirely, so a different role is assigned and read back.
     const rolesResponse = await client.GET("/roles.{format}", {
       params: { path: { format: "json" } },
     });

@@ -60,6 +60,10 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(201, response);
+    assert.strictEqual(response.data!.wiki_page.version, 1);
+    assert.strictEqual(response.data!.wiki_page.text, "Wiki page content from API");
+    assert.strictEqual(response.data!.wiki_page.comments, "Initial creation");
+    assert(!Object.hasOwn(response.data!.wiki_page, "parent"));
   });
 
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (create with parent)", async () => {
@@ -83,6 +87,7 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(201, response);
+    assert.deepStrictEqual(response.data!.wiki_page.parent, { title: "TestPage" });
   });
 
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (update)", async () => {
@@ -126,6 +131,10 @@ describe("Wiki Pages", () => {
     assertStatus(200, response);
 
     const wikiPage = response.data!.wiki_page;
+    assert.strictEqual(wikiPage.version, 2);
+    assert.strictEqual(wikiPage.text, "Updated wiki page content");
+    assert.strictEqual(wikiPage.comments, "Updated via API");
+    assert(wikiPage.attachments?.some((attachment) => attachment.filename === "wiki-attachment.txt"));
     assert(wikiPage.project, "Expected wiki page to include its project");
     assert.strictEqual(typeof wikiPage.project!.id, "number");
     assert.strictEqual(typeof wikiPage.project!.name, "string");
@@ -149,6 +158,9 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(200, response);
+    assert.strictEqual(response.data!.wiki_page.version, 1);
+    assert.strictEqual(response.data!.wiki_page.text, "Wiki page content from API");
+    assert.strictEqual(response.data!.wiki_page.comments, "Initial creation");
   });
 
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json returns 409 on version conflict", async () => {
@@ -342,6 +354,9 @@ describe("Wiki Pages", () => {
     // presence is asserted here rather than by the response validator
     const pages = response.data!.wiki_pages;
     assert(pages.length > 0, "Expected the created wiki pages to be listed");
+    const child = pages.find((page) => page.title === "ChildPage");
+    assert(child, "Expected the created child page in the wiki index");
+    assert.deepStrictEqual(child.parent, { title: "TestPage" });
     for (const page of pages) {
       assert.deepStrictEqual(page.project, {
         id: projectId,
@@ -411,9 +426,6 @@ describe("Wiki Pages", () => {
   });
 
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json returns 422 for invalid data", async () => {
-    // A nonexistent parent page fails the WikiPage parent validation.
-    // Note: omitting text does NOT return 422 — Redmine 6.1 skips the
-    // content save entirely and creates a broken content-less page (201)
     const response = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {
