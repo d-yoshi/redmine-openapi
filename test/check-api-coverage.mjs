@@ -3,13 +3,26 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 const METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
 
 // Globally injected statuses are excluded: fixed Basic credentials cannot
 // exercise them all. Dedicated permission tests cover selected 403 responses.
 const AUTO_INJECTED = new Set(["401", "403", "412"]);
+
+// Each pair uses the same Query class for global and project-scoped lists.
+const QUERY_OPERATION_ALIASES = new Map([
+  ["GET /projects/{project_id}/issues.{format}", "GET /issues.{format}"],
+  ["GET /projects/{project_id}/time_entries.{format}", "GET /time_entries.{format}"],
+]);
+
+// Only these shared definitions use the common pagination helpers.
+const PAGINATION_PARAMETERS = new Set([
+  "#/components/parameters/offset",
+  "#/components/parameters/limit",
+  "#/components/parameters/nometa",
+]);
 
 const UNREACHABLE = [
   {
@@ -33,7 +46,7 @@ for (const [label, file] of [["spec", specPath], ["observed log", observedPath]]
   }
 }
 
-const spec = yaml.load(fs.readFileSync(specPath, "utf8"));
+const spec = load(fs.readFileSync(specPath, "utf8"));
 const deref = (node) =>
   node?.$ref
     ? deref(node.$ref.slice(2).split("/").reduce((o, key) => o[key], spec))
@@ -42,6 +55,7 @@ const deref = (node) =>
 const declaredOperations = new Set();
 const declaredResponses = new Set();
 const declaredQueryParams = new Set();
+const queryParamsByOperation = new Map();
 for (const [urlPath, pathItem] of Object.entries(spec.paths)) {
   for (const method of METHODS) {
     if (!pathItem[method]) continue;
@@ -54,10 +68,18 @@ for (const [urlPath, pathItem] of Object.entries(spec.paths)) {
     const parameters = [
       ...(pathItem.parameters ?? []),
       ...(pathItem[method].parameters ?? []),
-    ].map(deref);
-    for (const parameter of parameters) {
-      if (parameter.in === "query") declaredQueryParams.add(parameter.name);
+    ];
+    const queryParams = new Map();
+    for (const reference of parameters) {
+      const parameter = deref(reference);
+      if (parameter.in !== "query") continue;
+      const scope = PAGINATION_PARAMETERS.has(reference.$ref)
+        ? "shared pagination"
+        : QUERY_OPERATION_ALIASES.get(operation) ?? operation;
+      queryParams.set(parameter.name, `${scope} ?${parameter.name}`);
     }
+    queryParamsByOperation.set(operation, queryParams);
+    for (const key of queryParams.values()) declaredQueryParams.add(key);
   }
 }
 
@@ -67,13 +89,16 @@ const observedQueryParams = new Set();
 for (const line of fs.readFileSync(observedPath, "utf8").split("\n")) {
   if (!line) continue;
   const [method, urlPath, status, url] = line.split(" ");
-  observedOperations.add(`${method} ${urlPath}`);
+  const operation = `${method} ${urlPath}`;
+  observedOperations.add(operation);
   observedResponses.add(`${method} ${urlPath} ${status}`);
   if (!url) continue;
   for (const key of new URL(url).searchParams.keys()) {
     // The spec spells the custom-field filter family as the literal `cf_x`;
     // requests carry a concrete id
-    observedQueryParams.add(/^cf_\d+$/.test(key) ? "cf_x" : key);
+    const name = /^cf_\d+$/.test(key) ? "cf_x" : key;
+    const declaredKey = queryParamsByOperation.get(operation)?.get(name);
+    if (declaredKey) observedQueryParams.add(declaredKey);
   }
 }
 
@@ -97,12 +122,9 @@ for (const response of [...declaredResponses].sort()) {
   );
 }
 
-// Name-level, not per-operation: a filter declared on both `GET /issues` and
-// `GET /projects/{id}/issues` goes through the same query builder, so exercising
-// it on one of them is enough.
-for (const name of [...declaredQueryParams].sort()) {
-  if (!observedQueryParams.has(name)) {
-    errors.push(`no test sends the declared query parameter ?${name}`);
+for (const key of [...declaredQueryParams].sort()) {
+  if (!observedQueryParams.has(key)) {
+    errors.push(`no test sends the declared query parameter ${key}`);
   }
 }
 
@@ -137,5 +159,5 @@ if (errors.length > 0) {
 console.log(
   `API coverage: ${declaredOperations.size} operations, ` +
     `${declaredResponses.size} responses (${allowed.size} unreachable by design), ` +
-    `${declaredQueryParams.size} query parameters.`
+    `${declaredQueryParams.size} query parameter checks.`
 );

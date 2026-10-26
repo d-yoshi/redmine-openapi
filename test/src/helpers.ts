@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { createRequire } from "node:module";
 import assert from "node:assert/strict";
 
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import type { OpenAPIV3 } from "openapi-types";
 import createClient from "openapi-fetch";
 import type { OpenAPIResponseValidatorArgs } from "openapi-response-validator";
@@ -47,13 +47,19 @@ if (
 }
 
 // js-yaml returns unknown; check.sh has linted this generated OpenAPI document.
-const openapi = yaml.load(
+const openapi = load(
   fs.readFileSync(OPENAPI_PATH, "utf8")
 ) as OpenAPIV3.Document;
 
 const basicAuth = Buffer.from(
   `${REDMINE_ADMIN_LOGIN}:${REDMINE_ADMIN_PASSWORD}`
 ).toString("base64");
+
+// Each process loads one spec; its clients can share compiled validators.
+const responseValidators = new Map<
+  string,
+  InstanceType<typeof OpenAPIResponseValidator>
+>();
 
 export const createTestClient = (switchUser?: string) => {
   const client = createClient<paths>({
@@ -99,11 +105,16 @@ export const createTestClient = (switchUser?: string) => {
         );
       }
 
-      const args: ResponseValidatorArgs = {
-        responses,
-        components: openapi.components,
-      };
-      const validator = new OpenAPIResponseValidator(args);
+      const validatorKey = `${method} ${schemaPath}`;
+      let validator = responseValidators.get(validatorKey);
+      if (!validator) {
+        const args: ResponseValidatorArgs = {
+          responses,
+          components: openapi.components,
+        };
+        validator = new OpenAPIResponseValidator(args);
+        responseValidators.set(validatorKey, validator);
+      }
 
       if ("content" in responseSchema) {
         const declaredTypes = Object.keys(responseSchema.content!);

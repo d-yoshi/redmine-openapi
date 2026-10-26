@@ -15,7 +15,7 @@ BIN="$REPO_ROOT/node_modules/.bin"
 OPENAPI_PATH="$SCRIPT_DIR/dist/openapi.strict.yaml"
 SCHEMA_PATH="$SCRIPT_DIR/dist/openapi-typescript/schema.d.ts"
 
-if [ ! -x "$BIN/redocly" ] || [ ! -x "$BIN/tsc" ]; then
+if [ ! -x "$BIN/redocly" ] || [ ! -x "$BIN/openapi-typescript" ]; then
   echo "Dependencies are not installed. Run 'npm ci' in $REPO_ROOT first."
   exit 1
 fi
@@ -33,6 +33,9 @@ elif [ -n "${CI:-}" ]; then
 else
   echo "  shellcheck is not installed; skipping (CI enforces it)"
 fi
+
+echo "=== Testing validation tools ==="
+node --test "$SCRIPT_DIR/"*.test.mjs
 
 echo "=== Checking summary/detail schema sync ==="
 node "$SCRIPT_DIR/check-summary-detail-sync.mjs"
@@ -66,6 +69,7 @@ echo "=== Generating OpenAPI TypeScript schema ==="
 "$BIN/openapi-typescript" "$OPENAPI_PATH" -o "$SCHEMA_PATH"
 
 echo "=== Type checking the tests ==="
-"$BIN/tsc" --noEmit -p "$SCRIPT_DIR/tsconfig.json"
+# The test workspace uses TypeScript 7; the generator still requires TypeScript 5.
+npm --prefix "$REPO_ROOT" run --workspace test typecheck
 
 echo "=== Static checks passed ==="

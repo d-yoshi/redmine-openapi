@@ -8,13 +8,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 const schemaDir = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   "../src/components/schemas"
 );
-const load = (f) => yaml.load(fs.readFileSync(f, "utf8"));
+const loadSchema = (f) => load(fs.readFileSync(f, "utf8"));
 
 let failures = 0;
 for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".summary.yaml"))) {
@@ -22,8 +22,8 @@ for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".summary.
   const detailPath = path.join(schemaDir, detailFile);
   if (!fs.existsSync(detailPath)) continue;
 
-  const summary = load(path.join(schemaDir, file));
-  const detail = load(detailPath);
+  const summary = loadSchema(path.join(schemaDir, file));
+  const detail = loadSchema(detailPath);
   for (const [key, def] of Object.entries(summary.properties ?? {})) {
     const detailDef = (detail.properties ?? {})[key];
     if (detailDef === undefined) {

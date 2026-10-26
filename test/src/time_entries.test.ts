@@ -131,9 +131,12 @@ describe("Time Entries", () => {
     assert.strictEqual(readback.data!.time_entry.comments, "entry-1-updated");
   });
 
-  test("GET /time_entries.json", async () => {
+  test("GET /time_entries.json with project filters", async () => {
     const response = await client.GET("/time_entries.{format}", {
-      params: { path: { format: "json" }, query: { project_id: String(projectId) } },
+      params: {
+        path: { format: "json" },
+        query: { project_id: String(projectId), "project.status": "1" },
+      },
     });
     assertStatus(200, response);
     assert(response.data!.time_entries.some((entry) => entry.id === timeEntryId));

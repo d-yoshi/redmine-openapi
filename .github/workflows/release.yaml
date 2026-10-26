@@ -16,6 +16,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
@@ -25,7 +26,7 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .tool-versions
           cache: "npm"
       - run: npm ci
 
@@ -107,6 +108,9 @@ jobs:
               exit 1
             fi
           fi
+
+      - name: Validate API spec against the pinned Redmine
+        run: ./test/run-test.sh
 
       - name: Detect breaking changes
         id: breaking
@@ -193,7 +197,7 @@ jobs:
       - uses: actions/setup-node@v7
         if: steps.guard.outputs.deploy == 'true'
         with:
-          node-version: 24
+          node-version-file: .tool-versions
           cache: "npm"
       - run: npm ci
         if: steps.guard.outputs.deploy == 'true'

@@ -169,12 +169,25 @@ RUBY
 # Kept idempotent: `docker compose up -d` reuses a container that an interrupted
 # run left behind, so this may run against a database that already has the data.
 echo "=== Setting up Git repository ==="
-docker exec -i "$REDMINE_CONTAINER" bash -c '
-  which git > /dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq git > /dev/null 2>&1)
-  [ -d /tmp/test-repo.git ] ||
-    git clone --bare https://github.com/d-yoshi/redmine-openapi.git /tmp/test-repo.git -q
-'
+docker exec -i "$REDMINE_CONTAINER" bash -seu -o pipefail <<'BASH'
+  if ! command -v git > /dev/null 2>&1; then
+    apt-get update -qq
+    apt-get install -y -qq git > /dev/null 2>&1
+  fi
+  if [ ! -d /tmp/test-repo.git ]; then
+    fixture_dir=$(mktemp -d)
+    git init --quiet --initial-branch=main --object-format=sha1 "$fixture_dir"
+    printf 'API test fixture\n' > "$fixture_dir/fixture.txt"
+    git -C "$fixture_dir" add fixture.txt
+    GIT_AUTHOR_DATE='2024-01-01T00:00:00Z' \
+    GIT_COMMITTER_DATE='2024-01-01T00:00:00Z' \
+      git -C "$fixture_dir" -c user.name='API Test' -c user.email='api-test@example.com' \
+        commit --quiet -m 'API test fixture'
+    git clone --bare --quiet "$fixture_dir" /tmp/test-repo.git
+  fi
+BASH
 
+echo "=== Importing repository changesets ==="
 REPO_REVISION=$(docker exec -i "$REDMINE_CONTAINER" rails runner - <<'RUBY' | tr -d '\r' | tail -1
   project = Project.find_by(identifier: 'repo-test') ||
             Project.create!(name: 'Repository Test', identifier: 'repo-test')

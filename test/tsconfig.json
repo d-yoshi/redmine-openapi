@@ -3,6 +3,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
+    "types": ["node"],
     "strict": true
   },
   "include": ["src/**/*.ts"],
