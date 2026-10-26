@@ -193,8 +193,6 @@ describe("Projects", () => {
     });
     assertStatus(204, response);
 
-    // Project#identifier= is a no-op once the project is persisted
-    // (identifier_frozen?): Redmine accepts the attribute and keeps the original
     const getResponse = await client.GET("/projects/{project_id}.{format}", {
       params: { path: { format: "json", project_id: mainProjectId } },
     });

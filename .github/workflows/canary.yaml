@@ -1,10 +1,6 @@
 name: Canary
 
-# Weekly check for new Redmine releases on Docker Hub (the regular CI is
-# pinned to a specific patch and cannot see them). The full test suite runs
-# only when a new patch of the pinned series appears; a newer series
-# (e.g. 6.2 or 7.0) is reported as an issue without running tests. Never
-# blocks the regular pipeline.
+# Test new patches of the pinned series; report newer series without testing.
 #
 # Tags are compared instead of image digests on purpose: official images
 # are rebuilt regularly, so the digest changes even when the version does not.

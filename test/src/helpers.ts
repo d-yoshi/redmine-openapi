@@ -32,7 +32,6 @@ const REDMINE_URL = process.env.REDMINE_URL;
 const REDMINE_ADMIN_LOGIN = process.env.REDMINE_ADMIN_LOGIN;
 const REDMINE_ADMIN_PASSWORD = process.env.REDMINE_ADMIN_PASSWORD;
 const OPENAPI_PATH = process.env.OPENAPI_PATH;
-// When set, every request/response pair is recorded for check-api-coverage.mjs
 const OBSERVED_LOG = process.env.OBSERVED_LOG;
 
 if (
@@ -207,10 +206,7 @@ export const runCleanup = async (steps: Array<() => Promise<void>>) => {
   assert.strictEqual(failures.length, 0, `cleanup failed:\n${failures.join("\n")}`);
 };
 
-// The ids below are looked up rather than hardcoded: run-test.sh seeds trackers,
-// roles and enumerations only when the database has none, so on an image that
-// ships default data these ids come from the image and need not start at 1.
-
+// Default data varies between images, so discover fixture ids through the API.
 export const currentUserId = memoize(async () => {
   const response = await client.GET("/users/current.{format}", {
     params: { path: { format: "json" } },

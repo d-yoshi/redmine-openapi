@@ -1,7 +1,4 @@
 #!/bin/bash
-# Integration test against a Redmine this script starts and destroys itself.
-#
-# check.sh runs first so static errors are caught before starting the container.
 set -e -u -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -13,7 +10,6 @@ BIN="$REPO_ROOT/node_modules/.bin"
 
 "$SCRIPT_DIR/check.sh"
 
-# Produced by check.sh; fixed paths for the same reason they are fixed there.
 OPENAPI_PATH="$SCRIPT_DIR/dist/openapi.strict.yaml"
 
 # Setup below resets the admin password, enables the REST API and writes seed
@@ -60,10 +56,7 @@ done
 echo "  Redmine is up!"
 
 echo "=== Verifying Redmine version ==="
-# check.sh already confirmed the pin matches README; what is left is the third
-# party, the container that is actually running (unless REDMINE_IMAGE overrides
-# the image for canary runs). `|| true` keeps a failing grep or docker exec from
-# aborting before the checks below can name the problem.
+# `|| true` lets the checks below report version-detection failures.
 PINNED_VERSION=$( (grep -oE 'redmine:[0-9][0-9.]*' "$SCRIPT_DIR/redmine/docker-compose.yaml" | head -1 | cut -d: -f2) || true)
 ACTUAL_VERSION=$( (docker exec "$REDMINE_CONTAINER" rails runner \
   'puts [Redmine::VERSION::MAJOR, Redmine::VERSION::MINOR, Redmine::VERSION::TINY].join(".")' 2>/dev/null | tr -d '\r' | tail -1) || true)

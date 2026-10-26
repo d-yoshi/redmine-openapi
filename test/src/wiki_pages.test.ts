@@ -259,10 +259,8 @@ describe("Wiki Pages", () => {
     );
     assertStatus(201, createResponse);
 
-    // With the redirect left enabled the old title would answer with a 302
-    // canonical redirect, which the spec does not model. Only the string "0"
-    // disables it (Redmine compares against the form value), making the old
-    // title a clean 404
+    // Redmine requires the string "0" to disable the old title's redirect,
+    // letting the old-title request below exercise 404.
     const renameResponse = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {
@@ -315,9 +313,7 @@ describe("Wiki Pages", () => {
   });
 
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (set start page)", async () => {
-    // Not verified beyond the status: no API response exposes which page is the
-    // start page. Note that WikiPage#is_start_page= coerces with
-    // `arg == "1" || arg == true`, so 1 or "true" is dropped and still returns 204.
+    // No API response exposes the start page, so only the status can be checked.
     const response = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {

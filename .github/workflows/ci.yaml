@@ -48,9 +48,7 @@ jobs:
           name: openapi
           path: openapi.yaml
 
-  # No Docker: fails a PR on a shell lint, schema, spec or type error without
-  # waiting for the integration job. run-test.sh runs the same script, so this is
-  # earlier feedback rather than an extra gate.
+  # Surface static errors without waiting for Redmine startup.
   static:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -73,13 +71,9 @@ jobs:
           node-version-file: .tool-versions
           cache: "npm"
       - run: npm ci
-      # Runs check.sh, then the suite, then check-api-coverage.mjs — so a failure
-      # here can also mean a declared operation, response or query parameter is
-      # unexercised
       - name: static checks, integration tests and API coverage
         run: ./test/run-test.sh
 
-  # Informational: show changes against the latest release tag (never fails the build)
   spec-diff:
     runs-on: ubuntu-latest
     continue-on-error: true

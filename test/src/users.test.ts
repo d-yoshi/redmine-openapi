@@ -268,8 +268,6 @@ describe("Users", () => {
   });
 
   test("POST /users.json returns 422 for invalid data", async () => {
-    // Duplicate login — reuses the one created above rather than assuming a
-    // particular account exists on this Redmine
     const response = await client.POST("/users.{format}", {
       params: { path: { format: "json" } },
       body: {
@@ -315,11 +313,8 @@ describe("Users", () => {
   });
 
   test("DELETE /users/{user_id}.json returns 422 for own account", async () => {
-    // Redmine refuses to delete the authenticated account only while it is the
-    // last active administrator and Setting.unsubscribe is on — its default
-    // (users_controller#destroy → User#own_account_deletable?). With a second
-    // active admin the same request destroys the account the suite authenticates
-    // as, unrecoverably, so the precondition is asserted rather than assumed.
+    // This test relies on the default Setting.unsubscribe being enabled.
+    // Check the last-admin precondition before risking deletion of the API account.
     const ownId = await currentUserId();
     const adminsResponse = await client.GET("/users.{format}", {
       params: {

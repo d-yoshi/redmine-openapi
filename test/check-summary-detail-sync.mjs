@@ -1,10 +1,6 @@
-// Verifies that each *.summary.yaml schema stays in sync with its detail
-// counterpart (*.yaml): every field of the summary schema must exist in the
-// detail schema with an identical definition. The two files are intentionally
-// duplicated because additionalProperties:false cannot be composed with
-// allOf in OpenAPI 3.0; the check guards against one-sided edits.
-// (required lists may differ deliberately: rendering conditions differ
-// between index and show endpoints.)
+// Closing a summary schema with additionalProperties:false prevents extending
+// it with allOf in OpenAPI 3.0, so summary/detail properties are duplicated.
+// required lists may differ because index and show rendering conditions differ.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

@@ -1,9 +1,5 @@
 name: Release
 
-# Creates a GitHub Release when a release tag (e.g. 6.1.3-r2) is pushed, then
-# publishes the docs site so it always matches the latest release. Tags not on
-# main (maintenance lines) are released with --latest=false and skip the docs
-# jobs.
 on:
   push:
     tags:
@@ -47,9 +43,6 @@ jobs:
           fi
 
       - name: Verify bundle freshness
-        # Rebundles in place with the canonical script; the checkout is clean at
-        # this point, so any diff means the committed bundle is stale. On success
-        # the file is byte-identical, so later steps see the committed content.
         run: |
           # git diff cannot see an untracked file, so require it to be tracked
           git ls-files --error-unmatch openapi.yaml

@@ -227,10 +227,8 @@ describe("Memberships", () => {
   });
 
   test("PUT /memberships/{membership_id}.json returns 422 for empty role_ids and destroys the membership", async () => {
-    // role_ids= saves the association immediately, and MemberRole's
-    // after_destroy removes a member left without roles — the request
-    // returns 422 but the membership is gone afterwards. Use a dedicated
-    // membership so the main flow is unaffected.
+    // Empty role_ids deletes the membership despite the 422 response, so use
+    // a dedicated membership for this request.
     const createResponse = await client.POST(
       "/projects/{project_id}/memberships.{format}",
       {
@@ -272,8 +270,7 @@ describe("Memberships", () => {
   });
 
   test("DELETE /memberships/{membership_id}.json returns 422 when not deletable", async () => {
-    // A membership inherited from a group membership cannot be deleted
-    // directly; Redmine responds 422 with an empty body
+    // A membership inherited from a group cannot be deleted directly.
     const groupMembershipResponse = await client.POST(
       "/projects/{project_id}/memberships.{format}",
       {

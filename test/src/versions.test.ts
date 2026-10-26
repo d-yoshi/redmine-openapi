@@ -176,8 +176,7 @@ describe("Versions", () => {
   });
 
   test("DELETE /versions/{version_id}.json returns 422 when not deletable", async () => {
-    // A version with issues assigned to it cannot be deleted;
-    // Redmine responds 422 with an empty body
+    // A version with issues assigned to it cannot be deleted.
     const versionResponse = await client.POST(
       "/projects/{project_id}/versions.{format}",
       {
