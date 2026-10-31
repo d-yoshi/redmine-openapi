@@ -6216,6 +6216,7 @@ components:
         - content_type
         - description
         - content_url
+        - author
         - created_on
       properties:
         id:
@@ -6239,6 +6240,36 @@ components:
         created_on:
           type: string
           format: date-time
+    issue_relation:
+      type: object
+      required:
+        - id
+        - issue_id
+        - issue_to_id
+        - relation_type
+        - delay
+      properties:
+        id:
+          type: integer
+        issue_id:
+          type: integer
+        issue_to_id:
+          type: integer
+        relation_type:
+          type: string
+          enum:
+            - relates
+            - duplicates
+            - duplicated
+            - blocks
+            - blocked
+            - precedes
+            - follows
+            - copied_to
+            - copied_from
+        delay:
+          type: integer
+          nullable: true
     issue.summary:
       type: object
       required:
@@ -6328,29 +6359,7 @@ components:
         relations:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-              issue_id:
-                type: integer
-              issue_to_id:
-                type: integer
-              relation_type:
-                type: string
-                enum:
-                  - relates
-                  - duplicates
-                  - duplicated
-                  - blocks
-                  - blocked
-                  - precedes
-                  - follows
-                  - copied_to
-                  - copied_from
-              delay:
-                type: integer
-                nullable: true
+            $ref: '#/components/schemas/issue_relation'
     errors:
       type: object
       required:
@@ -6402,6 +6411,7 @@ components:
       type: object
       required:
         - id
+        - tracker
         - subject
       properties:
         id:
@@ -6500,6 +6510,10 @@ components:
           type: array
           items:
             type: object
+            required:
+              - revision
+              - comments
+              - committed_on
             properties:
               revision:
                 type: string
@@ -6521,29 +6535,7 @@ components:
         relations:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-              issue_id:
-                type: integer
-              issue_to_id:
-                type: integer
-              relation_type:
-                type: string
-                enum:
-                  - relates
-                  - duplicates
-                  - duplicated
-                  - blocks
-                  - blocked
-                  - precedes
-                  - follows
-                  - copied_to
-                  - copied_from
-              delay:
-                type: integer
-                nullable: true
+            $ref: '#/components/schemas/issue_relation'
         journals:
           type: array
           items:
@@ -6958,6 +6950,9 @@ components:
       type: object
       required:
         - id
+        - project
+        - user
+        - activity
         - hours
         - comments
         - spent_on
@@ -7001,6 +6996,7 @@ components:
       type: object
       required:
         - id
+        - author
         - content
       properties:
         id:
@@ -7013,6 +7009,7 @@ components:
       type: object
       required:
         - id
+        - project
         - title
         - description
         - created_on
@@ -7040,40 +7037,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/news_comment'
-    issue_relation:
-      type: object
-      required:
-        - id
-        - issue_id
-        - issue_to_id
-        - relation_type
-        - delay
-      properties:
-        id:
-          type: integer
-        issue_id:
-          type: integer
-        issue_to_id:
-          type: integer
-        relation_type:
-          type: string
-          enum:
-            - relates
-            - duplicates
-            - duplicated
-            - blocks
-            - blocked
-            - precedes
-            - follows
-            - copied_to
-            - copied_from
-        delay:
-          type: integer
-          nullable: true
     version.summary:
       type: object
       required:
         - id
+        - project
         - name
         - description
         - status
@@ -7127,6 +7095,7 @@ components:
       type: object
       required:
         - id
+        - project
         - name
         - description
         - status
@@ -7185,6 +7154,7 @@ components:
       required:
         - title
         - version
+        - project
         - created_on
         - updated_on
       properties:
@@ -7214,6 +7184,7 @@ components:
         - text
         - version
         - comments
+        - project
         - created_on
         - updated_on
       properties:
@@ -7286,6 +7257,7 @@ components:
       required:
         - id
         - name
+        - default_status
         - description
         - enabled_standard_fields
       properties:
@@ -7306,6 +7278,7 @@ components:
       type: object
       required:
         - id
+        - project
         - name
       properties:
         id:
@@ -7559,6 +7532,9 @@ components:
           type: array
           items:
             type: object
+            required:
+              - value
+              - label
             properties:
               value:
                 type: string
@@ -7597,6 +7573,7 @@ components:
         - content_type
         - description
         - content_url
+        - author
         - created_on
         - digest
         - downloads
