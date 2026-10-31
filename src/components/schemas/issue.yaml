@@ -1,9 +1,5 @@
 type: object
 additionalProperties: false
-# The issues API templates skip project, tracker, status, priority and author
-# when they are nil, but Redmine never leaves them nil: Issue validates their
-# presence, and deleting a project, tracker, status, priority or user never
-# leaves an issue pointing to it
 required:
   - id
   - project
