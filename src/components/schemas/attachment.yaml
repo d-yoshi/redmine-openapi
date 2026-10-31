@@ -7,6 +7,7 @@ required:
   - content_type
   - description
   - content_url
+  - author
   - created_on
 properties:
   id:

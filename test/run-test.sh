@@ -156,6 +156,16 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     puts 'Date offset custom field created!'
   end
 
+  # News comments have no API creation endpoint.
+  news_project = Project.find_by(identifier: 'news-comment-fixture') ||
+                 Project.create!(name: 'News Comment Fixture', identifier: 'news-comment-fixture')
+  news_project.enable_module!('news')
+  news = news_project.news.find_or_create_by!(title: 'News with a comment') do |entry|
+    entry.author = admin
+    entry.description = 'News comment response fixture'
+  end
+  news.comments.find_or_create_by!(author: admin, content: 'API comment fixture')
+
   puts 'Setup completed!'
 RUBY
 

@@ -88,27 +88,4 @@ properties:
   relations:
     type: array
     items:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-        issue_id:
-          type: integer
-        issue_to_id:
-          type: integer
-        relation_type:
-          type: string
-          enum:
-            - relates
-            - duplicates
-            - duplicated
-            - blocks
-            - blocked
-            - precedes
-            - follows
-            - copied_to
-            - copied_from
-        delay:
-          type: integer
-          nullable: true
+      $ref: ./issue_relation.yaml

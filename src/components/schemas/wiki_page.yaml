@@ -5,6 +5,7 @@ required:
   - text
   - version
   - comments
+  - project
   - created_on
   - updated_on
 properties:

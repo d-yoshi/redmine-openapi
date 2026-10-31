@@ -101,6 +101,9 @@ properties:
     items:
       type: object
       additionalProperties: false
+      required:
+        - value
+        - label
       properties:
         value:
           type: string

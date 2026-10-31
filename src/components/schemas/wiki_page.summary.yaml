@@ -3,6 +3,7 @@ additionalProperties: false
 required:
   - title
   - version
+  - project
   - created_on
   - updated_on
 properties:

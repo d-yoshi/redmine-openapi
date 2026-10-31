@@ -2,6 +2,7 @@ type: object
 additionalProperties: false
 required:
   - id
+  - author
   - content
 properties:
   id:

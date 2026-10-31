@@ -1,7 +1,7 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus, uploadFile } from "./helpers.js";
+import { client, assertStatus, currentUserId, uploadFile } from "./helpers.js";
 
 describe("News", () => {
   const projectIdentifier = `news-${Date.now()}`;
@@ -78,7 +78,6 @@ describe("News", () => {
       params: {
         path: { format: "json", news_id: newsId },
         query: {
-          // News comments cannot be created through the API; only an empty array is exercised.
           include: ["attachments", "comments"],
         },
       },
@@ -89,6 +88,31 @@ describe("News", () => {
       1,
       "Expected the uploaded attachment in include=attachments"
     );
+    assert.deepStrictEqual(response.data!.news.comments, []);
+  });
+
+  test("GET /news/{news_id}.json with include=comments returns the seeded comment", async () => {
+    const list = await client.GET("/projects/{project_id}/news.{format}", {
+      params: {
+        path: { format: "json", project_id: "news-comment-fixture" },
+      },
+    });
+    assertStatus(200, list);
+    const news = list.data!.news.find((item) => item.title === "News with a comment");
+    assert(news, "Expected the news comment fixture");
+
+    const response = await client.GET("/news/{news_id}.{format}", {
+      params: {
+        path: { format: "json", news_id: news.id },
+        query: { include: ["comments"] },
+      },
+    });
+    assertStatus(200, response);
+    const comment = response.data!.news.comments?.find(
+      (item) => item.content === "API comment fixture"
+    );
+    assert(comment, "Expected a populated news comment");
+    assert.strictEqual(comment.author.id, await currentUserId());
   });
 
   test("PUT /news/{news_id}.json", async () => {

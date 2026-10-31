@@ -3,6 +3,7 @@ additionalProperties: false
 required:
   - id
   - name
+  - default_status
   - description
   - enabled_standard_fields
 properties:

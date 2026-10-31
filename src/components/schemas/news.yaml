@@ -2,6 +2,7 @@ type: object
 additionalProperties: false
 required:
   - id
+  - project
   - title
   - description
   - created_on

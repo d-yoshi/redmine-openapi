@@ -86,6 +86,10 @@ properties:
     items:
       type: object
       additionalProperties: false
+      required:
+        - revision
+        - comments
+        - committed_on
       properties:
         revision:
           type: string
@@ -107,38 +111,12 @@ properties:
   relations:
     type: array
     items:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-        issue_id:
-          type: integer
-        issue_to_id:
-          type: integer
-        relation_type:
-          type: string
-          enum:
-            - relates
-            - duplicates
-            - duplicated
-            - blocks
-            - blocked
-            - precedes
-            - follows
-            - copied_to
-            - copied_from
-        delay:
-          type: integer
-          nullable: true
+      $ref: ./issue_relation.yaml
   journals:
     type: array
     items:
       type: object
       additionalProperties: false
-      # issues/show.api.rsb renders every field below unconditionally; `user` and
-      # `updated_by` are guarded with `unless ... nil?` and are therefore optional
-      # (updated_by only appears once a journal has been edited)
       required:
         - id
         - notes

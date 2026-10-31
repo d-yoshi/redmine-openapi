@@ -2,6 +2,9 @@ type: object
 additionalProperties: false
 required:
   - id
+  - project
+  - user
+  - activity
   - hours
   - comments
   - spent_on
