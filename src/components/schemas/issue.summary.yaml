@@ -2,6 +2,11 @@ type: object
 additionalProperties: false
 required:
   - id
+  - project
+  - tracker
+  - status
+  - priority
+  - author
   - subject
   - description
   - start_date
@@ -35,6 +40,8 @@ properties:
   parent:
     type: object
     additionalProperties: false
+    required:
+      - id
     properties:
       id:
         type: integer
