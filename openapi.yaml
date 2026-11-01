@@ -6274,6 +6274,11 @@ components:
       type: object
       required:
         - id
+        - project
+        - tracker
+        - status
+        - priority
+        - author
         - subject
         - description
         - start_date
@@ -6306,6 +6311,8 @@ components:
           $ref: '#/components/schemas/id_name'
         parent:
           type: object
+          required:
+            - id
           properties:
             id:
               type: integer
@@ -6428,6 +6435,11 @@ components:
       type: object
       required:
         - id
+        - project
+        - tracker
+        - status
+        - priority
+        - author
         - subject
         - description
         - start_date
@@ -6460,6 +6472,8 @@ components:
           $ref: '#/components/schemas/id_name'
         parent:
           type: object
+          required:
+            - id
           properties:
             id:
               type: integer
