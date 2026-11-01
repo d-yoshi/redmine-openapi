@@ -244,6 +244,7 @@ post:
             - time_entry
           properties:
             time_entry:
+              description: Send `issue_id`, `project_id`, or both, and always `issue_id` when Redmine's time tracking settings require it. With `issue_id` alone, the entry takes the issue's project. When both IDs are specified, the issue must belong to the specified project.
               type: object
               additionalProperties: false
               required:
