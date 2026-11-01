@@ -12,49 +12,64 @@ import { FakeGitHub, payload } from "./fixtures/release.mjs";
 const expected = (value) => ({ tag: value.manifest.tag, sourceSha: value.manifest.sourceSha, repository: value.manifest.repository, publisherSha: "b".repeat(40) });
 const publish = (github, value = github.original) => publishRelease(github, value, expected(value));
 
-test("the HTTP client resumes a Draft by ID through uploads, publication and an immutable rerun", async () => {
-  const value = payload();
-  const tag = value.manifest.tag;
-  const draft = { id: 4, tag_name: tag, draft: true, body: draftSource(value.manifest.sourceSha), assets: [], upload_url: "https://uploads.github.com/repos/example/api/releases/4/assets{?name,label}" };
-  const bytes = new Map();
-  const writes = [];
-  let listed = true;
-  let nextId = 10;
-  const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
-  const github = new GitHub({ repository: "example/api", token: "test-token", run: () => { throw new Error("Existing Draft must be resumed"); }, fetchImpl: async (url, options) => {
-    const route = new URL(url);
-    const method = options.method ?? "GET";
-    if (method === "GET") {
-      if (route.pathname.includes("/git/ref/tags/")) return json({ object: { type: "commit", sha: value.manifest.sourceSha } });
-      if (route.pathname.endsWith(`/releases/tags/${tag}`)) return draft.draft ? json({}, 404) : json(draft);
-      if (route.pathname.endsWith("/releases")) return json(listed ? [draft] : []);
-      if (route.pathname.endsWith("/releases/4")) return json(draft);
-      if (route.pathname.endsWith("/releases/4/assets")) return json(draft.assets);
-      const id = Number(route.pathname.split("/").at(-1));
-      assert(bytes.has(id), `Unexpected asset read: ${route.pathname}`);
-      return new Response(bytes.get(id));
-    }
-    writes.push(method);
-    if (method === "POST") {
-      assert.equal(route.origin, "https://uploads.github.com");
-      const content = Buffer.from(options.body);
-      const asset = { id: nextId++, name: route.searchParams.get("name"), size: content.length, digest: `sha256:${digest(content)}` };
-      bytes.set(asset.id, content);
-      draft.assets.push(asset);
-      return json(asset, 201);
-    }
-    assert.equal(method, "PATCH");
-    const update = JSON.parse(options.body);
-    if (update.body) { draft.body = update.body; listed = false; }
-    else { assert.deepEqual(update, { draft: false, make_latest: "false" }); draft.draft = false; }
-    return json(draft);
-  } });
-  const manifest = await publishRelease(github, value, expected(value));
-  assert.equal(draft.draft, false);
-  assert.equal(draft.assets.length, 5);
-  const mutations = [...writes];
-  assert.deepEqual(await publishRelease(github, value, expected(value)), manifest);
-  assert.deepEqual(writes, mutations);
+test("the HTTP client creates or resumes Drafts through publication and an immutable rerun", async () => {
+  for (const fresh of [false, true]) {
+    const value = payload();
+    const tag = value.manifest.tag;
+    const initial = { id: 4, tag_name: tag, name: tag, draft: true, body: draftSource(value.manifest.sourceSha), assets: [], upload_url: "https://uploads.github.com/repos/example/api/releases/4/assets{?name,label}" };
+    let draft = fresh ? null : initial;
+    const bytes = new Map();
+    const writes = [];
+    let listed = true;
+    let nextId = 10;
+    const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
+    const github = new GitHub({ repository: "example/api", token: "test-token", fetchImpl: async (url, options) => {
+      const route = new URL(url);
+      const method = options.method ?? "GET";
+      if (method === "GET") {
+        if (route.pathname.includes("/git/ref/tags/")) return json({ object: { type: "commit", sha: value.manifest.sourceSha } });
+        if (route.pathname.endsWith(`/releases/tags/${tag}`)) return draft && !draft.draft ? json(draft) : json({}, 404);
+        if (route.pathname.endsWith("/releases")) return json(listed && draft ? [draft] : []);
+        if (route.pathname.endsWith("/releases/4")) return json(draft);
+        if (route.pathname.endsWith("/releases/4/assets")) return json(draft.assets);
+        const id = Number(route.pathname.split("/").at(-1));
+        assert(bytes.has(id), `Unexpected asset read: ${route.pathname}`);
+        return new Response(bytes.get(id));
+      }
+      writes.push(method);
+      if (method === "POST") {
+        if (route.origin === "https://api.github.com") {
+          assert.equal(draft, null, "An existing Draft must not be duplicated");
+          const request = JSON.parse(options.body);
+          assert.equal(request.tag_name, tag);
+          draft = { ...initial, body: request.body };
+          listed = false;
+          return json(draft, 201);
+        }
+        assert.equal(route.origin, "https://uploads.github.com");
+        const content = Buffer.from(options.body);
+        const asset = { id: nextId++, name: route.searchParams.get("name"), size: content.length, digest: `sha256:${digest(content)}` };
+        bytes.set(asset.id, content);
+        draft.assets.push(asset);
+        return json(asset, 201);
+      }
+      assert.equal(method, "PATCH");
+      const update = JSON.parse(options.body);
+      draft.tag_name = update.tag_name ?? "untagged-fixture";
+      draft.name = update.name ?? draft.tag_name;
+      if (Object.hasOwn(update, "body")) { draft.body = update.body; listed = false; }
+      else { assert.equal(update.draft, false); assert.equal(update.make_latest, "false"); draft.draft = false; }
+      return json(draft);
+    } });
+    const manifest = await publishRelease(github, value, expected(value));
+    assert.equal(draft.draft, false);
+    assert.equal(draft.tag_name, tag);
+    assert.equal(draft.name, tag);
+    assert.equal(draft.assets.length, 5);
+    const mutations = [...writes];
+    assert.deepEqual(await publishRelease(github, value, expected(value)), manifest);
+    assert.deepEqual(writes, mutations);
+  }
 });
 
 test("downloaded payloads check the producing run, attempt and file hashes", (t) => {

@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 
 import { CONFIG_PATH, SITE_MARKER, assertSha, parseConfig, positiveInteger } from "./policy.mjs";
@@ -7,7 +6,7 @@ import { CONFIG_PATH, SITE_MARKER, assertSha, parseConfig, positiveInteger } fro
 export const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 export class GitHub {
-  constructor({ repository, token, apiUrl = "https://api.github.com", fetchImpl = fetch, run = execFileSync }) {
+  constructor({ repository, token, apiUrl = "https://api.github.com", fetchImpl = fetch }) {
     assert(/^[\w.-]+\/[\w.-]+$/.test(repository), "Invalid repository");
     assert(token, "GH_TOKEN is required");
     this.repository = repository;
@@ -15,7 +14,6 @@ export class GitHub {
     this.token = token;
     this.apiUrl = apiUrl;
     this.fetch = fetchImpl;
-    this.run = run;
   }
 
   async request(route, { method = "GET", body, missing = false, binary = false } = {}) {
@@ -96,11 +94,14 @@ export class GitHub {
   }
 
   async createDraft(tag, body) {
-    this.run("gh", ["release", "create", tag, "--repo", this.repository, "--verify-tag", "--draft", "--latest=false", "--title", tag, "--notes-file", "-"], {
-      env: { ...process.env, GH_TOKEN: this.token }, input: body, stdio: ["pipe", "inherit", "inherit"],
+    // POST can create a missing tag, so verify the remote tag first.
+    await this.tagSha(tag);
+    const release = await this.request(`${this.prefix}/releases`, {
+      method: "POST", body: { tag_name: tag, name: tag, body, draft: true, make_latest: "false" },
     });
-    const release = await this.release(tag);
-    assert(release?.draft, "Created Draft could not be found");
+    assert(release?.draft && release.tag_name === tag, "Unexpected created Draft response");
+    positiveInteger(release.id, "release");
+    assert(Array.isArray(release.assets), "Created Draft is missing its asset list");
     return release;
   }
 
@@ -115,11 +116,11 @@ export class GitHub {
   }
 
   updateDraftNotes(release, body) {
-    return this.request(`${this.prefix}/releases/${release.id}`, { method: "PATCH", body: { body } });
+    return this.request(`${this.prefix}/releases/${release.id}`, { method: "PATCH", body: { tag_name: release.tag_name, name: release.name ?? release.tag_name, body } });
   }
 
   publish(release) {
-    return this.request(`${this.prefix}/releases/${release.id}`, { method: "PATCH", body: { draft: false, make_latest: "false" } });
+    return this.request(`${this.prefix}/releases/${release.id}`, { method: "PATCH", body: { tag_name: release.tag_name, name: release.name ?? release.tag_name, draft: false, make_latest: "false" } });
   }
 
   makeLatest(release) {

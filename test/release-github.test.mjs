@@ -93,27 +93,38 @@ test("configuration is read from a snapshot of the current default branch", asyn
   assert.deepEqual((await github.currentConfig()).config, { standard: "9.2.4", maintenance: [] });
 });
 
-test("Release creation verifies the tag and separates publication from Latest selection", async () => {
-  const commands = [];
-  const patches = [];
-  const github = client({ run: (command, args, options) => commands.push({ command, args, options }), fetchImpl: async (url, options) => {
-    if (url.endsWith("/releases/tags/9.2.4-r2")) return json({}, 404);
-    if (url.endsWith("/releases?per_page=100&page=1")) return json([{ id: 4, tag_name: "9.2.4-r2", draft: true }]);
-    if (url.endsWith("/releases/4") && options.method === "GET") return json({ id: 4, tag_name: "9.2.4-r2", draft: true });
-    if (url.endsWith("/releases/4/assets?per_page=100&page=1")) return json([]);
-    patches.push(JSON.parse(options.body));
-    return json({});
+test("Release creation uses the POST response and verifies the remote tag before writing", async () => {
+  const tag = "9.2.4-r2";
+  const sha = "a".repeat(40);
+  const created = { id: 4, tag_name: tag, name: tag, draft: true, assets: [] };
+  const calls = [];
+  const github = client({ fetchImpl: async (url, options) => {
+    calls.push({ url, method: options.method, body: options.body === undefined ? undefined : JSON.parse(options.body) });
+    if (url.endsWith(`/git/ref/tags/${tag}`)) return json({ object: { type: "commit", sha } });
+    assert.notEqual(options.method, "GET", "Creation must not depend on an immediate tag/list lookup");
+    return json(created, options.method === "POST" ? 201 : 200);
   } });
-  assert.equal((await github.createDraft("9.2.4-r2", "Release notes\n")).id, 4);
-  assert.equal(commands[0].command, "gh");
-  for (const flag of ["--verify-tag", "--draft", "--latest=false"]) assert(commands[0].args.includes(flag));
-  assert.equal(commands[0].args.at(-1), "-");
-  assert.equal(commands[0].options.input, "Release notes\n");
-  await github.publish({ id: 4 });
-  await github.makeLatest({ id: 4 });
-  assert.deepEqual(patches, [{ draft: false, make_latest: "false" }, { make_latest: "true" }]);
+  const release = await github.createDraft(tag, "Release notes\n");
+  assert.deepEqual(release, created);
+  await github.updateDraftNotes(release, "Updated notes\n");
+  await github.publish(release);
+  await github.makeLatest(release);
+  assert(calls[0].url.endsWith(`/git/ref/tags/${tag}`));
+  assert.deepEqual(calls.map((entry) => entry.method), ["GET", "POST", "PATCH", "PATCH", "PATCH"]);
+  assert.deepEqual(calls.slice(1).map((entry) => entry.body), [
+    { tag_name: tag, name: tag, body: "Release notes\n", draft: true, make_latest: "false" },
+    { tag_name: tag, name: tag, body: "Updated notes\n" },
+    { tag_name: tag, name: tag, draft: false, make_latest: "false" },
+    { make_latest: "true" },
+  ]);
 });
 
+test("a missing remote tag stops Draft creation before the POST", async () => {
+  const methods = [];
+  const github = client({ fetchImpl: async (_url, options) => { methods.push(options.method); return json({}, 404); } });
+  await assert.rejects(github.createDraft("9.2.4-r2", "notes"), /HTTP 404/);
+  assert.deepEqual(methods, ["GET"]);
+});
 
 test("site history uses successful publisher deployments and skips unrelated or failed entries", async () => {
   const selected = { publisher: SITE_MARKER, tag: "9.2.4-r2" };
