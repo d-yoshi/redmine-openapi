@@ -337,7 +337,7 @@ paths:
             Filter by creation date.
             Format: `<operator>[value]`
             Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: updated_on
@@ -346,7 +346,7 @@ paths:
             Filter by last updated date.
             Format: `<operator>[value]`
             Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: closed_on
@@ -355,7 +355,7 @@ paths:
             Filter by closed date.
             Format: `<operator>[value]`
             Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `t`, `>t-7`, `lm`
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: start_date
@@ -2961,6 +2961,7 @@ paths:
                 - time_entry
               properties:
                 time_entry:
+                  description: Send `issue_id`, `project_id`, or both, and always `issue_id` when Redmine's time tracking settings require it. With `issue_id` alone, the entry takes the issue's project. When both IDs are specified, the issue must belong to the specified project.
                   type: object
                   required:
                     - hours
@@ -5059,6 +5060,8 @@ paths:
               properties:
                 group:
                   type: object
+                  required:
+                    - name
                   properties:
                     name:
                       type: string
