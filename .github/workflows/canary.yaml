@@ -1,137 +1,116 @@
 name: Canary
 
-# Test new patches of the pinned series; report newer series without testing.
-#
-# Tags are compared instead of image digests on purpose: official images
-# are rebuilt regularly, so the digest changes even when the version does not.
 on:
   schedule:
     - cron: "0 21 * * 0" # Monday 06:00 JST
   workflow_dispatch:
+    inputs:
+      notify:
+        description: "Create or update Canary issues (otherwise show the summary only)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
-  issues: write
+
+concurrency:
+  group: canary
+  cancel-in-progress: false
 
 jobs:
   check:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
-      pinned: ${{ steps.compare.outputs.pinned }}
-      latest: ${{ steps.compare.outputs.latest }}
-      new_patch: ${{ steps.compare.outputs.new_patch }}
-      new_series: ${{ steps.compare.outputs.new_series }}
-      new_series_tag: ${{ steps.compare.outputs.new_series_tag }}
-      detect_error: ${{ steps.compare.outputs.detect_error }}
+      plan: ${{ steps.detect.outputs.plan }}
+      matrix: ${{ steps.detect.outputs.matrix }}
+      changed: ${{ steps.detect.outputs.changed }}
     steps:
       - uses: actions/checkout@v7
-      - name: Compare pinned version with Docker Hub tags
-        id: compare
-        run: |
-          PINNED=$( (grep -oE 'redmine:[0-9][0-9.]*' test/redmine/docker-compose.yaml | head -1 | cut -d: -f2) || true)
-          SERIES=${PINNED%.*}
-          # Latest patch of the pinned series
-          LATEST=$( (curl -fsSL "https://hub.docker.com/v2/repositories/library/redmine/tags?page_size=100&name=${SERIES}." \
-            | jq -r '.results[].name' \
-            | grep -E "^${SERIES//./\\.}\.[0-9]+$" \
-            | sort -V | tail -1) || true)
-          # Newest release tag overall — detects a newer series
-          NEWEST=$( (curl -fsSL "https://hub.docker.com/v2/repositories/library/redmine/tags?page_size=100" \
-            | jq -r '.results[].name' \
-            | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
-            | sort -V | tail -1) || true)
-          {
-            echo "pinned=$PINNED"
-            echo "latest=$LATEST"
-            if [ -z "$PINNED" ] || [ -z "$LATEST" ] || [ -z "$NEWEST" ]; then
-              echo "detect_error=true"
-              echo "new_patch=false"
-              echo "new_series=false"
-              echo "new_series_tag="
-            else
-              echo "detect_error=false"
-              if [ "$LATEST" != "$PINNED" ]; then
-                echo "new_patch=true"
-              else
-                echo "new_patch=false"
-              fi
-              if [ "${NEWEST%.*}" != "$SERIES" ] && [ "$(printf '%s\n%s\n' "$PINNED" "$NEWEST" | sort -V | tail -1)" = "$NEWEST" ]; then
-                echo "new_series=true"
-                echo "new_series_tag=$NEWEST"
-              else
-                echo "new_series=false"
-                echo "new_series_tag="
-              fi
-            fi
-          } >> "$GITHUB_OUTPUT"
-          echo "Pinned: ${PINNED:-unknown} / Latest in series: ${LATEST:-unknown} / Newest overall: ${NEWEST:-unknown}"
-
-  test:
-    needs: check
-    if: needs.check.outputs.new_patch == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version-file: .tool-versions
-          cache: "npm"
-      - name: Run tests against the new patch image
+          cache: npm
+      - run: npm ci
+      - id: detect
         env:
-          REDMINE_IMAGE: redmine:${{ needs.check.outputs.latest }}
-        run: |
-          npm ci
-          ./test/run-test.sh
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/canary.mjs detect
+
+  test:
+    needs: check
+    if: needs.check.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.check.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: tooling
+          persist-credentials: false
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.sha }}
+          path: spec
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: spec/.tool-versions
+          cache: npm
+          cache-dependency-path: spec/package-lock.json
+      - run: npm ci
+        working-directory: tooling
+      - name: Test the published specification against the candidate
+        env:
+          CANARY_CHECK: ${{ toJSON(matrix) }}
+          CANARY_SOURCE_DIR: ${{ github.workspace }}/spec
+          CANARY_RESULTS_DIR: ${{ runner.temp }}/canary-results
+        run: node tooling/scripts/canary.mjs test
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: canary-result-${{ matrix.target }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canary-results/*.json
+          if-no-files-found: warn
+          retention-days: 7
 
   report:
-    needs:
-      - check
-      - test
-    if: always() && (needs.check.result != 'success' || needs.check.outputs.detect_error == 'true' || needs.check.outputs.new_patch == 'true' || needs.check.outputs.new_series == 'true')
+    needs: [check, test]
+    if: always() && needs.check.result != 'skipped'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - name: Open issue for detection failure or new patch (deduplicated by title)
-        if: always() && (needs.check.result != 'success' || needs.check.outputs.detect_error == 'true' || needs.check.outputs.new_patch == 'true')
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v8
+        if: needs.test.result != 'skipped'
+        id: results
+        continue-on-error: true
+        with:
+          pattern: canary-result-*-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canary-results
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Summarize results and notify when requested
         env:
           GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          CHECK_RESULT: ${{ needs.check.result }}
-          TEST_RESULT: ${{ needs.test.result }}
-          DETECT_ERROR: ${{ needs.check.outputs.detect_error }}
-          PINNED: ${{ needs.check.outputs.pinned }}
-          LATEST: ${{ needs.check.outputs.latest }}
-        run: |
-          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          if [ "$CHECK_RESULT" != "success" ] || [ "$DETECT_ERROR" = "true" ]; then
-            TITLE="Canary: Redmine version detection failed"
-            BODY="The canary could not determine the pinned or latest Redmine version (pinned: \`${PINNED:-unknown}\`, latest: \`${LATEST:-unknown}\`); version-drift detection is not working. See the workflow run: $RUN_URL"
-          elif [ "$TEST_RESULT" = "success" ]; then
-            TITLE="Canary: Redmine $LATEST is available (pinned: $PINNED) — tests pass"
-            BODY="Docker Hub has \`redmine:$LATEST\` while the test pin is \`$PINNED\`. The full test suite passes against $LATEST, so this looks like a routine bump: update the pin, README, and info.description in one PR. Workflow run: $RUN_URL"
-          else
-            TITLE="Canary: Redmine $LATEST is available (pinned: $PINNED) — tests FAIL"
-            BODY="Docker Hub has \`redmine:$LATEST\` while the test pin is \`$PINNED\`, and the test suite does not pass against $LATEST (result: $TEST_RESULT). The new patch likely changed API behavior; spec updates are needed along with the bump. Workflow run: $RUN_URL"
-          fi
-          if gh issue list --state open --json title --jq '.[].title' | grep -Fxq "$TITLE"; then
-            echo "Issue already open: $TITLE"
-            exit 0
-          fi
-          gh issue create --title "$TITLE" --body "$BODY"
-
-      - name: Open issue for a new series (deduplicated by title)
-        if: always() && needs.check.result == 'success' && needs.check.outputs.new_series == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          PINNED: ${{ needs.check.outputs.pinned }}
-          NEW_SERIES_TAG: ${{ needs.check.outputs.new_series_tag }}
-        run: |
-          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          TITLE="Canary: Redmine $NEW_SERIES_TAG is available (new series, pinned: $PINNED)"
-          BODY="Docker Hub now has \`redmine:$NEW_SERIES_TAG\`, a newer series than the pinned \`$PINNED\`. Supporting a new series is a scope decision, not a routine bump: main would move to the new series (first release: \`${NEW_SERIES_TAG}-r1\`) while the current series continues on a maintenance branch. No tests were run against it. Keep this issue open to suppress re-filing while the decision is pending. Workflow run: $RUN_URL"
-          if gh issue list --state open --json title --jq '.[].title' | grep -Fxq "$TITLE"; then
-            echo "Issue already open: $TITLE"
-            exit 0
-          fi
-          gh issue create --title "$TITLE" --body "$BODY"
+          CANARY_PLAN: ${{ needs.check.outputs.plan }}
+          CANARY_CHECK_RESULT: ${{ needs.check.result }}
+          CANARY_RESULTS_DIR: ${{ runner.temp }}/canary-results
+          CANARY_DOWNLOAD_RESULT: ${{ steps.results.outcome }}
+          CANARY_NOTIFY: ${{ github.event_name != 'workflow_dispatch' || inputs.notify }}
+        run: node scripts/canary.mjs report

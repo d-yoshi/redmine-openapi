@@ -131,3 +131,16 @@ test("release image pins accept only exact released versions", () => {
   for (const image of ["redmine:9.2.4", "${REDMINE_IMAGE:-redmine:9.2.4}"]) assert.equal(imagePin({ services: { redmine: { image } } }), "9.2.4");
   for (const image of ["redmine:9.2", "redmine:latest", "redmine:9.2.4-alpine", "${REDMINE_IMAGE}"]) assert.throws(() => imagePin({ services: { redmine: { image } } }));
 });
+
+test("release validation rejects candidate image overrides before running target code", (t) => {
+  const { options, calls } = fixture(t);
+  const previous = process.env.REDMINE_IMAGE;
+  try {
+    process.env.REDMINE_IMAGE = "redmine:9.2.5";
+    assert.throws(() => buildRelease(options), /must use the pinned image/);
+    assert.deepEqual(calls, []);
+  } finally {
+    if (previous === undefined) delete process.env.REDMINE_IMAGE;
+    else process.env.REDMINE_IMAGE = previous;
+  }
+});

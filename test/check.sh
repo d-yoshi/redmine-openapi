@@ -29,7 +29,8 @@ else
 fi
 
 echo "=== Testing validation tools ==="
-node --test "$SCRIPT_DIR/"*.test.mjs
+# Tool fixtures use their own image settings; the override applies to the API container.
+env -u REDMINE_IMAGE node --test "$SCRIPT_DIR/"*.test.mjs
 
 echo "=== Checking summary/detail schema sync ==="
 node "$SCRIPT_DIR/check-summary-detail-sync.mjs"
