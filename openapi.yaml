@@ -7184,8 +7184,6 @@ components:
         comments:
           type: string
           nullable: true
-        project:
-          $ref: '#/components/schemas/id_name'
         created_on:
           type: string
           format: date-time
