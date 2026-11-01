@@ -27,8 +27,6 @@ properties:
   comments:
     type: string
     nullable: true
-  project:
-    $ref: ./id_name.yaml
   created_on:
     type: string
     format: date-time
