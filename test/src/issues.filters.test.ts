@@ -171,3 +171,75 @@ describe("Issue filter representations", () => {
     }
   });
 });
+
+describe("Issue timestamp filter representations", () => {
+  let projectId: number;
+  const issueIds = new Map<string, number>();
+
+  before(async () => {
+    const project = await client.GET("/projects/{project_id}.{format}", {
+      params: { path: { format: "json", project_id: "timestamp-filter-fixture" } },
+    });
+    assertStatus(200, project);
+    projectId = project.data!.project.id;
+
+    const issues = await client.GET("/issues.{format}", {
+      params: { path: { format: "json" }, query: { project_id: String(projectId), status_id: "*" } },
+    });
+    assertStatus(200, issues);
+    for (const issue of issues.data!.issues) {
+      issueIds.set(issue.subject, issue.id);
+    }
+  });
+
+  after(async () => {
+    if (!projectId) return;
+    const response = await client.DELETE("/projects/{project_id}.{format}", {
+      params: { path: { format: "json", project_id: projectId } },
+    });
+    assertStatus(204, response);
+  });
+
+  const cases: Array<{ name: string; query: IssuesQuery; expected: string[] }> = [
+    {
+      name: "unfiltered timestamp control",
+      query: {},
+      expected: ["before", "overlap", "lower", "upper", "after"],
+    },
+    {
+      name: "timestamp lower bound includes the preceding fractional second",
+      query: { updated_on: ">=2024-01-01T08:00:00Z" },
+      expected: ["overlap", "lower", "upper", "after"],
+    },
+    {
+      name: "timestamp range overlaps the lower bound and includes the upper bound",
+      query: { updated_on: "><2024-01-01T08:00:00Z|2024-01-01T08:00:01Z" },
+      expected: ["overlap", "lower", "upper"],
+    },
+  ];
+
+  for (const scoped of [false, true]) {
+    for (const example of cases) {
+      test(`${scoped ? "Project-scoped" : "Global"} issues: ${example.name}`, async () => {
+        const query = { status_id: "*", ...example.query };
+        const response = scoped
+          ? await client.GET("/projects/{project_id}/issues.{format}", {
+              params: { path: { format: "json", project_id: projectId }, query },
+            })
+          : await client.GET("/issues.{format}", {
+              params: { path: { format: "json" }, query: { ...query, project_id: String(projectId) } },
+            });
+        assertStatus(200, response);
+        const expectedIds = example.expected.map((subject) => {
+          const id = issueIds.get(subject);
+          assert(id, `Missing timestamp fixture: ${subject}`);
+          return id;
+        });
+        assert.deepStrictEqual(
+          response.data!.issues.map((issue) => issue.id).sort((a, b) => a - b),
+          expectedIds.sort((a, b) => a - b)
+        );
+      });
+    }
+  }
+});

@@ -166,6 +166,18 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
   end
   news.comments.find_or_create_by!(author: admin, content: 'API comment fixture')
 
+  # The API sets updated_on automatically; fixed timestamps avoid clock-dependent boundary tests.
+  timestamp_project = Project.find_by(identifier: 'timestamp-filter-fixture') ||
+                      Project.create!(name: 'Timestamp Filter Fixture', identifier: 'timestamp-filter-fixture')
+  timestamp_project.trackers = Tracker.all
+  [[-1, 'before'], [-0.5, 'overlap'], [0, 'lower'], [1, 'upper'], [2, 'after']].each do |offset, subject|
+    issue = timestamp_project.issues.find_or_create_by!(subject: subject) do |entry|
+      entry.author = admin
+      entry.tracker = Tracker.first
+    end
+    Issue.where(id: issue.id).update_all(updated_on: Time.utc(2024, 1, 1, 8, 0, 0) + offset)
+  end
+
   puts 'Setup completed!'
 RUBY
 
