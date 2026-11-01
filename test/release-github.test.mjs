@@ -58,6 +58,7 @@ test("draft lookup uses all release pages when the tag endpoint returns 404", as
     if (url.endsWith(`/releases/tags/${tag}`)) return json({}, 404);
     if (url.endsWith("/releases?per_page=100&page=1")) return json(Array.from({ length: 100 }, () => ({ tag_name: "other" })));
     if (url.endsWith("/releases?per_page=100&page=2")) return json([draft]);
+    if (url.endsWith("/releases/4")) return json(draft);
     assert(url.endsWith("/releases/4/assets?per_page=100&page=1"));
     return json([{ id: 8, name: "openapi.yaml" }]);
   } });
@@ -65,12 +66,13 @@ test("draft lookup uses all release pages when the tag endpoint returns 404", as
   assert.equal(found.id, draft.id);
   assert.equal(found.draft, true);
   assert.deepEqual(found.assets, [{ id: 8, name: "openapi.yaml" }]);
-  assert.equal(urls.length, 4);
+  assert.equal(urls.length, 5);
 });
 
 test("published release lookup avoids enumeration; missing drafts and errors stay distinct", async () => {
   const github = client({ fetchImpl: async (url) => {
     if (url.includes("/releases/tags/")) return json({ id: 4, draft: false });
+    if (url.endsWith("/releases/4")) return json({ id: 4, draft: false });
     assert(url.endsWith("/releases/4/assets?per_page=100&page=1"));
     return json([]);
   } });
@@ -97,6 +99,7 @@ test("Release creation verifies the tag and separates publication from Latest se
   const github = client({ run: (command, args, options) => commands.push({ command, args, options }), fetchImpl: async (url, options) => {
     if (url.endsWith("/releases/tags/9.2.4-r2")) return json({}, 404);
     if (url.endsWith("/releases?per_page=100&page=1")) return json([{ id: 4, tag_name: "9.2.4-r2", draft: true }]);
+    if (url.endsWith("/releases/4") && options.method === "GET") return json({ id: 4, tag_name: "9.2.4-r2", draft: true });
     if (url.endsWith("/releases/4/assets?per_page=100&page=1")) return json([]);
     patches.push(JSON.parse(options.body));
     return json({});

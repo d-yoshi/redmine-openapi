@@ -4,12 +4,58 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { MANIFEST_NAME } from "../scripts/release/policy.mjs";
+import { MANIFEST_NAME, draftSource } from "../scripts/release/policy.mjs";
+import { GitHub, digest } from "../scripts/release/github.mjs";
 import { beginSite, currentPromotion, readPayload, writeSite, publishRelease, updateLatest } from "../scripts/release/publication.mjs";
 import { FakeGitHub, payload } from "./fixtures/release.mjs";
 
 const expected = (value) => ({ tag: value.manifest.tag, sourceSha: value.manifest.sourceSha, repository: value.manifest.repository, publisherSha: "b".repeat(40) });
 const publish = (github, value = github.original) => publishRelease(github, value, expected(value));
+
+test("the HTTP client resumes a Draft by ID through uploads, publication and an immutable rerun", async () => {
+  const value = payload();
+  const tag = value.manifest.tag;
+  const draft = { id: 4, tag_name: tag, draft: true, body: draftSource(value.manifest.sourceSha), assets: [], upload_url: "https://uploads.github.com/repos/example/api/releases/4/assets{?name,label}" };
+  const bytes = new Map();
+  const writes = [];
+  let listed = true;
+  let nextId = 10;
+  const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
+  const github = new GitHub({ repository: "example/api", token: "test-token", run: () => { throw new Error("Existing Draft must be resumed"); }, fetchImpl: async (url, options) => {
+    const route = new URL(url);
+    const method = options.method ?? "GET";
+    if (method === "GET") {
+      if (route.pathname.includes("/git/ref/tags/")) return json({ object: { type: "commit", sha: value.manifest.sourceSha } });
+      if (route.pathname.endsWith(`/releases/tags/${tag}`)) return draft.draft ? json({}, 404) : json(draft);
+      if (route.pathname.endsWith("/releases")) return json(listed ? [draft] : []);
+      if (route.pathname.endsWith("/releases/4")) return json(draft);
+      if (route.pathname.endsWith("/releases/4/assets")) return json(draft.assets);
+      const id = Number(route.pathname.split("/").at(-1));
+      assert(bytes.has(id), `Unexpected asset read: ${route.pathname}`);
+      return new Response(bytes.get(id));
+    }
+    writes.push(method);
+    if (method === "POST") {
+      assert.equal(route.origin, "https://uploads.github.com");
+      const content = Buffer.from(options.body);
+      const asset = { id: nextId++, name: route.searchParams.get("name"), size: content.length, digest: `sha256:${digest(content)}` };
+      bytes.set(asset.id, content);
+      draft.assets.push(asset);
+      return json(asset, 201);
+    }
+    assert.equal(method, "PATCH");
+    const update = JSON.parse(options.body);
+    if (update.body) { draft.body = update.body; listed = false; }
+    else { assert.deepEqual(update, { draft: false, make_latest: "false" }); draft.draft = false; }
+    return json(draft);
+  } });
+  const manifest = await publishRelease(github, value, expected(value));
+  assert.equal(draft.draft, false);
+  assert.equal(draft.assets.length, 5);
+  const mutations = [...writes];
+  assert.deepEqual(await publishRelease(github, value, expected(value)), manifest);
+  assert.deepEqual(writes, mutations);
+});
 
 test("downloaded payloads check the producing run, attempt and file hashes", (t) => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "release-input-test-"));
@@ -99,6 +145,21 @@ test("a Draft published by another actor is never reset", async () => {
   };
   await assert.rejects(publish(github), /Published releases cannot be modified/);
   assert.equal(github.mutations.some((entry) => ["delete", "upload"].includes(entry.operation)), false);
+});
+
+test("a deleted or retagged Draft stops before asset writes", async () => {
+  for (const scenario of ["deleted", "retagged"]) {
+    const github = new FakeGitHub();
+    const draft = github.seed(github.original, { draft: true });
+    const update = github.updateDraftNotes.bind(github);
+    github.updateDraftNotes = async (...args) => {
+      await update(...args);
+      if (scenario === "deleted") github.stored.delete(draft.tag_name);
+      else draft.tag_name = "9.2.4-r3";
+    };
+    await assert.rejects(publish(github), /Draft (no longer exists|tag changed)/);
+    assert.equal(github.mutations.some((entry) => ["delete", "upload", "publish"].includes(entry.operation)), false);
+  }
 });
 
 test("incomplete or unverified published releases require a new revision", async () => {

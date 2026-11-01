@@ -37,6 +37,7 @@ export class FakeGitHub {
   async latest() { return structuredClone(this.currentLatest); }
   async releases() { return [...this.stored.values()].map((entry) => structuredClone(entry)); }
   async release(tag) { return this.stored.has(tag) ? structuredClone(this.stored.get(tag)) : null; }
+  async releaseById(id) { return structuredClone([...this.stored.values()].find((entry) => entry.id === id) ?? null); }
   async tagSha(tag) { return this.tags.get(tag); }
   async asset(asset) { return Buffer.from(this.bytes.get(asset.id)); }
   async deployedSite() { return structuredClone(this.deployed); }

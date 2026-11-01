@@ -82,6 +82,11 @@ export class GitHub {
     // The tag endpoint returns published releases; drafts are listed separately.
     const release = await this.request(`${this.prefix}/releases/tags/${encodeURIComponent(tag)}`, { missing: true }) ??
       (await this.releases()).find((entry) => entry.tag_name === tag) ?? null;
+    return release ? this.releaseById(release.id) : null;
+  }
+
+  async releaseById(id) {
+    const release = await this.request(`${this.prefix}/releases/${positiveInteger(id, "release")}`, { missing: true });
     if (release) release.assets = await this.list(`${this.prefix}/releases/${release.id}/assets`);
     return release;
   }

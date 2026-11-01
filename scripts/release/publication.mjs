@@ -43,9 +43,11 @@ async function storedManifest(github, release) {
 }
 
 async function checkedDraft(github, manifest, id) {
-  const release = await github.release(manifest.tag);
-  assert(release?.draft, "Published releases cannot be modified");
+  const release = await github.releaseById(id);
+  assert(release, "Draft no longer exists");
+  assert(release.draft, "Published releases cannot be modified");
   assert.equal(release.id, id, "Draft was replaced during publication");
+  assert.equal(release.tag_name, manifest.tag, "Draft tag changed during publication");
   if (!release.body?.trimEnd().endsWith(draftSource(manifest.sourceSha))) {
     const previous = await storedManifest(github, release);
     assert(previous, "Draft source cannot be verified");
