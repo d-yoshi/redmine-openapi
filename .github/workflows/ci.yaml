@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - ".github/workflows/**"
+      - ".github/release-targets.json"
+      - "scripts/**"
       - "src/**"
       - "redocly/**"
       - "test/**"
@@ -17,6 +19,8 @@ on:
   pull_request:
     paths:
       - ".github/workflows/**"
+      - ".github/release-targets.json"
+      - "scripts/**"
       - "src/**"
       - "redocly/**"
       - "test/**"
@@ -52,8 +56,14 @@ jobs:
   static:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Lint GitHub Actions workflows
+        run: docker run --rm -v "$PWD:/repo:ro" -w /repo rhysd/actionlint:1.7.12 -color
       - uses: actions/setup-node@v7
         with:
           node-version-file: .tool-versions
@@ -96,7 +106,7 @@ jobs:
             echo "No previous release tag found; skipping diff." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          git show "$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
+          git show "refs/tags/$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
           npm run bundle
           {
             echo "## oasdiff changelog vs \`$PREV_TAG\`"

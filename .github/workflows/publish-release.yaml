@@ -1,0 +1,201 @@
+name: Publish release
+
+on:
+  workflow_run:
+    workflows: [Request release]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to validate/publish; leave empty to reconcile Latest and Pages"
+        type: string
+        required: false
+      bootstrap_latest:
+        description: "Allow the initial Latest selection only when no Latest exists"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: [.github/release-targets.json]
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+      pages: read
+    outputs:
+      mode: ${{ steps.request.outputs.mode }}
+      tag: ${{ steps.request.outputs.tag }}
+      sha: ${{ steps.request.outputs.sha }}
+      tooling_sha: ${{ steps.request.outputs.tooling_sha }}
+      pages_url: ${{ steps.request.outputs.pages_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+      - run: npm ci
+      - id: request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release/cli.mjs prepare
+
+  validate:
+    name: Validate release
+    needs: prepare
+    if: needs.prepare.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.tooling_sha }}
+          path: tooling
+          persist-credentials: false
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+          path: spec
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: spec/.tool-versions
+      - run: npm ci
+        working-directory: tooling
+      - run: npm ci
+        working-directory: spec
+      - name: Validate the pinned API and build immutable payloads
+        env:
+          RELEASE_SOURCE_DIR: ${{ github.workspace }}/spec
+          RELEASE_OUTPUT_DIR: ${{ runner.temp }}/validated-release
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          RELEASE_SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+          RELEASE_TOOLING_SHA: ${{ needs.prepare.outputs.tooling_sha }}
+          RELEASE_PAGES_URL: ${{ needs.prepare.outputs.pages_url }}
+        run: node tooling/scripts/release/cli.mjs validate
+      - uses: actions/upload-artifact@v7
+        id: artifact
+        with:
+          name: validated-release-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/validated-release/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    needs: [prepare, validate]
+    if: needs.prepare.outputs.mode == 'publish' && needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ needs.prepare.outputs.tag }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+      - run: npm ci
+      - uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ needs.validate.outputs.artifact_id }}
+          path: ${{ runner.temp }}/release-input
+          digest-mismatch: error
+      - name: Publish or resume the individual Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_INPUT_DIR: ${{ runner.temp }}/release-input
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          RELEASE_SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+        run: node scripts/release/cli.mjs publish
+
+  reconcile:
+    needs: [prepare, publish]
+    if: always() && needs.prepare.result == 'success' && (needs.publish.result == 'success' || (needs.prepare.outputs.mode == 'reconcile' && needs.publish.result == 'skipped'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      deployments: write
+    concurrency:
+      group: release-promotion
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      deployment: false
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      RELEASE_BOOTSTRAP: ${{ github.event_name == 'workflow_dispatch' && inputs.bootstrap_latest }}
+    steps:
+      - name: Set work paths
+        run: |
+          echo "RELEASE_PLAN=$RUNNER_TEMP/release-plan.json" >> "$GITHUB_ENV"
+          echo "RELEASE_SITE_ARTIFACT=$RUNNER_TEMP/release-site/artifact.tar" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+      - run: npm ci
+      - name: Select the currently eligible release
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release/cli.mjs plan
+      - uses: actions/upload-artifact@v7
+        if: steps.plan.outputs.deploy == 'true'
+        with:
+          name: github-pages-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release-site/artifact.tar
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 1
+      - name: Recheck policy and update Latest
+        if: steps.plan.outputs.ready == 'true'
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release/cli.mjs latest
+      - name: Recheck the site selection immediately before deployment
+        if: steps.plan.outputs.deploy == 'true' && steps.latest.outputs.valid == 'true'
+        id: site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release/cli.mjs begin-site
+      - uses: actions/deploy-pages@v5
+        if: steps.site.outputs.deploy == 'true'
+        id: deploy
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
+      - name: Record the actual deployment result
+        if: always() && steps.site.outputs.id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_DEPLOYMENT_ID: ${{ steps.site.outputs.id }}
+          RELEASE_SITE_RESULT: ${{ steps.deploy.outcome }}
+          RELEASE_SITE_URL: ${{ needs.prepare.outputs.pages_url }}
+        run: node scripts/release/cli.mjs record-site
