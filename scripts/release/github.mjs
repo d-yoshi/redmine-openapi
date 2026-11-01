@@ -79,7 +79,9 @@ export class GitHub {
   }
 
   async release(tag) {
-    const release = await this.request(`${this.prefix}/releases/tags/${encodeURIComponent(tag)}`, { missing: true });
+    // The tag endpoint returns published releases; drafts are listed separately.
+    const release = await this.request(`${this.prefix}/releases/tags/${encodeURIComponent(tag)}`, { missing: true }) ??
+      (await this.releases()).find((entry) => entry.tag_name === tag) ?? null;
     if (release) release.assets = await this.list(`${this.prefix}/releases/${release.id}/assets`);
     return release;
   }
@@ -92,7 +94,9 @@ export class GitHub {
     this.run("gh", ["release", "create", tag, "--repo", this.repository, "--verify-tag", "--draft", "--latest=false", "--title", tag, "--notes-file", "-"], {
       env: { ...process.env, GH_TOKEN: this.token }, input: body, stdio: ["pipe", "inherit", "inherit"],
     });
-    return this.release(tag);
+    const release = await this.release(tag);
+    assert(release?.draft, "Created Draft could not be found");
+    return release;
   }
 
   upload(release, name, bytes) {

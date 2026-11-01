@@ -49,6 +49,37 @@ test("release enumeration includes later API pages", async () => {
   assert(urls[1].endsWith("per_page=100&page=2"));
 });
 
+test("draft lookup uses all release pages when the tag endpoint returns 404", async () => {
+  const tag = "9.2.4-r2";
+  const draft = { id: 4, tag_name: tag, draft: true, assets: [{ name: "incomplete" }] };
+  const urls = [];
+  const github = client({ fetchImpl: async (url) => {
+    urls.push(url);
+    if (url.endsWith(`/releases/tags/${tag}`)) return json({}, 404);
+    if (url.endsWith("/releases?per_page=100&page=1")) return json(Array.from({ length: 100 }, () => ({ tag_name: "other" })));
+    if (url.endsWith("/releases?per_page=100&page=2")) return json([draft]);
+    assert(url.endsWith("/releases/4/assets?per_page=100&page=1"));
+    return json([{ id: 8, name: "openapi.yaml" }]);
+  } });
+  const found = await github.release(tag);
+  assert.equal(found.id, draft.id);
+  assert.equal(found.draft, true);
+  assert.deepEqual(found.assets, [{ id: 8, name: "openapi.yaml" }]);
+  assert.equal(urls.length, 4);
+});
+
+test("published release lookup avoids enumeration; missing drafts and errors stay distinct", async () => {
+  const github = client({ fetchImpl: async (url) => {
+    if (url.includes("/releases/tags/")) return json({ id: 4, draft: false });
+    assert(url.endsWith("/releases/4/assets?per_page=100&page=1"));
+    return json([]);
+  } });
+  assert.equal((await github.release("9.2.4-r2")).draft, false);
+  assert.equal(await client({ fetchImpl: async (url) => url.includes("/releases/tags/") ? json({}, 404) : json([]) }).release("missing"), null);
+  await assert.rejects(client({ fetchImpl: async () => json({}, 403) }).release("9.2.4-r2"), /HTTP 403/);
+  await assert.rejects(client({ fetchImpl: async (url) => url.includes("/releases/tags/") ? json({}, 404) : json({}, 403) }).release("9.2.4-r2"), /HTTP 403/);
+});
+
 test("configuration is read from a snapshot of the current default branch", async () => {
   const sha = "d".repeat(40);
   const github = client({ fetchImpl: async (url) => {
@@ -63,12 +94,14 @@ test("configuration is read from a snapshot of the current default branch", asyn
 test("Release creation verifies the tag and separates publication from Latest selection", async () => {
   const commands = [];
   const patches = [];
-  const github = client({ run: (command, args, options) => commands.push({ command, args, options }), fetchImpl: async (_url, options) => {
+  const github = client({ run: (command, args, options) => commands.push({ command, args, options }), fetchImpl: async (url, options) => {
+    if (url.endsWith("/releases/tags/9.2.4-r2")) return json({}, 404);
+    if (url.endsWith("/releases?per_page=100&page=1")) return json([{ id: 4, tag_name: "9.2.4-r2", draft: true }]);
+    if (url.endsWith("/releases/4/assets?per_page=100&page=1")) return json([]);
     patches.push(JSON.parse(options.body));
     return json({});
   } });
-  github.release = async () => ({ id: 4 });
-  await github.createDraft("9.2.4-r2", "Release notes\n");
+  assert.equal((await github.createDraft("9.2.4-r2", "Release notes\n")).id, 4);
   assert.equal(commands[0].command, "gh");
   for (const flag of ["--verify-tag", "--draft", "--latest=false"]) assert(commands[0].args.includes(flag));
   assert.equal(commands[0].args.at(-1), "-");
