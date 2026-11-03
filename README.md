@@ -4,8 +4,6 @@
 
 An OpenAPI 3.0.3 specification for the Redmine API, built from the official docs and source code, and tested against a running Redmine instance.
 
-**Tested against: Redmine 6.1.5**
-
 ## Documentation
 
 Browse the rendered API reference at https://d-yoshi.github.io/redmine-openapi/
