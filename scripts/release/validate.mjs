@@ -58,7 +58,8 @@ export function buildRelease({ sourceDir, outputDir, tag, sourceSha, toolingSha,
     const previousDir = path.join(output, "previous");
     fs.mkdirSync(previousDir, { recursive: true });
     fs.writeFileSync(path.join(previousDir, "openapi.yaml"), command("git", ["show", `refs/tags/${previous}:openapi.yaml`], { stdio: "pipe" }));
-    const diff = (kind) => command("docker", ["run", "--rm", "-v", `${previousDir}:/previous:ro`, "-v", `${output}:/current:ro`, "tufin/oasdiff", kind, "/previous/openapi.yaml", "/current/openapi.yaml", ...(kind === "breaking" ? ["--fail-on", "ERR"] : [])], { stdio: "pipe", encoding: "utf8" });
+    const oasdiffImage = fs.readFileSync(new URL("../../.github/oasdiff-image.txt", import.meta.url), "utf8").trim();
+    const diff = (kind) => command("docker", ["run", "--rm", "-v", `${previousDir}:/previous:ro`, "-v", `${output}:/current:ro`, oasdiffImage, kind, "/previous/openapi.yaml", "/current/openapi.yaml", ...(kind === "breaking" ? ["--fail-on", "ERR"] : [])], { stdio: "pipe", encoding: "utf8" });
     try { diff("breaking"); } catch (error) {
       if (error.status !== 1) throw error;
       notes.push(`**Breaking corrections compared with ${previous}: regenerated clients or validators may need changes.**`, "");

@@ -1,4 +1,5 @@
 name: Publish release
+run-name: ${{ github.event.inputs.source_ref && format('Publish {0}', github.event.inputs.source_ref) || github.event.inputs.tag && format('Publish {0}', github.event.inputs.tag) || github.event.workflow_run.head_branch && format('Publish {0}', github.event.workflow_run.head_branch) || 'Reconcile Latest and Pages' }}
 
 on:
   workflow_run:
@@ -6,8 +7,12 @@ on:
     types: [completed]
   workflow_dispatch:
     inputs:
+      source_ref:
+        description: "Branch or commit to validate, tag, and publish (for example main or a maintenance branch)"
+        type: string
+        required: false
       tag:
-        description: "Release tag to validate/publish; leave empty to reconcile Latest and Pages"
+        description: "Existing tag to retry; leave both source_ref and tag empty to reconcile Latest and Pages"
         type: string
         required: false
       bootstrap_latest:
@@ -23,6 +28,7 @@ permissions:
 
 jobs:
   prepare:
+    name: Resolve release request
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -34,6 +40,7 @@ jobs:
       mode: ${{ steps.request.outputs.mode }}
       tag: ${{ steps.request.outputs.tag }}
       sha: ${{ steps.request.outputs.sha }}
+      create_tag: ${{ steps.request.outputs.create_tag }}
       tooling_sha: ${{ steps.request.outputs.tooling_sha }}
       pages_url: ${{ steps.request.outputs.pages_url }}
     steps:
@@ -98,6 +105,7 @@ jobs:
           retention-days: 30
 
   publish:
+    name: Publish release assets
     needs: [prepare, validate]
     if: needs.prepare.outputs.mode == 'publish' && needs.validate.result == 'success'
     runs-on: ubuntu-latest
@@ -127,9 +135,39 @@ jobs:
           RELEASE_INPUT_DIR: ${{ runner.temp }}/release-input
           RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
           RELEASE_SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+          RELEASE_CREATE_TAG: ${{ needs.prepare.outputs.create_tag }}
         run: node scripts/release/cli.mjs publish
 
+  targets:
+    name: Propose publication target
+    needs: [prepare, publish]
+    if: needs.publish.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: release-target-proposal
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .tool-versions
+      - run: npm ci
+      - name: Propose an update for a newly published patch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          RELEASE_SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+        run: node scripts/release/cli.mjs propose-target
+
   reconcile:
+    name: Update Latest and Pages
     needs: [prepare, publish]
     if: always() && needs.prepare.result == 'success' && (needs.publish.result == 'success' || (needs.prepare.outputs.mode == 'reconcile' && needs.publish.result == 'skipped'))
     runs-on: ubuntu-latest

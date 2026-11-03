@@ -48,7 +48,7 @@ Choose an example below and save it as `custom.overlay.yaml`. Each example is in
 
 ## Example: single-valued custom fields
 
-Suppose your Redmine installation uses only single-valued custom fields whose API values are strings or `null`. The following Overlay narrows the shared custom-field response value schema:
+Suppose your Redmine installation uses only single-valued custom fields whose response values are strings or `null`. The following Overlay narrows the shared schema for custom-field response values:
 
 ```yaml
 overlay: 1.1.0

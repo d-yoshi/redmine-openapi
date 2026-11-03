@@ -65,6 +65,9 @@ test("release validation packages the tested source, strict schema and site with
   assert.deepEqual(JSON.parse(fs.readFileSync(path.join(options.outputDir, "validation.json"), "utf8")), manifest);
   assert(calls.some((entry) => entry.command === "./test/run-test.sh"));
   assert(calls.some((entry) => entry.command === "git" && entry.args.includes("refs/tags/9.2.4-r1:openapi.yaml")));
+  const oasdiffImage = fs.readFileSync(new URL("../.github/oasdiff-image.txt", import.meta.url), "utf8").trim();
+  assert.match(oasdiffImage, /^tufin\/oasdiff:v\d+\.\d+\.\d+@sha256:[a-f0-9]{64}$/);
+  for (const comparison of calls.filter((entry) => entry.command === "docker")) assert(comparison.args.includes(oasdiffImage));
   const docs = calls.find((entry) => entry.command === "npm" && entry.args[1] === "docs");
   assert.equal(docs.args.at(-1), "/api");
   const archive = path.join(options.outputDir, "artifact.tar");

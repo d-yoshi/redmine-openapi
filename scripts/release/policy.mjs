@@ -89,6 +89,31 @@ export function assertRevision(tag, previous) {
   }
 }
 
+export function nextReleaseTag(target, previous) {
+  parseVersion(target);
+  let revision = 1n;
+  if (previous && !previous.includes("+redmine")) {
+    const old = parseTag(previous);
+    if (old.target === target) revision = BigInt(old.revision) + 1n;
+  }
+  const tag = `${target}-r${revision}`;
+  assertRevision(tag, previous);
+  return tag;
+}
+
+export function publicationTargetUpdate(config, tag) {
+  const current = parseConfig(config);
+  const { target } = parseTag(tag);
+  const series = (version) => version.split(".").slice(0, 2).join(".");
+  for (const slot of ["standard", "maintenance"]) {
+    const previous = slot === "standard" ? current.standard : current.maintenance[0];
+    if (!previous || series(previous) !== series(target) || compareVersions(target, previous) <= 0) continue;
+    const next = { ...current, [slot]: slot === "standard" ? target : [target] };
+    return { slot, previous, target, config: parseConfig(next) };
+  }
+  return null;
+}
+
 export function parseValidation(value) {
   assert.equal(value?.schemaVersion, 1, "Unsupported validation manifest");
   parseTag(value.tag);

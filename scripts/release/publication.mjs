@@ -60,6 +60,7 @@ async function checkedDraft(github, manifest, id) {
 export async function publishRelease(github, payload, expected) {
   identity(payload.manifest, expected);
   const manifest = parseManifest({ ...payload.manifest, publisherSha: expected.publisherSha, publisherWorkflow: PUBLISH_WORKFLOW });
+  if (expected.createTag) await github.ensureTag(manifest.tag, manifest.sourceSha);
   await assertTagUnchanged(github, manifest);
   let release = await github.release(manifest.tag);
   if (release && !release.draft) {
@@ -110,6 +111,16 @@ async function verifyRelease(github, release, manifest, expected) {
     }
   }
   return site;
+}
+
+export async function verifiedPublishedRelease(github, tag, sourceSha) {
+  const release = await github.release(tag);
+  assert(release && !release.draft && !release.prerelease, "A published stable release is required");
+  const manifest = await storedManifest(github, release);
+  assert(manifest, "Published release has no manifest");
+  assert.equal(manifest.sourceSha, sourceSha, "Published release has a different source");
+  await verifyRelease(github, release, manifest);
+  return manifest;
 }
 
 const sameSelection = (left, right) => left.tag && left.tag === right.tag && left.sourceSha === right.sourceSha && left.docsSha256 === right.docsSha256;

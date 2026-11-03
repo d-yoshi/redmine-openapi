@@ -3,7 +3,7 @@ import fs from "node:fs";
 import test from "node:test";
 import { load } from "js-yaml";
 
-import { CONFIG_PATH, PUBLISH_WORKFLOW, assertDefaultWorkflow, assertRevision, compareTags, parseConfig, parseTag, planPromotion } from "../scripts/release/policy.mjs";
+import { CONFIG_PATH, PUBLISH_WORKFLOW, assertDefaultWorkflow, assertRevision, compareTags, nextReleaseTag, parseConfig, parseTag, planPromotion, publicationTargetUpdate } from "../scripts/release/policy.mjs";
 import { payload, receipt } from "./fixtures/release.mjs";
 
 const release = (tag) => ({ tag_name: tag, draft: false, prerelease: false, manifest: receipt(payload(tag)) });
@@ -37,6 +37,21 @@ test("revision gates preserve the target's own ancestry", () => {
   assert.throws(() => assertRevision("8.1.7-r1", "9.2.4-r1"));
   assert.throws(() => assertRevision("8.1.7-r2", undefined));
   assert.throws(() => assertRevision("8.1.7-r2", "1.0+redmine.8.1.7"));
+});
+
+test("preparation uses numeric revisions and resets them only for a new target", () => {
+  assert.equal(nextReleaseTag("9.2.4", "9.2.4-r9"), "9.2.4-r10");
+  assert.equal(nextReleaseTag("9.2.10", "9.2.9-r99"), "9.2.10-r1");
+  assert.equal(nextReleaseTag("8.1.7", "1.0+redmine.8.1.7"), "8.1.7-r1");
+  assert.equal(nextReleaseTag("9.2.4"), "9.2.4-r1");
+  assert.throws(() => nextReleaseTag("9.2.3", "9.2.4-r1"));
+});
+
+test("target proposals advance only a patch within an already selected series", () => {
+  assert.deepEqual(publicationTargetUpdate(config, "9.2.5-r1"), { slot: "standard", previous: "9.2.4", target: "9.2.5", config: { ...config, standard: "9.2.5" } });
+  assert.deepEqual(publicationTargetUpdate(config, "8.1.8-r2"), { slot: "maintenance", previous: "8.1.7", target: "8.1.8", config: { ...config, maintenance: ["8.1.8"] } });
+  for (const tag of ["9.2.4-r99", "9.2.3-r99", "8.1.7-r99", "8.1.6-r99", "9.3.0-r1", "10.0.0-r1", "7.0.5-r1"]) assert.equal(publicationTargetUpdate(config, tag), null);
+  assert.equal(publicationTargetUpdate({ ...config, maintenance: [] }, "8.1.8-r1"), null);
 });
 
 test("only the default branch's publisher ref is accepted", () => {

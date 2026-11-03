@@ -3,11 +3,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import { load } from "js-yaml";
 
 import { GitHub } from "./github.mjs";
 import { CONFIG_PATH, REQUEST_WORKFLOW, assertDefaultWorkflow, assertSha, parseConfig, parseTag, positiveInteger } from "./policy.mjs";
 import { beginSite, currentPromotion, readPayload, writeSite, publishRelease, updateLatest } from "./publication.mjs";
 import { buildRelease } from "./validate.mjs";
+import { proposeTargetUpdate } from "./propose-target.mjs";
 
 const tooling = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const required = (name) => { assert(process.env[name], `${name} is required`); return process.env[name]; };
@@ -26,6 +28,7 @@ export async function prepareRequest(github, event, context) {
   assertDefaultWorkflow(context, repository);
   let tag = "";
   let sourceSha = "";
+  let createTag = false;
   if (context.eventName === "workflow_run") {
     const run = await github.runInfo(event.workflow_run.id);
     assert.equal(run.path, REQUEST_WORKFLOW, "Unexpected release request workflow");
@@ -37,13 +40,22 @@ export async function prepareRequest(github, event, context) {
     assert.equal(sourceSha, run.head_sha, "Request no longer matches the release tag");
   } else if (context.eventName === "workflow_dispatch") {
     tag = event.inputs?.tag?.trim() ?? "";
-    if (tag) sourceSha = await github.tagSha(parseTag(tag).tag);
+    const sourceRef = event.inputs?.source_ref?.trim() ?? "";
+    assert(!(tag && sourceRef), "Specify source_ref or tag, not both");
+    if (sourceRef) {
+      sourceSha = await github.commitSha(sourceRef);
+      const file = await github.fileAt("src/openapi.yaml", sourceSha);
+      tag = parseTag(load(file.content.toString("utf8"))?.info?.version).tag;
+      const existing = await github.tagSha(tag, { missing: true });
+      assert(!existing || existing === sourceSha, "Release tag already identifies a different source");
+      createTag = true;
+    } else if (tag) sourceSha = await github.tagSha(parseTag(tag).tag);
   } else {
     assert.equal(context.eventName, "push", "Unexpected publication event");
   }
   const pages = await github.request(`${github.prefix}/pages`);
   assert(pages.html_url, "GitHub Pages is not configured");
-  return { mode: tag ? "publish" : "reconcile", tag, sha: sourceSha, pages_url: pages.html_url };
+  return { mode: tag ? "publish" : "reconcile", tag, sha: sourceSha, create_tag: createTag, pages_url: pages.html_url };
 }
 
 async function main() {
@@ -76,8 +88,16 @@ async function main() {
       });
       const manifest = await publishRelease(github, payload, {
         repository: github.repository, tag: required("RELEASE_TAG"), sourceSha: required("RELEASE_SOURCE_SHA"), publisherSha: gitHead(),
+        createTag: process.env.RELEASE_CREATE_TAG === "true",
       });
       console.log(`Published ${manifest.tag} from ${manifest.sourceSha}`);
+      break;
+    }
+    case "propose-target": {
+      const url = await proposeTargetUpdate(github, { tag: required("RELEASE_TAG"), sourceSha: required("RELEASE_SOURCE_SHA") });
+      const message = url ? `Publication target proposal: ${url}` : "No publication target update is needed.";
+      console.log(message);
+      if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${message}\n`);
       break;
     }
     case "plan": {

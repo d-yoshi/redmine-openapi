@@ -6,7 +6,9 @@ permissions: {}
 
 jobs:
   retired:
+    name: Reject retired publication path
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - run: |
           echo '::error::Use the Publish release workflow on the default branch.'

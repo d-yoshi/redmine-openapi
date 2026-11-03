@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   check:
+    name: Find newer Redmine versions
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -41,6 +42,7 @@ jobs:
         run: node scripts/canary.mjs detect
 
   test:
+    name: Test Redmine ${{ matrix.candidate }} (from ${{ matrix.target }})
     needs: check
     if: needs.check.outputs.changed == 'true'
     runs-on: ubuntu-latest
@@ -80,6 +82,7 @@ jobs:
           retention-days: 7
 
   report:
+    name: Summarize Canary results
     needs: [check, test]
     if: always() && needs.check.result != 'skipped'
     runs-on: ubuntu-latest

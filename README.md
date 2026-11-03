@@ -1,12 +1,15 @@
 # Unofficial OpenAPI specification for the Redmine API
 
 [![CI](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yaml/badge.svg)](https://github.com/d-yoshi/redmine-openapi/actions/workflows/ci.yaml)
+[![Latest release](https://img.shields.io/github/v/release/d-yoshi/redmine-openapi?label=Latest%20release)](https://github.com/d-yoshi/redmine-openapi/releases/latest)
 
 An OpenAPI 3.0.3 specification for the Redmine API, built from the official docs and source code, and tested against a running Redmine instance.
 
 ## Documentation
 
-Browse the rendered API reference at https://d-yoshi.github.io/redmine-openapi/
+Browse the [API reference](https://d-yoshi.github.io/redmine-openapi/) for endpoint and schema details.
+
+See the [maintenance policy](docs/maintenance-policy.md) for maintained versions and backport criteria, and the [guide index](docs/README.md) for customization, testing, and release procedures.
 
 ## Download
 
@@ -31,14 +34,13 @@ Specific version:
 https://github.com/d-yoshi/redmine-openapi/releases/download/<tag>/openapi.yaml
 ```
 
-Release tags are `<redmine-version>-r<N>` (e.g. `6.1.3-r2`): the Redmine version the release was verified against, plus the revision number of the spec for that Redmine version (`-r1` is the first release). If you run an older Redmine, pick the release whose tag matches your version — for older tags in retired formats (`2.0.1+redmine.6.1.3` and earlier), the notes of each [release](https://github.com/d-yoshi/redmine-openapi/releases) state the verified Redmine version. Revisions may contain breaking corrections; each release's notes flag breaking changes and include a machine-generated changelog.
+Choose a release matching your Redmine version. Release tags use `<Redmine-version>-r<N>` (for example, `6.1.3-r2`): the exact Redmine version followed by the specification revision for that version. Revisions start at `-r1`.
 
-Tags are not SemVer — a SemVer parser reads `-rN` as a pre-release. Pin exact tags, and avoid reusing the spec's `info.version` as a package version for generated clients.
+For tags in retired formats, such as `2.0.1+redmine.6.1.3`, check the [release notes](https://github.com/d-yoshi/redmine-openapi/releases) for the verified Redmine version. Revisions can contain breaking corrections; release notes flag those changes and include a generated changelog.
+
+Pin complete tags. SemVer parsers treat `-rN` as a prerelease suffix and can order revisions differently from their numeric order. Choose package versions for generated clients separately from the specification's `info.version`.
 
 You can also check out a release tag with git, or fetch `openapi.yaml` from a tag via a raw URL.
-
-> [!NOTE]
-> `openapi.yaml` on the `main` branch may contain unreleased changes beyond its declared `info.version`. Use a release for a stable reference.
 
 ## Reference
 

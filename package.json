@@ -3,6 +3,7 @@
   "private": true,
   "description": "Unofficial OpenAPI specification for the Redmine API",
   "scripts": {
+    "release:prepare": "node scripts/release/prepare-metadata.mjs",
     "bundle": "redocly bundle --config redocly/redocly.yaml dist -o openapi.yaml",
     "lint": "redocly lint --config redocly/redocly.yaml openapi.yaml",
     "docs": "redocly build-docs --config redocly/redocly.yaml dist -t redocly/build-docs-template.hbs -o dist/index.html"

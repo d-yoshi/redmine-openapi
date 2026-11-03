@@ -10,7 +10,9 @@ permissions: {}
 
 jobs:
   request:
+    name: Validate release tag
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - name: Check the requested tag
         env:

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 
-import { CONFIG_PATH, SITE_MARKER, assertSha, parseConfig, positiveInteger } from "./policy.mjs";
+import { CONFIG_PATH, SITE_MARKER, assertSha, parseConfig, parseTag, positiveInteger } from "./policy.mjs";
 
 export const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
@@ -58,13 +58,39 @@ export class GitHub {
   releases() { return this.list(`${this.prefix}/releases`); }
   runInfo(id) { return this.request(`${this.prefix}/actions/runs/${positiveInteger(id, "run")}`); }
 
-  async tagSha(tag) {
-    let value = (await this.request(`${this.prefix}/git/ref/tags/${encodeURIComponent(tag)}`)).object;
+  async tagSha(tag, { missing = false } = {}) {
+    const ref = await this.request(`${this.prefix}/git/ref/tags/${encodeURIComponent(tag)}`, { missing });
+    if (!ref) return null;
+    let value = ref.object;
     for (let depth = 0; depth < 10 && value.type === "tag"; depth++) {
       value = (await this.request(`${this.prefix}/git/tags/${assertSha(value.sha)}`)).object;
     }
     assert.equal(value.type, "commit", "Release tag does not resolve to a commit");
     return assertSha(value.sha);
+  }
+
+  commitSha(ref) {
+    return this.request(`${this.prefix}/commits/${encodeURIComponent(ref)}`).then((commit) => assertSha(commit.sha));
+  }
+
+  async fileAt(name, sha) {
+    assertSha(sha);
+    const file = await this.request(`${this.prefix}/contents/${name}?ref=${sha}`);
+    assert.equal(file.encoding, "base64", "Unexpected file encoding");
+    return { content: Buffer.from(file.content, "base64"), sha: file.sha };
+  }
+
+  async ensureTag(tag, sha) {
+    parseTag(tag);
+    assertSha(sha);
+    if (!await this.tagSha(tag, { missing: true })) {
+      try {
+        await this.request(`${this.prefix}/git/refs`, { method: "POST", body: { ref: `refs/tags/${tag}`, sha } });
+      } catch (error) {
+        if (!await this.tagSha(tag, { missing: true })) throw error;
+      }
+    }
+    assert.equal(await this.tagSha(tag), sha, "Release tag already identifies a different source");
   }
 
   async currentConfig() {
