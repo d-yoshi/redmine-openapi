@@ -18,10 +18,7 @@ describe("Journals", () => {
     assertStatus(200, response);
     const journals = response.data!.issue.journals;
     assert(journals, "Expected include=journals to return a journals array");
-    return journals.map((journal) => {
-      assert(journal.id !== undefined, "Expected a journal id for the fixture");
-      return journal.id;
-    });
+    return journals.map((journal) => journal.id);
   };
 
   const addNote = async (notes: string) => {
@@ -67,6 +64,30 @@ describe("Journals", () => {
       });
       assertStatus(204, response);
     }
+  });
+
+  test("include=journals returns property change details", async () => {
+    const update = await client.PUT("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId } },
+      body: { issue: { subject: "journal-test-updated" } },
+    });
+    assertStatus(204, update);
+
+    const response = await client.GET("/issues/{issue_id}.{format}", {
+      params: {
+        path: { format: "json", issue_id: issueId },
+        query: { include: ["journals"] },
+      },
+    });
+    assertStatus(200, response);
+    const journals = response.data!.issue.journals;
+    assert(journals, "Expected include=journals to return a journals array");
+    assert(
+      journals.some((journal) =>
+        journal.details.some((detail) => detail.property === "attr" && detail.name === "subject")
+      ),
+      "Expected a subject change detail"
+    );
   });
 
   test("PUT /journals/{journal_id}.json", async () => {

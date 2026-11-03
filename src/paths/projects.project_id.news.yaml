@@ -27,7 +27,7 @@ get:
               news:
                 type: array
                 items:
-                  $ref: ../components/schemas/news.yaml
+                  $ref: ../components/schemas/news.summary.yaml
               total_count:
                 type: integer
               offset:

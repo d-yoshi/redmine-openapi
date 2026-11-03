@@ -124,6 +124,13 @@ properties:
     items:
       type: object
       additionalProperties: false
+      required:
+        - id
+        - notes
+        - created_on
+        - updated_on
+        - private_notes
+        - details
       properties:
         id:
           type: integer
@@ -146,6 +153,11 @@ properties:
           items:
             type: object
             additionalProperties: false
+            required:
+              - property
+              - name
+              - old_value
+              - new_value
             properties:
               property:
                 type: string

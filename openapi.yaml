@@ -3546,7 +3546,7 @@ paths:
                   news:
                     type: array
                     items:
-                      $ref: '#/components/schemas/news'
+                      $ref: '#/components/schemas/news.summary'
                   total_count:
                     type: integer
                   offset:
@@ -3700,7 +3700,7 @@ paths:
                   news:
                     type: array
                     items:
-                      $ref: '#/components/schemas/news'
+                      $ref: '#/components/schemas/news.summary'
                   total_count:
                     type: integer
                   offset:
@@ -6554,6 +6554,13 @@ components:
           type: array
           items:
             type: object
+            required:
+              - id
+              - notes
+              - created_on
+              - updated_on
+              - private_notes
+              - details
             properties:
               id:
                 type: integer
@@ -6575,6 +6582,11 @@ components:
                 type: array
                 items:
                   type: object
+                  required:
+                    - property
+                    - name
+                    - old_value
+                    - new_value
                   properties:
                     property:
                       type: string
@@ -6993,6 +7005,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/custom_field_value'
+    news.summary:
+      type: object
+      required:
+        - id
+        - project
+        - title
+        - summary
+        - description
+        - created_on
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/id_name'
+        author:
+          $ref: '#/components/schemas/id_name'
+        title:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        created_on:
+          type: string
+          format: date-time
     news_comment:
       type: object
       required:
@@ -7430,6 +7467,7 @@ components:
         - id
         - name
         - description
+        - customized_type
         - field_format
         - regexp
         - min_length
