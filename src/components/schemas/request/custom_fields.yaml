@@ -8,9 +8,4 @@ items:
     id:
       type: integer
     value:
-      oneOf:
-        - type: string
-          nullable: true
-        - type: array
-          items:
-            type: string
+      $ref: ./custom_field_request_value_type.yaml

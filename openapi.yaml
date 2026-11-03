@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
   title: Redmine API
-  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.2
+  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.3
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 7.0.2-r3
+  version: 7.0.3-r1
 servers:
   - url: /
 security:
@@ -6196,6 +6196,13 @@ components:
           type: string
         is_closed:
           type: boolean
+    custom_field_response_value_type:
+      oneOf:
+        - type: string
+          nullable: true
+        - type: array
+          items:
+            type: string
     custom_field_value:
       type: object
       required:
@@ -6210,12 +6217,7 @@ components:
         multiple:
           type: boolean
         value:
-          oneOf:
-            - type: string
-              nullable: true
-            - type: array
-              items:
-                type: string
+          $ref: '#/components/schemas/custom_field_response_value_type'
     attachment:
       type: object
       required:
@@ -6385,6 +6387,13 @@ components:
           type: array
           items:
             type: string
+    custom_field_request_value_type:
+      oneOf:
+        - type: string
+          nullable: true
+        - type: array
+          items:
+            type: string
     custom_fields:
       type: array
       items:
@@ -6395,21 +6404,11 @@ components:
           id:
             type: integer
           value:
-            oneOf:
-              - type: string
-                nullable: true
-              - type: array
-                items:
-                  type: string
+            $ref: '#/components/schemas/custom_field_request_value_type'
     custom_field_values:
       type: object
       additionalProperties:
-        oneOf:
-          - type: string
-            nullable: true
-          - type: array
-            items:
-              type: string
+        $ref: '#/components/schemas/custom_field_request_value_type'
     uploads:
       type: array
       items:

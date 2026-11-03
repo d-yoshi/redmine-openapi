@@ -1,0 +1,6 @@
+oneOf:
+  - type: string
+    nullable: true
+  - type: array
+    items:
+      type: string

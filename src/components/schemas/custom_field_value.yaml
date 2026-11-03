@@ -12,9 +12,4 @@ properties:
   multiple:
     type: boolean
   value:
-    oneOf:
-      - type: string
-        nullable: true
-      - type: array
-        items:
-          type: string
+    $ref: ./custom_field_response_value_type.yaml
