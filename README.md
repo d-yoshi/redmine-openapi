@@ -4,8 +4,6 @@
 
 An OpenAPI 3.0.3 specification for the Redmine API, built from the official docs and source code, and tested against a running Redmine instance.
 
-**Tested against: Redmine 7.0.2**
-
 ## Documentation
 
 Browse the rendered API reference at https://d-yoshi.github.io/redmine-openapi/
@@ -19,7 +17,7 @@ Releases include two specification variants:
 | `openapi.yaml` | General use, including client generation. |
 | `openapi.strict.yaml` | Response validation, including checks for undeclared properties. |
 
-See the [customization guide](docs/customization.md) for the differences between these variants and how to adapt the specification to your plugins or generator with an OpenAPI Overlay.
+See the [customization guide](docs/customization.md) for details on choosing a variant and adapting the specification for your Redmine installation or code generator.
 
 Latest release:
 

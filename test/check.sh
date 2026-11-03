@@ -35,19 +35,14 @@ env -u REDMINE_IMAGE node --test "$SCRIPT_DIR/"*.test.mjs
 echo "=== Checking summary/detail schema sync ==="
 node "$SCRIPT_DIR/check-summary-detail-sync.mjs"
 
-echo "=== Checking the documented Redmine version ==="
-# `|| true` keeps a pattern that stops matching from aborting before the checks.
+echo "=== Checking the pinned Redmine version ==="
+# `|| true` keeps a pattern that stops matching from aborting before the check.
 PINNED_VERSION=$( (grep -oE 'redmine:[0-9][0-9.]*' "$SCRIPT_DIR/redmine/docker-compose.yaml" | head -1 | cut -d: -f2) || true)
-README_VERSION=$( (grep -oE 'Tested against: Redmine [0-9.]+' "$REPO_ROOT/README.md" | grep -oE '[0-9.]+$') || true)
 if [ -z "$PINNED_VERSION" ]; then
   echo "  Could not read the pinned Redmine version from redmine/docker-compose.yaml"
   exit 1
 fi
-if [ "$README_VERSION" != "$PINNED_VERSION" ]; then
-  echo "  README (Tested against: $README_VERSION) does not match docker-compose pin ($PINNED_VERSION)"
-  exit 1
-fi
-echo "  Pinned and documented: $PINNED_VERSION"
+echo "  Pinned Redmine: $PINNED_VERSION"
 
 echo "=== Bundling OpenAPI spec (strict) ==="
 "$BIN/redocly" bundle --config "$REPO_ROOT/redocly/redocly.yaml" strict -o "$OPENAPI_PATH"

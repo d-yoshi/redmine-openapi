@@ -1,25 +1,25 @@
 # Customizing the OpenAPI specification
 
-Use an [OpenAPI Overlay](https://spec.openapis.org/overlay/v1.1.0.html) to describe changes in a separate YAML file and build a specification for your environment or tools. The downloaded specification stays unchanged.
+Use an [OpenAPI Overlay](https://spec.openapis.org/overlay/v1.1.0.html) to define changes in a separate YAML file and generate a customized OpenAPI specification. The build commands in this guide leave the downloaded specification unchanged.
 
-This can cover deployment-specific custom fields, response changes made by plugins, and adjustments for a code generator. An Overlay changes the API description; it does not transform requests or responses.
+Overlays can define custom-field types for your installation, describe responses modified by plugins, and adjust schemas for a code generator. Applying an Overlay changes the generated OpenAPI specification without transforming the HTTP request or response data exchanged with Redmine.
 
 ## Choose a release asset
 
-Download a specification from the [release](https://github.com/d-yoshi/redmine-openapi/releases) matching your Redmine version and pin its exact tag, including the revision.
+Choose an [OpenAPI release](https://github.com/d-yoshi/redmine-openapi/releases) matching your Redmine version. Pin the complete release tag, including the `-rN` revision suffix.
 
-| Asset                 | Difference                                                                                           | Typical use                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `openapi.yaml`        | Removes `additionalProperties: false` from schemas, allowing undeclared properties in those objects. | General use, including client generation.                                                  |
-| `openapi.strict.yaml` | Keeps `additionalProperties: false` where the source schemas declare it.                             | Checking responses for undeclared properties, including after an upgrade or plugin change. |
+| Asset                 | Difference                                                                                           | Typical use                                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `openapi.yaml`        | Omits `additionalProperties: false`, allowing undeclared properties in the affected object schemas.  | General use, including client generation.                                                   |
+| `openapi.strict.yaml` | Retains `additionalProperties: false` wherever the source schemas declare it.                        | Validating responses for undeclared properties, including after upgrades or plugin changes. |
 
-Other constraints, including types, required properties, and `oneOf`, are the same. The strict asset does not specialize custom fields for your installation or resolve generator compatibility issues. Both assets can be customized with an Overlay.
+The two assets otherwise have the same schema constraints, including types, required properties, and `oneOf`. The strict variant does not narrow custom-field types for your installation or adapt schemas to a particular generator. You can apply an Overlay to either asset.
 
-If a plugin adds response properties, declare them in your Overlay when using the strict asset. Explicitly extensible objects, such as maps of custom-field IDs to values, remain extensible in both assets.
+If a Redmine plugin adds response properties, declare those properties in your Overlay when using the strict asset. Object schemas that explicitly allow additional properties, such as maps of custom-field IDs to values, retain that behavior in both assets.
 
 ## Prepare the build
 
-The commands below use release `7.0.2-r3` and Redocly CLI `2.71.0` as a worked example, with Node.js 24. Choose the release for your installation. You do not need to clone this repository.
+The examples below use OpenAPI release `7.0.2-r3`, Redocly CLI `2.71.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
 
 ```sh
 mkdir redmine-api-custom
@@ -42,13 +42,13 @@ rules:
   tag-description: off
 ```
 
-Use this standalone configuration for the examples. The repository's own build configuration includes a decorator that removes `additionalProperties: false` for distribution; reusing it could remove constraints you intended to keep.
+Use the standalone configuration above for these examples. The repository's build configuration includes a decorator that removes `additionalProperties: false` for distribution; using the repository configuration could remove constraints you intended to keep.
 
 Choose an example below and save it as `custom.overlay.yaml`. Each example is independent.
 
 ## Example: single-valued custom fields
 
-Suppose every custom field returned by the APIs you use is single-valued and returns a string or `null`. You can narrow the shared response value schema:
+Suppose your Redmine installation uses only single-valued custom fields whose API values are strings or `null`. The following Overlay narrows the shared custom-field response value schema:
 
 ```yaml
 overlay: 1.1.0
@@ -64,15 +64,15 @@ actions:
       nullable: true
 ```
 
-This affects every response referencing `custom_field_value`, across resource types. It rejects array values, so use it only if that matches your installation. For fields with different contracts, define separate schemas and reference them from the relevant responses instead of narrowing this shared schema globally.
+The customized `custom_field_value` schema applies to every response that references that component, across resource types. Validators using the customized specification reject array values for those fields. If your custom fields need different value types, define separate schemas and reference them from the relevant response schemas.
 
-This example changes responses only. Request fields use separate schemas: `custom_fields` is an array of field objects, while `custom_field_values` is a map keyed by field ID. Customize them separately if needed.
+This Overlay changes only response schemas. The request schemas remain unchanged: `custom_fields` defines an array of field objects, and `custom_field_values` defines a map keyed by field ID. Customize the request schemas separately if needed.
 
-Match the JSON representation actually returned by Redmine. For example, a numeric custom field can still return a JSON string such as `"42"`; changing its schema to `integer` would not convert that value.
+Define custom-field schemas to match the JSON values actually returned by Redmine. A numeric custom field can return a JSON string such as `"42"`; declaring the value as `integer` in the specification does not convert that JSON string to a number.
 
 ## Example: a plugin changes a response type
 
-Suppose a plugin changes issue descriptions from a string or `null` to an object containing `plain` and `html` strings, or `null`. The following hypothetical profile replaces the description schema in both issue detail and list responses:
+Suppose a Redmine plugin changes the `description` property in issue responses from a string to an object containing `plain` and `html` strings, while still allowing `null`. The following hypothetical Overlay replaces the schema for that response property in both issue detail and list responses:
 
 ```yaml
 overlay: 1.1.0
@@ -98,13 +98,13 @@ actions:
             type: string
 ```
 
-Replace the hypothetical structure with your plugin's actual response contract. Deleting the old schema first avoids retaining constraints from its previous type. The outer issue schema still requires `description`, as before; the request schemas are unchanged.
+Replace the example's object structure with the JSON structure your plugin actually returns. Removing the existing schema for the `description` response property first prevents constraints from the original type from remaining in the replacement schema. The surrounding issue schemas still require the `description` property; request schemas remain unchanged.
 
-The same approach can add plugin properties or change nullability and required properties. Check all affected response schemas, including separate list and detail schemas.
+You can also use an Overlay to add response properties or change which values can be `null` and which properties are required. Update every response schema affected by the plugin, including separate list and detail schemas.
 
 ## Example: a generator cannot handle custom-field unions
 
-Before changing the specification for generation, check whether your generator offers suitable configuration or type mappings. If it cannot handle the custom-field `oneOf` schemas, one option is to leave those values unconstrained:
+Before modifying the specification for code generation, check whether your generator has suitable configuration options or type mappings. If your generator cannot handle the `oneOf` constraints on custom-field values, the following Overlay removes those constraints:
 
 ```yaml
 overlay: 1.1.0
@@ -120,13 +120,13 @@ actions:
     remove: true
 ```
 
-For the example release, each affected value schema becomes `{}`. This permits any value and loses the original string-or-array constraints, including their checks on array items. The generated type depends on your generator and language; verify the result with that tool.
+For release `7.0.2-r3`, each affected value schema becomes `{}`, which allows any JSON value. The customized schemas no longer restrict custom-field values to strings, `null`, or arrays of strings. Generated types depend on the generator and target language; inspect the output before using the generated client.
 
-This removes only the three custom-field unions. Other unsupported constructs require separate handling. Keep a specification with the original constraints for response validation if you loosen them solely for generation.
+The Overlay above removes only the three custom-field `oneOf` constraints. Handle any other constructs unsupported by your generator separately. If you relax schemas solely for code generation, keep a separate specification with those constraints intact for response validation.
 
 ## Build and verify
 
-Apply the chosen Overlay and lint the result:
+Build `openapi.custom.yaml` with your chosen Overlay, then lint the generated specification:
 
 ```sh
 npx --yes @redocly/cli@2.71.0 bundle openapi.base.yaml \
@@ -138,25 +138,25 @@ npx --yes @redocly/cli@2.71.0 lint openapi.custom.yaml \
   --config redocly.yaml
 ```
 
-Use `openapi.custom.yaml` as the input to your generator or response validator. Keep `openapi.base.yaml` unchanged so you can review the resulting differences.
+Use `openapi.custom.yaml` as the input to your generator or response validator. Keep `openapi.base.yaml` unchanged so you can compare the customized specification with the downloaded base.
 
-Lint checks the specification, not whether it matches your plugin's runtime behavior or works with a particular generator. Also check representative responses against the customized schemas, and generate and compile your client with the generator and options you actually use.
+Redocly's lint command checks the generated OpenAPI specification against configured rules. Linting does not verify that the schemas match responses from your installation or that your generator produces usable client code. Validate representative API responses against the customized schemas, and generate and compile your client with your chosen generator and options.
 
 When writing or combining Overlays:
 
-- Actions run in order. Object updates merge, and array updates append. To replace an entire schema or an array such as `required` or `oneOf`, remove it first, then add the replacement through its parent object.
-- Targets refer to the bundled specification. A component name containing a dot, such as `issue.summary`, needs bracket notation as shown above.
-- A target matching nothing is a successful no-op. A successful build or lint does not prove that every intended change took effect; inspect the output and its differences from the base.
-- Multiple `--overlay` options apply in the order given. Review their combined effect, especially when one Overlay narrows a type and another loosens it.
+- Overlay actions run in the listed order. An `update` action merges objects and appends array elements. To replace an entire schema or an array such as `required` or `oneOf`, first remove the existing schema or array, then add the replacement by updating the parent object.
+- Write `target` JSONPath expressions against the bundled OpenAPI specification. Use bracket notation for component names containing a dot, such as `issue.summary`, as shown in the plugin example.
+- If an action's `target` matches no nodes, the action succeeds without making a change. Compare `openapi.custom.yaml` with `openapi.base.yaml` to confirm that the intended changes were applied.
+- When you specify multiple `--overlay` options, Redocly applies the Overlays in that order. Review the combined result, especially if one Overlay narrows a type and another relaxes the same constraint.
 
 ## Update the base specification
 
-Keep the base release tag, chosen asset, Overlay, CLI version, and generator options together in your project. When adopting another release:
+Keep the Overlay and a record of the base release tag, asset filename, CLI version, and generator options together in your project. When adopting another release:
 
-1. Download the new base asset without overwriting your previous customized output.
-2. Check that every target still matches the intended nodes and that the assumptions behind each customization still hold.
-3. Rebuild, lint, and review the differences, including both upstream changes and your Overlay's effects.
-4. Repeat response validation and client generation checks as appropriate for your use case.
+1. Keep copies of your current base and customized specifications before downloading the new base asset.
+2. Check that every Overlay action's `target` still matches the intended nodes and that each customization still matches your installation and generator requirements.
+3. Rebuild and lint the customized specification. Compare the new output with both the new base and your previous customized specification.
+4. Recheck representative API responses against the new customized schemas, then regenerate and compile your client as needed.
 
 ## References
 
