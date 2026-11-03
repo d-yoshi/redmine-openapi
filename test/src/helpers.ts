@@ -225,15 +225,25 @@ export const someTrackerId = memoize(async () => {
   return tracker.id;
 });
 
-export const someRoleId = memoize(async () => {
+const roles = memoize(async () => {
   const response = await client.GET("/roles.{format}", {
     params: { path: { format: "json" } },
   });
   assertStatus(200, response);
-  const role = response.data!.roles[0];
+  return response.data!.roles;
+});
+
+export const someRoleId = memoize(async () => {
+  const role = (await roles())[0];
   assert(role, "Expected at least one givable role to exist");
   return role.id;
 });
+
+export const fixtureRoleId = async (name: string) => {
+  const role = (await roles()).find((candidate) => candidate.name === name);
+  assert(role, `Expected the seeded role: ${name}`);
+  return role.id;
+};
 
 export const someStatusId = memoize(async () => {
   const response = await client.GET("/issue_statuses.{format}", {

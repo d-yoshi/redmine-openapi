@@ -106,6 +106,19 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     Role.create!(name: 'Manager', permissions: Redmine::AccessControl.permissions.map(&:name))
     Role.create!(name: 'Developer', permissions: [:add_issues, :edit_issues, :view_issues, :manage_issue_relations, :add_issue_notes])
   end
+  {
+    'API visibility viewer' => [:view_issues],
+    'API issue relation editor' => [:view_issues, :manage_issue_relations],
+    'API project editor' => [:edit_project, :add_project, :add_subprojects]
+  }.each do |name, permissions|
+    role = Role.find_or_initialize_by(name: name)
+    role.permissions = permissions
+    role.issues_visibility = 'default'
+    role.users_visibility = 'all'
+    role.save!
+  end
+  Setting.new_project_user_role_id = Role.find_by!(name: 'API project editor').id.to_s
+
   # Expose auth_source metadata without authenticating against LDAP.
   ldap = AuthSourceLdap.find_or_create_by!(name: 'API test LDAP') do |source|
     source.host = 'ldap.invalid'

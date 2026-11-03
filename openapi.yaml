@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
   title: Redmine API
-  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 6.1.3
+  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 6.1.5
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 6.1.3-r3
+  version: 6.1.5-r1
 servers:
   - url: /
 security:
@@ -685,6 +685,7 @@ paths:
                       type: integer
                       nullable: true
                     assigned_to_id:
+                      description: User or group ID to assign the issue to. If omitted or `null`, an assignable category default is used before an assignable project default. Unassignable defaults are skipped.
                       type: integer
                       nullable: true
                     parent_issue_id:
@@ -745,7 +746,8 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `children` (child issues), `attachments` (file attachments), `relations` (issue relations), `changesets` (associated VCS changesets), `journals` (change history and notes), `watchers` (users watching the issue), `allowed_statuses` (status transitions available for the current user)
+            Values: `children` (child issues and their descendants, limited to issues visible to the current user), `attachments` (file attachments), `relations` (issue relations), `changesets` (associated VCS changesets), `journals` (change history and notes), `watchers` (users watching the issue), `allowed_statuses` (status transitions available for the current user)
+            The `children` field is omitted for leaf issues. For non-leaf issues, it may be empty when none of their children are visible.
           schema:
             type: array
             items:
@@ -1459,6 +1461,7 @@ paths:
                       type: integer
                       nullable: true
                     assigned_to_id:
+                      description: User or group ID to assign the issue to. If omitted or `null`, an assignable category default is used before an assignable project default. Unassignable defaults are skipped.
                       type: integer
                       nullable: true
                     parent_issue_id:
@@ -1581,6 +1584,8 @@ paths:
           description: |-
             Comma-separated list of associated data to include for each project.
             Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
+            `trackers`, `issue_categories`, and `issue_custom_fields` are omitted unless the current user has the View issues permission for the project.
+            `time_entry_activities` is omitted unless the current user has the View time entries permission for the project.
           schema:
             type: array
             items:
@@ -1734,7 +1739,7 @@ paths:
                       type: integer
                       nullable: true
                     inherit_members:
-                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set). For non-admin users, the default role for new projects must grant the Manage members permission.
                       type: boolean
                     default_assigned_to_id:
                       description: Default assignee for new issues in this project. Set to null to clear.
@@ -1810,6 +1815,8 @@ paths:
           description: |-
             Comma-separated list of associated data to include in the response.
             Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
+            `trackers`, `issue_categories`, and `issue_custom_fields` are omitted unless the current user has the View issues permission for the project.
+            `time_entry_activities` is omitted unless the current user has the View time entries permission for the project.
           schema:
             type: array
             items:
@@ -1877,7 +1884,7 @@ paths:
                       type: integer
                       nullable: true
                     inherit_members:
-                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set). Requires the Manage members permission for this project.
                       type: boolean
                     default_assigned_to_id:
                       description: Default assignee for new issues in this project. Set to null to clear.
@@ -2534,7 +2541,7 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `memberships` (project memberships with roles), `groups` (groups the user belongs to), `auth_source` (authentication source information)
+            Values: `memberships` (project memberships with roles, limited to projects visible to the current user), `groups` (groups the user belongs to), `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -2698,7 +2705,7 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `memberships` (project memberships with roles), `groups` (groups the user belongs to), `auth_source` (authentication source information)
+            Values: `memberships` (project memberships with roles, limited to projects visible to the current user), `groups` (groups the user belongs to), `auth_source` (authentication source information)
           schema:
             type: array
             items:
@@ -3765,6 +3772,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET
       summary: List issue relations
+      description: Requires the Manage issue relations permission. The source issue must be visible to the current user. Relations to issues the current user cannot see are omitted.
       operationId: getIssueRelations
       parameters:
         - $ref: '#/components/parameters/format'
@@ -3798,6 +3806,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
       summary: Create issue relation
+      description: Requires the Manage issue relations permission. The source issue must be visible to the current user.
       operationId: createIssueRelation
       parameters:
         - $ref: '#/components/parameters/format'
@@ -4672,6 +4681,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET
       summary: List issue categories
+      description: Reading issue categories is allowed with the View issues permission; the Manage issue categories permission is not required.
       operationId: getIssueCategories
       parameters:
         - $ref: '#/components/parameters/format'
@@ -4857,6 +4867,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2
       summary: Show issue category
+      description: Reading issue categories is allowed with the View issues permission; the Manage issue categories permission is not required.
       operationId: getIssueCategory
       parameters:
         - $ref: '#/components/parameters/format'
@@ -5132,7 +5143,7 @@ paths:
           in: query
           description: |-
             Comma-separated list of associated data to include in the response.
-            Values: `users` (list of users in the group), `memberships` (project memberships with roles)
+            Values: `users` (list of users in the group), `memberships` (project memberships with roles, limited to projects visible to the current user)
           schema:
             type: array
             items:
@@ -5821,7 +5832,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Journals#Updating-a-journal
       summary: Update journal
-      description: The journal is deleted when it is updated with empty `notes` and has no property changes (`details`).
+      description: A journal left with empty `notes` and no property changes (`details`) is kept and can still be updated, but is omitted from the issue's `include=journals` response until it has notes again.
       operationId: updateJournal
       parameters:
         - $ref: '#/components/parameters/format'
@@ -6403,6 +6414,23 @@ components:
             type: string
           content_type:
             type: string
+    issue_child:
+      type: object
+      required:
+        - id
+        - tracker
+        - subject
+      properties:
+        id:
+          type: integer
+        tracker:
+          $ref: '#/components/schemas/id_name'
+        subject:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/issue_child'
     issue:
       type: object
       required:
@@ -6513,16 +6541,7 @@ components:
         children:
           type: array
           items:
-            type: object
-            required:
-              - tracker
-            properties:
-              id:
-                type: integer
-              tracker:
-                $ref: '#/components/schemas/id_name'
-              subject:
-                type: string
+            $ref: '#/components/schemas/issue_child'
         attachments:
           type: array
           items:

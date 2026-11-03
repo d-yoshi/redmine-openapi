@@ -13,7 +13,7 @@ get:
       in: query
       description: |-
         Comma-separated list of associated data to include in the response.
-        Values: `users` (list of users in the group), `memberships` (project memberships with roles)
+        Values: `users` (list of users in the group), `memberships` (project memberships with roles, limited to projects visible to the current user)
       schema:
         type: array
         items:

@@ -569,6 +569,7 @@ post:
                   type: integer
                   nullable: true
                 assigned_to_id:
+                  description: User or group ID to assign the issue to. If omitted or `null`, an assignable category default is used before an assignable project default. Unassignable defaults are skipped.
                   type: integer
                   nullable: true
                 parent_issue_id:

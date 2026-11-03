@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET
   summary: List issue relations
+  description: Requires the Manage issue relations permission. The source issue must be visible to the current user. Relations to issues the current user cannot see are omitted.
   operationId: getIssueRelations
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -33,6 +34,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST
   summary: Create issue relation
+  description: Requires the Manage issue relations permission. The source issue must be visible to the current user.
   operationId: createIssueRelation
   parameters:
     - $ref: ../components/parameters/path/format.yaml

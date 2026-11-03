@@ -4,6 +4,7 @@ get:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET
   summary: List issue categories
+  description: Reading issue categories is allowed with the View issues permission; the Manage issue categories permission is not required.
   operationId: getIssueCategories
   parameters:
     - $ref: ../components/parameters/path/format.yaml

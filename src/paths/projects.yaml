@@ -17,6 +17,8 @@ get:
       description: |-
         Comma-separated list of associated data to include for each project.
         Values: `trackers` (available issue trackers), `issue_categories` (issue categories), `time_entry_activities` (time entry activity types), `enabled_modules` (enabled modules/features), `issue_custom_fields` (custom fields for issues)
+        `trackers`, `issue_categories`, and `issue_custom_fields` are omitted unless the current user has the View issues permission for the project.
+        `time_entry_activities` is omitted unless the current user has the View time entries permission for the project.
       schema:
         type: array
         items:
@@ -168,7 +170,7 @@ post:
                   type: integer
                   nullable: true
                 inherit_members:
-                  description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+                  description: Inherit members from the parent project. Only effective for subprojects (parent_id is set). For non-admin users, the default role for new projects must grant the Manage members permission.
                   type: boolean
                 default_assigned_to_id:
                   description: Default assignee for new issues in this project. Set to null to clear.

@@ -96,7 +96,7 @@ describe("Journals", () => {
     assert.strictEqual(journal.private_notes, true);
   });
 
-  test("PUT /journals/{journal_id}.json with empty notes deletes a notes-only journal", async () => {
+  test("PUT /journals/{journal_id}.json with empty notes hides the journal", async () => {
     const emptiedJournalId = await addNote("note to be emptied");
 
     const response = await client.PUT("/journals/{journal_id}.{format}", {
@@ -114,7 +114,12 @@ describe("Journals", () => {
       params: { path: { format: "json", journal_id: emptiedJournalId } },
       body: { journal: { notes: "refilled note" } },
     });
-    assertStatus(404, refillResponse);
+    assertStatus(204, refillResponse);
+
+    assert(
+      (await journalIds()).includes(emptiedJournalId),
+      "Expected the refilled journal to reappear in include=journals"
+    );
   });
 
   test("PUT /journals/{journal_id}.json returns 404", async () => {
