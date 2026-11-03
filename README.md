@@ -12,6 +12,15 @@ Browse the rendered API reference at https://d-yoshi.github.io/redmine-openapi/
 
 ## Download
 
+Releases include two specification variants:
+
+| Asset | Use |
+| --- | --- |
+| `openapi.yaml` | General use, including client generation. |
+| `openapi.strict.yaml` | Response validation, including checks for undeclared properties. |
+
+See the [customization guide](docs/customization.md) for the differences between these variants and how to adapt the specification to your plugins or generator with an OpenAPI Overlay.
+
 Latest release:
 
 ```text

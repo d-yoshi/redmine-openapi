@@ -153,6 +153,37 @@ describe("News", () => {
     assert(news.attachments?.some((attachment) => attachment.filename === "news-update-attachment.txt"));
   });
 
+  test("empty summaries are present in news lists and omitted from details", async () => {
+    const title = "news-with-empty-summary";
+    const create = await client.POST("/projects/{project_id}/news.{format}", {
+      params: { path: { format: "json", project_id: projectId } },
+      body: { news: { title, summary: "", description: "Empty summary fixture" } },
+    });
+    assertStatus(204, create);
+
+    const projectList = await client.GET("/projects/{project_id}/news.{format}", {
+      params: { path: { format: "json", project_id: projectId } },
+    });
+    assertStatus(200, projectList);
+    const news = projectList.data!.news.find((item) => item.title === title);
+    assert(news, "Expected the news with an empty summary in the project's list");
+    assert.strictEqual(news.summary, "");
+
+    const globalList = await client.GET("/news.{format}", {
+      params: { path: { format: "json" }, query: { limit: 100 } },
+    });
+    assertStatus(200, globalList);
+    const globalNews = globalList.data!.news.find((item) => item.id === news.id);
+    assert(globalNews, "Expected the news with an empty summary in the global list");
+    assert.strictEqual(globalNews.summary, "");
+
+    const detail = await client.GET("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: news.id } },
+    });
+    assertStatus(200, detail);
+    assert(!Object.hasOwn(detail.data!.news, "summary"), "Expected a blank summary to be omitted");
+  });
+
   test("GET /news.json with pagination", async () => {
     const response = await client.GET("/news.{format}", {
       params: {

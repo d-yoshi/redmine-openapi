@@ -4,6 +4,7 @@ required:
   - id
   - name
   - description
+  - customized_type
   - field_format
   - regexp
   - min_length
