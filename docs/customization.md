@@ -6,12 +6,12 @@ Overlays can define custom-field types for your installation, describe responses
 
 ## Choose a release asset
 
-Choose an [OpenAPI release](https://github.com/d-yoshi/redmine-openapi/releases) matching your Redmine version. Pin the complete release tag, including the `-rN` revision suffix.
+Choose a [release of this specification](https://github.com/d-yoshi/redmine-openapi/releases) matching your Redmine version. Pin the complete release tag, including the `-rN` revision suffix.
 
 | Asset                 | Difference                                                                                           | Typical use                                                                                 |
 | --------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | `openapi.yaml`        | Omits `additionalProperties: false`, allowing undeclared properties in the affected object schemas.  | General use, including client generation.                                                   |
-| `openapi.strict.yaml` | Retains `additionalProperties: false` wherever the source schemas declare it.                        | Validating responses for undeclared properties, including after upgrades or plugin changes. |
+| `openapi.strict.yaml` | Retains `additionalProperties: false` wherever the source schemas declare it.                        | Detecting undeclared properties in responses, including after upgrades or plugin changes.   |
 
 The two assets otherwise have the same schema constraints, including types, required properties, and `oneOf`. The strict variant does not narrow custom-field types for your installation or adapt schemas to a particular generator. You can apply an Overlay to either asset.
 
@@ -19,7 +19,7 @@ If a Redmine plugin adds response properties, declare those properties in your O
 
 ## Prepare the build
 
-The examples below use OpenAPI release `7.0.3-r1`, Redocly CLI `2.71.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
+The examples below use release `7.0.3-r1` of this specification, Redocly CLI `2.71.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
 
 ```sh
 mkdir redmine-api-custom
@@ -64,15 +64,15 @@ actions:
       nullable: true
 ```
 
-The `custom_field_value.value` property references `custom_field_response_value_type`. Customizing that shared value component affects every response that uses `custom_field_value`, across resource types. Validators using the customized specification reject array values for those fields. If your custom fields need different value types, define separate schemas and reference them from the relevant response schemas.
+The `value` property in `custom_field_value` references `custom_field_response_value_type`. Every response schema that uses `custom_field_value` therefore uses the customized value schema. Validators using the customized specification reject array values for that property. To use different value types for different fields or resource types, define separate schemas and reference them from the corresponding response schemas.
 
-This Overlay changes only response schemas. The request schemas remain unchanged: `custom_fields` defines an array of field objects, and `custom_field_values` defines a map keyed by field ID. Both request formats reference `custom_field_request_value_type` for their values. Customize that component separately to change the value schema for both request formats.
+The request schemas use a separate value component, `custom_field_request_value_type`, which this Overlay leaves unchanged. Both the `custom_fields` array of field objects and the `custom_field_values` map keyed by field ID reference that component. Customize it separately to change the value schema for both request formats.
 
 Define custom-field schemas to match the JSON values actually returned by Redmine. A numeric custom field can return a JSON string such as `"42"`; declaring the value as `integer` in the specification does not convert that JSON string to a number.
 
 ## Example: a plugin changes a response type
 
-Suppose a Redmine plugin changes the `description` property in issue responses from a string to an object containing `plain` and `html` strings, while still allowing `null`. The following hypothetical Overlay replaces the schema for that response property in both issue detail and list responses:
+Suppose a Redmine plugin changes the `description` property in issue responses from a string to an object containing `plain` and `html` strings, while still allowing `null`. The following Overlay replaces the schema for that response property in both issue detail and list responses:
 
 ```yaml
 overlay: 1.1.0
@@ -98,7 +98,7 @@ actions:
             type: string
 ```
 
-Replace the example's object structure with the JSON structure your plugin actually returns. Removing the existing schema for the `description` response property first prevents constraints from the original type from remaining in the replacement schema. The surrounding issue schemas still require the `description` property; request schemas remain unchanged.
+Replace the example's object structure with the JSON structure your plugin actually returns. Removing the existing schema for the `description` response property first prevents constraints from the original type from remaining in the replacement schema. The `issue` and `issue.summary` schemas still require the `description` property; request schemas remain unchanged.
 
 You can also use an Overlay to add response properties or change which values can be `null` and which properties are required. Update every response schema affected by the plugin, including separate list and detail schemas.
 
@@ -118,9 +118,9 @@ actions:
     remove: true
 ```
 
-Both shared value components become `{}`, which allows any JSON value. The customized schemas no longer restrict custom-field values to strings, `null`, or arrays of strings. Generated types depend on the generator and target language; inspect the output before using the generated client.
+Removing these two `oneOf` constraints leaves both shared value components as `{}`, allowing any JSON value. Generated types depend on the generator and target language; inspect the output before using the generated client.
 
-The Overlay above removes only the two shared custom-field `oneOf` constraints. Handle any other constructs unsupported by your generator separately. If you relax schemas solely for code generation, keep a separate specification with those constraints intact for response validation.
+Other unions in the specification remain unchanged and may need separate adjustments for your generator. Keep a separate specification with the custom-field value constraints intact for response validation.
 
 ## Build and verify
 
@@ -156,7 +156,7 @@ Keep the Overlay and a record of the base release tag, asset filename, CLI versi
 3. Rebuild and lint the customized specification. Compare the new output with both the new base and your previous customized specification.
 4. Recheck representative API responses against the new customized schemas, then regenerate and compile your client as needed.
 
-Changes to component names or references can change generated model names or code structure even when the accepted JSON values remain the same. Review the generated code when updating the base specification.
+Component names and references can affect generated model names and code structure even when the accepted JSON values remain the same.
 
 ## References
 
