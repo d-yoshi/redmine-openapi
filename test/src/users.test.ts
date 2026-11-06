@@ -6,15 +6,19 @@ import { client, assertStatus, currentUserId, runCleanup } from "./helpers.js";
 describe("Users", () => {
   let userId: number;
   let userLogin: string;
+  let originalGroupId: number;
   let filterGroupId: number;
 
   before(async () => {
-    const response = await client.POST("/groups.{format}", {
-      params: { path: { format: "json" } },
-      body: { group: { name: `user-filter-group-${Date.now()}` } },
-    });
-    assertStatus(201, response);
-    filterGroupId = response.data!.group.id;
+    for (const name of ["original", "filter"]) {
+      const response = await client.POST("/groups.{format}", {
+        params: { path: { format: "json" } },
+        body: { group: { name: `user-${name}-group-${Date.now()}` } },
+      });
+      assertStatus(201, response);
+      if (name === "original") originalGroupId = response.data!.group.id;
+      else filterGroupId = response.data!.group.id;
+    }
   });
 
   after(async () => {
@@ -26,13 +30,13 @@ describe("Users", () => {
         });
         assertStatus(204, response);
       },
-      async () => {
-        if (!filterGroupId) return;
+      ...[originalGroupId, filterGroupId].map((id) => async () => {
+        if (!id) return;
         const response = await client.DELETE("/groups/{group_id}.{format}", {
-          params: { path: { format: "json", group_id: filterGroupId } },
+          params: { path: { format: "json", group_id: id } },
         });
         assertStatus(204, response);
-      },
+      }),
     ]);
   });
 
@@ -83,7 +87,7 @@ describe("Users", () => {
 
   test("GET /users/{user_id}.json with all includes", async () => {
     const addResponse = await client.POST("/groups/{group_id}/users.{format}", {
-      params: { path: { format: "json", group_id: filterGroupId } },
+      params: { path: { format: "json", group_id: originalGroupId } },
       body: { user_id: userId },
     });
     assertStatus(204, addResponse);
@@ -96,7 +100,7 @@ describe("Users", () => {
       },
     });
     assertStatus(200, response);
-    assert(response.data!.user.groups?.some((group) => group.id === filterGroupId));
+    assert.deepStrictEqual(response.data!.user.groups!.map((group) => group.id), [originalGroupId]);
     assert(Array.isArray(response.data!.user.memberships));
     assert(!Object.hasOwn(response.data!.user, "auth_source"));
   });
@@ -152,7 +156,7 @@ describe("Users", () => {
     assert.strictEqual(readback.data!.user.login, userLogin);
     assert.strictEqual(readback.data!.user.firstname, "Bob");
     assert.strictEqual(readback.data!.user.mail, `user-upd-${ts}@example.com`);
-    assert(readback.data!.user.groups?.some((group) => group.id === filterGroupId));
+    assert.deepStrictEqual(readback.data!.user.groups!.map((group) => group.id), [filterGroupId]);
   });
 
   test("GET /users/current.json with all includes", async () => {

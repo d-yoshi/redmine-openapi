@@ -97,8 +97,6 @@ describe("Files", async () => {
   });
 
   test("GET /projects/{project_id}/files.json (null content_type)", async () => {
-    // A filename without an extension leaves Attachment#content_type NULL
-    // (Redmine::MimeType.of returns nil), rendered as null in the response
     const uploadResponse = await client.POST("/uploads.{format}", {
       params: {
         path: { format: "json" },
@@ -159,8 +157,6 @@ describe("Files", async () => {
   });
 
   test("POST /projects/{project_id}/files.json returns 404 for an invalid token", async () => {
-    // The controller intends 400, but the render references a missing API
-    // template, so the MissingTemplate handler turns it into a 404
     const response = await client.POST(
       "/projects/{project_id}/files.{format}",
       {

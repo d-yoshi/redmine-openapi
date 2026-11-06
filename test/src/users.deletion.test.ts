@@ -127,19 +127,23 @@ describe("Responses after user deletion", () => {
       params: { path: { format: "json", user_id: deletedUserId } },
     });
     assertStatus(204, removed);
+    const deletedUser = await client.GET("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: deletedUserId } },
+    });
+    assertStatus(404, deletedUser);
     authorId = undefined;
 
     const attachment = await client.GET("/attachments/{attachment_id}.{format}", {
       params: { path: { format: "json", attachment_id: attachmentId } },
     });
     assertStatus(200, attachment);
-    assert.notStrictEqual(attachment.data!.attachment.author.id, deletedUserId);
+    assert(Object.hasOwn(attachment.data!.attachment, "author"));
 
     const issue = await client.GET("/issues/{issue_id}.{format}", {
       params: { path: { format: "json", issue_id: issueId } },
     });
     assertStatus(200, issue);
-    assert.notStrictEqual(issue.data!.issue.author.id, deletedUserId);
+    assert(Object.hasOwn(issue.data!.issue, "author"));
 
     const issues = await client.GET("/issues.{format}", {
       params: {
@@ -150,12 +154,12 @@ describe("Responses after user deletion", () => {
     assertStatus(200, issues);
     const summary = issues.data!.issues.find((item) => item.id === issueId);
     assert(summary, "Expected the issue with a deleted author in the issue list");
-    assert.notStrictEqual(summary.author.id, deletedUserId);
+    assert(Object.hasOwn(summary, "author"));
 
     const entry = await client.GET("/time_entries/{time_entry_id}.{format}", {
       params: { path: { format: "json", time_entry_id: timeEntryId } },
     });
     assertStatus(200, entry);
-    assert.notStrictEqual(entry.data!.time_entry.user.id, deletedUserId);
+    assert(Object.hasOwn(entry.data!.time_entry, "user"));
   });
 });

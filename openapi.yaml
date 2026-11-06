@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 6.1.6-r1
+  version: 6.1.6-r2
 servers:
   - url: /
 security:
@@ -4598,9 +4598,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: ''
+          description: |-
+            Redmine selects the thumbnail's `Content-Type` from the attachment's `content_type`, inferring the media type from the filename when `content_type` is empty or `application/octet-stream`.
+            The response uses `image/png` for `application/pdf` and preserves other media types.
           content:
-            image/png:
+            '*/*':
               schema:
                 type: string
                 format: binary

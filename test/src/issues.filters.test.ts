@@ -131,6 +131,16 @@ describe("Issue filter representations", () => {
       query: () => ({ cf_x: { [`cf_${cfId}`]: "matching" } }),
       expected: () => [assignedId],
     },
+    {
+      name: "subject=~sign matches a substring",
+      query: () => ({ subject: "~sign" }),
+      expected: () => [assignedId],
+    },
+    {
+      name: "subject=!~sign excludes matching issues",
+      query: () => ({ subject: "!~sign" }),
+      expected: () => [datedId, emptyId],
+    },
   ];
 
   for (const scoped of [false, true]) {

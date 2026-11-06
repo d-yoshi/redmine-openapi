@@ -7,9 +7,7 @@ describe("Watchers", () => {
   let projectId: number;
   let issueId: number;
 
-  // watchers_controller renders 204 unconditionally: an unmatched user id, a
-  // locked principal or a failed valid_watcher? check all produce the same empty
-  // 204 as a successful call, so both tests read the watcher list back.
+  // A 204 response does not confirm a watcher change; read the list back.
   const watcherIds = async () => {
     const response = await client.GET("/issues/{issue_id}.{format}", {
       params: {
@@ -43,9 +41,7 @@ describe("Watchers", () => {
     assertStatus(201, issueResponse);
     issueId = issueResponse.data!.issue.id;
 
-    // Redmine adds the author as a watcher when their auto_watch_on preference
-    // includes issue_created, and that preference cannot be read back through the
-    // API — so normalise rather than assume. Removing a non-watcher is a no-op.
+    // Account preferences can add the author as a watcher automatically.
     const resetResponse = await client.DELETE(
       "/issues/{issue_id}/watchers/{user_id}.{format}",
       {
@@ -109,8 +105,6 @@ describe("Watchers", () => {
   });
 
   test("POST /issues/{issue_id}/watchers.json returns 403 for nonexistent issue", async () => {
-    // The watchable lookup leaves @project nil, so authorization fails
-    // before any 404 can be rendered
     const response = await client.POST(
       "/issues/{issue_id}/watchers.{format}",
       {
