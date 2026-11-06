@@ -210,7 +210,7 @@ post:
                 mail_notification:
                   description: |-
                     Email notification preference.
-                    Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things I watch or am involved in), `only_assigned` (only for things I am assigned to), `only_owner` (only for things I am the owner of), `none` (no events)
+                    Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things the user watches or is involved in), `only_assigned` (only for things assigned to the user), `only_owner` (only for things owned by the user), `only_my_watches` (only for issues the user watches), `none` (no events)
                   type: string
                   enum:
                     - all
@@ -218,6 +218,7 @@ post:
                     - only_my_events
                     - only_assigned
                     - only_owner
+                    - only_my_watches
                     - none
                 notified_project_ids:
                   description: |-

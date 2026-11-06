@@ -346,8 +346,6 @@ describe("Wiki Pages", () => {
     );
     assertStatus(200, response);
 
-    // `project` is optional in the schema (guarded in index.api.rsb), so its
-    // presence is asserted here rather than by the response validator
     const pages = response.data!.wiki_pages;
     assert(pages.length > 0, "Expected the created wiki pages to be listed");
     const child = pages.find((page) => page.title === "ChildPage");

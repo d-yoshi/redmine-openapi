@@ -8,7 +8,7 @@ info:
   license:
     name: MIT
     url: https://github.com/d-yoshi/redmine-openapi/blob/main/LICENSE
-  version: 7.0.3-r1
+  version: 7.0.3-r2
 servers:
   - url: /
 security:
@@ -385,7 +385,8 @@ paths:
             Filter by estimated hours.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `>=5`, `><1|10`, `!*`
+            Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+            Examples: `>=5`, `><1:30|2:30`, `!*`
           schema:
             type: string
         - name: spent_time
@@ -394,7 +395,8 @@ paths:
             Filter by total spent time.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `>=5`, `><1|10`, `!*`
+            Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+            Examples: `>=5`, `><1:30|2:30`, `!*`
           schema:
             type: string
         - name: done_ratio
@@ -1169,7 +1171,8 @@ paths:
             Filter by estimated hours.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `>=5`, `><1|10`, `!*`
+            Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+            Examples: `>=5`, `><1:30|2:30`, `!*`
           schema:
             type: string
         - name: spent_time
@@ -1178,7 +1181,8 @@ paths:
             Filter by total spent time.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `>=5`, `><1|10`, `!*`
+            Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+            Examples: `>=5`, `><1:30|2:30`, `!*`
           schema:
             type: string
         - name: done_ratio
@@ -2453,7 +2457,7 @@ paths:
                     mail_notification:
                       description: |-
                         Email notification preference.
-                        Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things I watch or am involved in), `only_assigned` (only for things I am assigned to), `only_owner` (only for things I am the owner of), `none` (no events)
+                        Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things the user watches or is involved in), `only_assigned` (only for things assigned to the user), `only_owner` (only for things owned by the user), `only_my_watches` (only for issues the user watches), `none` (no events)
                       type: string
                       enum:
                         - all
@@ -2461,6 +2465,7 @@ paths:
                         - only_my_events
                         - only_assigned
                         - only_owner
+                        - only_my_watches
                         - none
                     notified_project_ids:
                       description: Project IDs for which to receive email notifications. Only effective when mail_notification is set to `selected`.
@@ -2596,7 +2601,7 @@ paths:
                     mail_notification:
                       description: |-
                         Email notification preference.
-                        Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things I watch or am involved in), `only_assigned` (only for things I am assigned to), `only_owner` (only for things I am the owner of), `none` (no events)
+                        Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things the user watches or is involved in), `only_assigned` (only for things assigned to the user), `only_owner` (only for things owned by the user), `only_my_watches` (only for issues the user watches), `none` (no events)
                       type: string
                       enum:
                         - all
@@ -2604,6 +2609,7 @@ paths:
                         - only_my_events
                         - only_assigned
                         - only_owner
+                        - only_my_watches
                         - none
                     notified_project_ids:
                       description: Project IDs for which to receive email notifications. Only effective when mail_notification is set to `selected`.
@@ -2911,7 +2917,8 @@ paths:
             Filter by hours.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `=8`, `>=4`, `><1|8`
+            Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+            Examples: `=1:30`, `>=4`, `><1|8`
           schema:
             type: string
         - name: sort
@@ -3316,7 +3323,8 @@ paths:
             Filter by hours.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            Examples: `=8`, `>=4`, `><1|8`
+            Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+            Examples: `=1:30`, `>=4`, `><1|8`
           schema:
             type: string
         - name: sort
@@ -4580,9 +4588,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: ''
+          description: |-
+            Redmine selects the thumbnail's `Content-Type` from the attachment's `content_type`, inferring the media type from the filename when `content_type` is empty or `application/octet-stream`.
+            The response uses `image/png` for non-image media types.
           content:
-            image/png:
+            image/*:
               schema:
                 type: string
                 format: binary
@@ -5798,6 +5808,7 @@ paths:
                         - only_my_events
                         - only_assigned
                         - only_owner
+                        - only_my_watches
                         - none
                     notified_project_ids:
                       type: array
@@ -6883,6 +6894,7 @@ components:
             enum:
               - issue_created
               - issue_contributed_to
+              - issue_assigned_to_me
     user:
       type: object
       required:

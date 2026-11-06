@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import { client, assertStatus } from "./helpers.js";
 
-describe("Time entry date filter representations", () => {
+describe("Time entry filter representations", () => {
   let projectId: number;
   const entryIds: number[] = [];
 
@@ -23,14 +23,14 @@ describe("Time entry date filter representations", () => {
     const activity = activities.data!.time_entry_activities[0];
     assert(activity, "Expected at least one time entry activity");
 
-    for (const spentOn of ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"]) {
+    for (const [index, spentOn] of ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"].entries()) {
       const response = await client.POST("/time_entries.{format}", {
         params: { path: { format: "json" } },
         body: {
           time_entry: {
             project_id: projectId,
             spent_on: spentOn,
-            hours: 1,
+            hours: index + 0.5,
             activity_id: activity.id,
           },
         },
@@ -68,6 +68,21 @@ describe("Time entry date filter representations", () => {
       name: "from and to include both bounds",
       query: { from: "2024-01-02", to: "2024-01-03" },
       expected: () => entryIds.slice(1, 3),
+    },
+    {
+      name: "hours=1:30 matches 1.5 hours",
+      query: { hours: "1:30" },
+      expected: () => entryIds.slice(1, 2),
+    },
+    {
+      name: "hours=><1:30|2:30 includes both bounds",
+      query: { hours: "><1:30|2:30" },
+      expected: () => entryIds.slice(1, 3),
+    },
+    {
+      name: "hours=90m matches 1.5 hours",
+      query: { hours: "90m" },
+      expected: () => entryIds.slice(1, 2),
     },
   ];
 

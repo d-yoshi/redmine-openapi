@@ -16,9 +16,11 @@ get:
         type: integer
   responses:
     200:
-      description: ""
+      description: |-
+        Redmine selects the thumbnail's `Content-Type` from the attachment's `content_type`, inferring the media type from the filename when `content_type` is empty or `application/octet-stream`.
+        The response uses `image/png` for non-image media types.
       content:
-        image/png:
+        image/*:
           schema:
             type: string
             format: binary

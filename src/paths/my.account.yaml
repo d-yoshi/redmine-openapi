@@ -61,6 +61,7 @@ put:
                     - only_my_events
                     - only_assigned
                     - only_owner
+                    - only_my_watches
                     - none
                 notified_project_ids:
                   type: array

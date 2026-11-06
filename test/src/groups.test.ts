@@ -72,7 +72,7 @@ describe("Groups", () => {
       body: {
         group: {
           name,
-          user_ids: [userId],
+          user_ids: [extraUserId],
           twofa_required: false,
           custom_fields: [],
           custom_field_values: {},
@@ -86,7 +86,7 @@ describe("Groups", () => {
     });
     assertStatus(200, readback);
     assert.strictEqual(readback.data!.group.name, name);
-    assert.deepStrictEqual(readback.data!.group.users!.map((user) => user.id), [userId]);
+    assert.deepStrictEqual(readback.data!.group.users!.map((user) => user.id), [extraUserId]);
   });
 
   test("POST /groups/{group_id}/users.json (add user)", async () => {
@@ -94,7 +94,7 @@ describe("Groups", () => {
       "/groups/{group_id}/users.{format}",
       {
         params: { path: { format: "json", group_id: groupId } },
-        body: { user_id: extraUserId },
+        body: { user_id: userId },
       }
     );
     assertStatus(204, response);

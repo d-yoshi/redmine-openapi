@@ -24,7 +24,7 @@ describe("Issue filter representations", () => {
     const name = `issue-filters-${Date.now()}`;
     const project = await client.POST("/projects.{format}", {
       params: { path: { format: "json" } },
-      body: { project: { name, identifier: name } },
+      body: { project: { name, identifier: name, enabled_module_names: ["issue_tracking", "time_tracking"] } },
     });
     assertStatus(201, project);
     projectId = project.data!.project.id;
@@ -48,10 +48,17 @@ describe("Issue filter representations", () => {
     assert.strictEqual(customField.is_filter, true);
     cfId = customField.id;
 
-    for (const [subject, startDate, assignee] of [
-      ["assigned", "2024-01-01", userId],
-      ["dated", "2024-02-01", otherUserId],
-      ["empty", null, undefined],
+    const activities = await client.GET("/enumerations/time_entry_activities.{format}", {
+      params: { path: { format: "json" } },
+    });
+    assertStatus(200, activities);
+    const activity = activities.data!.time_entry_activities[0];
+    assert(activity, "Expected at least one time entry activity");
+
+    for (const [subject, startDate, assignee, estimatedHours] of [
+      ["assigned", "2024-01-01", userId, 1.5],
+      ["dated", "2024-02-01", otherUserId, 2.5],
+      ["empty", null, undefined, undefined],
     ] as const) {
       const response = await client.POST("/issues.{format}", {
         params: { path: { format: "json" } },
@@ -61,6 +68,7 @@ describe("Issue filter representations", () => {
             subject,
             start_date: startDate,
             assigned_to_id: assignee,
+            estimated_hours: estimatedHours,
             custom_fields: [{ id: cfId, value: subject === "assigned" ? "matching" : "other" }],
           },
         },
@@ -69,6 +77,20 @@ describe("Issue filter representations", () => {
       if (subject === "assigned") assignedId = response.data!.issue.id;
       if (subject === "dated") datedId = response.data!.issue.id;
       if (subject === "empty") emptyId = response.data!.issue.id;
+      if (estimatedHours !== undefined) {
+        const timeEntry = await client.POST("/time_entries.{format}", {
+          params: { path: { format: "json" } },
+          body: {
+            time_entry: {
+              issue_id: response.data!.issue.id,
+              hours: estimatedHours,
+              activity_id: activity.id,
+              spent_on: "2024-03-01",
+            },
+          },
+        });
+        assertStatus(201, timeEntry);
+      }
     }
   });
 
@@ -129,6 +151,31 @@ describe("Issue filter representations", () => {
     {
       name: "custom field key and value",
       query: () => ({ cf_x: { [`cf_${cfId}`]: "matching" } }),
+      expected: () => [assignedId],
+    },
+    {
+      name: "subject=~sign matches a substring",
+      query: () => ({ subject: "~sign" }),
+      expected: () => [assignedId],
+    },
+    {
+      name: "subject=!~sign excludes matching issues",
+      query: () => ({ subject: "!~sign" }),
+      expected: () => [datedId, emptyId],
+    },
+    {
+      name: "estimated_hours=1:30 matches 1.5 hours",
+      query: () => ({ estimated_hours: "1:30" }),
+      expected: () => [assignedId],
+    },
+    {
+      name: "estimated_hours=><1:30|2:30 includes both bounds",
+      query: () => ({ estimated_hours: "><1:30|2:30" }),
+      expected: () => [assignedId, datedId],
+    },
+    {
+      name: "spent_time=1h30 matches 1.5 hours",
+      query: () => ({ spent_time: "1h30" }),
       expected: () => [assignedId],
     },
   ];

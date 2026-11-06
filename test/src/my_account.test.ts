@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { client, assertStatus, createTestClient, createTestUser } from "./helpers.js";
 
 describe("My Account", () => {
-  // Preferences cannot be read back, so this suite owns a disposable account.
+  // The API omits account preferences from responses, so this suite uses a disposable account.
   let accountId: number;
   let accountClient: ReturnType<typeof createTestClient>;
   let original: {
@@ -64,7 +64,7 @@ describe("My Account", () => {
           mail: original.mail,
           language: "en",
           auth_source_id: null,
-          mail_notification: "only_my_events",
+          mail_notification: "only_my_watches",
           notified_project_ids: [],
           must_change_passwd: false,
           generate_password: false,
@@ -84,7 +84,7 @@ describe("My Account", () => {
           recently_used_projects: 3,
           history_default_tab: "notes",
           toolbar_language_options: "",
-          auto_watch_on: ["issue_contributed_to"],
+          auto_watch_on: ["issue_assigned_to_me"],
           default_issue_query: null,
           default_project_query: null,
         },

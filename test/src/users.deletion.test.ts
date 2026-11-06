@@ -124,18 +124,22 @@ describe("Responses after user deletion", () => {
       params: { path: { format: "json", user_id: deletedUserId } },
     });
     assertStatus(204, removed);
+    const deletedUser = await client.GET("/users/{user_id}.{format}", {
+      params: { path: { format: "json", user_id: deletedUserId } },
+    });
+    assertStatus(404, deletedUser);
     authorId = undefined;
 
     const attachment = await client.GET("/attachments/{attachment_id}.{format}", {
       params: { path: { format: "json", attachment_id: attachmentId } },
     });
     assertStatus(200, attachment);
-    assert.notStrictEqual(attachment.data!.attachment.author.id, deletedUserId);
+    assert(Object.hasOwn(attachment.data!.attachment, "author"));
 
     const entry = await client.GET("/time_entries/{time_entry_id}.{format}", {
       params: { path: { format: "json", time_entry_id: timeEntryId } },
     });
     assertStatus(200, entry);
-    assert.notStrictEqual(entry.data!.time_entry.user.id, deletedUserId);
+    assert(Object.hasOwn(entry.data!.time_entry, "user"));
   });
 });

@@ -44,7 +44,7 @@ Add cases for distinct interpretations or exceptions and when source inspection 
 | Include structure and conditions | Arrange data, check content when included and absence when not requested, and follow source behavior for empty arrays or permission-based omissions. See [issues.test.ts](src/issues.test.ts) and [memberships.visibility.test.ts](src/memberships.visibility.test.ts) |
 | Status and error structure | Arrange the smallest setup that produces the response; state changes serve to expose that branch |
 | Request attributes and descriptions | Inspect how Redmine handles the attribute in addition to type checking. Read back relevant values when a 204 or acceptance of unknown attributes would not establish the documented effect. See [versions.test.ts](src/versions.test.ts) |
-| Filter formats and special values | Use a small set of matching and nonmatching records. Check representative multiple values, negation, dates, and `me`. Separately handled shortcuts such as `from` and `to` need one-sided, combined, and boundary cases. See [issues.filters.test.ts](src/issues.filters.test.ts) and [time_entries.filters.test.ts](src/time_entries.filters.test.ts) |
+| Filter formats and special values | Use a small set of matching and nonmatching records. Check representative multiple values, negation, substring matching, dates, and `me`. Separately handled shortcuts such as `from` and `to` need one-sided, combined, and boundary cases. See [issues.filters.test.ts](src/issues.filters.test.ts) and [time_entries.filters.test.ts](src/time_entries.filters.test.ts) |
 | Pagination and `nometa` | Control ordering and records; assert IDs, pagination values, and metadata omission for both the `nometa` query parameter and `X-Redmine-Nometa`. See [issues.test.ts](src/issues.test.ts) |
 | Content-Type | Shared middleware compares actual media types with declarations, including binary content and wildcard media types such as `*/*` |
 
@@ -54,11 +54,14 @@ Keep state creation and modification relevant to response formats, statuses, acc
 
 - Exercise new fields and includes with populated data. Assert the presence and values needed to prevent an empty array or absent optional property from leaving a claim unchecked.
 - For request effects, send a representative changed value and read back relevant attributes. A 204 alone cannot distinguish an applied value from an ignored input.
+- For replacement inputs such as `group_ids` and `user_ids`, send a set different from the current one and check the complete result, including removal of old entries. See [users.test.ts](src/users.test.ts) and [groups.test.ts](src/groups.test.ts).
+- For string flags, distinguish omitted, empty, and nonempty values using data that changes the result. See [search.test.ts](src/search.test.ts).
+- Match assertions to the documented guarantee. For required user references after deletion, check presence and structure. Assert the replacement identity only if the specification promises it.
 - Resolve fixture-dependent IDs through [helpers.ts](src/helpers.ts). Values fixed by the specification, such as project-status values, can be used directly.
 - Own users, groups, and other data not removed with a project in `before` and `after` hooks. Use `runCleanup` so one failed deletion does not prevent the rest.
 - Avoid casting entire requests to `as any`. For an intentionally missing required input, place a justified `@ts-expect-error` only on that input; an accidentally optional declaration then causes an unused-directive failure.
 - Pass dynamic `cf_<id>` filters as ``cf_x: { [`cf_${cfId}`]: "value" }``. The client's OpenAPI `form`/`explode: true` serialization sends `cf_<id>=value`, while values remain type-checked strings. No cast is needed. Confirm filter enablement, visibility, and IDs using released source and requests. See [issues.filters.test.ts](src/issues.filters.test.ts).
-- Avoid `@ts-ignore`, `@ts-nocheck`, and file-wide lint suppression. Limit assertions to unavoidable generated-type or library boundaries, and explain the local reason. The binary upload in [attachments.test.ts](src/attachments.test.ts), for example, limits its cast to the `Buffer` because its generated input type is `string`.
+- Avoid `@ts-ignore`, `@ts-nocheck`, and file-wide lint suppression. Limit type assertions to unavoidable generated-type or library boundaries, and explain the local reason. The binary upload in [attachments.test.ts](src/attachments.test.ts), for example, limits its cast to the `Buffer` because its generated input type is `string`.
 - Use a disposable user for account changes, as in [my_account.test.ts](src/my_account.test.ts). `createTestClient(login)` in the helpers sends `X-Redmine-Switch-User` as a Redmine administrator and uses the same response validation and observation log.
 - For binary responses, verify the declared representation, such as media type, without expanding the test into file-byte equality or image-processing correctness.
 

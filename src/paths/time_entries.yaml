@@ -191,7 +191,8 @@ get:
         Filter by hours.
         Format: `[operator]value`
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-        Examples: `=8`, `>=4`, `><1|8`
+        Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+        Examples: `=1:30`, `>=4`, `><1|8`
       schema:
         type: string
     - name: sort

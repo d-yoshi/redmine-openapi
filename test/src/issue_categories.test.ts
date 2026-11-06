@@ -184,9 +184,7 @@ describe("Issue Categories", () => {
     assertStatus(201, otherResponse);
     const otherCategoryId = otherResponse.data!.issue_category.id;
 
-    // Without an issue carrying the category, IssueCategory#destroy reassigns
-    // zero rows, and the controller resolves an unknown reassign_to_id to nil and
-    // proceeds — so a dropped parameter would return the same 204.
+    // Reassignment is observable only when an issue uses the deleted category.
     const issueResponse = await client.POST("/issues.{format}", {
       params: { path: { format: "json" } },
       body: {

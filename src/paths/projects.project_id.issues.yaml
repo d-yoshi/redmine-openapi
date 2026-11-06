@@ -285,7 +285,8 @@ get:
         Filter by estimated hours.
         Format: `[operator]value`
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-        Examples: `>=5`, `><1|10`, `!*`
+        Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+        Examples: `>=5`, `><1:30|2:30`, `!*`
       schema:
         type: string
     - name: spent_time
@@ -294,7 +295,8 @@ get:
         Filter by total spent time.
         Format: `[operator]value`
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-        Examples: `>=5`, `><1|10`, `!*`
+        Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
+        Examples: `>=5`, `><1:30|2:30`, `!*`
       schema:
         type: string
     - name: done_ratio
