@@ -4,6 +4,7 @@ required:
   - title
   - text
   - version
+  - author
   - comments
   - project
   - created_on

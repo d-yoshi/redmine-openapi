@@ -1,0 +1,10 @@
+type: object
+additionalProperties: false
+required:
+  - status
+  - error
+properties:
+  status:
+    type: integer
+  error:
+    type: string

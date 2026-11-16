@@ -1,0 +1,78 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        issue:
+          type: object
+          additionalProperties: false
+          properties:
+            project_id:
+              oneOf:
+                - type: integer
+                - type: string
+            tracker_id:
+              type: integer
+            status_id:
+              type: integer
+            priority_id:
+              type: integer
+            subject:
+              type: string
+            description:
+              type: string
+              nullable: true
+            start_date:
+              type: string
+              format: date
+              nullable: true
+            due_date:
+              type: string
+              format: date
+              nullable: true
+            done_ratio:
+              type: integer
+              minimum: 0
+              maximum: 100
+            category_id:
+              type: integer
+              nullable: true
+            fixed_version_id:
+              type: integer
+              nullable: true
+            assigned_to_id:
+              description: Assignee ID. The value `me` selects the current user.
+              oneOf:
+                - type: integer
+                  nullable: true
+                - type: string
+                  enum:
+                    - me
+            parent_issue_id:
+              type: integer
+              nullable: true
+            custom_fields:
+              $ref: ../schemas/request/custom_fields.yaml
+            custom_field_values:
+              $ref: ../schemas/request/custom_field_values.yaml
+            is_private:
+              type: boolean
+            estimated_hours:
+              description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
+              oneOf:
+                - type: number
+                  nullable: true
+                - type: string
+            notes:
+              type: string
+            private_notes:
+              description: Mark the notes as private. Visible to their author and users with the View private notes permission.
+              type: boolean
+            deleted_attachment_ids:
+              description: IDs of existing attachments to remove from this issue.
+              type: array
+              items:
+                type: integer
+            uploads:
+              $ref: ../schemas/request/uploads.yaml

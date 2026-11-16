@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/project_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 put:
   tags:
     - Projects
@@ -5,18 +10,36 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
   summary: Archive project
   operationId: archiveProject
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Requires an administrator.
+post:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
+  summary: Archive project (POST)
+  operationId: archiveProjectViaPost
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior. Requires an administrator.

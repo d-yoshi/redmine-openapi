@@ -81,6 +81,7 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
   admin.save!
 
   Setting.rest_api_enabled = '1'
+  Setting.sequential_project_identifiers = '1'
 
   if IssueStatus.count == 0
     IssueStatus.create!(name: 'New')
@@ -97,10 +98,12 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
   if DocumentCategory.count == 0
     DocumentCategory.create!(name: 'Documentation')
   end
-  # Saved query so that GET /queries returns a non-empty list and
-  # the query_id filter can be exercised
-  unless IssueQuery.find_by(name: 'Seed Query')
-    IssueQuery.create!(name: 'Seed Query', user_id: admin.id, visibility: Query::VISIBILITY_PUBLIC)
+  [IssueQuery, TimeEntryQuery, ProjectQuery, UserQuery, ProjectAdminQuery].each do |klass|
+    name = klass == IssueQuery ? 'Seed Query' : "Seed #{klass.name}"
+    klass.find_or_create_by!(name: name) do |query|
+      query.user = admin
+      query.visibility = Query::VISIBILITY_PUBLIC
+    end
   end
   if Role.givable.count == 0
     Role.create!(name: 'Manager', permissions: Redmine::AccessControl.permissions.map(&:name))
@@ -149,7 +152,14 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     TimeEntryCustomField.create!(name: 'CF TimeEntry String', field_format: 'string', is_for_all: true)
     puts 'Custom fields created!'
   end
-  IssueCustomField.find_by!(name: 'CF String').update!(is_filter: true)
+  [IssueCustomField, ProjectCustomField, TimeEntryCustomField].each do |klass|
+    klass.where(field_format: 'string').each { |field| field.update!(is_filter: true) }
+  end
+  UserCustomField.find_or_create_by!(name: 'CF User String') do |field|
+    field.field_format = 'string'
+    field.is_filter = true
+    field.visible = true
+  end
   unless IssueCustomField.find_by(name: 'CF Date Offset')
     IssueCustomField.create!(name: 'CF Date Offset', field_format: 'date', is_for_all: true, tracker_ids: tracker_ids,
       default_value_mode: 'date_offset', default_value: '5')

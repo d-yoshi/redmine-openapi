@@ -205,6 +205,32 @@ describe("Versions", () => {
     assertStatus(422, response);
   });
 
+  test("version descriptions can be cleared with null", async () => {
+    const update = await client.PUT("/versions/{version_id}.{format}", {
+      params: { path: { format: "json", version_id: versionId } },
+      body: { version: { description: null } },
+    });
+    assertStatus(204, update);
+    const result = await client.GET("/versions/{version_id}.{format}", {
+      params: { path: { format: "json", version_id: versionId } },
+    });
+    assertStatus(200, result);
+    assert.equal(result.data!.version.description, null);
+  });
+
+  test("PATCH updates version through the equivalent method", async () => {
+    const params = { path: { format: "json" as const, version_id: versionId } };
+    const updated = await client.PATCH("/versions/{version_id}.{format}", {
+      params,
+      body: { version: { name: "Version via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/versions/{version_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.version.name, "Version via PATCH");
+  });
+
+
   test("DELETE /versions/{version_id}.json", async () => {
     const response = await client.DELETE("/versions/{version_id}.{format}", {
       params: {

@@ -1,0 +1,92 @@
+post:
+  tags:
+    - Watchers
+  summary: Add watchers to resources
+  operationId: addWatchers
+  description: Adds users to one or more resources. Requires the permission to add watchers for each resource type and access to the selected projects. Unknown user IDs are ignored.
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: false
+          required:
+            - object_type
+            - object_id
+          properties:
+            object_type:
+              type: string
+              enum:
+                - issue
+                - wiki_page
+                - message
+              description: Watchable resource type. Wiki-page and forum-message IDs are returned by search results for those types.
+            object_id:
+              oneOf:
+                - type: integer
+                - type: array
+                  items:
+                    type: integer
+                  minItems: 1
+            watcher:
+              type: object
+              additionalProperties: false
+              properties:
+                user_id:
+                  type: integer
+                user_ids:
+                  type: array
+                  items:
+                    type: integer
+              description: Provide `user_id` for one user or `user_ids` for several users.
+            user_id:
+              type: integer
+              description: Alternative to `watcher.user_id` when `watcher` is omitted.
+  responses:
+    "204":
+      description: The request was processed; only eligible users were added.
+delete:
+  tags:
+    - Watchers
+  summary: Remove a watcher from resources
+  operationId: removeWatcherFromResources
+  description: Removes one user from the selected resources. Requires the permission to delete watchers for each resource type and access to the selected projects.
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: object_type
+      in: query
+      description: Watchable resource type. Wiki-page and forum-message IDs are returned by search results for those types.
+      schema:
+        type: string
+        enum:
+          - issue
+          - wiki_page
+          - message
+      required: true
+    - name: object_id[]
+      in: query
+      description: Resource IDs from which to remove the watcher.
+      schema:
+        type: array
+        items:
+          type: integer
+        minItems: 1
+      required: true
+      style: form
+      explode: true
+    - name: user_id
+      in: query
+      description: User ID to remove.
+      schema:
+        type: integer
+      required: true
+  responses:
+    "204":
+      description: The watcher was removed.
+    "404":
+      description: The user was not found.

@@ -12,6 +12,14 @@ get:
     - $ref: ../components/parameters/query/nometa.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - $ref: ../components/parameters/query/page.yaml
+    - name: project_id
+      in: query
+      description: Project ID or identifier limiting news to that project.
+      schema:
+        oneOf:
+          - type: integer
+          - type: string
   responses:
     200:
       description: ""
@@ -33,3 +41,5 @@ get:
                 type: integer
               limit:
                 type: integer
+    "404":
+      description: The project was not found.

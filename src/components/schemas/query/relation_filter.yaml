@@ -1,0 +1,6 @@
+type: string
+description: |-
+  Relation filter expression.
+  For `=` (default) and `!`, provide comma-separated issue IDs; pipes do not form an equality list.
+  Use `=pPROJECT_ID` for a relation to an issue in that project, `=!pPROJECT_ID` for a relation to an issue outside that project, or `!pPROJECT_ID` for no relation to an issue in that project.
+  Use `*o` for a relation to an open issue, `!o` for no relation to an open issue, `*` for any relation, or `!*` for none.

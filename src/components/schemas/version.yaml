@@ -44,12 +44,15 @@ properties:
     nullable: true
   estimated_hours:
     type: number
+    description: Returned when the current user can view spent time in the version's project.
   spent_hours:
     type: number
+    description: Returned when the current user can view spent time in the version's project.
   custom_fields:
     type: array
     items:
       $ref: ./custom_field_value.yaml
+    description: Visible custom-field values. Omitted when no custom fields are visible.
   created_on:
     type: string
     format: date-time

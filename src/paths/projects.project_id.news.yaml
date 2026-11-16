@@ -13,6 +13,7 @@ get:
     - $ref: ../components/parameters/query/nometa.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - $ref: ../components/parameters/query/page.yaml
   responses:
     200:
       description: ""
@@ -68,6 +69,7 @@ post:
                   type: string
                 summary:
                   type: string
+                  nullable: true
                 description:
                   type: string
                 uploads:
@@ -83,3 +85,4 @@ post:
             $ref: ../components/schemas/errors.yaml
     404:
       description: ""
+  description: The same operation is available at POST /news.json with `project_id` in the query string.

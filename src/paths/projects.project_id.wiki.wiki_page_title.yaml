@@ -1,3 +1,9 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/project_id.yaml
+  - $ref: ../components/parameters/path/wiki_page_title.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Wiki Pages
@@ -6,10 +12,6 @@ get:
   summary: Show wiki page
   operationId: getWikiPage
   parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/path/wiki_page_title.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
       description: |-
@@ -22,6 +24,11 @@ get:
           enum:
             - attachments
       explode: false
+    - name: version
+      in: query
+      description: Historical content version; an alternative to the versioned page path.
+      schema:
+        type: integer
   responses:
     200:
       description: ""
@@ -37,6 +44,8 @@ get:
                 $ref: ../components/schemas/wiki_page.yaml
     404:
       description: ""
+    "302":
+      $ref: ../components/responses.yaml#/WikiRedirect
 
 put:
   tags:
@@ -45,78 +54,19 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
   summary: Create or update wiki page
   operationId: updateWikiPage
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/path/wiki_page_title.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            wiki_page:
-              type: object
-              additionalProperties: false
-              required:
-                - text
-              properties:
-                text:
-                  type: string
-                comments:
-                  type: string
-                version:
-                  description: |-
-                    Content version for optimistic locking. If specified and it does not match the current version, the server returns 409 Conflict to prevent overwriting concurrent changes.
-                  type: integer
-                parent_title:
-                  description: Title of the parent wiki page. Sets this page as a child in the page hierarchy.
-                  type: string
-                title:
-                  description: New title for the page (rename). Requires the rename_wiki_pages permission.
-                  type: string
-                redirect_existing_links:
-                  description: 'When renaming with title, controls whether the old title keeps redirecting to the new one. Only the string "0" disables the redirect; any other value (including boolean false) leaves it enabled.'
-                  type: string
-                  enum:
-                    - "0"
-                    - "1"
-                is_start_page:
-                  description: Make this page the start page of the wiki. Requires the manage_wiki permission.
-                  type: boolean
-                deleted_attachment_ids:
-                  type: array
-                  items:
-                    type: integer
-                uploads:
-                  $ref: ../components/schemas/request/uploads.yaml
+    $ref: ../components/request_bodies/update_wiki_page.yaml
   responses:
-    201:
-      description: ""
-      content:
-        application/json:
-          schema:
-            type: object
-            additionalProperties: false
-            required:
-              - wiki_page
-            properties:
-              wiki_page:
-                $ref: ../components/schemas/wiki_page.yaml
-    204:
-      description: ""
-    409:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "201":
+      $ref: ../components/responses.yaml#/WikiPageCreated
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "409":
+      $ref: ../components/responses.yaml#/WikiContentConflict
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -125,13 +75,32 @@ delete:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page
   summary: Delete wiki page
   operationId: deleteWikiPage
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/path/wiki_page_title.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     204:
       description: ""
     404:
       description: ""
+    "302":
+      $ref: ../components/responses.yaml#/WikiRedirect
+  description: When the requested title is a redirect, Redmine returns 302 before deleting the page. Use the current title to delete it.
+patch:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
+  summary: Create or update wiki page (PATCH)
+  operationId: updateWikiPageViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_wiki_page.yaml
+  responses:
+    "201":
+      $ref: ../components/responses.yaml#/WikiPageCreated
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "409":
+      $ref: ../components/responses.yaml#/WikiContentConflict
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.

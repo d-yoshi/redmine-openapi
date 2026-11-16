@@ -8,6 +8,11 @@ get:
     - $ref: ../components/parameters/path/attachment_id.yaml
     - $ref: ../components/parameters/path/filename.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: If-None-Match
+      in: header
+      description: ETag from a previous response. A matching tag returns 304 without a body.
+      schema:
+        type: string
   responses:
     200:
       description: ""
@@ -16,8 +21,29 @@ get:
           schema:
             type: string
             format: binary
+      headers:
+        ETag:
+          description: Cache validator for this attachment or thumbnail.
+          schema:
+            type: string
     404:
       description: Returned as an HTML error page regardless of the Accept header — the route pins the request format to html.
+      content:
+        text/html:
+          schema:
+            type: string
+            format: binary
+    "304":
+      description: The ETag matches; no response body is sent.
+    "302":
+      description: Redirect to sign-in when an anonymous browser-style request cannot access the attachment.
+      headers:
+        Location:
+          description: Sign-in URL.
+          schema:
+            type: string
+    "403":
+      description: HTML access-denied page. This route uses HTML even when Accept requests JSON.
       content:
         text/html:
           schema:

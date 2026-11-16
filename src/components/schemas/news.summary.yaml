@@ -3,6 +3,7 @@ additionalProperties: false
 required:
   - id
   - project
+  - author
   - title
   - summary
   - description
@@ -18,6 +19,7 @@ properties:
     type: string
   summary:
     type: string
+    nullable: true
   description:
     type: string
   created_on:

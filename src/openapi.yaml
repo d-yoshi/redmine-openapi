@@ -2,7 +2,12 @@ openapi: 3.0.3
 
 info:
   title: Redmine API
-  description: Unofficial OpenAPI specification for the Redmine API, tested against Redmine 7.0.3
+  description: |-
+    Unofficial OpenAPI specification for Redmine 7.0.3. This specification covers JSON REST representations and related attachment downloads. XML responses are outside its scope.
+
+    When JSONP support is enabled, Redmine can return JavaScript responses selected with the `callback` or `jsonp` query parameter. This specification excludes JSONP responses and does not define those parameters.
+
+    Authentication is optional where installation settings, project visibility and permissions allow anonymous access. Operations that require an account or administrator credentials declare that requirement explicitly.
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
@@ -23,6 +28,7 @@ security:
   - ApiKey: []
   - ApiKeyInQuery: []
   - OAuth2: []
+  - {}
 
 paths:
   /issues.{format}:
@@ -192,12 +198,45 @@ paths:
 
   /projects/{project_id}/repository/{repository_id}/revisions/{revision}/issues/{issue_id}.{format}:
     $ref: ./paths/projects.project_id.repository.repository_id.revisions.revision.issues.issue_id.yaml
+  /projects/{project_id}/wiki.{format}:
+    $ref: ./paths/projects.project_id.wiki.yaml
+  /watchers.{format}:
+    $ref: ./paths/watchers.yaml
+  /time_entries/destroy.{format}:
+    $ref: ./paths/time_entries.destroy.yaml
+  /attachments/download/{attachment_id}.{format}:
+    $ref: ./paths/attachments.download.attachment_id.yaml
 
 components:
   securitySchemes:
     $ref: ./components/security_schemes.yaml
   responses:
     $ref: ./components/responses.yaml
+  requestBodies:
+    UpdateJournal:
+      $ref: ./components/request_bodies/update_journal.yaml
+    UpdateUser:
+      $ref: ./components/request_bodies/update_user.yaml
+    UpdateMembership:
+      $ref: ./components/request_bodies/update_membership.yaml
+    UpdateIssueCategory:
+      $ref: ./components/request_bodies/update_issue_category.yaml
+    UpdateWikiPage:
+      $ref: ./components/request_bodies/update_wiki_page.yaml
+    UpdateProject:
+      $ref: ./components/request_bodies/update_project.yaml
+    UpdateIssue:
+      $ref: ./components/request_bodies/update_issue.yaml
+    UpdateNews:
+      $ref: ./components/request_bodies/update_news.yaml
+    UpdateVersion:
+      $ref: ./components/request_bodies/update_version.yaml
+    UpdateTimeEntry:
+      $ref: ./components/request_bodies/update_time_entry.yaml
+    UpdateGroup:
+      $ref: ./components/request_bodies/update_group.yaml
+    UpdateAttachment:
+      $ref: ./components/request_bodies/update_attachment.yaml
 
 tags:
   $ref: ./tags.yaml

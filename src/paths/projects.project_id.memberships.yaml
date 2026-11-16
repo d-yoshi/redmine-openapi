@@ -13,6 +13,7 @@ get:
     - $ref: ../components/parameters/query/nometa.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - $ref: ../components/parameters/query/page.yaml
   responses:
     200:
       description: ""
@@ -61,7 +62,6 @@ post:
               type: object
               additionalProperties: false
               required:
-                - user_id
                 - role_ids
               properties:
                 user_id:
@@ -70,6 +70,16 @@ post:
                   type: array
                   items:
                     type: integer
+                user_ids:
+                  type: array
+                  items:
+                    type: integer
+              description: Provide `user_id` for one user or group, or `user_ids` for several. Batch creation returns the first membership and can leave successfully created memberships if another principal fails.
+              anyOf:
+                - required:
+                    - user_id
+                - required:
+                    - user_ids
   responses:
     201:
       description: ""

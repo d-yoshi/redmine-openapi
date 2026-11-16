@@ -1,7 +1,7 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, createTestClient, createTestUser } from "./helpers.js";
 
 const MINIMAL_PNG = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAEElEQVR4nGP4z8AARAwQCgAf7gP9i18U1AAAAABJRU5ErkJggg==",
@@ -27,6 +27,7 @@ describe("Attachments", () => {
         project: {
           name: projectIdentifier,
           identifier: projectIdentifier,
+          is_public: false,
         },
       },
     });
@@ -328,6 +329,19 @@ describe("Attachments", () => {
     assertStatus(404, response);
   });
 
+  test("PUT updates attachment through the equivalent method", async () => {
+    const params = { path: { format: "json" as const, attachment_id: attachmentId } };
+    const updated = await client.PUT("/attachments/{attachment_id}.{format}", {
+      params,
+      body: { attachment: { description: "Attachment via PUT" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/attachments/{attachment_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.attachment.description, "Attachment via PUT");
+  });
+
+
   test("DELETE /attachments/{attachment_id}.json", async () => {
     const response = await client.DELETE(
       "/attachments/{attachment_id}.{format}",
@@ -339,4 +353,140 @@ describe("Attachments", () => {
     );
     assertStatus(204, response);
   });
+  test("download and thumbnail ETags support conditional requests", async () => {
+    const download = await client.GET("/attachments/download/{attachment_id}/{filename}", {
+      params: { path: { attachment_id: imageAttachmentId, filename: "test.png" } },
+      parseAs: "blob",
+    });
+    assertStatus(200, download);
+    const downloadTag = download.response.headers.get("etag");
+    assert(downloadTag);
+    assertStatus(
+      304,
+      await client.GET("/attachments/download/{attachment_id}/{filename}", {
+        params: { path: { attachment_id: imageAttachmentId, filename: "test.png" } },
+        headers: { "If-None-Match": downloadTag },
+        parseAs: "blob",
+      })
+    );
+    const thumbnail = await client.GET("/attachments/thumbnail/{attachment_id}", {
+      params: { path: { attachment_id: imageAttachmentId } },
+      parseAs: "blob",
+    });
+    assertStatus(200, thumbnail);
+    const thumbnailTag = thumbnail.response.headers.get("etag");
+    assert(thumbnailTag);
+    assertStatus(
+      304,
+      await client.GET("/attachments/thumbnail/{attachment_id}", {
+        params: { path: { attachment_id: imageAttachmentId } },
+        headers: { "If-None-Match": thumbnailTag },
+        parseAs: "blob",
+      })
+    );
+  });
+
+  test("anonymous browser-style requests to private attachments redirect to sign-in", async () => {
+    const anonymous = createTestClient(undefined, { anonymous: true });
+    const download = await anonymous.GET("/attachments/download/{attachment_id}/{filename}", {
+      params: { path: { attachment_id: imageAttachmentId, filename: "test.png" } },
+      headers: { Accept: "application/json" },
+      parseAs: "blob",
+    });
+    assertStatus(302, download);
+    assert(download.response.headers.get("location"));
+    const thumbnail = await anonymous.GET("/attachments/thumbnail/{attachment_id}", {
+      params: { path: { attachment_id: imageAttachmentId } },
+      headers: { Accept: "*/*" },
+      parseAs: "blob",
+    });
+    assertStatus(302, thumbnail);
+  });
+
+  test("attachment error representations follow route format and Accept", async () => {
+    const userId = await createTestUser("attachment-outsider");
+    try {
+      const user = await client.GET("/users/{user_id}.{format}", {
+        params: { path: { format: "json", user_id: userId } },
+      });
+      assertStatus(200, user);
+      const outsider = createTestClient(user.data!.user.login);
+      const download = await outsider.GET("/attachments/download/{attachment_id}/{filename}", {
+        params: { path: { attachment_id: imageAttachmentId, filename: "test.png" } },
+        headers: { Accept: "application/json" },
+        parseAs: "blob",
+      });
+      assertStatus(403, download);
+      assert.match(download.response.headers.get("content-type") ?? "", /^text\/html/);
+      for (const Accept of ["application/json", "*/*"]) {
+        assertStatus(
+          403,
+          await outsider.GET("/attachments/thumbnail/{attachment_id}", {
+            params: { path: { attachment_id: imageAttachmentId } },
+            headers: { Accept },
+            parseAs: "blob",
+          })
+        );
+      }
+      assertStatus(
+        404,
+        await client.GET("/attachments/thumbnail/{attachment_id}", {
+          params: { path: { attachment_id: 999999 } },
+          headers: { Accept: "*/*" },
+          parseAs: "blob",
+        })
+      );
+      assertStatus(
+        404,
+        await client.GET("/attachments/thumbnail/{attachment_id}", {
+          params: { path: { attachment_id: attachmentId } },
+          headers: { Accept: "*/*" },
+          parseAs: "blob",
+        })
+      );
+    } finally {
+      assertStatus(
+        204,
+        await client.DELETE("/users/{user_id}.{format}", {
+          params: { path: { format: "json", user_id: userId } },
+        })
+      );
+    }
+  });
+
+  test("the filename-free JSON download route has binary success and API errors", async () => {
+    const params = { path: { format: "json" as const, attachment_id: imageAttachmentId } };
+    const result = await client.GET("/attachments/download/{attachment_id}.{format}", {
+      params,
+      parseAs: "blob",
+    });
+    assertStatus(200, result);
+    const etag = result.response.headers.get("etag");
+    assert(etag);
+    assertStatus(
+      304,
+      await client.GET("/attachments/download/{attachment_id}.{format}", {
+        params,
+        headers: { "If-None-Match": etag },
+        parseAs: "blob",
+      })
+    );
+    assertStatus(
+      404,
+      await client.GET("/attachments/download/{attachment_id}.{format}", {
+        params: { path: { format: "json", attachment_id: 999999 } },
+        parseAs: "blob",
+      })
+    );
+    const anonymous = createTestClient(undefined, { anonymous: true });
+    assertStatus(
+      401,
+      await anonymous.GET("/attachments/download/{attachment_id}.{format}", {
+        params,
+        parseAs: "blob",
+      })
+    );
+  });
+
+
 });

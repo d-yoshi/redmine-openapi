@@ -12,6 +12,18 @@ get:
     - $ref: ../components/parameters/query/nometa.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - $ref: ../components/parameters/query/page.yaml
+    - name: type
+      in: query
+      description: Saved-query class to list. Defaults to `IssueQuery`. Visibility and administrator permissions still apply.
+      schema:
+        type: string
+        enum:
+          - IssueQuery
+          - TimeEntryQuery
+          - ProjectQuery
+          - UserQuery
+          - ProjectAdminQuery
   responses:
     200:
       description: ""

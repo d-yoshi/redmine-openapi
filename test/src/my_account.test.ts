@@ -77,7 +77,7 @@ describe("My Account", () => {
           hide_mail: true,
           time_zone: "Tokyo",
           comments_sorting: "asc",
-          warn_on_leaving_unsaved: true,
+          warn_on_leaving_unsaved: "1",
           no_self_notified: true,
           notify_about_high_priority_issues: false,
           textarea_font: "monospace",

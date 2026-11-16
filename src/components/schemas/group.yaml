@@ -14,10 +14,12 @@ properties:
     type: array
     items:
       $ref: ./custom_field_value.yaml
+    description: Visible custom-field values. Omitted when no custom fields are visible.
   users:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Included when requested, except for the built-in Anonymous and Non member groups.
   memberships:
     description: Project memberships visible to the current user. Memberships in archived projects are excluded.
     type: array

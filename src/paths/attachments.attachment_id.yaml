@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/attachment_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Attachments
@@ -5,10 +10,6 @@ get:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET
   summary: Show attachment
   operationId: getAttachment
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/attachment_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     200:
       description: ""
@@ -32,38 +33,15 @@ patch:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
   summary: Update attachment
   operationId: updateAttachment
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/attachment_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            attachment:
-              type: object
-              additionalProperties: false
-              properties:
-                filename:
-                  type: string
-                content_type:
-                  type: string
-                description:
-                  type: string
+    $ref: ../components/request_bodies/update_attachment.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -72,12 +50,25 @@ delete:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE
   summary: Delete attachment
   operationId: deleteAttachment
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/attachment_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     204:
       description: ""
     404:
       description: ""
+put:
+  tags:
+    - Attachments
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH
+  summary: Update attachment (PUT)
+  operationId: updateAttachmentViaPut
+  requestBody:
+    $ref: ../components/request_bodies/update_attachment.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PATCH on this path, including its permission requirements and request/response behavior.

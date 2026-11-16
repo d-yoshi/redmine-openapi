@@ -52,10 +52,17 @@ post:
               additionalProperties: false
               required:
                 - issue_to_id
-                - relation_type
               properties:
                 issue_to_id:
-                  type: integer
+                  description: One target issue ID, comma-separated IDs, or an array of IDs. Redmine creates relations in order and returns the last one. Earlier relations can remain if a later target fails.
+                  oneOf:
+                    - type: integer
+                    - type: string
+                    - type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
                 relation_type:
                   description: |-
                     Type of relation from this issue to the target issue.
@@ -71,6 +78,7 @@ post:
                     - follows
                     - copied_to
                     - copied_from
+                  default: relates
                 delay:
                   description: Number of days of delay for `precedes`/`follows` relations. Ignored for other relation types.
                   type: integer

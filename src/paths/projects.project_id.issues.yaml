@@ -15,9 +15,7 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: sort
       in: query
-      description: |-
-        Sort order. Comma-separated list of `field` or `field:desc`. Default direction is ascending.
-        Examples: `id:desc`, `status:desc,id`
+      description: "Sort order: up to three comma-separated criteria of `field`, `field:asc` or `field:desc`. The default direction is ascending. Examples: `id:desc`, `status:desc,id`."
       schema:
         type: string
         example: "id:desc"
@@ -51,6 +49,7 @@ get:
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Examples: `1|2`, `*`, `!*`
+        Available only for a project with subprojects.
       schema:
         type: string
     - name: tracker_id
@@ -86,7 +85,7 @@ get:
         Filter by assignee.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
-        Special values: `me` (current user)
+        Special values: `me` (current user and their groups)
         Examples: `1`, `me`, `!*`, `!me`
       schema:
         type: string
@@ -150,7 +149,7 @@ get:
       description: |-
         Filter by target version's due date.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t+` (in n days), `>t+` (on or after n days from now), `<t+` (on or before n days from now), `><t+` (from today through n days from now), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `t`, `>t-7`
       schema:
         type: string
@@ -171,6 +170,7 @@ get:
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none), `ev` (has ever been), `!ev` (has never been), `cf` (changed from)
         Examples: `1|2`, `!*`
+        Available only in a project context.
       schema:
         type: string
     - name: parent_id
@@ -191,19 +191,7 @@ get:
         Examples: `123`, `~123`, `*`, `!*`
       schema:
         type: string
-    - name: cf_x
-      in: query
-      description: |-
-        Filter by custom field value. Replace `x` with the custom field ID (e.g., `cf_1`, `cf_12`).
-        Available only for custom fields enabled as filters and visible to the current user.
-        Format and operators depend on the custom field type (string, int, date, list, etc.) and follow the same conventions as other filter parameters.
-        Examples: `cf_1=~keyword`, `cf_5=1|2`, `cf_10=>=2024-01-01`
-      schema:
-        type: object
-        additionalProperties:
-          type: string
-        example:
-          cf_0: string
+    - $ref: ../components/parameters/query/custom_filters.yaml
     - name: subject
       in: query
       description: |-
@@ -236,7 +224,7 @@ get:
       description: |-
         Filter by creation date or timestamp.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
         Timestamp filters with a lower bound may also return issues from the preceding second.
         Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `t`, `>t-7`, `lm`
       schema:
@@ -246,9 +234,10 @@ get:
       description: |-
         Filter by last updated date or timestamp.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
         Timestamp filters with a lower bound may also return issues from the preceding second.
         Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `t`, `>t-7`, `lm`
+        For this field, `*` means updated after creation and `!*` means never updated after creation.
       schema:
         type: string
     - name: closed_on
@@ -256,7 +245,7 @@ get:
       description: |-
         Filter by closed date or timestamp.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
         Timestamp filters with a lower bound may also return issues from the preceding second.
         Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `t`, `>t-7`, `lm`
       schema:
@@ -266,7 +255,7 @@ get:
       description: |-
         Filter by start date.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t+` (in n days), `>t+` (on or after n days from now), `<t+` (on or before n days from now), `><t+` (from today through n days from now), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `t`, `>t-7`
       schema:
         type: string
@@ -275,7 +264,7 @@ get:
       description: |-
         Filter by due date.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `t+` (in n days), `>t+` (in more than n days), `<t+` (in less than n days), `><t+` (between n1 and n2 days from now), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `nd` (tomorrow), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `nw` (next week), `m` (this month), `lm` (last month), `nm` (next month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t+` (in n days), `>t+` (on or after n days from now), `<t+` (on or before n days from now), `><t+` (from today through n days from now), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `t`, `>t-7`
       schema:
         type: string
@@ -297,6 +286,7 @@ get:
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
         Values can be decimal hours (`1.5`), hours and minutes (`1:30` or `1h30`), or minutes (`90m`).
         Examples: `>=5`, `><1:30|2:30`, `!*`
+        Requires permission to view spent time.
       schema:
         type: string
     - name: done_ratio
@@ -316,6 +306,7 @@ get:
         Operators: `=` (default), `!` (not equal)
         Values: `1` (private), `0` (not private)
         Examples: `1`, `0`
+        Available only when the current user can view private issues.
       schema:
         type: string
     - name: attachment
@@ -324,7 +315,7 @@ get:
         Filter by attachment filename.
         Format: `<operator>value`
         Operators: `~` (contains), `!~` (not contains), `*~` (contains any word), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
-        Examples: `~report`, `*.pdf`
+        Examples: `~report`, `$.pdf`
       schema:
         type: string
     - name: attachment_description
@@ -342,8 +333,9 @@ get:
         Filter by watcher.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal)
-        Special values: `me` (current user)
+        Special values: `me` (current user and their groups)
         Examples: `1`, `me`, `!me`
+        Available only to logged-in users.
       schema:
         type: string
     - name: updated_by
@@ -378,85 +370,49 @@ get:
         type: string
     - name: relates
       in: query
-      description: |-
-        Filter by "relates to" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=` (default), `!` (not equal), `=p` (same project), `=!p` (different project), `!p` (not in project), `*o` (related to open issue), `!o` (related to closed issue), `*` (any), `!*` (none)
-        Examples: `123`, `=p`, `*o`, `*`
+      description: Filter by the relates relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: duplicates
       in: query
-      description: |-
-        Filter by "duplicates" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*`
+      description: Filter by the duplicates relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: duplicated
       in: query
-      description: |-
-        Filter by "duplicated by" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*`
+      description: Filter by the duplicated relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: blocks
       in: query
-      description: |-
-        Filter by "blocks" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*o`
+      description: Filter by the blocks relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: blocked
       in: query
-      description: |-
-        Filter by "blocked by" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*o`
+      description: Filter by the blocked relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: precedes
       in: query
-      description: |-
-        Filter by "precedes" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*`
+      description: Filter by the precedes relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: follows
       in: query
-      description: |-
-        Filter by "follows" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*`
+      description: Filter by the follows relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: copied_to
       in: query
-      description: |-
-        Filter by "copied to" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*`
+      description: Filter by the copied_to relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: copied_from
       in: query
-      description: |-
-        Filter by "copied from" relation.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=`, `!`, `=p`, `=!p`, `!p`, `*o`, `!o`, `*`, `!*`
-        Examples: `123`, `*`
+      description: Filter by the copied_from relation.
       schema:
-        type: string
+        $ref: ../components/schemas/query/relation_filter.yaml
     - name: any_searchable
       in: query
       description: |-
@@ -474,6 +430,10 @@ get:
         Use GET /queries.json to retrieve available saved queries.
       schema:
         type: integer
+    - $ref: ../components/parameters/query/page.yaml
+    - $ref: ../components/parameters/query/filter_fields.yaml
+    - $ref: ../components/parameters/query/filter_operators.yaml
+    - $ref: ../components/parameters/query/filter_values.yaml
   responses:
     200:
       description: ""
@@ -503,6 +463,7 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yaml
+  description: Lists visible issues. Without a saved query or explicit status filter, only open issues are returned. Available filters depend on the project modules, enabled core fields, custom fields and the current user's permissions.
 
 post:
   tags:
@@ -515,6 +476,32 @@ post:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/path/project_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: copy_from
+      in: query
+      description: ID of a visible issue to copy. The current user needs permission to copy issues.
+      schema:
+        type: integer
+    - name: link_copy
+      in: query
+      description: Link the new issue to its source with a copied relation. Used with `copy_from`.
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: copy_attachments
+      in: query
+      description: Copy attachments from the source issue. Used with `copy_from`.
+      schema:
+        type: integer
+        enum:
+          - 1
+    - name: copy_subtasks
+      in: query
+      description: Copy visible subtasks from the source issue. Used with `copy_from`.
+      schema:
+        type: integer
+        enum:
+          - 1
   requestBody:
     content:
       application/json:
@@ -562,9 +549,13 @@ post:
                 assigned_to_id:
                   description: |-
                     ID of the assignee. If omitted or null, Redmine uses the first assignable default assignee, checking the category before the project.
-                    Default assignees that cannot be assigned (e.g. locked users) are skipped.
-                  type: integer
-                  nullable: true
+                    Default assignees that cannot be assigned (e.g. locked users) are skipped. The value `me` selects the current user.
+                  oneOf:
+                    - type: integer
+                      nullable: true
+                    - type: string
+                      enum:
+                        - me
                 parent_issue_id:
                   type: integer
                   nullable: true
@@ -579,8 +570,11 @@ post:
                 is_private:
                   type: boolean
                 estimated_hours:
-                  type: number
-                  nullable: true
+                  description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
+                  oneOf:
+                    - type: number
+                      nullable: true
+                    - type: string
                 uploads:
                   $ref: ../components/schemas/request/uploads.yaml
   responses:

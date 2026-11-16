@@ -1,15 +1,27 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/project_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 put:
   tags:
     - Projects
   summary: Close project
   description: "Undocumented: This operation is not listed in the official documentation."
   operationId: closeProject
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
-    204:
-      description: ""
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+post:
+  tags:
+    - Projects
+  summary: Close project (POST)
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.
+  operationId: closeProjectViaPost
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound

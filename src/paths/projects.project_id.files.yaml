@@ -9,6 +9,11 @@ get:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/path/project_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: sort
+      in: query
+      description: "Sort field and optional direction: `filename`, `created_on`, `size` or `downloads`, followed by `:asc` or `:desc`. Defaults to filename ascending."
+      schema:
+        type: string
   responses:
     200:
       description: ""

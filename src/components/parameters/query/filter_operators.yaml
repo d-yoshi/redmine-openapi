@@ -1,0 +1,9 @@
+name: op
+in: query
+description: Operator for each field in `f[]`, encoded as `op[status_id]=o`, for example. Uses the same operators as the corresponding shortcut filter.
+schema:
+  type: object
+  additionalProperties:
+    type: string
+style: deepObject
+explode: true

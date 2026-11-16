@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/version_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Versions
@@ -5,10 +10,6 @@ get:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2
   summary: Show version
   operationId: getVersion
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/version_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     200:
       description: ""
@@ -32,68 +33,15 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT
   summary: Update version
   operationId: updateVersion
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/version_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            version:
-              type: object
-              additionalProperties: false
-              properties:
-                name:
-                  type: string
-                status:
-                  type: string
-                  enum:
-                    - open
-                    - locked
-                    - closed
-                sharing:
-                  description: |-
-                    Version sharing scope.
-                    Values: `none` (not shared), `descendants` (with subprojects), `hierarchy` (with ancestors and descendants), `tree` (with entire project tree), `system` (with all projects)
-                  type: string
-                  enum:
-                    - none
-                    - descendants
-                    - hierarchy
-                    - tree
-                    - system
-                due_date:
-                  type: string
-                  format: date
-                  nullable: true
-                description:
-                  type: string
-                wiki_page_title:
-                  description: Title of a wiki page to associate with this version. Set to null to clear.
-                  type: string
-                  nullable: true
-                default_project_version:
-                  description: Set to true to make this the default target version for new issues in the project.
-                  type: boolean
-                custom_fields:
-                  $ref: ../components/schemas/request/custom_fields.yaml
-                custom_field_values:
-                  $ref: ../components/schemas/request/custom_field_values.yaml
+    $ref: ../components/request_bodies/update_version.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -102,10 +50,6 @@ delete:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE
   summary: Delete version
   operationId: deleteVersion
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/version_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     204:
       description: ""
@@ -113,3 +57,20 @@ delete:
       description: Returned without a body when the version is not deletable (e.g. issues are assigned to it).
     404:
       description: ""
+patch:
+  tags:
+    - Versions
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT
+  summary: Update version (PATCH)
+  operationId: updateVersionViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_version.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.

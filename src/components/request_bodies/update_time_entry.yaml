@@ -1,0 +1,35 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        time_entry:
+          type: object
+          additionalProperties: false
+          properties:
+            issue_id:
+              type: integer
+              nullable: true
+              description: Set to null to detach the entry from its issue, if the installation does not require an issue for time entries.
+            project_id:
+              type: integer
+            spent_on:
+              type: string
+              format: date
+            hours:
+              description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
+              oneOf:
+                - type: number
+                - type: string
+            activity_id:
+              type: integer
+            comments:
+              type: string
+              nullable: true
+            user_id:
+              type: integer
+            custom_fields:
+              $ref: ../schemas/request/custom_fields.yaml
+            custom_field_values:
+              $ref: ../schemas/request/custom_field_values.yaml

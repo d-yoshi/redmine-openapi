@@ -6,10 +6,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { load } from "js-yaml";
 
-const schemaDir = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../src/components/schemas"
-);
+const schemaDir =
+  process.argv[2] ??
+  path.join(path.dirname(fileURLToPath(import.meta.url)), "../src/components/schemas");
 const loadSchema = (f) => load(fs.readFileSync(f, "utf8"));
 
 let failures = 0;
@@ -22,10 +21,15 @@ for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".summary.
   const detail = loadSchema(detailPath);
   for (const [key, def] of Object.entries(summary.properties ?? {})) {
     const detailDef = (detail.properties ?? {})[key];
+    const comparable = { ...def };
+    // News lists retain null summaries; details omit summaries with no value.
+    if (detailFile === "news.yaml" && key === "summary" && comparable.nullable === true) {
+      delete comparable.nullable;
+    }
     if (detailDef === undefined) {
       console.error(`${detailFile}: missing field "${key}" defined in ${file}`);
       failures++;
-    } else if (JSON.stringify(def) !== JSON.stringify(detailDef)) {
+    } else if (JSON.stringify(comparable) !== JSON.stringify(detailDef)) {
       console.error(`${detailFile}: field "${key}" differs from ${file}`);
       failures++;
     }
@@ -33,7 +37,9 @@ for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".summary.
 }
 
 if (failures > 0) {
-  console.error(`\n${failures} summary/detail mismatch(es) found. Apply the same change to both files.`);
+  console.error(
+    `\n${failures} summary/detail mismatch(es) found. Apply the same change to both files.`
+  );
   process.exit(1);
 }
 console.log("summary/detail schemas are in sync.");

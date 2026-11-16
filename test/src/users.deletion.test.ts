@@ -12,6 +12,8 @@ import {
 
 describe("Responses after user deletion", () => {
   let projectId: number;
+  let issueId: number;
+  let newsId: number;
   let authorId: number | undefined;
   let attachmentId: number;
   let timeEntryId: number;
@@ -24,7 +26,7 @@ describe("Responses after user deletion", () => {
         project: {
           name,
           identifier: name,
-          enabled_module_names: ["issue_tracking", "time_tracking"],
+          enabled_module_names: ["issue_tracking", "time_tracking", "news", "wiki"],
           tracker_ids: [await someTrackerId()],
         },
       },
@@ -61,6 +63,34 @@ describe("Responses after user deletion", () => {
       },
     });
     assertStatus(201, issue);
+    issueId = issue.data!.issue.id;
+    assertStatus(
+      204,
+      await actor.PUT("/issues/{issue_id}.{format}", {
+        params: { path: { format: "json", issue_id: issueId } },
+        body: { issue: { notes: "Journal by the deleted user" } },
+      })
+    );
+    assertStatus(
+      204,
+      await actor.POST("/projects/{project_id}/news.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+        body: { news: { title: "Deleted news author", description: "Author reference fixture" } },
+      })
+    );
+    const news = await client.GET("/projects/{project_id}/news.{format}", {
+      params: { path: { format: "json", project_id: projectId } },
+    });
+    assertStatus(200, news);
+    newsId = news.data!.news[0].id;
+    assert.equal(news.data!.news[0].author.id, authorId);
+    for (const text of ["First content version", "Second content version"]) {
+      const page = await actor.PUT("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+        params: { path: { format: "json", project_id: projectId, wiki_page_title: "Author" } },
+        body: { wiki_page: { text } },
+      });
+      assertStatus(text === "First content version" ? 201 : 204, page);
+    }
     const issueDetails = await client.GET("/issues/{issue_id}.{format}", {
       params: {
         path: { format: "json", issue_id: issue.data!.issue.id },
@@ -117,7 +147,7 @@ describe("Responses after user deletion", () => {
     ]);
   });
 
-  test("attachment author and time entry user remain present after user deletion", async () => {
+  test("required user references remain present after user deletion", async () => {
     const deletedUserId = authorId;
     assert(deletedUserId);
     const removed = await client.DELETE("/users/{user_id}.{format}", {
@@ -141,5 +171,39 @@ describe("Responses after user deletion", () => {
     });
     assertStatus(200, entry);
     assert(Object.hasOwn(entry.data!.time_entry, "user"));
+    const issue = await client.GET("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId }, query: { include: ["journals"] } },
+    });
+    assertStatus(200, issue);
+    const journal = issue.data!.issue.journals?.find(
+      (j) => j.notes === "Journal by the deleted user"
+    );
+    assert(journal);
+    assert(Object.hasOwn(journal, "user"));
+    const news = await client.GET("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: newsId } },
+    });
+    assertStatus(200, news);
+    assert(Object.hasOwn(news.data!.news, "author"));
+    const list = await client.GET("/projects/{project_id}/news.{format}", {
+      params: { path: { format: "json", project_id: projectId } },
+    });
+    assertStatus(200, list);
+    assert(list.data!.news.some((n) => n.id === newsId && Object.hasOwn(n, "author")));
+    const current = await client.GET("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: { path: { format: "json", project_id: projectId, wiki_page_title: "Author" } },
+    });
+    assertStatus(200, current);
+    assert(Object.hasOwn(current.data!.wiki_page, "author"));
+    const historical = await client.GET(
+      "/projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}",
+      {
+        params: {
+          path: { format: "json", project_id: projectId, wiki_page_title: "Author", version_id: 1 },
+        },
+      }
+    );
+    assertStatus(200, historical);
+    assert(Object.hasOwn(historical.data!.wiki_page, "author"));
   });
 });

@@ -46,6 +46,7 @@ properties:
     type: array
     items:
       $ref: ./custom_field_value.yaml
+    description: Visible custom-field values. Omitted when no custom fields are visible.
   created_on:
     type: string
     format: date-time

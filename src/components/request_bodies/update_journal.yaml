@@ -1,0 +1,17 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        journal:
+          type: object
+          additionalProperties: false
+          properties:
+            notes:
+              type: string
+              nullable: true
+              description: A journal left with empty `notes` and no property changes (`details`) is kept and can still be updated, but is omitted from the issue's `include=journals` response until it has notes again.
+            private_notes:
+              description: Mark the notes as private. Visible to their author and users with the View private notes permission.
+              type: boolean

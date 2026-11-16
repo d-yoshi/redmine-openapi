@@ -1,17 +1,17 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus, currentUserId } from "./helpers.js";
+import { client, assertStatus, currentUserId, serializeRepeatedArrays } from "./helpers.js";
 
 describe("Watchers", () => {
   let projectId: number;
   let issueId: number;
 
   // A 204 response does not confirm a watcher change; read the list back.
-  const watcherIds = async () => {
+  const watcherIds = async (targetIssueId = issueId) => {
     const response = await client.GET("/issues/{issue_id}.{format}", {
       params: {
-        path: { format: "json", issue_id: issueId },
+        path: { format: "json", issue_id: targetIssueId },
         query: { include: ["watchers"] },
       },
     });
@@ -126,4 +126,46 @@ describe("Watchers", () => {
     );
     assertStatus(404, response);
   });
+  test("generic watcher routes accept resource arrays and can remove the added watcher", async () => {
+    const second = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: { issue: { project_id: projectId, subject: "Second watched issue" } },
+    });
+    assertStatus(201, second);
+    const secondId = second.data!.issue.id;
+    const userId = await currentUserId();
+    const added = await client.POST("/watchers.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        object_type: "issue",
+        object_id: [issueId, secondId],
+        watcher: { user_ids: [userId] },
+      },
+    });
+    assertStatus(204, added);
+    assert((await watcherIds()).includes(userId));
+    assert((await watcherIds(secondId)).includes(userId));
+    const removed = await client.DELETE("/watchers.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { object_type: "issue", "object_id[]": [issueId, secondId], user_id: userId },
+      },
+      querySerializer: serializeRepeatedArrays,
+    });
+    assertStatus(204, removed);
+    assert(!(await watcherIds()).includes(userId));
+    assert(!(await watcherIds(secondId)).includes(userId));
+  });
+
+  test("generic watcher deletion returns 404 for an unknown user", async () => {
+    const result = await client.DELETE("/watchers.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { object_type: "issue", "object_id[]": [issueId], user_id: 999999 },
+      },
+    });
+    assertStatus(404, result);
+  });
+
+
 });

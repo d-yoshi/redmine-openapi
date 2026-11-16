@@ -63,7 +63,8 @@ Keep state creation and modification relevant to response formats, statuses, acc
 - Pass dynamic `cf_<id>` filters as ``cf_x: { [`cf_${cfId}`]: "value" }``. The client's OpenAPI `form`/`explode: true` serialization sends `cf_<id>=value`, while values remain type-checked strings. No cast is needed. Confirm filter enablement, visibility, and IDs using released source and requests. See [issues.filters.test.ts](src/issues.filters.test.ts).
 - Avoid `@ts-ignore`, `@ts-nocheck`, and file-wide lint suppression. Limit type assertions to unavoidable generated-type or library boundaries, and explain the local reason. The binary upload in [attachments.test.ts](src/attachments.test.ts), for example, limits its cast to the `Buffer` because its generated input type is `string`.
 - Use a disposable user for account changes, as in [my_account.test.ts](src/my_account.test.ts). `createTestClient(login)` in the helpers sends `X-Redmine-Switch-User` as a Redmine administrator and uses the same response validation and observation log.
-- For binary responses, verify the declared representation, such as media type, without expanding the test into file-byte equality or image-processing correctness.
+- For binary responses, verify the declared representation, such as media type, without expanding the test into file-byte equality or image-processing correctness. Keep redirects observable and use conditional requests to check a declared 304 response.
+- Use `serializeRepeatedArrays` from the helpers for repeated bracketed query keys such as `ids[]=1&ids[]=2`. Keep comma-separated options such as `include` on the default serializer. Explicit Query filters need nested keys such as `op[field]` and `v[field][]`; see [queries.filters.test.ts](src/queries.filters.test.ts) for a typed serializer and matching-data checks.
 
 For API test or schema changes, run `./test/run-test.sh`, which includes static checks. Use `./test/check.sh` for changes that only need static or tool checks. Review the statement being checked, observable data, type exceptions, and cleanup.
 
@@ -72,14 +73,16 @@ For API test or schema changes, run `./test/run-test.sh`, which includes static 
 | Check | Implementation | What it establishes |
 | --- | --- | --- |
 | Static checks | [check.sh](check.sh) | ShellCheck, tool regression tests, summary/detail synchronization, presence of the Redmine image pin, strict bundle and lint, generated TypeScript, and test type checking |
-| Actual responses | [src/helpers.ts](src/helpers.ts) | Declared status and Content-Type, JSON bodies matching strict schemas, and empty bodies when content is not declared |
+| Actual responses | [src/helpers.ts](src/helpers.ts), [src/response-validator.ts](src/response-validator.ts) | Declared status and Content-Type, JSON bodies matching strict schemas including calendar dates and timestamps, and empty bodies when content is not declared |
 | API coverage | [check-api-coverage.mjs](check-api-coverage.mjs) | Whether declared operations, responses, and query parameter names were observed in actual requests |
 
 `check.sh` skips ShellCheck locally when it is not installed and fails in CI if it is missing. CI's `Check workflows` job uses actionlint for workflow syntax, expressions, and shell sections. Its `Validate specification and API` job runs `check.sh` once through `run-test.sh`, before starting Redmine.
 
 An always-present property incorrectly declared optional still passes response validation. Use source inspection to establish requiredness, including creation, update, deletion, retrieval, and authorization. Distinguish an optional `parent` object from its `id`, which can be required when that object is present.
 
-Query coverage normally counts each operation and parameter name. Global and project-scoped issue and time-entry lists share counts where they use the same Query class. Pagination parameters `offset`, `limit`, and `nometa` share counts only when they reference common definitions. Sending an undeclared parameter does not satisfy coverage for another endpoint. `cf_x` corresponds to actual `cf_<id>` names. Coverage does not establish all operator/value combinations or filtering effects; inspect each filter's existence and processing as described in Contributing.
+Query coverage normally counts each operation and parameter name. Global and project-scoped issue and time-entry lists share counts where they use the same Query class. Global and project-scoped issue creation share copy-option checks; single and batch issue deletion share time-entry handling checks. Pagination parameters `offset`, `limit`, `page`, and `nometa`, and the explicit filter encoding `f[]`, `op` and `v`, share counts only when they reference common definitions. Sending an undeclared parameter does not satisfy coverage for another endpoint. `cf_x` represents concrete custom-field filter names, including associated fields such as `issue.cf_12`. Coverage does not establish all operator/value combinations or filtering effects; inspect each filter's existence and processing as described in Contributing.
+
+Equivalent HTTP method operations must each have a successful API request in the tests. Response-status coverage is shared only for the explicit method pairs in `METHOD_ALIASES`, whose released source reaches the same action. The checker requires each pair to retain identical operation parameters, request body, response definitions and security requirements. Detailed input behavior can use representative tests; alias tests still read back a changed value.
 
 Automatically injected 401, 403, and 412 responses are excluded from coverage requirements. Some tests exercise 403, but the coverage checker would not detect removal of those tests. The checker's `UNREACHABLE` entries record unreachable responses and their reasons. The checker fails if an entry no longer corresponds to a declared response or if a test reaches it. Read test and coverage counts from execution output rather than maintaining another count.
 
@@ -87,11 +90,10 @@ Automatically injected 401, 403, and 412 responses are excluded from coverage re
 
 | Area | Current limits and reasons |
 | --- | --- |
-| XML responses | XML response bodies are not schema-validated by the middleware |
+| XML and JSONP responses | Outside the specification's JSON and binary scope; JSONP parameters `callback` and `jsonp` are mentioned in the common description and are not declared as operation parameters |
 | OAuth-specific behavior | The Basic-authentication suite does not check omitted `api_key` values or account-update 403 responses under OAuth; OAuth application setup is needed |
-| 401, 412, and authentication headers | Middleware fixes authentication credentials. The specification does not declare `WWW-Authenticate`, whose value depends on authentication mode |
+| Authentication | The default client uses administrator Basic credentials. Selected anonymous-access cases use `createTestClient(undefined, { anonymous: true })`; they do not cover every installation setting, role or authentication mode. The specification does not declare `WWW-Authenticate`, whose value depends on authentication mode |
 | Issue `allowed_statuses` | Setup does not create workflows, so a nonempty result is not guaranteed. The array is checked, and items share the issue-status schema; business rules for transitions are not tested |
-| Wiki `is_start_page` effects | The API does not expose the setting after update. See [wiki_pages.test.ts](src/wiki_pages.test.ts) for acceptance and value conversion |
 | Unreadable `PUT /my/account` attributes | `GET /my/account` does not return `pref` and some other values. Acceptance is checked with a disposable user; the shared administrator is not modified |
 | Invalid project/time-entry list filters | The specification does not promise a 422 for invalid filter values in these lists, and tests do not impose that guarantee |
 | Filter semantics | Representative multiple values, negation, date comparisons, and `me` are tested, rather than every filter/operator/value combination. Unknown names can return 200, so source verification remains necessary |
@@ -103,11 +105,13 @@ These decisions describe the current specification. Recheck the relevant release
 | Area | Decision and references |
 | --- | --- |
 | Wiki creation without `text` | Can create an incomplete page without content. Do not widen the schema to accommodate that state or create it in tests. Test 422 using an invalid parent instead |
-| Membership updates with empty `role_ids` | The 422 response with membership deletion is described in the [path](../src/paths/memberships.membership_id.yaml) and checked in [memberships.test.ts](src/memberships.test.ts) |
-| Attachment download/thumbnail 404 | Download declares an HTML error page. Thumbnail tests send `Accept: application/json` and check an empty body. See [attachments.test.ts](src/attachments.test.ts) |
-| Redirects from old wiki titles | The specification does not declare the 302 canonical redirect. Rename tests use `redirect_existing_links: "0"` to check 404 for the old title. See [wiki_pages.test.ts](src/wiki_pages.test.ts) |
+| Membership updates with empty `role_ids` | The 422 response with membership deletion is described in the [shared request body](../src/components/request_bodies/update_membership.yaml) and checked in [memberships.test.ts](src/memberships.test.ts) |
+| Attachment errors and caching | Named downloads use HTML errors; filename-free JSON downloads use empty API errors, and thumbnails negotiate errors using `Accept`. Tests exercise empty JSON and HTML errors, sign-in redirects and ETag-based 304 responses. See [attachments.test.ts](src/attachments.test.ts) |
+| News summaries | Lists retain a null `summary`; details omit it when blank. The synchronization checker preserves this response-specific nullability difference |
+| Wiki start page | `GET /projects/{project_id}/wiki.json` exposes the configured start page. Tests read it after `is_start_page` updates |
+| Redirects from old wiki titles | Tests use `redirect_existing_links: "0"` for an old-title 404 and `"1"` for a 302. Redirect tests check `Location` for page reads, historical reads, start-page reads and deletion without following it. Renaming with `is_start_page: false` can keep the configured start-page title pointing to the old-title redirect. See [wiki_pages.test.ts](src/wiki_pages.test.ts) |
 | Issue `lock_version` | Undeclared because the API does not expose the optimistic-lock value needed to test it |
-| Issue-update `watcher_user_ids` | Undeclared for PUT because it is accepted only during creation |
+| Issue-update `watcher_user_ids` | Undeclared for PUT and PATCH because it is accepted only during creation |
 | Issue-creation `notes` | Undeclared because the creation path does not record it as a journal |
 | Wiki `parent_id` and `wiki_id` | Undeclared because the API does not expose the internal IDs; use `parent_title` for hierarchy |
 

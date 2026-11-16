@@ -1,32 +1,21 @@
 import fs from "node:fs";
-import { createRequire } from "node:module";
 import assert from "node:assert/strict";
 
 import { load } from "js-yaml";
 import type { OpenAPIV3 } from "openapi-types";
-import createClient from "openapi-fetch";
-import type { OpenAPIResponseValidatorArgs } from "openapi-response-validator";
-
-const _require = createRequire(import.meta.url);
-const OpenAPIResponseValidator: new (args: ResponseValidatorArgs) => {
-  validateResponse(status: number, body: unknown): unknown;
-} =
-  _require("openapi-response-validator").default;
-
-/**
- * The package accepts OpenAPI 3 response content at runtime (`getSchemas` in
- * dist/index.js), but declares only the OpenAPI 2 response shape.
- * It validates only the first declared media type; current responses declare one.
- */
-type ResponseValidatorArgs = Omit<OpenAPIResponseValidatorArgs, "responses"> & {
-  responses: OpenAPIV3.ResponsesObject;
-};
+import createClient, { createQuerySerializer } from "openapi-fetch";
+import { createResponseValidator } from "./response-validator.js";
 
 import type { paths } from "../dist/openapi-typescript/schema.d.ts";
 
 export type IssuesQuery = NonNullable<
   paths["/issues.{format}"]["get"]["parameters"]["query"]
 >;
+
+export const serializeRepeatedArrays = createQuerySerializer({
+  array: { style: "form", explode: true },
+  object: { style: "form", explode: true },
+});
 
 const REDMINE_URL = process.env.REDMINE_URL;
 const REDMINE_ADMIN_LOGIN = process.env.REDMINE_ADMIN_LOGIN;
@@ -55,14 +44,12 @@ const basicAuth = Buffer.from(
 ).toString("base64");
 
 // Each process loads one spec; its clients can share compiled validators.
-const responseValidators = new Map<
-  string,
-  InstanceType<typeof OpenAPIResponseValidator>
->();
+const responseValidators = new Map<string, ReturnType<typeof createResponseValidator>>();
 
-export const createTestClient = (switchUser?: string) => {
+export const createTestClient = (switchUser?: string, options: { anonymous?: boolean } = {}) => {
   const client = createClient<paths>({
     baseUrl: `${REDMINE_URL}/`,
+    fetch: (request) => fetch(request, { redirect: "manual" }),
     headers: switchUser ? { "X-Redmine-Switch-User": switchUser } : undefined,
     querySerializer: {
       array: { style: "form", explode: false },
@@ -72,7 +59,7 @@ export const createTestClient = (switchUser?: string) => {
 
   client.use({
     onRequest({ request }) {
-      request.headers.set("Authorization", `Basic ${basicAuth}`);
+      if (!options.anonymous) request.headers.set("Authorization", `Basic ${basicAuth}`);
       return request;
     },
     async onResponse({ schemaPath, request, response }) {
@@ -92,9 +79,7 @@ export const createTestClient = (switchUser?: string) => {
         | undefined;
       const responses = pathItem?.[method]?.responses;
       if (!responses) {
-        throw new Error(
-          `No OpenAPI spec found for ${method.toUpperCase()} ${schemaPath}`
-        );
+        throw new Error(`No OpenAPI spec found for ${method.toUpperCase()} ${schemaPath}`);
       }
 
       const responseSchema = responses[status] ?? responses[String(status)];
@@ -107,49 +92,11 @@ export const createTestClient = (switchUser?: string) => {
       const validatorKey = `${method} ${schemaPath}`;
       let validator = responseValidators.get(validatorKey);
       if (!validator) {
-        const args: ResponseValidatorArgs = {
-          responses,
-          components: openapi.components,
-        };
-        validator = new OpenAPIResponseValidator(args);
+        validator = createResponseValidator(responses, openapi.components);
         responseValidators.set(validatorKey, validator);
       }
 
-      if ("content" in responseSchema) {
-        const declaredTypes = Object.keys(responseSchema.content!);
-        const actualType = (response.headers.get("content-type") ?? "")
-          .split(";")[0]
-          .trim()
-          .toLowerCase();
-        const actualParts = actualType.split("/");
-        assert(
-          actualParts.length === 2 &&
-            declaredTypes.some((declared) =>
-              declared.toLowerCase().split("/").every(
-                (part, index) => part === "*" || part === actualParts[index]
-              )
-            ),
-          `${method.toUpperCase()} ${schemaPath} ${status}: Content-Type '${actualType}' is not declared (${declaredTypes.join(", ")})`
-        );
-
-        const isBinary = Object.values(responseSchema.content!).some(
-          ({ schema }) => schema && "format" in schema && schema.format === "binary"
-        );
-
-        if (!isBinary) {
-          const data: unknown = await response.clone().json();
-          const validationError = validator.validateResponse(status, data);
-          assert(
-            !validationError,
-            JSON.stringify([validationError, data], null, 2)
-          );
-        }
-      } else {
-        const text = await response.clone().text();
-        assert.strictEqual(text, "", `Expected empty body, got: ${text}`);
-        const validationError = validator.validateResponse(status, undefined);
-        assert(!validationError, JSON.stringify(validationError, null, 2));
-      }
+      await assert.doesNotReject(validator(response), `${request.method} ${schemaPath} ${status}`);
 
       return response;
     },

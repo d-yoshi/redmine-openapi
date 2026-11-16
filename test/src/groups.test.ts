@@ -1,7 +1,13 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus, createTestUser, runCleanup } from "./helpers.js";
+import {
+  client,
+  assertStatus,
+  createTestUser,
+  runCleanup,
+  serializeRepeatedArrays,
+} from "./helpers.js";
 
 describe("Groups", () => {
   let groupId: number;
@@ -112,17 +118,6 @@ describe("Groups", () => {
     assertStatus(204, response);
   });
 
-  // Rails only parses repeated bracketed keys (user_ids[]=1&user_ids[]=2) as an
-  // array; the client's global serializer would join values with commas.
-  const repeatArraysSerializer = (query: Record<string, unknown>) =>
-    Object.entries(query)
-      .flatMap(([key, value]) =>
-        Array.isArray(value)
-          ? value.map((item) => `${key}=${item}`)
-          : [`${key}=${value}`]
-      )
-      .join("&");
-
   const groupUserIds = async () => {
     const response = await client.GET("/groups/{group_id}.{format}", {
       params: {
@@ -137,13 +132,11 @@ describe("Groups", () => {
   };
 
   test("DELETE /groups/{group_id}/users.json (bulk remove)", async () => {
-    for (const id of bulkUserIds) {
-      const addResponse = await client.POST("/groups/{group_id}/users.{format}", {
-        params: { path: { format: "json", group_id: groupId } },
-        body: { user_id: id },
-      });
-      assertStatus(204, addResponse);
-    }
+    const added = await client.POST("/groups/{group_id}/users.{format}", {
+      params: { path: { format: "json", group_id: groupId } },
+      body: { user_ids: bulkUserIds },
+    });
+    assertStatus(204, added);
     const membersBefore = await groupUserIds();
     for (const id of bulkUserIds) {
       assert(
@@ -157,7 +150,7 @@ describe("Groups", () => {
         path: { format: "json", group_id: groupId },
         query: { "user_ids[]": bulkUserIds },
       },
-      querySerializer: repeatArraysSerializer,
+      querySerializer: serializeRepeatedArrays,
     });
     assertStatus(204, response);
 
@@ -187,7 +180,7 @@ describe("Groups", () => {
         path: { format: "json", group_id: groupId },
         query: { "user_ids[]": [999999] },
       },
-      querySerializer: repeatArraysSerializer,
+      querySerializer: serializeRepeatedArrays,
     });
     assertStatus(404, response);
   });
@@ -198,7 +191,7 @@ describe("Groups", () => {
         path: { format: "json", group_id: 999999 },
         query: { "user_ids[]": [userId] },
       },
-      querySerializer: repeatArraysSerializer,
+      querySerializer: serializeRepeatedArrays,
     });
     assertStatus(404, response);
   });
@@ -313,6 +306,19 @@ describe("Groups", () => {
     );
     assertStatus(404, response);
   });
+
+  test("PATCH updates group through the equivalent method", async () => {
+    const params = { path: { format: "json" as const, group_id: groupId } };
+    const updated = await client.PATCH("/groups/{group_id}.{format}", {
+      params,
+      body: { group: { name: "Group via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/groups/{group_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.group.name, "Group via PATCH");
+  });
+
 
   test("DELETE /groups/{group_id}.json", async () => {
     const response = await client.DELETE("/groups/{group_id}.{format}", {

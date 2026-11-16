@@ -14,12 +14,9 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: q
       in: query
-      description: |-
-        Search query string. Tokenized into words for matching.
-        When `all_words` is enabled (default), all tokens must match. Otherwise, any token can match.
+      description: "Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. An omitted query or a query with no usable tokens returns an empty result and `total_count: null`. By default all tokens must match; `all_words` can select any-token matching."
       schema:
         type: string
-      required: true
     - name: scope
       in: query
       description: |-
@@ -75,10 +72,7 @@ get:
           - 1
     - name: projects
       in: query
-      description: |-
-        Include projects in search results. Any non-empty value enables this search type.
-        If no search type parameters are specified, all types are searched.
-        Not available when searching within a specific project.
+      description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables the type. If no search types are specified, all available types are searched.
       schema:
         type: integer
         enum:
@@ -119,15 +113,14 @@ get:
         type: string
     - name: attachments
       in: query
-      description: |-
-        Search attachments. Default is `0` (do not search attachments).
-        Values: `0` (disabled), `1` (search attachments and content), `only` (search attachments only)
+      description: Search attachment filenames and descriptions belonging to searchable records; file contents are not searched. `0` (default) searches normal record fields, `1` searches normal fields and attachment metadata, and `only` searches attachment metadata only. With `titles_only`, attachment metadata is searched only in `only` mode.
       schema:
         type: string
         enum:
           - "0"
           - "1"
           - "only"
+    - $ref: ../components/parameters/query/page.yaml
   responses:
     200:
       description: ""
@@ -145,6 +138,7 @@ get:
                   $ref: ../components/schemas/search.yaml
               total_count:
                 type: integer
+                nullable: true
               offset:
                 type: integer
               limit:

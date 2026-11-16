@@ -361,6 +361,19 @@ describe("Time Entries", () => {
     assertStatus(422, response);
   });
 
+  test("PATCH updates time_entry through the equivalent method", async () => {
+    const params = { path: { format: "json" as const, time_entry_id: timeEntryId } };
+    const updated = await client.PATCH("/time_entries/{time_entry_id}.{format}", {
+      params,
+      body: { time_entry: { comments: "Comment via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/time_entries/{time_entry_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.time_entry.comments, "Comment via PATCH");
+  });
+
+
   test("DELETE /time_entries/{time_entry_id}.json", async () => {
     const response = await client.DELETE(
       "/time_entries/{time_entry_id}.{format}",

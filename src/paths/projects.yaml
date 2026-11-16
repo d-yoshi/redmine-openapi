@@ -91,7 +91,7 @@ get:
       description: |-
         Filter by creation date.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
       schema:
         type: string
@@ -100,8 +100,19 @@ get:
       description: |-
         Filter by last updated date.
         Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (less than n days ago), `<t-` (more than n days ago), `><t-` (between n1 and n2 days ago), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+      schema:
+        type: string
+    - $ref: ../components/parameters/query/page.yaml
+    - $ref: ../components/parameters/query/query_id.yaml
+    - $ref: ../components/parameters/query/filter_fields.yaml
+    - $ref: ../components/parameters/query/filter_operators.yaml
+    - $ref: ../components/parameters/query/filter_values.yaml
+    - $ref: ../components/parameters/query/custom_filters.yaml
+    - name: sort
+      in: query
+      description: "Comma-separated list of up to three field names, optionally followed by :asc or :desc. The default direction is ascending. Stock fields: name, status, short_description, homepage, identifier, parent_id, is_public, created_on, updated_on. Sortable custom-field columns use cf_<id>. Example: name:desc."
       schema:
         type: string
   responses:
@@ -125,6 +136,13 @@ get:
                 type: integer
               limit:
                 type: integer
+    "404":
+      description: The saved query was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/framework_error.yaml
+  description: Lists visible records. The default status filter selects active records. A saved query or explicit filters can select other statuses.
 
 post:
   tags:
@@ -150,12 +168,12 @@ post:
               additionalProperties: false
               required:
                 - name
-                - identifier
               properties:
                 name:
                   type: string
                 identifier:
                   type: string
+                  description: Project identifier. Required unless sequential project identifiers are enabled; when enabled, omission uses the generated identifier.
                 description:
                   type: string
                   nullable: true
@@ -222,3 +240,8 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yaml
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []

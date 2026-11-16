@@ -1,0 +1,32 @@
+get:
+  tags:
+    - Attachments
+  summary: Download attachment by ID
+  description: Downloads an attachment without including its filename in the path. The JSON format selects empty API error responses; successful responses contain the original file bytes.
+  operationId: downloadAttachmentById
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: If-None-Match
+      in: header
+      description: ETag from a previous response. A matching tag returns 304 without a body.
+      schema:
+        type: string
+  responses:
+    "200":
+      description: ""
+      content:
+        "*/*":
+          schema:
+            type: string
+            format: binary
+      headers:
+        ETag:
+          description: Cache validator for this attachment or thumbnail.
+          schema:
+            type: string
+    "304":
+      description: The ETag matches; no response body is sent.
+    "404":
+      description: The attachment was not found.

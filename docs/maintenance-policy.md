@@ -19,6 +19,12 @@ Include information that users need to construct API requests or interpret respo
 
 Describe the stock Redmine API for the target version. Users can represent installation-specific types and plugin changes in a separate specification using the [customization guide](customization.md).
 
+The specification covers JSON REST representations and related binary attachment downloads. XML responses are outside this scope. When JSONP support is enabled, the `callback` or `jsonp` query parameter can select a JavaScript response. JSONP responses and those parameters are excluded from this specification.
+
+The repository-management web services under `/sys/` and the incoming-mail web service at `POST /mail_handler` are also excluded: they serve repository provisioning and mail ingestion, use separately configured service keys, and are not part of the REST API described here.
+
+Declare equivalent PUT/PATCH update methods and POST/PUT project-state methods as separate operations so generated clients can use either method. Share path parameters, request bodies and response definitions when the methods have the same API contract. For equivalent URL aliases, describe the alternate URL alongside the primary route. Add separate operations when an alternate route requires a different body format or produces a different response representation, such as the HTML errors on named attachment downloads.
+
 Investigating internal implementation is a way to establish API behavior. Changes to internal method names or call order alone do not require specification changes. Confirmed omissions and properties incorrectly marked optional are specification defects and should be corrected.
 
 ## Evidence and verification

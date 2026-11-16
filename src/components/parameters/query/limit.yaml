@@ -2,3 +2,4 @@ name: limit
 in: query
 schema:
   type: integer
+description: Maximum records per page. Defaults to 25 when omitted or less than 1; values above 100 are capped at 100.

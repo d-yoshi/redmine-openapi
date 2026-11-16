@@ -89,14 +89,17 @@ properties:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Returned for issue custom fields.
   trackers:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Returned for issue custom fields.
   roles:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Returned for issue, time-entry, project and version custom fields.
   possible_values:
     type: array
     items:
@@ -110,3 +113,4 @@ properties:
           type: string
         label:
           type: string
+    description: Returned when the field format exposes a nonempty list of possible values.

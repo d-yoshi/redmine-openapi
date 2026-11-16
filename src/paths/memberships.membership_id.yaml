@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/membership_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Project Memberships
@@ -5,10 +10,6 @@ get:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2
   summary: Show membership
   operationId: getMembership
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/membership_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     200:
       description: ""
@@ -31,40 +32,16 @@ put:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
   summary: Update membership
-  description: "Warning: sending an empty role_ids returns 422 but still destroys the membership — role assignments are saved immediately and a member left without roles is removed."
   operationId: updateMembership
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/membership_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            membership:
-              type: object
-              additionalProperties: false
-              required:
-                - role_ids
-              properties:
-                role_ids:
-                  type: array
-                  items:
-                    type: integer
+    $ref: ../components/request_bodies/update_membership.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -73,10 +50,6 @@ delete:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE
   summary: Delete membership
   operationId: deleteMembership
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/membership_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     204:
       description: ""
@@ -84,3 +57,20 @@ delete:
       description: Returned without a body when the membership is not deletable (e.g. inherited from a group).
     404:
       description: ""
+patch:
+  tags:
+    - Project Memberships
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT
+  summary: Update membership (PATCH)
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.
+  operationId: updateMembershipViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_membership.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors

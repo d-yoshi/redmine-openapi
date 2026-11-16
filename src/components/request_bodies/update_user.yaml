@@ -1,0 +1,69 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        user:
+          type: object
+          additionalProperties: false
+          properties:
+            login:
+              type: string
+            admin:
+              type: boolean
+            password:
+              type: string
+            firstname:
+              type: string
+            lastname:
+              type: string
+            mail:
+              type: string
+            language:
+              type: string
+            auth_source_id:
+              description: External authentication source ID (e.g., LDAP). When set, the user authenticates via the external source and the password field is ignored. Set to null for local authentication.
+              type: integer
+              nullable: true
+            mail_notification:
+              description: |-
+                Email notification preference.
+                Values: `all` (for any event on all projects), `selected` (for any event on selected projects only), `only_my_events` (only for things the user watches or is involved in), `only_assigned` (only for things assigned to the user), `only_owner` (only for things owned by the user), `only_my_watches` (only for issues the user watches), `none` (no events)
+              type: string
+              enum:
+                - all
+                - selected
+                - only_my_events
+                - only_assigned
+                - only_owner
+                - only_my_watches
+                - none
+            notified_project_ids:
+              description: Project IDs for which to receive email notifications. Only effective when mail_notification is set to `selected`.
+              type: array
+              items:
+                type: integer
+            must_change_passwd:
+              description: Force the user to change their password at next login.
+              type: boolean
+            generate_password:
+              description: Generate a random password automatically. When true, the password field is ignored. Only effective for locally authenticated users (auth_source_id is null).
+              type: boolean
+            status:
+              description: "User account status: `1` (active), `2` (registered), `3` (locked)."
+              type: integer
+            custom_fields:
+              $ref: ../schemas/request/custom_fields.yaml
+            custom_field_values:
+              $ref: ../schemas/request/custom_field_values.yaml
+            group_ids:
+              description: Group IDs to assign the user to. Admin-only. Replaces all current group memberships (not append).
+              type: array
+              items:
+                type: integer
+        send_information:
+          description: Request an account-information email for an active user other than the current user. Account activation can separately trigger a notification. This option is not stored.
+          type: boolean
+        pref:
+          $ref: ../schemas/request/pref.yaml

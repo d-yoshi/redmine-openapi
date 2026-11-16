@@ -1,0 +1,5 @@
+name: page
+in: query
+description: Page number, starting at 1. Used only when `offset` is absent; the offset is `(page - 1) * limit`, with negative results treated as 0.
+schema:
+  type: integer
