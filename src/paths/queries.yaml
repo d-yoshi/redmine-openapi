@@ -15,7 +15,7 @@ get:
     - $ref: ../components/parameters/query/page.yaml
     - name: type
       in: query
-      description: Saved-query class to list. Defaults to `IssueQuery`. Visibility and administrator permissions still apply.
+      description: Saved-query type to list. Defaults to `IssueQuery`. Results are limited by query visibility and administrator permissions.
       schema:
         type: string
         enum:

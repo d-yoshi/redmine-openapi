@@ -415,7 +415,7 @@ describe("Projects", () => {
     assertStatus(422, response);
   });
 
-  test("PATCH updates project through the equivalent method", async () => {
+  test("PATCH updates a project", async () => {
     const params = { path: { format: "json" as const, project_id: mainProjectId } };
     const updated = await client.PATCH("/projects/{project_id}.{format}", {
       params,
@@ -453,7 +453,7 @@ describe("Projects", () => {
     }
   });
 
-  test("POST project-state methods expose the same status changes", async () => {
+  test("POST archives, unarchives, closes, and reopens a project", async () => {
     const name = `project-state-alias-${Date.now()}`;
     const created = await client.POST("/projects.{format}", {
       params: { path: { format: "json" } },

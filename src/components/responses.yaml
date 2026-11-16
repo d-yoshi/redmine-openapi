@@ -1,5 +1,5 @@
 Unauthorized:
-  description: Authentication is required by the operation, installation settings or resource permissions. Invalid credentials also return 401. API-key and Basic authentication return 403 when REST API authentication is disabled.
+  description: Authentication is required by the operation, installation settings, or resource permissions. Redmine also returns 401 for invalid credentials. API-key and Basic authentication return 403 when REST API authentication is disabled.
 
 Forbidden:
   description: The current user, including an anonymous user, lacks permission for the action or resource.
@@ -7,7 +7,7 @@ Forbidden:
 PreconditionFailed:
   description: Invalid X-Redmine-Switch-User header. Returns 412 when the specified user does not exist or is not active. Only applicable to admin users using the X-Redmine-Switch-User header.
 WikiRedirect:
-  description: The requested Wiki title redirects to the page at its current title. This occurs when a redirect remains after a rename or move, including when the configured start-page title refers to a redirect.
+  description: Redmine redirects requests for an old wiki page title to the page's current title after a rename or move. This also applies when the configured start-page title points to that redirect.
   headers:
     Location:
       description: Target page URL. The URL may omit the `.json` suffix; the response format at that URL can depend on the client's Accept header.
@@ -24,9 +24,9 @@ ValidationErrors:
       schema:
         $ref: ./schemas/errors.yaml
 WikiContentConflict:
-  description: The supplied content version conflicts with the current Wiki content version.
+  description: The supplied content version conflicts with the current wiki content version.
 WikiPageCreated:
-  description: The Wiki page was created.
+  description: The wiki page was created.
   content:
     application/json:
       schema:

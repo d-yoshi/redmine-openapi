@@ -1,6 +1,6 @@
 name: op
 in: query
-description: Operator for each field in `f[]`, encoded as `op[status_id]=o`, for example. Uses the same operators as the corresponding shortcut filter.
+description: Operator for each field in `f[]`, such as `op[status_id]=o`. Each field supports the same operators as its corresponding shortcut filter.
 schema:
   type: object
   additionalProperties:

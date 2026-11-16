@@ -24,7 +24,7 @@ get:
         type: string
     - name: project_id
       in: query
-      description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. Use explicit `f[]`, `op` and `v` filters to select multiple projects without this shortcut.
+      description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
       schema:
         type: string
     - name: spent_on
@@ -100,8 +100,8 @@ get:
     - name: issue.parent_id
       in: query
       description: |-
-        Filter by parent issue or ancestry.
-        With `=` (default), provide one parent ID or comma-separated parent IDs to select entries on their immediate children. With `~ID`, select entries on strict descendants of ID, excluding entries on ID itself; `issue_id=~ID` includes ID as well.
+        Filter time entries by the issue's parent or ancestry.
+        With `=` (default), provide one parent issue ID or comma-separated IDs to select entries on their immediate children. With `~ID`, select entries on descendants of that issue, excluding the issue itself. Use `issue_id=~ID` to include that issue as well.
         `*` selects entries whose issue has a parent; `!*` selects entries on root issues or without an issue. Examples: `1`, `1,2`, `~1`, `*`, `!*`.
       schema:
         type: string
@@ -192,7 +192,7 @@ get:
     - name: sort
       in: query
       description: |-
-        Sort order: up to three comma-separated criteria of `field` or `field:desc`. Default direction is ascending.
+        Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
         Examples: `spent_on:desc`, `hours:desc,spent_on`
       schema:
         type: string

@@ -1,7 +1,7 @@
 name: v
 in: query
 description: |-
-  Values for each field in `f[]`. Encode each value as `v[field][]=value`; for example, send `op[project_id]=%3D&v[project_id][]=1&v[project_id][]=2` to select projects 1 and 2 with equality.
+  Values for each field in `f[]`. Encode each value as `v[field][]=value`; for example, send `op[project_id]=%3D&v[project_id][]=1&v[project_id][]=2` to filter for records in projects 1 and 2.
   OpenAPI 3.0 does not standardize nested array serialization in deep objects; configure the client serializer to send these repeated bracketed keys.
 schema:
   type: object

@@ -3,7 +3,7 @@ delete:
     - Time Entries
   summary: Delete time entries
   operationId: deleteTimeEntries
-  description: Deletes several time entries. The current user must be allowed to delete every selected entry.
+  description: Deletes the selected time entries. The current user must be allowed to delete every selected entry.
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml

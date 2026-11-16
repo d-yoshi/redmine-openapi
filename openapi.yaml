@@ -2,11 +2,11 @@ openapi: 3.0.3
 info:
   title: Redmine API
   description: |-
-    Unofficial OpenAPI specification for Redmine 7.0.3. This specification covers JSON REST representations and related attachment downloads. XML responses are outside its scope.
+    This unofficial OpenAPI specification describes the Redmine 7.0.3 REST API, covering JSON requests and responses, file uploads, attachment downloads, and thumbnails.
 
-    When JSONP support is enabled, Redmine can return JavaScript responses selected with the `callback` or `jsonp` query parameter. This specification excludes JSONP responses and does not define those parameters.
+    Anonymous access depends on the Redmine instance's settings, project visibility, and permissions. This specification identifies operations that require authentication or administrator privileges.
 
-    Authentication is optional where installation settings, project visibility and permissions allow anonymous access. Operations that require an account or administrator credentials declare that requirement explicitly.
+    XML and JSONP responses are outside the scope of this specification. When JSONP support is enabled in Redmine, clients can request JSONP responses using the `callback` or `jsonp` query parameter. These parameters are not declared on individual operations.
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi
@@ -141,7 +141,7 @@ paths:
             type: string
         - name: project_id
           in: query
-          description: Project ID or identifier selecting the project context. Query operators and multiple IDs are not accepted here. Subprojects are included according to the installation setting unless `subproject_id` overrides it. Use explicit `f[]`, `op` and `v` filters to select multiple projects without this shortcut.
+          description: Project ID or identifier selecting the project context. Query operators and multiple IDs are not accepted here. Subprojects are included according to the installation setting unless `subproject_id` overrides it. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
           schema:
             type: string
         - name: subproject_id
@@ -472,47 +472,47 @@ paths:
             type: string
         - name: relates
           in: query
-          description: Filter by the relates relation.
+          description: Filter by the `relates` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: duplicates
           in: query
-          description: Filter by the duplicates relation.
+          description: Filter by the `duplicates` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: duplicated
           in: query
-          description: Filter by the duplicated relation.
+          description: Filter by the `duplicated` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: blocks
           in: query
-          description: Filter by the blocks relation.
+          description: Filter by the `blocks` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: blocked
           in: query
-          description: Filter by the blocked relation.
+          description: Filter by the `blocked` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: precedes
           in: query
-          description: Filter by the precedes relation.
+          description: Filter by the `precedes` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: follows
           in: query
-          description: Filter by the follows relation.
+          description: Filter by the `follows` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: copied_to
           in: query
-          description: Filter by the copied_to relation.
+          description: Filter by the `copied_to` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: copied_from
           in: query
-          description: Filter by the copied_from relation.
+          description: Filter by the `copied_from` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: any_searchable
@@ -1233,47 +1233,47 @@ paths:
             type: string
         - name: relates
           in: query
-          description: Filter by the relates relation.
+          description: Filter by the `relates` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: duplicates
           in: query
-          description: Filter by the duplicates relation.
+          description: Filter by the `duplicates` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: duplicated
           in: query
-          description: Filter by the duplicated relation.
+          description: Filter by the `duplicated` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: blocks
           in: query
-          description: Filter by the blocks relation.
+          description: Filter by the `blocks` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: blocked
           in: query
-          description: Filter by the blocked relation.
+          description: Filter by the `blocked` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: precedes
           in: query
-          description: Filter by the precedes relation.
+          description: Filter by the `precedes` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: follows
           in: query
-          description: Filter by the follows relation.
+          description: Filter by the `follows` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: copied_to
           in: query
-          description: Filter by the copied_to relation.
+          description: Filter by the `copied_to` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: copied_from
           in: query
-          description: Filter by the copied_from relation.
+          description: Filter by the `copied_from` relation type.
           schema:
             $ref: '#/components/schemas/relation_filter'
         - name: any_searchable
@@ -1639,7 +1639,10 @@ paths:
         - $ref: '#/components/parameters/custom_filters'
         - name: sort
           in: query
-          description: 'Comma-separated list of up to three field names, optionally followed by :asc or :desc. The default direction is ascending. Stock fields: name, status, short_description, homepage, identifier, parent_id, is_public, created_on, updated_on. Sortable custom-field columns use cf_<id>. Example: name:desc.'
+          description: |-
+            Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
+            Available fields: `name`, `status`, `short_description`, `homepage`, `identifier`, `parent_id`, `is_public`, `created_on`, `updated_on`. Sortable custom-field columns use `cf_<id>`.
+            Example: `name:desc`.
           schema:
             type: string
       responses:
@@ -1674,7 +1677,7 @@ paths:
                 $ref: '#/components/schemas/framework_error'
         '412':
           $ref: '#/components/responses/PreconditionFailed'
-      description: Lists visible records. The default status filter selects active records. A saved query or explicit filters can select other statuses.
+      description: Lists visible projects. The default status filter selects active projects. A saved query or explicit filters can select other statuses.
     post:
       tags:
         - Projects
@@ -1702,7 +1705,7 @@ paths:
                       type: string
                     identifier:
                       type: string
-                      description: Project identifier. Required unless sequential project identifiers are enabled; when enabled, omission uses the generated identifier.
+                      description: Project identifier. If sequential project identifiers are enabled, Redmine generates an identifier when this field is omitted; otherwise this field is required.
                     description:
                       type: string
                       nullable: true
@@ -2081,7 +2084,7 @@ paths:
                       type: array
                       items:
                         type: integer
-                  description: Provide `user_id` for one user or group, or `user_ids` for several. Batch creation returns the first membership and can leave successfully created memberships if another principal fails.
+                  description: Provide `user_id` for one user or group, or `user_ids` for several users or groups. Batch creation returns the first membership. If creating another membership fails, memberships already created can remain.
                   anyOf:
                     - required:
                         - user_id
@@ -2219,7 +2222,6 @@ paths:
       tags:
         - Projects
       summary: Close project
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: closeProject
       responses:
         '204':
@@ -2258,7 +2260,6 @@ paths:
       tags:
         - Projects
       summary: Reopen project
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: reopenProject
       responses:
         '204':
@@ -2344,7 +2345,7 @@ paths:
         - name: auth_source_id
           in: query
           description: |-
-            Filter by authentication source. Undocumented
+            Filter by authentication source.
             Format: `[operator]value[|value2|...]`
             Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
             Examples: `1`, `!1`
@@ -2353,7 +2354,7 @@ paths:
         - name: twofa_scheme
           in: query
           description: |-
-            Filter by two-factor authentication scheme. Undocumented
+            Filter by two-factor authentication scheme.
             Format: `[operator]value[|value2|...]`
             Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
             Only available when two-factor authentication is enabled in Redmine settings.
@@ -2362,7 +2363,7 @@ paths:
         - name: login
           in: query
           description: |-
-            Filter by login. Undocumented
+            Filter by login.
             Format: `[operator]value`
             Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~admin`, `^john`
@@ -2371,7 +2372,7 @@ paths:
         - name: firstname
           in: query
           description: |-
-            Filter by first name. Undocumented
+            Filter by first name.
             Format: `[operator]value`
             Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~John`, `=John`
@@ -2380,7 +2381,7 @@ paths:
         - name: lastname
           in: query
           description: |-
-            Filter by last name. Undocumented
+            Filter by last name.
             Format: `[operator]value`
             Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~Doe`, `=Doe`
@@ -2389,7 +2390,7 @@ paths:
         - name: mail
           in: query
           description: |-
-            Filter by email address. Undocumented
+            Filter by email address.
             Format: `[operator]value`
             Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~example.com`, `$@example.com`
@@ -2398,7 +2399,7 @@ paths:
         - name: created_on
           in: query
           description: |-
-            Filter by creation date. Undocumented
+            Filter by creation date.
             Format: `[operator]value`
             Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
             Examples: `>=2024-01-01`, `>t-30`, `lm`
@@ -2407,7 +2408,7 @@ paths:
         - name: last_login_on
           in: query
           description: |-
-            Filter by last login date. Undocumented
+            Filter by last login date.
             Format: `[operator]value`
             Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
             Examples: `>=2024-01-01`, `>t-30`, `!*`
@@ -2416,7 +2417,7 @@ paths:
         - name: admin
           in: query
           description: |-
-            Filter by admin privilege. Undocumented
+            Filter by whether the user is an administrator.
             Format: `[operator]value`
             Operators: `=` (default), `!` (not equal)
             Values: `1` (admin), `0` (non-admin)
@@ -2436,7 +2437,10 @@ paths:
             type: string
         - name: sort
           in: query
-          description: 'Comma-separated list of up to three field names, optionally followed by :asc or :desc. The default direction is ascending. Stock fields: login, firstname, lastname, mail, admin, created_on, updated_on, last_login_on, passwd_changed_on, status, auth_source.name. Sortable custom-field columns use cf_<id>. Example: login:desc. The twofa_scheme field is available when two-factor authentication is enabled.'
+          description: |-
+            Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
+            Available fields: `login`, `firstname`, `lastname`, `mail`, `admin`, `created_on`, `updated_on`, `last_login_on`, `passwd_changed_on`, `status`, `auth_source.name`. Sortable custom-field columns use `cf_<id>`. The `twofa_scheme` field is available when two-factor authentication is enabled.
+            Example: `login:desc`.
           schema:
             type: string
       responses:
@@ -2478,7 +2482,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errors'
       description: |-
-        Lists visible records. The default status filter selects active records. A saved query or explicit filters can select other statuses.
+        Lists visible users. The default status filter selects active users. A saved query or explicit filters can select other statuses.
         Requires an administrator.
       security:
         - Basic: []
@@ -2799,7 +2803,7 @@ paths:
             type: string
         - name: project_id
           in: query
-          description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. Use explicit `f[]`, `op` and `v` filters to select multiple projects without this shortcut.
+          description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
           schema:
             type: string
         - name: spent_on
@@ -2875,8 +2879,8 @@ paths:
         - name: issue.parent_id
           in: query
           description: |-
-            Filter by parent issue or ancestry.
-            With `=` (default), provide one parent ID or comma-separated parent IDs to select entries on their immediate children. With `~ID`, select entries on strict descendants of ID, excluding entries on ID itself; `issue_id=~ID` includes ID as well.
+            Filter time entries by the issue's parent or ancestry.
+            With `=` (default), provide one parent issue ID or comma-separated IDs to select entries on their immediate children. With `~ID`, select entries on descendants of that issue, excluding the issue itself. Use `issue_id=~ID` to include that issue as well.
             `*` selects entries whose issue has a parent; `!*` selects entries on root issues or without an issue. Examples: `1`, `1,2`, `~1`, `*`, `!*`.
           schema:
             type: string
@@ -2967,7 +2971,7 @@ paths:
         - name: sort
           in: query
           description: |-
-            Sort order: up to three comma-separated criteria of `field` or `field:desc`. Default direction is ascending.
+            Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
             Examples: `spent_on:desc`, `hours:desc,spent_on`
           schema:
             type: string
@@ -3290,8 +3294,8 @@ paths:
         - name: issue.parent_id
           in: query
           description: |-
-            Filter by parent issue or ancestry.
-            With `=` (default), provide one parent ID or comma-separated parent IDs to select entries on their immediate children. With `~ID`, select entries on strict descendants of ID, excluding entries on ID itself; `issue_id=~ID` includes ID as well.
+            Filter time entries by the issue's parent or ancestry.
+            With `=` (default), provide one parent issue ID or comma-separated IDs to select entries on their immediate children. With `~ID`, select entries on descendants of that issue, excluding the issue itself. Use `issue_id=~ID` to include that issue as well.
             `*` selects entries whose issue has a parent; `!*` selects entries on root issues or without an issue. Examples: `1`, `1,2`, `~1`, `*`, `!*`.
           schema:
             type: string
@@ -3382,7 +3386,7 @@ paths:
         - name: sort
           in: query
           description: |-
-            Sort order: up to three comma-separated criteria of `field` or `field:desc`. Default direction is ascending.
+            Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
             Examples: `spent_on:desc`, `hours:desc,spent_on`
           schema:
             type: string
@@ -3845,7 +3849,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errors'
-      description: The same operation is available at POST /news.json with `project_id` in the query string.
+      description: The same operation is available at `POST /news.json` with `project_id` in the query string.
   /issues/{issue_id}/relations.{format}:
     get:
       tags:
@@ -3905,7 +3909,7 @@ paths:
                     - issue_to_id
                   properties:
                     issue_to_id:
-                      description: One target issue ID, comma-separated IDs, or an array of IDs. Redmine creates relations in order and returns the last one. Earlier relations can remain if a later target fails.
+                      description: One target issue ID, comma-separated IDs, or an array of IDs. Redmine creates relations in the supplied order. On success, the response contains the last relation created. If creating a later relation fails, previously created relations can remain.
                       oneOf:
                         - type: integer
                         - type: string
@@ -4371,7 +4375,7 @@ paths:
           description: ''
         '412':
           $ref: '#/components/responses/PreconditionFailed'
-      description: When the requested title is a redirect, Redmine returns 302 before deleting the page. Use the current title to delete it.
+      description: When the requested title refers to a redirect, Redmine returns 302 without deleting the page. Send the DELETE request to the current title to delete the page.
     patch:
       tags:
         - Wiki Pages
@@ -4447,7 +4451,7 @@ paths:
           description: ''
         '412':
           $ref: '#/components/responses/PreconditionFailed'
-      description: Returns the requested content version. If the title is a redirect, the 302 Location uses the current title and retains the version number.
+      description: Returns the requested content version. If the requested title is a redirect, the 302 response has a `Location` header that points to the current title and retains the requested version number.
   /queries.{format}:
     get:
       tags:
@@ -4466,7 +4470,7 @@ paths:
         - $ref: '#/components/parameters/page'
         - name: type
           in: query
-          description: Saved-query class to list. Defaults to `IssueQuery`. Visibility and administrator permissions still apply.
+          description: Saved-query type to list. Defaults to `IssueQuery`. Results are limited by query visibility and administrator permissions.
           schema:
             type: string
             enum:
@@ -4601,7 +4605,6 @@ paths:
       tags:
         - Attachments
       summary: Download attachment file
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: downloadAttachmentFile
       parameters:
         - $ref: '#/components/parameters/attachment_id'
@@ -4609,7 +4612,7 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: If-None-Match
           in: header
-          description: ETag from a previous response. A matching tag returns 304 without a body.
+          description: ETag from a previous response. Redmine returns 304 with no response body when the tag matches.
           schema:
             type: string
       responses:
@@ -4622,11 +4625,11 @@ paths:
                 format: binary
           headers:
             ETag:
-              description: Cache validator for this attachment or thumbnail.
+              description: Use this value with `If-None-Match` to make a conditional request.
               schema:
                 type: string
         '302':
-          description: Redirect to sign-in when an anonymous browser-style request cannot access the attachment.
+          description: Redirects to the sign-in page when an anonymous request cannot access the attachment.
           headers:
             Location:
               description: Sign-in URL.
@@ -4637,7 +4640,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: HTML access-denied page. This route uses HTML even when Accept requests JSON.
+          description: 'HTML access-denied page, including when the request sends `Accept: application/json`.'
           content:
             text/html:
               schema:
@@ -4671,7 +4674,7 @@ paths:
             type: integer
         - name: If-None-Match
           in: header
-          description: ETag from a previous response. A matching tag returns 304 without a body.
+          description: ETag from a previous response. Redmine returns 304 with no response body when the tag matches.
           schema:
             type: string
       responses:
@@ -4686,11 +4689,11 @@ paths:
                 format: binary
           headers:
             ETag:
-              description: Cache validator for this attachment or thumbnail.
+              description: Use this value with `If-None-Match` to make a conditional request.
               schema:
                 type: string
         '302':
-          description: Redirect to sign-in when an anonymous browser-style request cannot access the attachment.
+          description: Redirects to the sign-in page when an anonymous request cannot access the attachment.
           headers:
             Location:
               description: Sign-in URL.
@@ -4701,7 +4704,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: 'Empty body for Accept: application/json; an HTML access-denied page for browser-style requests.'
+          description: 'Empty response body for `Accept: application/json`; an HTML access-denied page for browser-style requests.'
           content:
             application/json:
               schema:
@@ -4713,7 +4716,7 @@ paths:
                 type: string
                 format: binary
         '404':
-          description: An unknown attachment returns an empty body for JSON requests or an HTML error page for browser-style requests. An existing attachment that cannot be thumbnailed returns an empty body.
+          description: 'If the attachment does not exist, the error format depends on `Accept`: an empty body for JSON or an HTML error page for HTML. If the attachment exists but cannot be thumbnailed, the body is empty.'
           content:
             application/json:
               schema:
@@ -4911,7 +4914,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '412':
           $ref: '#/components/responses/PreconditionFailed'
-      description: The same collection is available at GET /enumerations.json?type=IssuePriority.
+      description: The same collection is available at `GET /enumerations.json?type=IssuePriority`.
   /enumerations/time_entry_activities.{format}:
     get:
       tags:
@@ -4943,7 +4946,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '412':
           $ref: '#/components/responses/PreconditionFailed'
-      description: The same collection is available at GET /enumerations.json?type=TimeEntryActivity.
+      description: The same collection is available at `GET /enumerations.json?type=TimeEntryActivity`.
   /enumerations/document_categories.{format}:
     get:
       tags:
@@ -4975,7 +4978,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '412':
           $ref: '#/components/responses/PreconditionFailed'
-      description: The same collection is available at GET /enumerations.json?type=DocumentCategory.
+      description: The same collection is available at `GET /enumerations.json?type=DocumentCategory`.
   /issue_categories/{issue_category_id}.{format}:
     parameters:
       - $ref: '#/components/parameters/format'
@@ -5548,7 +5551,7 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: q
           in: query
-          description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. An omitted query or a query with no usable tokens returns an empty result and `total_count: null`. By default all tokens must match; `all_words` can select any-token matching.'
+          description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. If the query is omitted or has no usable tokens, Redmine returns an empty result and `total_count: null`. By default, all tokens must match; use `all_words` to allow any token to match.'
           schema:
             type: string
         - name: scope
@@ -5606,7 +5609,7 @@ paths:
               - 1
         - name: projects
           in: query
-          description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables the type. If no search types are specified, all available types are searched.
+          description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables project results. If no search types are specified, all available types are searched.
           schema:
             type: integer
             enum:
@@ -5647,7 +5650,7 @@ paths:
             type: string
         - name: attachments
           in: query
-          description: Search attachment filenames and descriptions belonging to searchable records; file contents are not searched. `0` (default) searches normal record fields, `1` searches normal fields and attachment metadata, and `only` searches attachment metadata only. With `titles_only`, attachment metadata is searched only in `only` mode.
+          description: Search attachment metadata (filenames and descriptions) associated with searchable records; file contents are not searched. `0` (default) searches record fields only, `1` searches record fields and attachment metadata, and `only` searches attachment metadata only. If `titles_only` is enabled, attachment metadata is searched only when this parameter is `only`.
           schema:
             type: string
             enum:
@@ -5700,12 +5703,12 @@ paths:
         - $ref: '#/components/parameters/x_redmine_nometa'
         - name: q
           in: query
-          description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. An omitted query or a query with no usable tokens returns an empty result and `total_count: null`. By default all tokens must match; `all_words` can select any-token matching.'
+          description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. If the query is omitted or has no usable tokens, Redmine returns an empty result and `total_count: null`. By default, all tokens must match; use `all_words` to allow any token to match.'
           schema:
             type: string
         - name: scope
           in: query
-          description: Defaults to the specified project. `subprojects` includes its descendants; `all`, `my_projects` and `bookmarks` replace that context with all visible projects, current-user projects or bookmarked projects respectively.
+          description: Defaults to the project in the path. `subprojects` includes that project and its descendants. `all`, `my_projects`, and `bookmarks` replace this context with all visible projects, projects the current user belongs to, or the current user's bookmarked projects, respectively.
           schema:
             type: string
             enum:
@@ -5790,7 +5793,7 @@ paths:
             type: string
         - name: attachments
           in: query
-          description: Search attachment filenames and descriptions belonging to searchable records; file contents are not searched. `0` (default) searches normal record fields, `1` searches normal fields and attachment metadata, and `only` searches attachment metadata only. With `titles_only`, attachment metadata is searched only in `only` mode.
+          description: Search attachment metadata (filenames and descriptions) associated with searchable records; file contents are not searched. `0` (default) searches record fields only, `1` searches record fields and attachment metadata, and `only` searches attachment metadata only. If `titles_only` is enabled, attachment metadata is searched only when this parameter is `only`.
           schema:
             type: string
             enum:
@@ -5800,7 +5803,7 @@ paths:
         - $ref: '#/components/parameters/page'
         - name: projects
           in: query
-          description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables the type.
+          description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables project results.
           schema:
             type: integer
             enum:
@@ -5848,7 +5851,7 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: sort
           in: query
-          description: 'Sort field and optional direction: `filename`, `created_on`, `size` or `downloads`, followed by `:asc` or `:desc`. Defaults to filename ascending.'
+          description: 'Sort field and optional direction: `filename`, `created_on`, `size`, or `downloads`, followed by `:asc` or `:desc`. Defaults to `filename:asc`.'
           schema:
             type: string
       responses:
@@ -6162,7 +6165,6 @@ paths:
       tags:
         - Repositories
       summary: Add related issue
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: addRelatedIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -6202,7 +6204,6 @@ paths:
       tags:
         - Repositories
       summary: Remove related issue
-      description: 'Undocumented: This operation is not listed in the official documentation.'
       operationId: removeRelatedIssue
       parameters:
         - $ref: '#/components/parameters/format'
@@ -6280,7 +6281,7 @@ paths:
         - Watchers
       summary: Add watchers to resources
       operationId: addWatchers
-      description: Adds users to one or more resources. Requires the permission to add watchers for each resource type and access to the selected projects. Unknown user IDs are ignored.
+      description: Adds users as watchers of one or more resources. Requires permission to add watchers for each resource type and access to the selected projects. Unknown user IDs are ignored.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
@@ -6300,7 +6301,7 @@ paths:
                     - issue
                     - wiki_page
                     - message
-                  description: Watchable resource type. Wiki-page and forum-message IDs are returned by search results for those types.
+                  description: Watchable resource type. For `wiki_page` and `message`, obtain resource IDs from search results.
                 object_id:
                   oneOf:
                     - type: integer
@@ -6335,13 +6336,13 @@ paths:
         - Watchers
       summary: Remove a watcher from resources
       operationId: removeWatcherFromResources
-      description: Removes one user from the selected resources. Requires the permission to delete watchers for each resource type and access to the selected projects.
+      description: Removes a user as a watcher of the selected resources. Requires permission to delete watchers for each resource type and access to the selected projects.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: object_type
           in: query
-          description: Watchable resource type. Wiki-page and forum-message IDs are returned by search results for those types.
+          description: Watchable resource type. For `wiki_page` and `message`, obtain resource IDs from search results.
           schema:
             type: string
             enum:
@@ -6362,7 +6363,7 @@ paths:
           explode: true
         - name: user_id
           in: query
-          description: User ID to remove.
+          description: ID of the user to remove as a watcher.
           schema:
             type: integer
           required: true
@@ -6383,7 +6384,7 @@ paths:
         - Time Entries
       summary: Delete time entries
       operationId: deleteTimeEntries
-      description: Deletes several time entries. The current user must be allowed to delete every selected entry.
+      description: Deletes the selected time entries. The current user must be allowed to delete every selected entry.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
@@ -6420,7 +6421,7 @@ paths:
       tags:
         - Attachments
       summary: Download attachment by ID
-      description: Downloads an attachment without including its filename in the path. The JSON format selects empty API error responses; successful responses contain the original file bytes.
+      description: Downloads an attachment by ID without a filename in the path. With `.json`, errors have empty response bodies; successful responses contain the original file bytes.
       operationId: downloadAttachmentById
       parameters:
         - $ref: '#/components/parameters/format'
@@ -6428,7 +6429,7 @@ paths:
         - $ref: '#/components/parameters/x_redmine_switch_user'
         - name: If-None-Match
           in: header
-          description: ETag from a previous response. A matching tag returns 304 without a body.
+          description: ETag from a previous response. Redmine returns 304 with no response body when the tag matches.
           schema:
             type: string
       responses:
@@ -6441,7 +6442,7 @@ paths:
                 format: binary
           headers:
             ETag:
-              description: Cache validator for this attachment or thumbnail.
+              description: Use this value with `If-None-Match` to make a conditional request.
               schema:
                 type: string
         '304':
@@ -6477,7 +6478,7 @@ components:
           authorizationUrl: /oauth/authorize
           tokenUrl: /oauth/token
           scopes: {}
-      description: Authorization-code OAuth token with scopes permitting the requested action. PUT /my/account.json is not available through OAuth.
+      description: Authorization-code OAuth token with scopes permitting the requested action. `PUT /my/account.json` is not available through OAuth.
   responses:
     NoContent:
       description: The request was completed successfully; no response body is returned.
@@ -6490,14 +6491,14 @@ components:
           schema:
             $ref: '#/components/schemas/errors'
     WikiRedirect:
-      description: The requested Wiki title redirects to the page at its current title. This occurs when a redirect remains after a rename or move, including when the configured start-page title refers to a redirect.
+      description: Redmine redirects requests for an old wiki page title to the page's current title after a rename or move. This also applies when the configured start-page title points to that redirect.
       headers:
         Location:
           description: Target page URL. The URL may omit the `.json` suffix; the response format at that URL can depend on the client's Accept header.
           schema:
             type: string
     WikiPageCreated:
-      description: The Wiki page was created.
+      description: The wiki page was created.
       content:
         application/json:
           schema:
@@ -6508,9 +6509,9 @@ components:
               wiki_page:
                 $ref: '#/components/schemas/wiki_page'
     WikiContentConflict:
-      description: The supplied content version conflicts with the current Wiki content version.
+      description: The supplied content version conflicts with the current wiki content version.
     Unauthorized:
-      description: Authentication is required by the operation, installation settings or resource permissions. Invalid credentials also return 401. API-key and Basic authentication return 403 when REST API authentication is disabled.
+      description: Authentication is required by the operation, installation settings, or resource permissions. Redmine also returns 401 for invalid credentials. API-key and Basic authentication return 403 when REST API authentication is disabled.
     Forbidden:
       description: The current user, including an anonymous user, lacks permission for the action or resource.
     PreconditionFailed:
@@ -6608,7 +6609,7 @@ components:
                   notes:
                     type: string
                   private_notes:
-                    description: Mark the notes as private. Visible to their author and users with the View private notes permission.
+                    description: Mark the notes as private. Private notes are visible to their author and users with the View private notes permission.
                     type: boolean
                   deleted_attachment_ids:
                     description: IDs of existing attachments to remove from this issue.
@@ -6628,9 +6629,7 @@ components:
                 properties:
                   identifier:
                     type: string
-                    description: |
-                      Accepted but ignored: a project's identifier cannot be changed
-                      once the project exists, and the request still succeeds.
+                    description: Redmine accepts this field but ignores changes to an existing project's identifier.
                   name:
                     type: string
                   description:
@@ -6645,7 +6644,7 @@ components:
                     type: integer
                     nullable: true
                   inherit_members:
-                    description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+                    description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set).
                     type: boolean
                   default_assigned_to_id:
                     description: Default assignee for new issues in this project. Set to null to clear.
@@ -6755,7 +6754,7 @@ components:
                   custom_field_values:
                     $ref: '#/components/schemas/custom_field_values'
                   group_ids:
-                    description: Group IDs to assign the user to. Admin-only. Replaces all current group memberships (not append).
+                    description: IDs of the groups the user should belong to. Requires an administrator. Replaces the user's current group memberships.
                     type: array
                     items:
                       type: integer
@@ -6879,7 +6878,7 @@ components:
                   comments:
                     type: string
                   version:
-                    description: Content version for optimistic locking. When text changes, a version that differs from the current content version causes 409 Conflict. Unchanged text does not trigger this conflict.
+                    description: Content version for optimistic locking. When `text` changes, a supplied version that differs from the current content version causes a 409 Conflict response. Unchanged text does not cause a version conflict.
                     type: integer
                   parent_title:
                     description: Title of the parent wiki page. Sets this page as a child in the page hierarchy.
@@ -6888,13 +6887,13 @@ components:
                     description: New title for the page (rename). Requires the rename_wiki_pages permission.
                     type: string
                   redirect_existing_links:
-                    description: When renaming with title, controls whether the old title keeps redirecting to the new one. Only the string "0" disables the redirect; any other value (including boolean false) leaves it enabled.
+                    description: When a page is renamed using `title`, this parameter controls whether the old title redirects to the new one. Only the string `"0"` disables the redirect; all other values, including the boolean `false`, leave it enabled.
                     type: string
                     enum:
                       - '0'
                       - '1'
                   is_start_page:
-                    description: Set to true to make this page the wiki start page. When renaming the current start page, omission updates the configured title automatically; false keeps the previous configured title. Setting this parameter requires the manage_wiki permission.
+                    description: Set to `true` to make this page the wiki start page. When renaming the current start page, Redmine updates the configured start-page title if this parameter is omitted. Setting it to `false` preserves the previous title. Requires the `manage_wiki` permission.
                     type: boolean
                   deleted_attachment_ids:
                     type: array
@@ -6963,9 +6962,9 @@ components:
                   notes:
                     type: string
                     nullable: true
-                    description: A journal left with empty `notes` and no property changes (`details`) is kept and can still be updated, but is omitted from the issue's `include=journals` response until it has notes again.
+                    description: A journal with empty `notes` and no property changes (`details`) remains editable but is omitted from the issue's `include=journals` response until notes are added.
                   private_notes:
-                    description: Mark the notes as private. Visible to their author and users with the View private notes permission.
+                    description: Mark the notes as private. Private notes are visible to their author and users with the View private notes permission.
                     type: boolean
   parameters:
     format:
@@ -6995,7 +6994,7 @@ components:
         type: integer
         enum:
           - 1
-      description: Send `1` to omit `total_count`, `offset` and `limit` from the response. The X-Redmine-Nometa header is an alternative.
+      description: Send `1` to omit `total_count`, `offset`, and `limit` from the response. The `X-Redmine-Nometa` header is an alternative.
     x_redmine_switch_user:
       name: X-Redmine-Switch-User
       in: header
@@ -7041,7 +7040,7 @@ components:
     filter_operators:
       name: op
       in: query
-      description: Operator for each field in `f[]`, encoded as `op[status_id]=o`, for example. Uses the same operators as the corresponding shortcut filter.
+      description: Operator for each field in `f[]`, such as `op[status_id]=o`. Each field supports the same operators as its corresponding shortcut filter.
       schema:
         type: object
         additionalProperties:
@@ -7052,7 +7051,7 @@ components:
       name: v
       in: query
       description: |-
-        Values for each field in `f[]`. Encode each value as `v[field][]=value`; for example, send `op[project_id]=%3D&v[project_id][]=1&v[project_id][]=2` to select projects 1 and 2 with equality.
+        Values for each field in `f[]`. Encode each value as `v[field][]=value`; for example, send `op[project_id]=%3D&v[project_id][]=1&v[project_id][]=2` to filter for records in projects 1 and 2.
         OpenAPI 3.0 does not standardize nested array serialization in deep objects; configure the client serializer to send these repeated bracketed keys.
       schema:
         type: object
@@ -7065,7 +7064,7 @@ components:
     issue_delete_todo:
       name: todo
       in: query
-      description: 'How to handle time entries on the deleted issues: `destroy` (default) deletes them, `nullify` keeps them without an issue when the time-tracking settings allow it, and `reassign` moves them to `reassign_to_id`. Used when the selected issues have positive total spent time.'
+      description: 'How to handle time entries on the deleted issues: `destroy` (default) deletes them, `nullify` keeps them without an issue when the time-tracking settings allow it, and `reassign` moves them to `reassign_to_id`. Redmine uses this option when the selected issues have positive total spent time.'
       schema:
         type: string
         enum:
@@ -7075,7 +7074,7 @@ components:
     issue_delete_reassign_to_id:
       name: reassign_to_id
       in: query
-      description: Destination issue ID for `todo=reassign`. The issue must be outside the deleted set and belong to the same project as the moved entries.
+      description: Destination issue ID for `todo=reassign`. The destination must not be one of the issues being deleted and must belong to the same project as the time entries being moved.
       schema:
         type: integer
     issue_id:
@@ -7101,7 +7100,7 @@ components:
     query_id:
       name: query_id
       in: query
-      description: ID of a visible saved query for this list type. Uses its filters and sort order. Other filter inputs, including `f[]`, are ignored; `sort` can override the saved sort order.
+      description: ID of a visible saved query for this list type. Redmine applies the saved query's filters and sort order. Other filter parameters, including `f[]`, are ignored; `sort` can override the saved sort order.
       schema:
         type: integer
     membership_id:
@@ -7860,14 +7859,14 @@ components:
           type: string
         admin:
           type: boolean
-          description: Returned for administrators or the user themselves.
+          description: Returned when the current user is an administrator or is viewing their own record.
         firstname:
           type: string
         lastname:
           type: string
         mail:
           type: string
-          description: Returned to administrators, or when the user has not hidden their email address.
+          description: Returned when the current user is an administrator or the user represented by this record has not hidden their email address.
         created_on:
           type: string
           format: date-time
@@ -7888,12 +7887,12 @@ components:
         twofa_scheme:
           type: string
           nullable: true
-          description: Returned for administrators or the user themselves.
+          description: Returned when the current user is an administrator or is viewing their own record.
         status:
           type: integer
           description: Returned to administrators.
         auth_source:
-          description: Included for administrators when requested and an external authentication source is configured.
+          description: Included for administrators when requested and this user has an external authentication source.
           allOf:
             - $ref: '#/components/schemas/id_name'
         custom_fields:
@@ -7975,14 +7974,14 @@ components:
           type: string
         admin:
           type: boolean
-          description: Returned for administrators or the user themselves.
+          description: Returned when the current user is an administrator or is viewing their own record.
         firstname:
           type: string
         lastname:
           type: string
         mail:
           type: string
-          description: Returned to administrators, or when the user has not hidden their email address.
+          description: Returned when the current user is an administrator or the user represented by this record has not hidden their email address.
         created_on:
           type: string
           format: date-time
@@ -8003,10 +8002,10 @@ components:
         twofa_scheme:
           type: string
           nullable: true
-          description: Returned for administrators or the user themselves.
+          description: Returned when the current user is an administrator or is viewing their own record.
         api_key:
           type: string
-          description: Returned to administrators, or to the user themselves when not authenticated via OAuth.
+          description: Returned when the current user is an administrator, or is viewing their own record without OAuth authentication.
         status:
           type: integer
           description: Returned to administrators.
@@ -8016,7 +8015,7 @@ components:
             $ref: '#/components/schemas/custom_field_value'
           description: Visible custom-field values. Omitted when no custom fields are visible.
         auth_source:
-          description: Included for administrators when requested and an external authentication source is configured.
+          description: Included for administrators when requested and this user has an external authentication source.
           allOf:
             - $ref: '#/components/schemas/id_name'
         groups:

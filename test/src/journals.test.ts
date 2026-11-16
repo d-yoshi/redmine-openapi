@@ -174,7 +174,7 @@ describe("Journals", () => {
     assert(added.some((j) => j.notes === "Private explanation" && j.private_notes));
   });
 
-  test("PATCH updates journal notes through the equivalent method", async () => {
+  test("PATCH updates journal notes", async () => {
     const id = await addNote("Notes before PATCH");
     const updated = await client.PATCH("/journals/{journal_id}.{format}", {
       params: { path: { format: "json", journal_id: id } },

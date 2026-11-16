@@ -22,4 +22,4 @@ OAuth2:
       authorizationUrl: /oauth/authorize
       tokenUrl: /oauth/token
       scopes: {}
-  description: Authorization-code OAuth token with scopes permitting the requested action. PUT /my/account.json is not available through OAuth.
+  description: Authorization-code OAuth token with scopes permitting the requested action. `PUT /my/account.json` is not available through OAuth.

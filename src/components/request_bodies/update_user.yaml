@@ -58,7 +58,7 @@ content:
             custom_field_values:
               $ref: ../schemas/request/custom_field_values.yaml
             group_ids:
-              description: Group IDs to assign the user to. Admin-only. Replaces all current group memberships (not append).
+              description: IDs of the groups the user should belong to. Requires an administrator. Replaces the user's current group memberships.
               type: array
               items:
                 type: integer

@@ -112,7 +112,10 @@ get:
     - $ref: ../components/parameters/query/custom_filters.yaml
     - name: sort
       in: query
-      description: "Comma-separated list of up to three field names, optionally followed by :asc or :desc. The default direction is ascending. Stock fields: name, status, short_description, homepage, identifier, parent_id, is_public, created_on, updated_on. Sortable custom-field columns use cf_<id>. Example: name:desc."
+      description: |-
+        Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
+        Available fields: `name`, `status`, `short_description`, `homepage`, `identifier`, `parent_id`, `is_public`, `created_on`, `updated_on`. Sortable custom-field columns use `cf_<id>`.
+        Example: `name:desc`.
       schema:
         type: string
   responses:
@@ -142,7 +145,7 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/framework_error.yaml
-  description: Lists visible records. The default status filter selects active records. A saved query or explicit filters can select other statuses.
+  description: Lists visible projects. The default status filter selects active projects. A saved query or explicit filters can select other statuses.
 
 post:
   tags:
@@ -173,7 +176,7 @@ post:
                   type: string
                 identifier:
                   type: string
-                  description: Project identifier. Required unless sequential project identifiers are enabled; when enabled, omission uses the generated identifier.
+                  description: Project identifier. If sequential project identifiers are enabled, Redmine generates an identifier when this field is omitted; otherwise this field is required.
                 description:
                   type: string
                   nullable: true

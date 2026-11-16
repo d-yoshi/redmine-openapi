@@ -307,7 +307,7 @@ describe("Groups", () => {
     assertStatus(404, response);
   });
 
-  test("PATCH updates group through the equivalent method", async () => {
+  test("PATCH updates a group", async () => {
     const params = { path: { format: "json" as const, group_id: groupId } };
     const updated = await client.PATCH("/groups/{group_id}.{format}", {
       params,

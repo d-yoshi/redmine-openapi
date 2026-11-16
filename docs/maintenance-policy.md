@@ -19,11 +19,13 @@ Include information that users need to construct API requests or interpret respo
 
 Describe the stock Redmine API for the target version. Users can represent installation-specific types and plugin changes in a separate specification using the [customization guide](customization.md).
 
-The specification covers JSON REST representations and related binary attachment downloads. XML responses are outside this scope. When JSONP support is enabled, the `callback` or `jsonp` query parameter can select a JavaScript response. JSONP responses and those parameters are excluded from this specification.
+The specification covers JSON requests and responses, file uploads, attachment downloads, and thumbnails. XML and JSONP responses are outside its scope. When JSONP support is enabled in Redmine, clients can request JSONP responses using the `callback` or `jsonp` query parameter. The API overview (`info.description`) mentions these parameters; individual operations do not declare them.
 
-The repository-management web services under `/sys/` and the incoming-mail web service at `POST /mail_handler` are also excluded: they serve repository provisioning and mail ingestion, use separately configured service keys, and are not part of the REST API described here.
+The repository-management web services under `/sys/` and the incoming-mail web service at `POST /mail_handler` are also outside this scope. They provision repositories or process incoming email, and authenticate using separately configured service keys.
 
-Declare equivalent PUT/PATCH update methods and POST/PUT project-state methods as separate operations so generated clients can use either method. Share path parameters, request bodies and response definitions when the methods have the same API contract. For equivalent URL aliases, describe the alternate URL alongside the primary route. Add separate operations when an alternate route requires a different body format or produces a different response representation, such as the HTML errors on named attachment downloads.
+Declare supported HTTP method aliases as separate operations so generated clients can use each supported method. This includes PUT and PATCH updates and POST and PUT requests that change project status. Share path parameters, request bodies, and response definitions when the methods have the same API contract.
+
+For equivalent URL aliases, describe the alternate URL alongside the primary route. Define separate operations when routes accept different body formats or return different representations, such as the HTML errors on attachment download routes that include a filename.
 
 Investigating internal implementation is a way to establish API behavior. Changes to internal method names or call order alone do not require specification changes. Confirmed omissions and properties incorrectly marked optional are specification defects and should be corrected.
 

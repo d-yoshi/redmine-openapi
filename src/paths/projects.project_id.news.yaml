@@ -85,4 +85,4 @@ post:
             $ref: ../components/schemas/errors.yaml
     404:
       description: ""
-  description: The same operation is available at POST /news.json with `project_id` in the query string.
+  description: The same operation is available at `POST /news.json` with `project_id` in the query string.

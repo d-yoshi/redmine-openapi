@@ -22,7 +22,7 @@ for (const file of fs.readdirSync(schemaDir).filter((f) => f.endsWith(".summary.
   for (const [key, def] of Object.entries(summary.properties ?? {})) {
     const detailDef = (detail.properties ?? {})[key];
     const comparable = { ...def };
-    // News lists retain null summaries; details omit summaries with no value.
+    // News list responses retain null summaries; detail responses omit blank summaries.
     if (detailFile === "news.yaml" && key === "summary" && comparable.nullable === true) {
       delete comparable.nullable;
     }

@@ -15,12 +15,12 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: q
       in: query
-      description: "Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. An omitted query or a query with no usable tokens returns an empty result and `total_count: null`. By default all tokens must match; `all_words` can select any-token matching."
+      description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. If the query is omitted or has no usable tokens, Redmine returns an empty result and `total_count: null`. By default, all tokens must match; use `all_words` to allow any token to match.'
       schema:
         type: string
     - name: scope
       in: query
-      description: Defaults to the specified project. `subprojects` includes its descendants; `all`, `my_projects` and `bookmarks` replace that context with all visible projects, current-user projects or bookmarked projects respectively.
+      description: Defaults to the project in the path. `subprojects` includes that project and its descendants. `all`, `my_projects`, and `bookmarks` replace this context with all visible projects, projects the current user belongs to, or the current user's bookmarked projects, respectively.
       schema:
         type: string
         enum:
@@ -105,7 +105,7 @@ get:
         type: string
     - name: attachments
       in: query
-      description: Search attachment filenames and descriptions belonging to searchable records; file contents are not searched. `0` (default) searches normal record fields, `1` searches normal fields and attachment metadata, and `only` searches attachment metadata only. With `titles_only`, attachment metadata is searched only in `only` mode.
+      description: Search attachment metadata (filenames and descriptions) associated with searchable records; file contents are not searched. `0` (default) searches record fields only, `1` searches record fields and attachment metadata, and `only` searches attachment metadata only. If `titles_only` is enabled, attachment metadata is searched only when this parameter is `only`.
       schema:
         type: string
         enum:
@@ -115,7 +115,7 @@ get:
     - $ref: ../components/parameters/query/page.yaml
     - name: projects
       in: query
-      description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables the type.
+      description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables project results.
       schema:
         type: integer
         enum:

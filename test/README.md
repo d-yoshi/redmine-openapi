@@ -80,9 +80,13 @@ For API test or schema changes, run `./test/run-test.sh`, which includes static 
 
 An always-present property incorrectly declared optional still passes response validation. Use source inspection to establish requiredness, including creation, update, deletion, retrieval, and authorization. Distinguish an optional `parent` object from its `id`, which can be required when that object is present.
 
-Query coverage normally counts each operation and parameter name. Global and project-scoped issue and time-entry lists share counts where they use the same Query class. Global and project-scoped issue creation share copy-option checks; single and batch issue deletion share time-entry handling checks. Pagination parameters `offset`, `limit`, `page`, and `nometa`, and the explicit filter encoding `f[]`, `op` and `v`, share counts only when they reference common definitions. Sending an undeclared parameter does not satisfy coverage for another endpoint. `cf_x` represents concrete custom-field filter names, including associated fields such as `issue.cf_12`. Coverage does not establish all operator/value combinations or filtering effects; inspect each filter's existence and processing as described in Contributing.
+Query-parameter coverage checks whether each declared parameter was used for each operation. Global and project-scoped issue and time-entry lists share observations where they use the same Query class. Global and project-scoped issue creation share copy-option observations; single and batch issue deletion share observations for time-entry handling.
 
-Equivalent HTTP method operations must each have a successful API request in the tests. Response-status coverage is shared only for the explicit method pairs in `METHOD_ALIASES`, whose released source reaches the same action. The checker requires each pair to retain identical operation parameters, request body, response definitions and security requirements. Detailed input behavior can use representative tests; alias tests still read back a changed value.
+Observations for pagination parameters `offset`, `limit`, `page`, and `nometa`, and explicit filters `f[]`, `op`, and `v`, are shared only when the operations reference common definitions. Sending an undeclared parameter does not satisfy coverage for another endpoint. `cf_x` represents concrete custom-field filter names, including associated fields such as `issue.cf_12`.
+
+Coverage does not establish all operator/value combinations or filtering effects; inspect each filter's existence and processing as described in Contributing.
+
+Each declared HTTP method alias needs a successful API request in the tests. The checker shares response-status observations only between pairs listed in `METHOD_ALIASES`, and requires their parameter, request-body, response, and security definitions to match. Source inspection must also establish that both methods use the same Redmine controller action. Use representative tests for shared input behavior, and check the observable effect of each update in alias tests.
 
 Automatically injected 401, 403, and 412 responses are excluded from coverage requirements. Some tests exercise 403, but the coverage checker would not detect removal of those tests. The checker's `UNREACHABLE` entries record unreachable responses and their reasons. The checker fails if an entry no longer corresponds to a declared response or if a test reaches it. Read test and coverage counts from execution output rather than maintaining another count.
 
@@ -90,7 +94,7 @@ Automatically injected 401, 403, and 412 responses are excluded from coverage re
 
 | Area | Current limits and reasons |
 | --- | --- |
-| XML and JSONP responses | Outside the specification's JSON and binary scope; JSONP parameters `callback` and `jsonp` are mentioned in the common description and are not declared as operation parameters |
+| XML and JSONP responses | Outside the specification's JSON and binary scope. JSONP parameters `callback` and `jsonp` are mentioned in `info.description` but are not declared on individual operations |
 | OAuth-specific behavior | The Basic-authentication suite does not check omitted `api_key` values or account-update 403 responses under OAuth; OAuth application setup is needed |
 | Authentication | The default client uses administrator Basic credentials. Selected anonymous-access cases use `createTestClient(undefined, { anonymous: true })`; they do not cover every installation setting, role or authentication mode. The specification does not declare `WWW-Authenticate`, whose value depends on authentication mode |
 | Issue `allowed_statuses` | Setup does not create workflows, so a nonempty result is not guaranteed. The array is checked, and items share the issue-status schema; business rules for transitions are not tested |
@@ -105,8 +109,8 @@ These decisions describe the current specification. Recheck the relevant release
 | Area | Decision and references |
 | --- | --- |
 | Wiki creation without `text` | Can create an incomplete page without content. Do not widen the schema to accommodate that state or create it in tests. Test 422 using an invalid parent instead |
-| Membership updates with empty `role_ids` | The 422 response with membership deletion is described in the [shared request body](../src/components/request_bodies/update_membership.yaml) and checked in [memberships.test.ts](src/memberships.test.ts) |
-| Attachment errors and caching | Named downloads use HTML errors; filename-free JSON downloads use empty API errors, and thumbnails negotiate errors using `Accept`. Tests exercise empty JSON and HTML errors, sign-in redirects and ETag-based 304 responses. See [attachments.test.ts](src/attachments.test.ts) |
+| Membership updates with empty `role_ids` | If an update leaves no roles, Redmine deletes the membership and returns 422. An empty array does not remove inherited roles or roles the current user cannot manage. See the [shared request body](../src/components/request_bodies/update_membership.yaml) and [memberships.test.ts](src/memberships.test.ts) |
+| Attachment errors and caching | Download routes with a filename return HTML errors; the filename-free JSON route returns empty API error bodies. Thumbnail error representations depend on `Accept`. Tests check empty API error bodies, HTML error pages, sign-in redirects, and ETag-based 304 responses. See [attachments.test.ts](src/attachments.test.ts) |
 | News summaries | Lists retain a null `summary`; details omit it when blank. The synchronization checker preserves this response-specific nullability difference |
 | Wiki start page | `GET /projects/{project_id}/wiki.json` exposes the configured start page. Tests read it after `is_start_page` updates |
 | Redirects from old wiki titles | Tests use `redirect_existing_links: "0"` for an old-title 404 and `"1"` for a 302. Redirect tests check `Location` for page reads, historical reads, start-page reads and deletion without following it. Renaming with `is_start_page: false` can keep the configured start-page title pointing to the old-title redirect. See [wiki_pages.test.ts](src/wiki_pages.test.ts) |

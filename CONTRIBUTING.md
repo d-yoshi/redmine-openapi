@@ -49,7 +49,7 @@ Follow these schema conventions:
 - Use `*.summary.yaml` for list representations and `*.yaml` for detail representations. Check both when changing a shared field.
 - Declare `additionalProperties: false` on response object schemas. The strict bundle retains it; the distribution bundle removes it.
 - Assess required properties, `null`, and omission conditions separately, using the maintenance policy's evidence requirements.
-- Declare equivalent HTTP update and project-state methods as separate operations. Reuse path-level parameters, request bodies under `src/components/request_bodies/`, and shared response definitions so both methods retain the same contract.
+- Declare supported HTTP method aliases as separate operations. Reuse path-level parameters, request bodies under `src/components/request_bodies/`, and shared response definitions for operations with identical contracts.
 - The build plugin supplies default 401, 403, and 412 responses. Declare an operation-specific response only when its representation differs, as with HTML errors on attachment downloads; the plugin preserves explicit declarations.
 - Filters that accept expressions such as `1|5`, `!1`, or `>=2024-01-01` use `type: string`, including ID filters. Verify the parser for the specific parameter. Parameters such as `include`, pagination, and search flags can use different parsing rules.
 

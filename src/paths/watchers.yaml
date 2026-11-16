@@ -3,7 +3,7 @@ post:
     - Watchers
   summary: Add watchers to resources
   operationId: addWatchers
-  description: Adds users to one or more resources. Requires the permission to add watchers for each resource type and access to the selected projects. Unknown user IDs are ignored.
+  description: Adds users as watchers of one or more resources. Requires permission to add watchers for each resource type and access to the selected projects. Unknown user IDs are ignored.
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
@@ -24,7 +24,7 @@ post:
                 - issue
                 - wiki_page
                 - message
-              description: Watchable resource type. Wiki-page and forum-message IDs are returned by search results for those types.
+              description: Watchable resource type. For `wiki_page` and `message`, obtain resource IDs from search results.
             object_id:
               oneOf:
                 - type: integer
@@ -54,13 +54,13 @@ delete:
     - Watchers
   summary: Remove a watcher from resources
   operationId: removeWatcherFromResources
-  description: Removes one user from the selected resources. Requires the permission to delete watchers for each resource type and access to the selected projects.
+  description: Removes a user as a watcher of the selected resources. Requires permission to delete watchers for each resource type and access to the selected projects.
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: object_type
       in: query
-      description: Watchable resource type. Wiki-page and forum-message IDs are returned by search results for those types.
+      description: Watchable resource type. For `wiki_page` and `message`, obtain resource IDs from search results.
       schema:
         type: string
         enum:
@@ -81,7 +81,7 @@ delete:
       explode: true
     - name: user_id
       in: query
-      description: User ID to remove.
+      description: ID of the user to remove as a watcher.
       schema:
         type: integer
       required: true

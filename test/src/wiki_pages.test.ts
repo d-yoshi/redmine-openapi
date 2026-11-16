@@ -310,7 +310,7 @@ describe("Wiki Pages", () => {
     assertStatus(404, oldTitleResponse);
   });
 
-  test("Wiki title redirects return 302 for reads and deletion without deleting the page", async () => {
+  test("old wiki titles return 302 for reads and DELETE without deleting the page", async () => {
     const path = {
       format: "json" as const,
       project_id: projectIdentifier,
@@ -589,7 +589,7 @@ describe("Wiki Pages", () => {
     );
     assertStatus(204, response);
   });
-  test("PATCH creates and updates Wiki content through the equivalent method", async () => {
+  test("PATCH creates and updates wiki content", async () => {
     const params = {
       path: {
         format: "json" as const,

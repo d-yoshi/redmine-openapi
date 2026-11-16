@@ -7,7 +7,6 @@ put:
   tags:
     - Projects
   summary: Reopen project
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: reopenProject
   responses:
     "204":

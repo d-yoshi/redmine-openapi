@@ -38,7 +38,7 @@ export function prepareReleaseMetadata({ sourceDir, target, run = execFileSync }
   let spec = replaceOnce(original.get(paths[0]), /^  version: .+$/gm, () => `  version: ${tag}`, "info.version");
   const redmineVersion = /\bRedmine \d+\.\d+\.\d+\b/g;
   const description = load(spec).info.description;
-  assert.equal(typeof description, "string", "Missing info.description");
+  assert.equal(typeof description, "string", "info.description must be a string");
   const updatedDescription = replaceOnce(description, redmineVersion, () => `Redmine ${selected}`, "Redmine version in info.description");
   spec = replaceOnce(spec, redmineVersion, () => `Redmine ${selected}`, "Redmine version in specification");
   assert.equal(load(spec).info.description, updatedDescription, "Could not update info.description");

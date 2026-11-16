@@ -20,14 +20,14 @@ properties:
     type: string
   admin:
     type: boolean
-    description: Returned for administrators or the user themselves.
+    description: Returned when the current user is an administrator or is viewing their own record.
   firstname:
     type: string
   lastname:
     type: string
   mail:
     type: string
-    description: Returned to administrators, or when the user has not hidden their email address.
+    description: Returned when the current user is an administrator or the user represented by this record has not hidden their email address.
   created_on:
     type: string
     format: date-time
@@ -48,12 +48,12 @@ properties:
   twofa_scheme:
     type: string
     nullable: true
-    description: Returned for administrators or the user themselves.
+    description: Returned when the current user is an administrator or is viewing their own record.
   status:
     type: integer
     description: Returned to administrators.
   auth_source:
-    description: Included for administrators when requested and an external authentication source is configured.
+    description: Included for administrators when requested and this user has an external authentication source.
     allOf:
       - $ref: ./id_name.yaml
   custom_fields:

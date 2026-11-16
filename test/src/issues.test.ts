@@ -644,7 +644,7 @@ describe("Issues", () => {
     );
   });
 
-  test("PATCH updates issue through the equivalent method", async () => {
+  test("PATCH updates an issue", async () => {
     const params = { path: { format: "json" as const, issue_id: issueId } };
     const updated = await client.PATCH("/issues/{issue_id}.{format}", {
       params,

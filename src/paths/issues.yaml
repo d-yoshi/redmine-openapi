@@ -43,7 +43,7 @@ get:
         type: string
     - name: project_id
       in: query
-      description: Project ID or identifier selecting the project context. Query operators and multiple IDs are not accepted here. Subprojects are included according to the installation setting unless `subproject_id` overrides it. Use explicit `f[]`, `op` and `v` filters to select multiple projects without this shortcut.
+      description: Project ID or identifier selecting the project context. Query operators and multiple IDs are not accepted here. Subprojects are included according to the installation setting unless `subproject_id` overrides it. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
       schema:
         type: string
     - name: subproject_id
@@ -374,47 +374,47 @@ get:
         type: string
     - name: relates
       in: query
-      description: Filter by the relates relation.
+      description: Filter by the `relates` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: duplicates
       in: query
-      description: Filter by the duplicates relation.
+      description: Filter by the `duplicates` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: duplicated
       in: query
-      description: Filter by the duplicated relation.
+      description: Filter by the `duplicated` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: blocks
       in: query
-      description: Filter by the blocks relation.
+      description: Filter by the `blocks` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: blocked
       in: query
-      description: Filter by the blocked relation.
+      description: Filter by the `blocked` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: precedes
       in: query
-      description: Filter by the precedes relation.
+      description: Filter by the `precedes` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: follows
       in: query
-      description: Filter by the follows relation.
+      description: Filter by the `follows` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: copied_to
       in: query
-      description: Filter by the copied_to relation.
+      description: Filter by the `copied_to` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: copied_from
       in: query
-      description: Filter by the copied_from relation.
+      description: Filter by the `copied_from` relation type.
       schema:
         $ref: ../components/schemas/query/relation_filter.yaml
     - name: any_searchable

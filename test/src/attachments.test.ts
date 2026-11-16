@@ -329,7 +329,7 @@ describe("Attachments", () => {
     assertStatus(404, response);
   });
 
-  test("PUT updates attachment through the equivalent method", async () => {
+  test("PUT updates an attachment", async () => {
     const params = { path: { format: "json" as const, attachment_id: attachmentId } };
     const updated = await client.PUT("/attachments/{attachment_id}.{format}", {
       params,
@@ -403,7 +403,7 @@ describe("Attachments", () => {
     assertStatus(302, thumbnail);
   });
 
-  test("attachment error representations follow route format and Accept", async () => {
+  test("attachment error representations depend on the route and Accept header", async () => {
     const userId = await createTestUser("attachment-outsider");
     try {
       const user = await client.GET("/users/{user_id}.{format}", {
@@ -454,7 +454,7 @@ describe("Attachments", () => {
     }
   });
 
-  test("the filename-free JSON download route has binary success and API errors", async () => {
+  test("the filename-free download route returns file bytes on success and empty error bodies", async () => {
     const params = { path: { format: "json" as const, attachment_id: imageAttachmentId } };
     const result = await client.GET("/attachments/download/{attachment_id}.{format}", {
       params,

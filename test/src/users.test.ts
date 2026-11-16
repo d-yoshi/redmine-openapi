@@ -375,7 +375,7 @@ describe("Users", () => {
     assert(substring.data!.users.some((u) => u.id === userId));
   });
 
-  test("PATCH updates user through the equivalent method", async () => {
+  test("PATCH updates a user", async () => {
     const params = { path: { format: "json" as const, user_id: userId } };
     const updated = await client.PATCH("/users/{user_id}.{format}", {
       params,

@@ -230,7 +230,7 @@ describe("Shared query parameters", () => {
     );
   });
 
-  test("time filters distinguish equality, substrings, relative dates and descendant boundaries", async () => {
+  test("time-entry filters distinguish equality, substrings, relative dates and descendant boundaries", async () => {
     for (const [query, expected] of [
       [{ comments: marker }, [entryIds[0]]],
       [{ comments: `~${marker}` }, entryIds],

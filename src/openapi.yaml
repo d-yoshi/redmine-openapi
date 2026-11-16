@@ -3,11 +3,11 @@ openapi: 3.0.3
 info:
   title: Redmine API
   description: |-
-    Unofficial OpenAPI specification for Redmine 7.0.3. This specification covers JSON REST representations and related attachment downloads. XML responses are outside its scope.
+    This unofficial OpenAPI specification describes the Redmine 7.0.3 REST API, covering JSON requests and responses, file uploads, attachment downloads, and thumbnails.
 
-    When JSONP support is enabled, Redmine can return JavaScript responses selected with the `callback` or `jsonp` query parameter. This specification excludes JSONP responses and does not define those parameters.
+    Anonymous access depends on the Redmine instance's settings, project visibility, and permissions. This specification identifies operations that require authentication or administrator privileges.
 
-    Authentication is optional where installation settings, project visibility and permissions allow anonymous access. Operations that require an account or administrator credentials declare that requirement explicitly.
+    XML and JSONP responses are outside the scope of this specification. When JSONP support is enabled in Redmine, clients can request JSONP responses using the `callback` or `jsonp` query parameter. These parameters are not declared on individual operations.
   contact:
     name: d-yoshi/redmine-openapi
     url: https://github.com/d-yoshi/redmine-openapi

@@ -310,7 +310,7 @@ describe("Memberships", () => {
     assertStatus(422, response);
   });
 
-  test("PATCH updates membership roles through the equivalent method", async () => {
+  test("PATCH updates membership roles", async () => {
     const params = { path: { format: "json" as const, membership_id: membershipId } };
     const before = await client.GET("/memberships/{membership_id}.{format}", { params });
     assertStatus(200, before);

@@ -53,7 +53,7 @@ get:
     - name: auth_source_id
       in: query
       description: |-
-        Filter by authentication source. Undocumented
+        Filter by authentication source.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Examples: `1`, `!1`
@@ -62,7 +62,7 @@ get:
     - name: twofa_scheme
       in: query
       description: |-
-        Filter by two-factor authentication scheme. Undocumented
+        Filter by two-factor authentication scheme.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Only available when two-factor authentication is enabled in Redmine settings.
@@ -71,7 +71,7 @@ get:
     - name: login
       in: query
       description: |-
-        Filter by login. Undocumented
+        Filter by login.
         Format: `[operator]value`
         Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~admin`, `^john`
@@ -80,7 +80,7 @@ get:
     - name: firstname
       in: query
       description: |-
-        Filter by first name. Undocumented
+        Filter by first name.
         Format: `[operator]value`
         Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~John`, `=John`
@@ -89,7 +89,7 @@ get:
     - name: lastname
       in: query
       description: |-
-        Filter by last name. Undocumented
+        Filter by last name.
         Format: `[operator]value`
         Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~Doe`, `=Doe`
@@ -98,7 +98,7 @@ get:
     - name: mail
       in: query
       description: |-
-        Filter by email address. Undocumented
+        Filter by email address.
         Format: `[operator]value`
         Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~example.com`, `$@example.com`
@@ -107,7 +107,7 @@ get:
     - name: created_on
       in: query
       description: |-
-        Filter by creation date. Undocumented
+        Filter by creation date.
         Format: `[operator]value`
         Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `>t-30`, `lm`
@@ -116,7 +116,7 @@ get:
     - name: last_login_on
       in: query
       description: |-
-        Filter by last login date. Undocumented
+        Filter by last login date.
         Format: `[operator]value`
         Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `>t-30`, `!*`
@@ -125,7 +125,7 @@ get:
     - name: admin
       in: query
       description: |-
-        Filter by admin privilege. Undocumented
+        Filter by whether the user is an administrator.
         Format: `[operator]value`
         Operators: `=` (default), `!` (not equal)
         Values: `1` (admin), `0` (non-admin)
@@ -145,7 +145,10 @@ get:
         type: string
     - name: sort
       in: query
-      description: "Comma-separated list of up to three field names, optionally followed by :asc or :desc. The default direction is ascending. Stock fields: login, firstname, lastname, mail, admin, created_on, updated_on, last_login_on, passwd_changed_on, status, auth_source.name. Sortable custom-field columns use cf_<id>. Example: login:desc. The twofa_scheme field is available when two-factor authentication is enabled."
+      description: |-
+        Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
+        Available fields: `login`, `firstname`, `lastname`, `mail`, `admin`, `created_on`, `updated_on`, `last_login_on`, `passwd_changed_on`, `status`, `auth_source.name`. Sortable custom-field columns use `cf_<id>`. The `twofa_scheme` field is available when two-factor authentication is enabled.
+        Example: `login:desc`.
       schema:
         type: string
   responses:
@@ -182,7 +185,7 @@ get:
           schema:
             $ref: ../components/schemas/framework_error.yaml
   description: |-
-    Lists visible records. The default status filter selects active records. A saved query or explicit filters can select other statuses.
+    Lists visible users. The default status filter selects active users. A saved query or explicit filters can select other statuses.
     Requires an administrator.
   security:
     - Basic: []

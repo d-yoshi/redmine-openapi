@@ -269,7 +269,7 @@ describe("News", () => {
     assertStatus(404, response);
   });
 
-  test("null news summaries remain present in lists and can be omitted from details", async () => {
+  test("cleared news summaries are null in lists and omitted from details", async () => {
     const update = await client.PUT("/news/{news_id}.{format}", {
       params: { path: { format: "json", news_id: newsId } },
       body: { news: { summary: null } },
@@ -298,7 +298,7 @@ describe("News", () => {
     );
   });
 
-  test("PATCH updates news through the equivalent method", async () => {
+  test("PATCH updates a news item", async () => {
     const params = { path: { format: "json" as const, news_id: newsId } };
     const updated = await client.PATCH("/news/{news_id}.{format}", {
       params,

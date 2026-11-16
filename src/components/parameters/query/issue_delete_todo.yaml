@@ -1,6 +1,6 @@
 name: todo
 in: query
-description: "How to handle time entries on the deleted issues: `destroy` (default) deletes them, `nullify` keeps them without an issue when the time-tracking settings allow it, and `reassign` moves them to `reassign_to_id`. Used when the selected issues have positive total spent time."
+description: 'How to handle time entries on the deleted issues: `destroy` (default) deletes them, `nullify` keeps them without an issue when the time-tracking settings allow it, and `reassign` moves them to `reassign_to_id`. Redmine uses this option when the selected issues have positive total spent time.'
 schema:
   type: string
   enum:

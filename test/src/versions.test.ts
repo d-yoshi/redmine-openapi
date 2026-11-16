@@ -218,7 +218,7 @@ describe("Versions", () => {
     assert.equal(result.data!.version.description, null);
   });
 
-  test("PATCH updates version through the equivalent method", async () => {
+  test("PATCH updates a version", async () => {
     const params = { path: { format: "json" as const, version_id: versionId } };
     const updated = await client.PATCH("/versions/{version_id}.{format}", {
       params,

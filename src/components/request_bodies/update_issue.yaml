@@ -67,7 +67,7 @@ content:
             notes:
               type: string
             private_notes:
-              description: Mark the notes as private. Visible to their author and users with the View private notes permission.
+              description: Mark the notes as private. Private notes are visible to their author and users with the View private notes permission.
               type: boolean
             deleted_attachment_ids:
               description: IDs of existing attachments to remove from this issue.

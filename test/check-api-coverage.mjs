@@ -11,7 +11,7 @@ const METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
 // exercise them all. Dedicated permission tests cover selected 403 responses.
 const AUTO_INJECTED = new Set(["401", "403", "412"]);
 
-// These method pairs reach the same released Redmine action.
+// Both methods in each pair use the same Redmine controller action.
 const METHOD_ALIASES = new Map([
   ["PATCH /journals/{journal_id}.{format}", "PUT /journals/{journal_id}.{format}"],
   ["PATCH /users/{user_id}.{format}", "PUT /users/{user_id}.{format}"],
@@ -67,14 +67,13 @@ const UNREACHABLE = [
     operation: "DELETE /time_entries/destroy.{format}",
     status: "422",
     reason:
-      "The shared destroy action only fails on a callback abort, which the stock API cannot trigger",
+      "Deletion can fail only through a callback abort, which the stock API cannot trigger",
   },
   {
     operation: "DELETE /time_entries/{time_entry_id}.{format}",
     status: "422",
     reason:
-      "render_validation_errors exists in timelog_controller.rb but destroy " +
-      "only fails on a callback abort, which the API cannot trigger",
+      "Deletion can fail only through a callback abort, which the stock API cannot trigger",
   },
 ];
 

@@ -173,7 +173,7 @@ describe("Issue Categories", () => {
     assertStatus(404, response);
   });
 
-  test("PATCH updates issue_category through the equivalent method", async () => {
+  test("PATCH updates an issue category", async () => {
     const params = { path: { format: "json" as const, issue_category_id: categoryId } };
     const updated = await client.PATCH("/issue_categories/{issue_category_id}.{format}", {
       params,

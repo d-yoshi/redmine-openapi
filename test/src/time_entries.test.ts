@@ -361,7 +361,7 @@ describe("Time Entries", () => {
     assertStatus(422, response);
   });
 
-  test("PATCH updates time_entry through the equivalent method", async () => {
+  test("PATCH updates a time entry", async () => {
     const params = { path: { format: "json" as const, time_entry_id: timeEntryId } };
     const updated = await client.PATCH("/time_entries/{time_entry_id}.{format}", {
       params,

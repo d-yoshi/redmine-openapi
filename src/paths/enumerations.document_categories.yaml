@@ -23,4 +23,4 @@ get:
                 type: array
                 items:
                   $ref: ../components/schemas/document_category.yaml
-  description: The same collection is available at GET /enumerations.json?type=DocumentCategory.
+  description: The same collection is available at `GET /enumerations.json?type=DocumentCategory`.

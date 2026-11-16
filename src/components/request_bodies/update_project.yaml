@@ -10,9 +10,8 @@ content:
           properties:
             identifier:
               type: string
-              description: |
-                Accepted but ignored: a project's identifier cannot be changed
-                once the project exists, and the request still succeeds.
+              description: |-
+                Redmine accepts this field but ignores changes to an existing project's identifier.
             name:
               type: string
             description:
@@ -27,7 +26,7 @@ content:
               type: integer
               nullable: true
             inherit_members:
-              description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+              description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set).
               type: boolean
             default_assigned_to_id:
               description: Default assignee for new issues in this project. Set to null to clear.
