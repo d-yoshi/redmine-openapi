@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
-import { load } from "js-yaml";
+import { dump, load } from "js-yaml";
 
 import { prepareReleaseMetadata } from "../scripts/release/prepare-metadata.mjs";
 
@@ -57,6 +57,32 @@ test("a new Redmine target updates metadata and pin together and starts at r1", 
   assert.equal(load(value.read("src/openapi.yaml")).info.description, "Unofficial API, tested against Redmine 9.2.5");
   assert.equal(load(value.read("openapi.yaml")).info.version, result.tag);
   assert.match(value.read("test/redmine/docker-compose.yaml"), /redmine:9\.2\.5/);
+});
+
+test("release preparation preserves the current specification description when updating a target", (t) => {
+  const value = fixture(t);
+  const current = load(fs.readFileSync(new URL("../src/openapi.yaml", import.meta.url), "utf8"));
+  const description = current.info.description.replace(`Redmine ${current.info.version.split("-r")[0]}`, "Redmine 9.2.4");
+  const spec = load(value.read("src/openapi.yaml"));
+  spec.info.description = description;
+  value.write("src/openapi.yaml", dump(spec, { lineWidth: -1 }));
+  prepareReleaseMetadata(value);
+  assert.equal(load(value.read("src/openapi.yaml")).info.description, description);
+  prepareReleaseMetadata({ ...value, target: "9.2.5" });
+  const expected = description.replace("Redmine 9.2.4", "Redmine 9.2.5");
+  assert.equal(load(value.read("src/openapi.yaml")).info.description, expected);
+  assert.equal(load(value.read("openapi.yaml")).info.description, expected);
+});
+
+test("a Redmine version outside info.description cannot replace missing description metadata", (t) => {
+  const value = fixture(t);
+  const original = value.read("src/openapi.yaml").replace("tested against Redmine 9.2.4", "unversioned");
+  value.write("src/openapi.yaml", `${original}# tested against Redmine 9.2.4\n`);
+  const files = ["src/openapi.yaml", "test/redmine/docker-compose.yaml", "openapi.yaml"];
+  const before = files.map(value.read);
+  assert.throws(() => prepareReleaseMetadata(value), /info\.description/);
+  assert.deepEqual(files.map(value.read), before);
+  assert(!value.calls.some(({ command }) => command === "npm"));
 });
 
 test("fetched tags participate in revision calculation", (t) => {

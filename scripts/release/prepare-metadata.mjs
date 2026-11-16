@@ -36,7 +36,12 @@ export function prepareReleaseMetadata({ sourceDir, target, run = execFileSync }
   const tag = nextReleaseTag(selected, previous);
   assert.equal(git("tag", "--list", tag), "", "The planned tag already exists outside this source history");
   let spec = replaceOnce(original.get(paths[0]), /^  version: .+$/gm, () => `  version: ${tag}`, "info.version");
-  spec = replaceOnce(spec, /(tested against Redmine )\d+\.\d+\.\d+/g, (_match, prefix) => `${prefix}${selected}`, "tested Redmine description");
+  const redmineVersion = /\bRedmine \d+\.\d+\.\d+\b/g;
+  const description = load(spec).info.description;
+  assert.equal(typeof description, "string", "Missing info.description");
+  const updatedDescription = replaceOnce(description, redmineVersion, () => `Redmine ${selected}`, "Redmine version in info.description");
+  spec = replaceOnce(spec, redmineVersion, () => `Redmine ${selected}`, "Redmine version in specification");
+  assert.equal(load(spec).info.description, updatedDescription, "Could not update info.description");
   const compose = replaceOnce(original.get(paths[1]), /redmine:\d+\.\d+\.\d+/g, () => `redmine:${selected}`, "Redmine image pin");
   assert.equal(load(spec).info.version, tag);
   assert.equal(imagePin(load(compose)), selected);
