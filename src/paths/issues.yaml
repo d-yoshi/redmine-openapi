@@ -609,6 +609,7 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yaml
+
 delete:
   tags:
     - Issues

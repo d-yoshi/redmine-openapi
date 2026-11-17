@@ -57,6 +57,7 @@ delete:
       description: Returned without a body when the membership is not deletable (e.g. inherited from a group).
     404:
       description: ""
+
 patch:
   tags:
     - Project Memberships

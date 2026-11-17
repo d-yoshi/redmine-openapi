@@ -11,7 +11,7 @@ get:
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: sort
       in: query
-      description: 'Sort field and optional direction: `filename`, `created_on`, `size`, or `downloads`, followed by `:asc` or `:desc`. Defaults to `filename:asc`.'
+      description: "Sort field and optional direction: `filename`, `created_on`, `size`, or `downloads`, followed by `:asc` or `:desc`. Defaults to `filename:asc`."
       schema:
         type: string
   responses:

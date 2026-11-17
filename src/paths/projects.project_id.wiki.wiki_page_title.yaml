@@ -83,6 +83,7 @@ delete:
     "302":
       $ref: ../components/responses.yaml#/WikiRedirect
   description: When the requested title refers to a redirect, Redmine returns 302 without deleting the page. Send the DELETE request to the current title to delete the page.
+
 patch:
   tags:
     - Wiki Pages

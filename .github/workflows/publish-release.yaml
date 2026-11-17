@@ -1,4 +1,5 @@
 name: Publish release
+
 run-name: ${{ github.event.inputs.source_ref && format('Publish {0}', github.event.inputs.source_ref) || github.event.inputs.tag && format('Publish {0}', github.event.inputs.tag) || github.event.workflow_run.head_branch && format('Publish {0}', github.event.workflow_run.head_branch) || 'Reconcile Latest and Pages' }}
 
 on:

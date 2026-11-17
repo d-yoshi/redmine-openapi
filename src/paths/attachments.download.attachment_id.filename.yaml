@@ -42,7 +42,7 @@ get:
           schema:
             type: string
     "403":
-      description: 'HTML access-denied page, including when the request sends `Accept: application/json`.'
+      description: "HTML access-denied page, including when the request sends `Accept: application/json`."
       content:
         text/html:
           schema:

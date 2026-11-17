@@ -34,6 +34,10 @@ Docker and Docker Compose are needed for API tests. ShellCheck is optional local
 
 Edit `src/` for OpenAPI changes and `test/src/` for API tests. The root `openapi.yaml` is generated; use `npm run bundle` to update it.
 
+After editing YAML, run `npm run format:yaml`. Prettier formats YAML under `src/`, `redocly/`, `.github/`, and `test/`, using the repository's EditorConfig settings. Generated bundles and ignored build outputs are excluded.
+
+Separate top-level operations, named definitions, and document or configuration sections with one blank line. Keep top-level attributes of a single schema, parameter, or request body adjacent. Prettier preserves these blank lines but does not add missing ones, so review section spacing when editing YAML.
+
 Confirm behavior in Redmine's source tag matching the branch's image pin. Redmine development branches can contain behavior that has not been released. An adjacent checkout at `../redmine` is one possible layout, not a required location.
 
 | Subject | Useful Redmine source locations |
@@ -65,6 +69,8 @@ Run commands from the repository root:
 | --- | --- |
 | `./test/check.sh` | Tool tests, schema checks, strict bundling and linting, TypeScript generation and type checking; no Docker required |
 | `./test/run-test.sh` | The static checks above, then API tests and coverage checks in a disposable Redmine container |
+| `npm run format:yaml` | Format YAML sources and configuration |
+| `npm run format:yaml:check` | Check YAML formatting without changing files; included in `check.sh` |
 | `npm run bundle` | Regenerate the distribution bundle |
 | `npm run lint` | Lint the distribution bundle |
 

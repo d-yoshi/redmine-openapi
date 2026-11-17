@@ -81,6 +81,7 @@ delete:
     - ApiKeyInQuery: []
     - OAuth2: []
   description: Requires an administrator.
+
 patch:
   tags:
     - Groups

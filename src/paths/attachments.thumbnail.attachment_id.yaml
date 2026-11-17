@@ -35,7 +35,7 @@ get:
           schema:
             type: string
     "404":
-      description: 'If the attachment does not exist, the error format depends on `Accept`: an empty body for JSON or an HTML error page for HTML. If the attachment exists but cannot be thumbnailed, the body is empty.'
+      description: "If the attachment does not exist, the error format depends on `Accept`: an empty body for JSON or an HTML error page for HTML. If the attachment exists but cannot be thumbnailed, the body is empty."
       content:
         application/json:
           schema:
@@ -57,7 +57,7 @@ get:
           schema:
             type: string
     "403":
-      description: 'Empty response body for `Accept: application/json`; an HTML access-denied page for browser-style requests.'
+      description: "Empty response body for `Accept: application/json`; an HTML access-denied page for browser-style requests."
       content:
         application/json:
           schema:

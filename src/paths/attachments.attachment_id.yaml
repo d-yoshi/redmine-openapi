@@ -55,6 +55,7 @@ delete:
       description: ""
     404:
       description: ""
+
 put:
   tags:
     - Attachments

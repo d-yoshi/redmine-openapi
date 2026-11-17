@@ -23,6 +23,7 @@ put:
     - ApiKeyInQuery: []
     - OAuth2: []
   description: Requires an administrator.
+
 post:
   tags:
     - Projects

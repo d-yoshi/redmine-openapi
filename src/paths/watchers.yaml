@@ -49,6 +49,7 @@ post:
   responses:
     "204":
       description: The request was processed; only eligible users or regular groups were added.
+
 delete:
   tags:
     - Watchers

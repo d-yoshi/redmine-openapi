@@ -57,6 +57,7 @@ delete:
       description: Returned without a body when the version is not deletable (e.g. issues are assigned to it).
     404:
       description: ""
+
 patch:
   tags:
     - Versions

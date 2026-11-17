@@ -19,7 +19,7 @@ If a Redmine plugin adds response properties, declare those properties in your O
 
 ## Prepare the build
 
-The examples below use release `7.0.3-r4` of this specification, Redocly CLI `2.71.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
+The examples below use release `7.0.3-r4` of this specification, Redocly CLI `2.79.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
 
 ```sh
 mkdir redmine-api-custom
@@ -152,12 +152,12 @@ The customized specification no longer requires either alternative property. The
 Build `openapi.custom.yaml` with your chosen Overlay, then lint the generated specification:
 
 ```sh
-npx --yes @redocly/cli@2.71.0 bundle openapi.base.yaml \
+npx --yes @redocly/cli@2.79.0 bundle openapi.base.yaml \
   --config redocly.yaml \
   --overlay custom.overlay.yaml \
   --output openapi.custom.yaml
 
-npx --yes @redocly/cli@2.71.0 lint openapi.custom.yaml \
+npx --yes @redocly/cli@2.79.0 lint openapi.custom.yaml \
   --config redocly.yaml
 ```
 

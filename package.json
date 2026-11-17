@@ -4,6 +4,8 @@
   "description": "Unofficial OpenAPI specification for the Redmine API",
   "scripts": {
     "release:prepare": "node scripts/release/prepare-metadata.mjs",
+    "format:yaml": "prettier --write \"{src,redocly,.github,test}/**/*.{yaml,yml}\"",
+    "format:yaml:check": "prettier --check \"{src,redocly,.github,test}/**/*.{yaml,yml}\"",
     "bundle": "redocly bundle --config redocly/redocly.yaml dist -o openapi.yaml",
     "lint": "redocly lint --config redocly/redocly.yaml openapi.yaml",
     "docs": "redocly build-docs --config redocly/redocly.yaml dist -t redocly/build-docs-template.hbs -o dist/index.html"
@@ -13,8 +15,9 @@
     "test"
   ],
   "devDependencies": {
-    "@redocly/cli": "2.71.0",
+    "@redocly/cli": "2.79.0",
     "openapi-typescript": "7.13.0",
+    "prettier": "3.10.1",
     "tsx": "4.23.15"
   }
 }

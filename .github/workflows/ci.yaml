@@ -14,6 +14,9 @@ on:
       - "redocly/**"
       - "test/**"
       - ".tool-versions"
+      - ".editorconfig"
+      - ".prettierignore"
+      - ".gitignore"
       - "package.json"
       - "package-lock.json"
     tags-ignore:
@@ -30,6 +33,9 @@ on:
       - "redocly/**"
       - "test/**"
       - ".tool-versions"
+      - ".editorconfig"
+      - ".prettierignore"
+      - ".gitignore"
       - "package.json"
       - "package-lock.json"
 

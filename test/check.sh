@@ -12,10 +12,13 @@ BIN="$REPO_ROOT/node_modules/.bin"
 OPENAPI_PATH="$SCRIPT_DIR/dist/openapi.strict.yaml"
 SCHEMA_PATH="$SCRIPT_DIR/dist/openapi-typescript/schema.d.ts"
 
-if [ ! -x "$BIN/redocly" ] || [ ! -x "$BIN/openapi-typescript" ]; then
+if [ ! -x "$BIN/redocly" ] || [ ! -x "$BIN/openapi-typescript" ] || [ ! -x "$BIN/prettier" ]; then
   echo "Dependencies are not installed. Run 'npm ci' in $REPO_ROOT first."
   exit 1
 fi
+
+echo "=== Checking YAML formatting ==="
+npm --prefix "$REPO_ROOT" run format:yaml:check
 
 echo "=== Linting shell scripts ==="
 if command -v shellcheck > /dev/null 2>&1; then

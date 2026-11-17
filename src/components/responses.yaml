@@ -6,6 +6,7 @@ Forbidden:
 
 PreconditionFailed:
   description: Invalid X-Redmine-Switch-User header. Returns 412 when the specified user does not exist or is not active. Only applicable to admin users using the X-Redmine-Switch-User header.
+
 WikiRedirect:
   description: Redmine redirects requests for an old wiki page title to the page's current title after a rename or move. This also applies when the configured start-page title points to that redirect.
   headers:
@@ -13,18 +14,23 @@ WikiRedirect:
       description: Target page URL. The URL may omit the `.json` suffix; the response format at that URL can depend on the client's Accept header.
       schema:
         type: string
+
 NoContent:
   description: The request was completed successfully; no response body is returned.
+
 ResourceNotFound:
   description: The requested resource was not found or is not visible.
+
 ValidationErrors:
   description: The request could not be completed. The response lists the reasons.
   content:
     application/json:
       schema:
         $ref: ./schemas/errors.yaml
+
 WikiContentConflict:
   description: The supplied content version conflicts with the current wiki content version.
+
 WikiPageCreated:
   description: The wiki page was created.
   content:

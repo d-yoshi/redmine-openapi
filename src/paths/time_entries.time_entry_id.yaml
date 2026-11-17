@@ -61,6 +61,7 @@ delete:
             $ref: ../components/schemas/errors.yaml
     404:
       description: ""
+
 patch:
   tags:
     - Time Entries

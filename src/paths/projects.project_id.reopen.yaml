@@ -13,6 +13,7 @@ put:
       $ref: ../components/responses.yaml#/NoContent
     "404":
       $ref: ../components/responses.yaml#/ResourceNotFound
+
 post:
   tags:
     - Projects

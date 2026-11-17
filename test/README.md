@@ -79,7 +79,7 @@ For API test or schema changes, run `./test/run-test.sh`, which includes static 
 
 | Check | Implementation | What it establishes |
 | --- | --- | --- |
-| Static checks | [check.sh](check.sh) | ShellCheck, tool regression tests, summary/detail synchronization, presence of the Redmine image pin, strict bundle and lint, generated TypeScript, and test type checking |
+| Static checks | [check.sh](check.sh) | YAML formatting, ShellCheck, tool regression tests, summary/detail synchronization, presence of the Redmine image pin, strict bundle and lint, generated TypeScript, and test type checking |
 | Actual responses | [src/helpers.ts](src/helpers.ts), [src/response-validator.ts](src/response-validator.ts) | Declared status and Content-Type, JSON bodies matching strict schemas including calendar dates and timestamps, and empty bodies when content is not declared |
 | API coverage | [check-api-coverage.mjs](check-api-coverage.mjs) | Whether declared operations, responses, and query parameter names were observed in actual requests |
 

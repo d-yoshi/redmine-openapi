@@ -15,7 +15,7 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: q
       in: query
-      description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. If the query is omitted or has no usable tokens, Redmine returns an empty result and `total_count: null`. By default, all tokens must match; use `all_words` to allow any token to match.'
+      description: "Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. If the query is omitted or has no usable tokens, Redmine returns an empty result and `total_count: null`. By default, all tokens must match; use `all_words` to allow any token to match."
       schema:
         type: string
     - name: scope
