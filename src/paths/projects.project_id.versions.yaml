@@ -30,6 +30,7 @@ get:
                 type: integer
     404:
       description: ""
+  description: The same collection is available at `/projects/{project_id}/roadmap?format=json`. The roadmap route does not accept a `.json` suffix.
 
 post:
   tags:
@@ -43,6 +44,7 @@ post:
     - $ref: ../components/parameters/path/project_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -69,6 +71,7 @@ post:
                   description: |-
                     Version sharing scope.
                     Values: `none` (not shared), `descendants` (with subprojects), `hierarchy` (with ancestors and descendants), `tree` (with entire project tree), `system` (with all projects)
+                    `system` requires an administrator. `hierarchy` and `tree` require permission to manage versions in the root project.
                   type: string
                   enum:
                     - none
@@ -82,6 +85,7 @@ post:
                   nullable: true
                 description:
                   type: string
+                  nullable: true
                 wiki_page_title:
                   description: Title of a wiki page to associate with this version. Set to null to clear.
                   type: string

@@ -4,3 +4,4 @@ schema:
   type: integer
   enum:
     - 1
+description: Send `1` to omit `total_count`, `offset`, and `limit` from the response. The `X-Redmine-Nometa` header is an alternative.

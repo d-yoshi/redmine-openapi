@@ -5,6 +5,7 @@ import {
   client,
   assertStatus,
   currentUserId,
+  uploadFile,
   createTestUser,
   runCleanup,
   someRoleId,
@@ -180,6 +181,32 @@ describe("Issue filter representations", () => {
       assert(!Object.hasOwn(issue, field), `Expected omitted ${field}`);
     }
   });
+
+  test("the attachment suffix example distinguishes PDF and text filenames", async () => {
+    for (const [id, filename] of [
+      [assignedId, "report.pdf"],
+      [datedId, "report.txt"],
+    ] as const) {
+      const upload = await uploadFile(filename, "Attachment filter fixture");
+      const update = await client.PUT("/issues/{issue_id}.{format}", {
+        params: { path: { format: "json", issue_id: id } },
+        body: { issue: { uploads: [{ token: upload.token }] } },
+      });
+      assertStatus(204, update);
+    }
+    const result = await client.GET("/issues.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { project_id: String(projectId), attachment: "$.pdf" },
+      },
+    });
+    assertStatus(200, result);
+    assert.deepEqual(
+      result.data!.issues.map((i) => i.id),
+      [assignedId]
+    );
+  });
+
 });
 
 describe("Issue timestamp filter representations", () => {
@@ -194,7 +221,10 @@ describe("Issue timestamp filter representations", () => {
     projectId = project.data!.project.id;
 
     const issues = await client.GET("/issues.{format}", {
-      params: { path: { format: "json" }, query: { project_id: String(projectId), status_id: "*" } },
+      params: {
+        path: { format: "json" },
+        query: { project_id: String(projectId), status_id: "*" },
+      },
     });
     assertStatus(200, issues);
     for (const issue of issues.data!.issues) {
@@ -237,7 +267,10 @@ describe("Issue timestamp filter representations", () => {
               params: { path: { format: "json", project_id: projectId }, query },
             })
           : await client.GET("/issues.{format}", {
-              params: { path: { format: "json" }, query: { ...query, project_id: String(projectId) } },
+              params: {
+                path: { format: "json" },
+                query: { ...query, project_id: String(projectId) },
+              },
             });
         assertStatus(200, response);
         const expectedIds = example.expected.map((subject) => {

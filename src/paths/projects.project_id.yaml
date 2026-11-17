@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/project_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Projects
@@ -6,9 +11,6 @@ get:
   summary: Show project
   operationId: getProject
   parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
       description: |-
@@ -42,6 +44,7 @@ get:
                 $ref: ../components/schemas/project.yaml
     404:
       description: ""
+  description: Authenticated users, including administrators, receive 403 for archived projects.
 
 put:
   tags:
@@ -50,83 +53,15 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
   summary: Update project
   operationId: updateProject
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            project:
-              type: object
-              additionalProperties: false
-              properties:
-                identifier:
-                  type: string
-                name:
-                  type: string
-                description:
-                  type: string
-                  nullable: true
-                homepage:
-                  type: string
-                  nullable: true
-                is_public:
-                  type: boolean
-                parent_id:
-                  type: integer
-                  nullable: true
-                inherit_members:
-                  description: Inherit members from the parent project. Only effective for subprojects (parent_id is set). Requires the Manage members permission for this project.
-                  type: boolean
-                default_assigned_to_id:
-                  description: Default assignee for new issues in this project. Set to null to clear.
-                  type: integer
-                  nullable: true
-                default_version_id:
-                  description: Default target version for new issues in this project. Set to null to clear.
-                  type: integer
-                  nullable: true
-                default_issue_query_id:
-                  description: Default saved query for the project's issue list page. Set to null to clear.
-                  type: integer
-                  nullable: true
-                tracker_ids:
-                  description: IDs of trackers available in this project.
-                  type: array
-                  items:
-                    type: integer
-                enabled_module_names:
-                  description: |-
-                    Enabled module names for this project.
-                    Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
-                  type: array
-                  items:
-                    type: string
-                issue_custom_field_ids:
-                  description: IDs of issue custom fields enabled for this project. Custom fields with `is_for_all=true` are always available regardless of this setting.
-                  type: array
-                  items:
-                    type: integer
-                custom_fields:
-                  $ref: ../components/schemas/request/custom_fields.yaml
-                custom_field_values:
-                  $ref: ../components/schemas/request/custom_field_values.yaml
+    $ref: ../components/request_bodies/update_project.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -135,12 +70,25 @@ delete:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
   summary: Delete project
   operationId: deleteProject
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/project_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     204:
       description: ""
     404:
       description: ""
+patch:
+  tags:
+    - Projects
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
+  summary: Update project (PATCH)
+  operationId: updateProjectViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_project.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.

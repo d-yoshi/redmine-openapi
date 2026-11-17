@@ -4,7 +4,7 @@ post:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
   summary: Add watcher
-  description: Returns 204 even when the user_id does not exist (the watcher is silently not added). A nonexistent issue yields 403, not 404.
+  description: Adds a user or regular group as a watcher. Unknown IDs are ignored and still return 204. A nonexistent issue returns 403.
   operationId: addWatcher
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -16,11 +16,24 @@ post:
         schema:
           type: object
           additionalProperties: false
-          required:
-            - user_id
+          anyOf:
+            - required: [user_id]
+            - required: [watcher]
           properties:
             user_id:
               type: integer
+              description: User or regular group ID. Ignored when `watcher` is present.
+            watcher:
+              type: object
+              additionalProperties: false
+              properties:
+                user_id:
+                  type: integer
+                user_ids:
+                  type: array
+                  items:
+                    type: integer
+              description: Provide `user_id` for one user or regular group, or `user_ids` for several.
   responses:
     204:
       description: ""

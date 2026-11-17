@@ -1,16 +1,19 @@
 Basic:
   type: http
   scheme: basic
+  description: Username and password, or an API key as the username with any password. Password-based Basic authentication is unavailable for accounts using two-factor authentication. API authentication must be enabled.
 
 ApiKey:
   type: apiKey
   in: header
   name: X-Redmine-API-Key
+  description: Personal REST API key. API authentication must be enabled.
 
 ApiKeyInQuery:
   type: apiKey
   in: query
   name: key
+  description: Personal REST API key sent in the query string. API authentication must be enabled.
 
 OAuth2:
   type: oauth2
@@ -19,3 +22,4 @@ OAuth2:
       authorizationUrl: /oauth/authorize
       tokenUrl: /oauth/token
       scopes: {}
+  description: Authorization-code OAuth token with scopes permitting the requested action. `PUT /my/account.json` is not available through OAuth.

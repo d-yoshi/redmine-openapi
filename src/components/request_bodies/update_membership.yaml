@@ -1,0 +1,17 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        membership:
+          type: object
+          additionalProperties: false
+          required:
+            - role_ids
+          properties:
+            role_ids:
+              type: array
+              items:
+                type: integer
+              description: Replaces the roles that the current user can manage. Inherited roles are preserved. If the update leaves no roles, the membership is removed and the response is 422.

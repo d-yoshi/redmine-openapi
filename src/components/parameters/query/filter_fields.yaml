@@ -1,0 +1,9 @@
+name: f[]
+in: query
+description: Explicit filter field names. Without `query_id`, these replace the default filters. Pair each field with `op[field]` and, where needed, repeated `v[field][]` values. Available fields depend on permissions, project context and enabled custom fields.
+schema:
+  type: array
+  items:
+    type: string
+style: form
+explode: true

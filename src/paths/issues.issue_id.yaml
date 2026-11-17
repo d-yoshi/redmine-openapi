@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/issue_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Issues
@@ -6,9 +11,6 @@ get:
   summary: Show issue
   operationId: getIssue
   parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/issue_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
       description: |-
@@ -51,92 +53,15 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
   summary: Update issue
   operationId: updateIssue
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/issue_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            issue:
-              type: object
-              additionalProperties: false
-              properties:
-                project_id:
-                  oneOf:
-                    - type: integer
-                    - type: string
-                tracker_id:
-                  type: integer
-                status_id:
-                  type: integer
-                priority_id:
-                  type: integer
-                subject:
-                  type: string
-                description:
-                  type: string
-                  nullable: true
-                start_date:
-                  type: string
-                  format: date
-                  nullable: true
-                due_date:
-                  type: string
-                  format: date
-                  nullable: true
-                done_ratio:
-                  type: integer
-                  minimum: 0
-                  maximum: 100
-                category_id:
-                  type: integer
-                  nullable: true
-                fixed_version_id:
-                  type: integer
-                  nullable: true
-                assigned_to_id:
-                  type: integer
-                  nullable: true
-                parent_issue_id:
-                  type: integer
-                  nullable: true
-                custom_fields:
-                  $ref: ../components/schemas/request/custom_fields.yaml
-                custom_field_values:
-                  $ref: ../components/schemas/request/custom_field_values.yaml
-                is_private:
-                  type: boolean
-                estimated_hours:
-                  type: number
-                  nullable: true
-                notes:
-                  type: string
-                private_notes:
-                  description: Mark the notes as private. Only visible to users with the "View private notes" permission.
-                  type: boolean
-                deleted_attachment_ids:
-                  description: IDs of existing attachments to remove from this issue.
-                  type: array
-                  items:
-                    type: integer
-                uploads:
-                  $ref: ../components/schemas/request/uploads.yaml
+    $ref: ../components/request_bodies/update_issue.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -146,11 +71,27 @@ delete:
   summary: Delete issue
   operationId: deleteIssue
   parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/issue_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - $ref: ../components/parameters/query/issue_delete_todo.yaml
+    - $ref: ../components/parameters/query/issue_delete_reassign_to_id.yaml
   responses:
     204:
       description: ""
     404:
       description: ""
+patch:
+  tags:
+    - Issues
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
+  summary: Update issue (PATCH)
+  operationId: updateIssueViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_issue.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.

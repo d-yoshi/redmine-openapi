@@ -68,7 +68,7 @@ describe("Users", () => {
           hide_mail: true,
           time_zone: "Tokyo",
           comments_sorting: "asc",
-          warn_on_leaving_unsaved: true,
+          warn_on_leaving_unsaved: "1",
           no_self_notified: true,
           notify_about_high_priority_issues: false,
           textarea_font: "monospace",
@@ -134,7 +134,7 @@ describe("Users", () => {
           hide_mail: false,
           time_zone: "UTC",
           comments_sorting: "desc",
-          warn_on_leaving_unsaved: false,
+          warn_on_leaving_unsaved: "0",
           no_self_notified: false,
           notify_about_high_priority_issues: true,
           textarea_font: "proportional",
@@ -338,6 +338,53 @@ describe("Users", () => {
       params: { path: { format: "json", user_id: ownId } },
     });
     assertStatus(422, response);
+  });
+
+  test("native group membership filters support negation", async () => {
+    const included = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query: { is_member_of_group: String(filterGroupId) } },
+    });
+    assertStatus(200, included);
+    assert(included.data!.users.some((u) => u.id === userId));
+    const excluded = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query: { is_member_of_group: `!${filterGroupId}` } },
+    });
+    assertStatus(200, excluded);
+    assert(!excluded.data!.users.some((u) => u.id === userId));
+  });
+
+  test("user string shortcuts use equality unless an operator is supplied", async () => {
+    const equal = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query: { login: userLogin } },
+    });
+    assertStatus(200, equal);
+    assert.deepEqual(
+      equal.data!.users.map((u) => u.id),
+      [userId]
+    );
+    const partial = userLogin.slice(2);
+    const unmatched = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query: { login: partial } },
+    });
+    assertStatus(200, unmatched);
+    assert(!unmatched.data!.users.some((u) => u.id === userId));
+    const substring = await client.GET("/users.{format}", {
+      params: { path: { format: "json" }, query: { login: `~${partial}` } },
+    });
+    assertStatus(200, substring);
+    assert(substring.data!.users.some((u) => u.id === userId));
+  });
+
+  test("PATCH updates a user", async () => {
+    const params = { path: { format: "json" as const, user_id: userId } };
+    const updated = await client.PATCH("/users/{user_id}.{format}", {
+      params,
+      body: { user: { firstname: "PATCH firstname" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/users/{user_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.user.firstname, "PATCH firstname");
   });
 
   test("DELETE /users/{user_id}.json", async () => {

@@ -269,6 +269,47 @@ describe("News", () => {
     assertStatus(404, response);
   });
 
+  test("cleared news summaries are null in lists and omitted from details", async () => {
+    const update = await client.PUT("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: newsId } },
+      body: { news: { summary: null } },
+    });
+    assertStatus(204, update);
+    const list = await client.GET("/news.{format}", {
+      params: { path: { format: "json" }, query: { project_id: projectId } },
+    });
+    assertStatus(200, list);
+    const item = list.data!.news.find((n) => n.id === newsId);
+    assert(item);
+    assert.equal(item.summary, null);
+    const detail = await client.GET("/news/{news_id}.{format}", {
+      params: { path: { format: "json", news_id: newsId } },
+    });
+    assertStatus(200, detail);
+    assert(!Object.hasOwn(detail.data!.news, "summary"));
+  });
+
+  test("news project filtering returns 404 for an unknown project", async () => {
+    assertStatus(
+      404,
+      await client.GET("/news.{format}", {
+        params: { path: { format: "json" }, query: { project_id: 999999 } },
+      })
+    );
+  });
+
+  test("PATCH updates a news item", async () => {
+    const params = { path: { format: "json" as const, news_id: newsId } };
+    const updated = await client.PATCH("/news/{news_id}.{format}", {
+      params,
+      body: { news: { title: "News via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/news/{news_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.news.title, "News via PATCH");
+  });
+
   test("DELETE /news/{news_id}.json", async () => {
     const response = await client.DELETE("/news/{news_id}.{format}", {
       params: {

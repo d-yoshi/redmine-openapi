@@ -156,21 +156,26 @@ describe("Project permissions", () => {
     }
   });
 
-  test("updating inherit_members requires Manage members in addition to Edit project", async () => {
+  test("project settings require their field-specific permissions in addition to Edit project", async () => {
     for (const login of [editorLogin, undefined]) {
       const response = await client.PUT("/projects/{project_id}.{format}", {
         params: {
           path: { format: "json", project_id: projectId },
           header: { "X-Redmine-Switch-User": login },
         },
-        body: { project: { inherit_members: true } },
+        body: { project: { inherit_members: true, is_public: false, enabled_module_names: [] } },
       });
       assertStatus(204, response);
       const readback = await client.GET("/projects/{project_id}.{format}", {
-        params: { path: { format: "json", project_id: projectId } },
+        params: { path: { format: "json", project_id: projectId }, query: { include: ["enabled_modules"] } },
       });
       assertStatus(200, readback);
       assert.strictEqual(readback.data!.project.inherit_members, login === undefined);
+      assert.strictEqual(readback.data!.project.is_public, login !== undefined);
+      assert.deepEqual(
+        readback.data!.project.enabled_modules!.map((module) => module.name).sort(),
+        login ? ["issue_tracking", "time_tracking"] : []
+      );
     }
   });
 });

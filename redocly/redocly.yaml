@@ -1,6 +1,9 @@
 extends:
   - recommended-strict
 
+rules:
+  tag-description: off
+
 plugins:
   - ./plugins/common-responses.js
   - ./plugins/remove-additional-properties.js

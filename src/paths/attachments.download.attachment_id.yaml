@@ -1,0 +1,32 @@
+get:
+  tags:
+    - Attachments
+  summary: Download attachment by ID
+  description: Downloads an attachment by ID without a filename in the path. With `.json`, errors have empty response bodies; successful responses contain the original file bytes.
+  operationId: downloadAttachmentById
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/attachment_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: If-None-Match
+      in: header
+      description: ETag from a previous response. Redmine returns 304 with no response body when the tag matches.
+      schema:
+        type: string
+  responses:
+    "200":
+      description: ""
+      content:
+        "*/*":
+          schema:
+            type: string
+            format: binary
+      headers:
+        ETag:
+          description: Use this value with `If-None-Match` to make a conditional request.
+          schema:
+            type: string
+    "304":
+      description: The ETag matches; no response body is sent.
+    "404":
+      description: The attachment was not found.

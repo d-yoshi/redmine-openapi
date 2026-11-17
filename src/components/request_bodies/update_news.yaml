@@ -1,0 +1,19 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        news:
+          type: object
+          additionalProperties: false
+          properties:
+            title:
+              type: string
+            summary:
+              type: string
+              nullable: true
+            description:
+              type: string
+            uploads:
+              $ref: ../schemas/request/uploads.yaml

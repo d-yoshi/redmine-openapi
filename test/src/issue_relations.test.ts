@@ -193,4 +193,31 @@ describe("Issue Relations", () => {
     );
     assertStatus(204, response);
   });
+  test("relation creation defaults to relates and accepts several target IDs", async () => {
+    const ids: number[] = [];
+    for (const subject of ["Batch relation source", "First target", "Second target"]) {
+      const result = await client.POST("/issues.{format}", {
+        params: { path: { format: "json" } },
+        body: { issue: { project_id: projectId, subject } },
+      });
+      assertStatus(201, result);
+      ids.push(result.data!.issue.id);
+    }
+    const created = await client.POST("/issues/{issue_id}/relations.{format}", {
+      params: { path: { format: "json", issue_id: ids[0] } },
+      body: { relation: { issue_to_id: ids.slice(1).join(",") } },
+    });
+    assertStatus(201, created);
+    assert.equal(created.data!.relation.relation_type, "relates");
+    assert.equal(created.data!.relation.issue_to_id, ids[2]);
+    const result = await client.GET("/issues/{issue_id}/relations.{format}", {
+      params: { path: { format: "json", issue_id: ids[0] } },
+    });
+    assertStatus(200, result);
+    assert.deepEqual(
+      result.data!.relations.map((r) => r.issue_to_id).sort((a, b) => a - b),
+      ids.slice(1)
+    );
+  });
+
 });

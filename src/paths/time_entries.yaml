@@ -24,12 +24,7 @@ get:
         type: string
     - name: project_id
       in: query
-      description: |-
-        Filter by project.
-        Format: `[operator]value[|value2|...]`
-        Operators: `=` (default), `!` (not equal)
-        Special values: `mine` (projects where current user is a member), `bookmarks` (bookmarked projects)
-        Examples: `1|2`, `mine`, `!mine`
+      description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
       schema:
         type: string
     - name: spent_on
@@ -37,7 +32,7 @@ get:
       description: |-
         Filter by date spent.
         Format: `[operator]value`
-        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
         Examples: `=2024-01-01`, `>=2024-01-01`, `><2024-01-01|2024-12-31`, `>t-7`, `t`, `lw`
       schema:
         type: string
@@ -70,9 +65,9 @@ get:
       in: query
       description: |-
         Filter by issue.
-        Format: `[operator]value`
-        Operators: `=` (exact match), `~` (issue and its subtasks), `*` (any), `!*` (none)
-        Examples: `=1`, `~1`, `*`, `!*`
+        Format: `[operator]ID`
+        Operators: `=` (default, one exact issue ID), `~` (the issue and all its descendants), `*` (any issue), `!*` (no issue).
+        Examples: `1`, `~1`, `*`, `!*`.
       schema:
         type: string
     - name: issue.tracker_id
@@ -105,10 +100,9 @@ get:
     - name: issue.parent_id
       in: query
       description: |-
-        Filter by issue's parent.
-        Format: `[operator]value`
-        Operators: `=` (exact match), `~` (issue and its subtasks), `*` (any), `!*` (none)
-        Examples: `=1`, `~1`, `*`, `!*`
+        Filter time entries by the issue's parent or ancestry.
+        With `=` (default), provide one parent issue ID or comma-separated IDs to select entries on their immediate children. With `~ID`, select entries on descendants of that issue, excluding the issue itself. Use `issue_id=~ID` to include that issue as well.
+        `*` selects entries whose issue has a parent; `!*` selects entries on root issues or without an issue. Examples: `1`, `1,2`, `~1`, `*`, `!*`.
       schema:
         type: string
     - name: issue.category_id
@@ -125,7 +119,8 @@ get:
       description: |-
         Filter by issue's subject.
         Format: `[operator]value`
-        Operators: `~` (contains, default), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        A value without an operator uses exact matching. A leading `=` is part of the literal value.
+        Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~keyword`, `^prefix`, `$suffix`
       schema:
         type: string
@@ -181,14 +176,15 @@ get:
       description: |-
         Filter by comments.
         Format: `[operator]value`
-        Operators: `~` (contains, default), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        A value without an operator uses exact matching. A leading `=` is part of the literal value.
+        Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~keyword`, `^prefix`
       schema:
         type: string
     - name: hours
       in: query
       description: |-
-        Filter by hours.
+        Filter by hours, expressed as decimal hours.
         Format: `[operator]value`
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
         Examples: `=8`, `>=4`, `><1|8`
@@ -197,11 +193,17 @@ get:
     - name: sort
       in: query
       description: |-
-        Sort order. Comma-separated list of `field` or `field:desc`. Default direction is ascending.
+        Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
         Examples: `spent_on:desc`, `hours:desc,spent_on`
       schema:
         type: string
         example: "spent_on:desc"
+    - $ref: ../components/parameters/query/page.yaml
+    - $ref: ../components/parameters/query/query_id.yaml
+    - $ref: ../components/parameters/query/filter_fields.yaml
+    - $ref: ../components/parameters/query/filter_operators.yaml
+    - $ref: ../components/parameters/query/filter_values.yaml
+    - $ref: ../components/parameters/query/custom_filters.yaml
   responses:
     200:
       description: ""
@@ -223,6 +225,22 @@ get:
                 type: integer
               limit:
                 type: integer
+    "404":
+      description: Not found. The body is empty for an unknown project, or contains a framework error object for an unknown saved query.
+      content:
+        application/json:
+          schema:
+            type: object
+            nullable: true
+            additionalProperties: false
+            required:
+              - status
+              - error
+            properties:
+              status:
+                type: integer
+              error:
+                type: string
 
 post:
   tags:
@@ -235,6 +253,7 @@ post:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -258,11 +277,15 @@ post:
                   type: string
                   format: date
                 hours:
-                  type: number
+                  description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
+                  oneOf:
+                    - type: number
+                    - type: string
                 activity_id:
                   type: integer
                 comments:
                   type: string
+                  nullable: true
                 user_id:
                   type: integer
                 custom_fields:

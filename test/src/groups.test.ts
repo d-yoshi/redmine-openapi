@@ -1,12 +1,26 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus, createTestUser, runCleanup } from "./helpers.js";
+import {
+  client,
+  assertStatus,
+  createTestUser,
+  runCleanup,
+} from "./helpers.js";
 
 describe("Groups", () => {
   let groupId: number;
   let userId: number;
   let extraUserId: number;
+
+  const groupUserIds = async () => {
+    const result = await client.GET("/groups/{group_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId }, query: { include: ["users"] } },
+    });
+    assertStatus(200, result);
+    assert(result.data!.group.users);
+    return result.data!.group.users.map((user) => user.id).sort((a, b) => a - b);
+  };
 
   before(async () => {
     userId = await createTestUser("grpuser");
@@ -94,6 +108,7 @@ describe("Groups", () => {
       }
     );
     assertStatus(204, response);
+    assert.deepEqual(await groupUserIds(), [userId, extraUserId].sort((a, b) => a - b));
   });
 
   test("DELETE /groups/{group_id}/users/{user_id}.json (remove user)", async () => {
@@ -106,6 +121,29 @@ describe("Groups", () => {
       }
     );
     assertStatus(204, response);
+    assert.deepEqual(await groupUserIds(), [extraUserId]);
+  });
+
+  test("removing an existing user who is not a group member also returns 204", async () => {
+    assert(!(await groupUserIds()).includes(userId));
+    const result = await client.DELETE("/groups/{group_id}/users/{user_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId, user_id: userId } },
+    });
+    assertStatus(204, result);
+    assert.deepEqual(await groupUserIds(), [extraUserId]);
+  });
+
+  test("group-user creation accepts several IDs in user_ids", async () => {
+    assertStatus(204, await client.DELETE("/groups/{group_id}/users/{user_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId, user_id: extraUserId } },
+    }));
+    assert.deepEqual(await groupUserIds(), []);
+    const result = await client.POST("/groups/{group_id}/users.{format}", {
+      params: { path: { format: "json", group_id: groupId } },
+      body: { user_ids: [userId, extraUserId] },
+    });
+    assertStatus(204, result);
+    assert.deepEqual(await groupUserIds(), [userId, extraUserId].sort((a, b) => a - b));
   });
 
   test("GET /groups.json", async () => {
@@ -136,6 +174,10 @@ describe("Groups", () => {
   });
 
   test("POST /groups/{group_id}/users.json returns 422 for a user already in the group", async () => {
+    assertStatus(204, await client.DELETE("/groups/{group_id}/users/{user_id}.{format}", {
+      params: { path: { format: "json", group_id: groupId, user_id: userId } },
+    }));
+    assert(!(await groupUserIds()).includes(userId));
     const firstResponse = await client.POST("/groups/{group_id}/users.{format}", {
       params: { path: { format: "json", group_id: groupId } },
       body: { user_id: userId },
@@ -217,6 +259,18 @@ describe("Groups", () => {
       }
     );
     assertStatus(404, response);
+  });
+
+  test("PATCH updates a group", async () => {
+    const params = { path: { format: "json" as const, group_id: groupId } };
+    const updated = await client.PATCH("/groups/{group_id}.{format}", {
+      params,
+      body: { group: { name: "Group via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/groups/{group_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.group.name, "Group via PATCH");
   });
 
   test("DELETE /groups/{group_id}.json", async () => {

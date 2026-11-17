@@ -415,10 +415,83 @@ describe("Projects", () => {
     assertStatus(422, response);
   });
 
+  test("PATCH updates a project", async () => {
+    const params = { path: { format: "json" as const, project_id: mainProjectId } };
+    const updated = await client.PATCH("/projects/{project_id}.{format}", {
+      params,
+      body: { project: { name: "Project updated via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/projects/{project_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.project.name, "Project updated via PATCH");
+  });
+
   test("DELETE /projects/{project_id}.json", async () => {
     const response = await client.DELETE("/projects/{project_id}.{format}", {
       params: { path: { format: "json", project_id: postProjectId } },
     });
     assertStatus(204, response);
   });
+  test("project creation can omit identifier when sequential identifiers are enabled", async () => {
+    const result = await client.POST("/projects.{format}", {
+      params: { path: { format: "json" } },
+      body: { project: { name: "Generated identifier" } },
+    });
+    assertStatus(201, result);
+    const project = result.data!.project;
+    try {
+      assert(project.identifier.length > 0);
+    } finally {
+      assertStatus(
+        204,
+        await client.DELETE("/projects/{project_id}.{format}", {
+          params: { path: { format: "json", project_id: project.id } },
+        })
+      );
+    }
+  });
+
+  test("POST archives, unarchives, closes, and reopens a project", async () => {
+    const name = `project-state-alias-${Date.now()}`;
+    const created = await client.POST("/projects.{format}", {
+      params: { path: { format: "json" } },
+      body: { project: { name, identifier: name } },
+    });
+    assertStatus(201, created);
+    const params = { path: { format: "json" as const, project_id: created.data!.project.id } };
+    try {
+      const transitions = [
+        {
+          request: () => client.POST("/projects/{project_id}/close.{format}", { params }),
+          status: 5,
+        },
+        {
+          request: () => client.POST("/projects/{project_id}/reopen.{format}", { params }),
+          status: 1,
+        },
+        {
+          request: () => client.POST("/projects/{project_id}/archive.{format}", { params }),
+          status: 9,
+        },
+        {
+          request: () => client.POST("/projects/{project_id}/unarchive.{format}", { params }),
+          status: 1,
+        },
+      ];
+      for (const transition of transitions) {
+        assertStatus(204, await transition.request());
+        const current = await client.GET("/projects/{project_id}.{format}", { params });
+        if (transition.status === 9) {
+          assertStatus(403, current);
+        } else {
+          assertStatus(200, current);
+          assert.equal(current.data!.project.status, transition.status);
+        }
+      }
+    } finally {
+      assertStatus(204, await client.DELETE("/projects/{project_id}.{format}", { params }));
+    }
+  });
+
 });

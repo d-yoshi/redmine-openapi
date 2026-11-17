@@ -42,14 +42,18 @@ properties:
     nullable: true
   avatar_url:
     type: string
+    description: Returned when Gravatar icons are enabled.
   twofa_scheme:
     type: string
     nullable: true
   status:
     type: integer
   auth_source:
-    $ref: ./id_name.yaml
+    description: Included when requested and this user has an external authentication source.
+    allOf:
+      - $ref: ./id_name.yaml
   custom_fields:
     type: array
     items:
       $ref: ./custom_field_value.yaml
+    description: Visible custom-field values. Omitted when no custom fields are visible.

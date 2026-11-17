@@ -1,7 +1,7 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, createTestUser, fixtureRoleId } from "./helpers.js";
 
 describe("Journals", () => {
   let projectId: number;
@@ -150,4 +150,84 @@ describe("Journals", () => {
     });
     assertStatus(404, response);
   });
+
+  test("private_notes is ignored without the Set notes as private permission", async () => {
+    const userId = await createTestUser("public-note-author");
+    try {
+      const user = await client.GET("/users/{user_id}.{format}", {
+        params: { path: { format: "json", user_id: userId } },
+      });
+      assertStatus(200, user);
+      const member = await client.POST("/projects/{project_id}/memberships.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+        body: { membership: { user_id: userId, role_ids: [await fixtureRoleId("API note author")] } },
+      });
+      assertStatus(201, member);
+      const header = { "X-Redmine-Switch-User": user.data!.user.login };
+      const notes = "Notes without permission to mark them private";
+      assertStatus(204, await client.PUT("/issues/{issue_id}.{format}", {
+        params: { path: { format: "json", issue_id: issueId }, header },
+        body: { issue: { notes, private_notes: true } },
+      }));
+      const readNote = async () => {
+        const result = await client.GET("/issues/{issue_id}.{format}", {
+          params: { path: { format: "json", issue_id: issueId }, query: { include: ["journals"] } },
+        });
+        assertStatus(200, result);
+        const note = result.data!.issue.journals?.find((item) => item.notes === notes);
+        assert(note);
+        assert.equal(note.private_notes, false);
+        return note.id;
+      };
+      const id = await readNote();
+      assertStatus(204, await client.PATCH("/journals/{journal_id}.{format}", {
+        params: { path: { format: "json", journal_id: id }, header },
+        body: { journal: { private_notes: true } },
+      }));
+      await readNote();
+    } finally {
+      assertStatus(204, await client.DELETE("/users/{user_id}.{format}", {
+        params: { path: { format: "json", user_id: userId } },
+      }));
+    }
+  });
+  test("private notes accompanying a property change can produce null public notes", async () => {
+    const ids = await journalIds();
+    const update = await client.PUT("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId } },
+      body: {
+        issue: {
+          subject: "Property change with private notes",
+          notes: "Private explanation",
+          private_notes: true,
+        },
+      },
+    });
+    assertStatus(204, update);
+    const result = await client.GET("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId }, query: { include: ["journals"] } },
+    });
+    assertStatus(200, result);
+    const added = result.data!.issue.journals!.filter((j) => !ids.includes(j.id));
+    assert(added.some((j) => j.notes === null && j.details.length > 0));
+    assert(added.some((j) => j.notes === "Private explanation" && j.private_notes));
+  });
+
+  test("PATCH updates journal notes", async () => {
+    const id = await addNote("Notes before PATCH");
+    const updated = await client.PATCH("/journals/{journal_id}.{format}", {
+      params: { path: { format: "json", journal_id: id } },
+      body: { journal: { notes: "Notes after PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: issueId }, query: { include: ["journals"] } },
+    });
+    assertStatus(200, current);
+    assert.equal(
+      current.data!.issue.journals?.find((j) => j.id === id)?.notes,
+      "Notes after PATCH"
+    );
+  });
+
 });

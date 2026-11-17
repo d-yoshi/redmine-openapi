@@ -15,11 +15,14 @@ post:
         schema:
           type: object
           additionalProperties: false
-          required:
-            - user_id
           properties:
             user_id:
               type: integer
+            user_ids:
+              type: array
+              items:
+                type: integer
+          description: Provide `user_id` for one user or `user_ids` for several users. Unknown user IDs are ignored.
   responses:
     204:
       description: ""
@@ -31,3 +34,9 @@ post:
             $ref: ../components/schemas/errors.yaml
     404:
       description: ""
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Requires an administrator.

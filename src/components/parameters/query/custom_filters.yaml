@@ -1,0 +1,12 @@
+name: cf_x
+in: query
+description: |-
+  Custom-field filters, using actual field names as keys.
+  Use `cf_12` for custom field 12 on the listed records. Issue lists also support `project.cf_12`, `author.cf_12`, `assigned_to.cf_12` and `fixed_version.cf_12`; time-entry lists support `project.cf_12`, `user.cf_12` and `issue.cf_12`.
+  Reference fields can expose chained names such as `cf_12.cf_34`, or version attributes `cf_12.due_date` and `cf_12.status`. Only registered, visible fields enabled as filters are available. Operators and values depend on the field type. Use explicit `f[]`, `op` and `v` for repeated values without shortcut parsing.
+schema:
+  type: object
+  additionalProperties:
+    type: string
+style: form
+explode: true

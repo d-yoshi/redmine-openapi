@@ -36,6 +36,7 @@ properties:
     type: array
     items:
       $ref: ./custom_field_value.yaml
+    description: Visible custom-field values. Omitted when no custom fields are visible.
   trackers:
     type: array
     items:
@@ -44,10 +45,12 @@ properties:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Included when requested and the current user can view issues.
   time_entry_activities:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Included when requested and the current user can view time entries.
   enabled_modules:
     type: array
     items:

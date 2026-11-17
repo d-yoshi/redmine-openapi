@@ -72,12 +72,15 @@ properties:
     nullable: true
   spent_hours:
     type: number
+    description: Returned when the current user can view spent time in the project.
   total_spent_hours:
     type: number
+    description: Returned when the current user can view spent time in the project.
   custom_fields:
     type: array
     items:
       $ref: ./custom_field_value.yaml
+    description: Visible custom-field values. Omitted when no custom fields are visible.
   created_on:
     type: string
     format: date-time
@@ -111,6 +114,7 @@ properties:
     type: array
     items:
       $ref: ./issue_child.yaml
+    description: Included with `include=children` when descendants exist. Contains only visible descendants; an empty array is possible when all descendants are hidden.
   attachments:
     type: array
     items:
@@ -119,6 +123,7 @@ properties:
     type: array
     items:
       $ref: ./issue_relation.yaml
+    description: Included with `include=relations` when at least one relation to a visible issue exists.
   journals:
     type: array
     items:
@@ -126,6 +131,7 @@ properties:
       additionalProperties: false
       required:
         - id
+        - user
         - notes
         - created_on
         - updated_on
@@ -138,6 +144,7 @@ properties:
           $ref: ./id_name.yaml
         notes:
           type: string
+          nullable: true
         created_on:
           type: string
           format: date-time
@@ -173,6 +180,7 @@ properties:
     type: array
     items:
       $ref: ./id_name.yaml
+    description: Users and regular groups watching the issue. Included with `include=watchers` when the current user can view issue watchers.
   allowed_statuses:
     type: array
     items:

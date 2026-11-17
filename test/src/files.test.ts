@@ -81,14 +81,12 @@ describe("Files", async () => {
   });
 
   test("GET /projects/{project_id}/files.json", async () => {
-    const response = await client.GET(
-      "/projects/{project_id}/files.{format}",
-      {
-        params: {
-          path: { format: "json", project_id: projectIdentifier },
-        },
-      }
-    );
+    const response = await client.GET("/projects/{project_id}/files.{format}", {
+      params: {
+        path: { format: "json", project_id: projectIdentifier },
+        query: { sort: "filename:desc" },
+      },
+    });
     assertStatus(200, response);
     assert(
       response.data!.files.some((file) => file.filename === "project-file.txt"),

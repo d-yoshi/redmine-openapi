@@ -35,3 +35,8 @@ get:
             properties:
               user:
                 $ref: ../components/schemas/user.yaml
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []

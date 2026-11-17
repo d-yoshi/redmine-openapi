@@ -1,7 +1,7 @@
 import { before, after, describe, test } from "node:test";
 import assert from "node:assert/strict";
 
-import { client, assertStatus } from "./helpers.js";
+import { client, assertStatus, uploadFile } from "./helpers.js";
 
 describe("Search", () => {
   let projectId: number;
@@ -178,4 +178,93 @@ describe("Search", () => {
     assertStatus(200, response);
     assertIssueResults(response.data!.results, [issueId, partialMatchId]);
   });
+  test("queries without searchable tokens have null total_count", async () => {
+    for (const q of [undefined, "", "a", '""']) {
+      const result = await client.GET("/search.{format}", {
+        params: { path: { format: "json" }, query: { q } },
+      });
+      assertStatus(200, result);
+      assert.deepEqual(result.data!.results, []);
+      assert.equal(result.data!.total_count, null);
+    }
+  });
+
+  test("project search scopes can expand beyond the project in the path", async () => {
+    const name = `outside${Date.now()}`;
+    const project = await client.POST("/projects.{format}", {
+      params: { path: { format: "json" } },
+      body: { project: { name, identifier: name } },
+    });
+    assertStatus(201, project);
+    const otherId = project.data!.project.id;
+    try {
+      const issue = await client.POST("/issues.{format}", {
+        params: { path: { format: "json" } },
+        body: { issue: { project_id: otherId, subject: token } },
+      });
+      assertStatus(201, issue);
+      const local = await client.GET("/projects/{project_id}/search.{format}", {
+        params: { path: { format: "json", project_id: projectId }, query: { q: token, issues: 1 } },
+      });
+      assertStatus(200, local);
+      assert(!local.data!.results.some((r) => r.id === issue.data!.issue.id));
+      const global = await client.GET("/projects/{project_id}/search.{format}", {
+        params: {
+          path: { format: "json", project_id: projectId },
+          query: { q: token, issues: 1, scope: "all" },
+        },
+      });
+      assertStatus(200, global);
+      assert(global.data!.results.some((r) => r.id === issue.data!.issue.id));
+      const projects = await client.GET("/projects/{project_id}/search.{format}", {
+        params: {
+          path: { format: "json", project_id: projectId },
+          query: { q: name, projects: 1, scope: "all" },
+        },
+      });
+      assertStatus(200, projects);
+      assert(projects.data!.results.some((r) => r.type === "project" && r.id === otherId));
+    } finally {
+      assertStatus(
+        204,
+        await client.DELETE("/projects/{project_id}.{format}", {
+          params: { path: { format: "json", project_id: otherId } },
+        })
+      );
+    }
+  });
+
+  test("attachment search matches metadata rather than file bytes", async () => {
+    const metadata = `metadata${Date.now()}`;
+    const bytes = `filebytes${Date.now()}`;
+    const upload = await uploadFile(`${metadata}.txt`, bytes);
+    const issue = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        issue: {
+          project_id: projectId,
+          subject: "Attachment search fixture",
+          uploads: [{ token: upload.token }],
+        },
+      },
+    });
+    assertStatus(201, issue);
+    for (const [query, found] of [
+      [{ q: metadata, attachments: "0" }, false],
+      [{ q: metadata, attachments: "1" }, true],
+      [{ q: metadata, attachments: "1", titles_only: "1" }, false],
+      [{ q: metadata, attachments: "only", titles_only: "1" }, true],
+      [{ q: bytes, attachments: "1" }, false],
+    ] as const) {
+      const result = await client.GET("/projects/{project_id}/search.{format}", {
+        params: { path: { format: "json", project_id: projectId }, query: { ...query, issues: 1 } },
+      });
+      assertStatus(200, result);
+      assert.equal(
+        result.data!.results.some((r) => r.id === issue.data!.issue.id),
+        found
+      );
+    }
+  });
+
 });

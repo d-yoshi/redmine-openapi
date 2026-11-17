@@ -15,21 +15,18 @@ get:
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
     - name: q
       in: query
-      description: |-
-        Search query string. Tokenized into words for matching.
-        When `all_words` is enabled (default), all tokens must match. Otherwise, any token can match.
+      description: 'Search query split into at most five unique tokens; quoted phrases form one token. Non-Han tokens need at least two characters, while a Han character can be a token. If the query is omitted or has no usable tokens, Redmine returns an empty result and `total_count: null`. By default, all tokens must match; use `all_words` to allow any token to match.'
       schema:
         type: string
-      required: true
     - name: scope
       in: query
-      description: |-
-        Search scope.
-        Values: `subprojects` (include subprojects of the specified project)
-        When not specified, only the specified project is searched.
+      description: Defaults to the project in the path. `subprojects` includes that project and its descendants. `all`, `my_projects`, and `bookmarks` replace this context with all visible projects, projects the current user belongs to, or the current user's bookmarked projects, respectively.
       schema:
         type: string
         enum:
+          - all
+          - my_projects
+          - bookmarks
           - subprojects
     - name: all_words
       in: query
@@ -108,15 +105,21 @@ get:
         type: string
     - name: attachments
       in: query
-      description: |-
-        Search attachments. Default is `0` (do not search attachments).
-        Values: `0` (disabled), `1` (search attachments and content), `only` (search attachments only)
+      description: Search attachment metadata (filenames and descriptions) associated with searchable records; file contents are not searched. `0` (default) searches record fields only, `1` searches record fields and attachment metadata, and `only` searches attachment metadata only. If `titles_only` is enabled, attachment metadata is searched only when this parameter is `only`.
       schema:
         type: string
         enum:
           - "0"
           - "1"
           - "only"
+    - $ref: ../components/parameters/query/page.yaml
+    - name: projects
+      in: query
+      description: Include matching projects when the effective scope covers multiple projects or is global. Any non-empty value enables project results.
+      schema:
+        type: integer
+        enum:
+          - 1
   responses:
     200:
       description: ""
@@ -134,6 +137,7 @@ get:
                   $ref: ../components/schemas/search.yaml
               total_count:
                 type: integer
+                nullable: true
               offset:
                 type: integer
               limit:

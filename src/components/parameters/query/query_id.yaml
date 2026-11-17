@@ -1,0 +1,5 @@
+name: query_id
+in: query
+description: ID of a visible saved query for this list type. Redmine applies the saved query's filters and sort order. Other filter parameters, including `f[]`, are ignored; `sort` can override the saved sort order.
+schema:
+  type: integer

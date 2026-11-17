@@ -4,6 +4,7 @@ delete:
   externalDocs:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
   summary: Remove watcher
+  description: Removes the user or regular group identified by `user_id` as a watcher of the issue.
   operationId: removeWatcher
   parameters:
     - $ref: ../components/parameters/path/format.yaml

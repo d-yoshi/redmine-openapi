@@ -41,6 +41,7 @@ post:
     - $ref: ../components/parameters/path/issue_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -54,10 +55,17 @@ post:
               additionalProperties: false
               required:
                 - issue_to_id
-                - relation_type
               properties:
                 issue_to_id:
-                  type: integer
+                  description: One target issue ID, comma-separated IDs, or an array of IDs. Redmine creates relations in the supplied order. On success, the response contains the last relation created. If creating a later relation fails, previously created relations can remain.
+                  oneOf:
+                    - type: integer
+                    - type: string
+                    - type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
                 relation_type:
                   description: |-
                     Type of relation from this issue to the target issue.
@@ -73,6 +81,7 @@ post:
                     - follows
                     - copied_to
                     - copied_from
+                  default: relates
                 delay:
                   description: Number of days of delay for `precedes`/`follows` relations. Ignored for other relation types.
                   type: integer

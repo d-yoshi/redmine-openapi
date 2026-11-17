@@ -240,7 +240,7 @@ describe("Wiki Pages", () => {
     );
   });
 
-  test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (rename)", async () => {
+  test("renaming without a redirect makes the old title return 404", async () => {
     const createResponse = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {
@@ -256,8 +256,6 @@ describe("Wiki Pages", () => {
     );
     assertStatus(201, createResponse);
 
-    // Redmine requires the string "0" to disable the old title's redirect,
-    // letting the old-title request below exercise 404.
     const renameResponse = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {
@@ -309,8 +307,80 @@ describe("Wiki Pages", () => {
     assertStatus(404, oldTitleResponse);
   });
 
+  test("old wiki titles return 302 for reads and DELETE without deleting the page", async () => {
+    const path = {
+      format: "json" as const,
+      project_id: projectIdentifier,
+      wiki_page_title: "RedirectSource",
+    };
+    const text = "Page retained behind an old-title redirect";
+    const created = await client.PUT("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: { path },
+      body: { wiki_page: { text, is_start_page: true } },
+    });
+    assertStatus(201, created);
+    const renamed = await client.PUT("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: { path },
+      body: {
+        wiki_page: {
+          text,
+          title: "RedirectTarget",
+          redirect_existing_links: "1",
+          is_start_page: false,
+        },
+      },
+    });
+    assertStatus(204, renamed);
+
+    const requests = [
+      {
+        request: () =>
+          client.GET("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+            params: { path },
+          }),
+        suffix: "",
+      },
+      {
+        request: () =>
+          client.GET("/projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}", {
+            params: { path: { ...path, version_id: 1 } },
+          }),
+        suffix: "/1",
+      },
+      {
+        request: () =>
+          client.GET("/projects/{project_id}/wiki.{format}", {
+            params: { path: { format: "json", project_id: projectIdentifier } },
+          }),
+        suffix: "",
+      },
+      {
+        request: () =>
+          client.DELETE("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+            params: { path },
+          }),
+        suffix: "",
+      },
+    ];
+    for (const { request, suffix } of requests) {
+      const result = await request();
+      assertStatus(302, result);
+      const location = result.response.headers.get("location");
+      assert(location, "Expected a Location header on the Wiki redirect");
+      assert.equal(
+        new URL(location, result.response.url).pathname,
+        `/projects/${projectIdentifier}/wiki/RedirectTarget${suffix}`
+      );
+    }
+    const current = await client.GET("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: { path: { ...path, wiki_page_title: "RedirectTarget" } },
+    });
+    assertStatus(200, current);
+    assert.equal(current.data!.wiki_page.title, "RedirectTarget");
+    assert.equal(current.data!.wiki_page.text, text);
+  });
+
   test("PUT /projects/{project_id}/wiki/{wiki_page_title}.json (set start page)", async () => {
-    // No API response exposes the start page, so only the status can be checked.
     const response = await client.PUT(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
       {
@@ -327,6 +397,15 @@ describe("Wiki Pages", () => {
       }
     );
     assertStatus(204, response);
+    const start = await client.GET("/projects/{project_id}/wiki.{format}", {
+      params: {
+        path: { format: "json", project_id: projectIdentifier },
+        query: { include: ["attachments"] },
+      },
+    });
+    assertStatus(200, start);
+    assert.equal(start.data!.wiki_page.title, "TestPage");
+    assert.equal(start.data!.wiki_page.text, "Updated wiki page content");
   });
 
   test("GET /projects/{project_id}/wiki/index.json", async () => {
@@ -445,6 +524,47 @@ describe("Wiki Pages", () => {
     assertStatus(404, response);
   });
 
+  test("the start-page route returns 404 for an unknown project", async () => {
+    assertStatus(
+      404,
+      await client.GET("/projects/{project_id}/wiki.{format}", {
+        params: { path: { format: "json", project_id: "missing-project" } },
+      })
+    );
+  });
+
+  test("the version query selects historical content", async () => {
+    const result = await client.GET("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: {
+        path: { format: "json", project_id: projectIdentifier, wiki_page_title: "TestPage" },
+        query: { version: 1 },
+      },
+    });
+    assertStatus(200, result);
+    assert.equal(result.data!.wiki_page.version, 1);
+    const start = await client.GET("/projects/{project_id}/wiki.{format}", {
+      params: { path: { format: "json", project_id: projectIdentifier }, query: { version: 1 } },
+    });
+    assertStatus(200, start);
+    assert.equal(start.data!.wiki_page.version, 1);
+  });
+
+  test("unchanged wiki text does not conflict with a stale content version", async () => {
+    const current = await client.GET("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: {
+        path: { format: "json", project_id: projectIdentifier, wiki_page_title: "TestPage" },
+      },
+    });
+    assertStatus(200, current);
+    const result = await client.PUT("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params: {
+        path: { format: "json", project_id: projectIdentifier, wiki_page_title: "TestPage" },
+      },
+      body: { wiki_page: { text: current.data!.wiki_page.text, version: 0 } },
+    });
+    assertStatus(204, result);
+  });
+
   test("DELETE /projects/{project_id}/wiki/{wiki_page_title}.json", async () => {
     const response = await client.DELETE(
       "/projects/{project_id}/wiki/{wiki_page_title}.{format}",
@@ -460,4 +580,30 @@ describe("Wiki Pages", () => {
     );
     assertStatus(204, response);
   });
+  test("PATCH creates and updates wiki content", async () => {
+    const params = {
+      path: {
+        format: "json" as const,
+        project_id: projectIdentifier,
+        wiki_page_title: "PatchPage",
+      },
+    };
+    const created = await client.PATCH("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params,
+      body: { wiki_page: { text: "Content created via PATCH" } },
+    });
+    assertStatus(201, created);
+    assert.equal(created.data!.wiki_page.text, "Content created via PATCH");
+    const updated = await client.PATCH("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params,
+      body: { wiki_page: { text: "Content updated via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/projects/{project_id}/wiki/{wiki_page_title}.{format}", {
+      params,
+    });
+    assertStatus(200, current);
+    assert.equal(current.data!.wiki_page.text, "Content updated via PATCH");
+  });
+
 });

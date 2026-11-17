@@ -119,12 +119,12 @@ describe("Issues", () => {
           start_date: new Date().toISOString().slice(0, 10),
           due_date: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
           done_ratio: 10,
-          assigned_to_id: userId,
+          assigned_to_id: "me",
           category_id: categoryId,
           fixed_version_id: versionId,
           parent_issue_id: parentIssueId,
           is_private: false,
-          estimated_hours: 2,
+          estimated_hours: "2:00",
           watcher_user_ids: [userId],
           custom_fields: [],
           custom_field_values: {},
@@ -602,6 +602,61 @@ describe("Issues", () => {
       }
     );
     assertStatus(422, response);
+  });
+
+  test("copy options preserve attachments and subtasks and link the source", async () => {
+    const upload = await uploadFile("copy-source.txt", "copy content");
+    const source = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: {
+        issue: {
+          project_id: projectId,
+          subject: "Copy source",
+          uploads: [{ token: upload.token }],
+        },
+      },
+    });
+    assertStatus(201, source);
+    const sourceId = source.data!.issue.id;
+    const child = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: { issue: { project_id: projectId, subject: "Copy child", parent_issue_id: sourceId } },
+    });
+    assertStatus(201, child);
+    const copy = await client.POST("/issues.{format}", {
+      params: {
+        path: { format: "json" },
+        query: { copy_from: sourceId, link_copy: 1, copy_attachments: 1, copy_subtasks: 1 },
+      },
+      body: { issue: { project_id: projectId, subject: "Copy result" } },
+    });
+    assertStatus(201, copy);
+    const detail = await client.GET("/issues/{issue_id}.{format}", {
+      params: {
+        path: { format: "json", issue_id: copy.data!.issue.id },
+        query: { include: ["attachments", "children", "relations"] },
+      },
+    });
+    assertStatus(200, detail);
+    assert(detail.data!.issue.attachments?.some((a) => a.filename === "copy-source.txt"));
+    assert(detail.data!.issue.children?.some((i) => i.subject === "Copy child"));
+    assert(
+      detail.data!.issue.relations?.some(
+        (r) => r.issue_id === sourceId || r.issue_to_id === sourceId
+      )
+    );
+  });
+
+  test("PATCH updates an issue", async () => {
+    const params = { path: { format: "json" as const, issue_id: issueId } };
+    const updated = await client.PATCH("/issues/{issue_id}.{format}", {
+      params,
+      body: { issue: { subject: "Issue updated via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/issues/{issue_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.issue.subject, "Issue updated via PATCH");
   });
 
   test("DELETE /issues/{issue_id}.json", async () => {

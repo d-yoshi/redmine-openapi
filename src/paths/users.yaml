@@ -53,7 +53,7 @@ get:
     - name: auth_source_id
       in: query
       description: |-
-        Filter by authentication source. Undocumented
+        Filter by authentication source.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Examples: `1`, `!1`
@@ -62,7 +62,7 @@ get:
     - name: twofa_scheme
       in: query
       description: |-
-        Filter by two-factor authentication scheme. Undocumented
+        Filter by two-factor authentication scheme.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Only available when two-factor authentication is enabled in Redmine settings.
@@ -71,65 +71,84 @@ get:
     - name: login
       in: query
       description: |-
-        Filter by login. Undocumented
+        Filter by login.
         Format: `[operator]value`
-        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~admin`, `^john`
       schema:
         type: string
     - name: firstname
       in: query
       description: |-
-        Filter by first name. Undocumented
+        Filter by first name.
         Format: `[operator]value`
-        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~John`, `=John`
       schema:
         type: string
     - name: lastname
       in: query
       description: |-
-        Filter by last name. Undocumented
+        Filter by last name.
         Format: `[operator]value`
-        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~Doe`, `=Doe`
       schema:
         type: string
     - name: mail
       in: query
       description: |-
-        Filter by email address. Undocumented
+        Filter by email address.
         Format: `[operator]value`
-        Operators: `~` (contains, default), `*~` (contains any word), `=` (exact match), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `!` (not equal), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~example.com`, `$@example.com`
       schema:
         type: string
     - name: created_on
       in: query
       description: |-
-        Filter by creation date. Undocumented
+        Filter by creation date.
         Format: `[operator]value`
-        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `>t-30`, `lm`
       schema:
         type: string
     - name: last_login_on
       in: query
       description: |-
-        Filter by last login date. Undocumented
+        Filter by last login date.
         Format: `[operator]value`
-        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (more than N days ago), `<t-` (less than N days ago), `><t-` (between N and M days ago), `t-` (N days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
         Examples: `>=2024-01-01`, `>t-30`, `!*`
       schema:
         type: string
     - name: admin
       in: query
       description: |-
-        Filter by admin privilege. Undocumented
+        Filter by whether the user is an administrator.
         Format: `[operator]value`
         Operators: `=` (default), `!` (not equal)
         Values: `1` (admin), `0` (non-admin)
         Examples: `1`, `!1`
+      schema:
+        type: string
+    - $ref: ../components/parameters/query/page.yaml
+    - $ref: ../components/parameters/query/query_id.yaml
+    - $ref: ../components/parameters/query/filter_fields.yaml
+    - $ref: ../components/parameters/query/filter_operators.yaml
+    - $ref: ../components/parameters/query/filter_values.yaml
+    - $ref: ../components/parameters/query/custom_filters.yaml
+    - name: is_member_of_group
+      in: query
+      description: Filter by group membership. Supports `=` (default), `!`, `*` and `!*`; separate group IDs with pipes. Unlike the legacy `group_id` shortcut, this filter accepts operators.
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: |-
+        Sort order: up to three comma-separated criteria of `field`, `field:asc`, or `field:desc`. The default direction is ascending.
+        Available fields: `login`, `firstname`, `lastname`, `mail`, `admin`, `created_on`, `updated_on`, `last_login_on`, `passwd_changed_on`, `status`, `auth_source.name`. Sortable custom-field columns use `cf_<id>`. The `twofa_scheme` field is available when two-factor authentication is enabled.
+        Example: `login:desc`.
       schema:
         type: string
   responses:
@@ -159,6 +178,20 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yaml
+    "404":
+      description: The saved query was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/framework_error.yaml
+  description: |-
+    Lists visible users. The default status filter selects active users. A saved query or explicit filters can select other statuses.
+    Requires an administrator.
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
 
 post:
   tags:
@@ -171,6 +204,7 @@ post:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -264,3 +298,9 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yaml
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Requires an administrator.

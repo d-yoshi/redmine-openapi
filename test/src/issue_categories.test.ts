@@ -173,6 +173,18 @@ describe("Issue Categories", () => {
     assertStatus(404, response);
   });
 
+  test("PATCH updates an issue category", async () => {
+    const params = { path: { format: "json" as const, issue_category_id: categoryId } };
+    const updated = await client.PATCH("/issue_categories/{issue_category_id}.{format}", {
+      params,
+      body: { issue_category: { name: "Category via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/issue_categories/{issue_category_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.issue_category.name, "Category via PATCH");
+  });
+
   test("DELETE /issue_categories/{issue_category_id}.json with reassign_to_id", async () => {
     const otherResponse = await client.POST(
       "/projects/{project_id}/issue_categories.{format}",
@@ -184,7 +196,6 @@ describe("Issue Categories", () => {
     assertStatus(201, otherResponse);
     const otherCategoryId = otherResponse.data!.issue_category.id;
 
-    // Reassignment is observable only when an issue uses the deleted category.
     const issueResponse = await client.POST("/issues.{format}", {
       params: { path: { format: "json" } },
       body: {

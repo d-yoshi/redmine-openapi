@@ -32,6 +32,12 @@ get:
                 type: array
                 items:
                   $ref: ../components/schemas/group.summary.yaml
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Requires an administrator.
 
 post:
   tags:
@@ -44,6 +50,7 @@ post:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -91,3 +98,9 @@ post:
         application/json:
           schema:
             $ref: ../components/schemas/errors.yaml
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Requires an administrator.

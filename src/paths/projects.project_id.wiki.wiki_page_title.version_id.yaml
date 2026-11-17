@@ -38,3 +38,6 @@ get:
                 $ref: ../components/schemas/wiki_page.yaml
     404:
       description: ""
+    "302":
+      $ref: ../components/responses.yaml#/WikiRedirect
+  description: Returns the requested content version. If the requested title is a redirect, the 302 response has a `Location` header that points to the current title and retains the requested version number.

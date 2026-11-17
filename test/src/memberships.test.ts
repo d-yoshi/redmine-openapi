@@ -5,6 +5,7 @@ import {
   client,
   assertStatus,
   createTestUser,
+  createTestClient,
   runCleanup,
   someRoleId,
 } from "./helpers.js";
@@ -269,8 +270,7 @@ describe("Memberships", () => {
     assertStatus(404, response);
   });
 
-  test("DELETE /memberships/{membership_id}.json returns 422 when not deletable", async () => {
-    // A membership inherited from a group cannot be deleted directly.
+  test("inherited membership roles survive empty updates and prevent direct deletion", async () => {
     const groupMembershipResponse = await client.POST(
       "/projects/{project_id}/memberships.{format}",
       {
@@ -282,30 +282,55 @@ describe("Memberships", () => {
     );
     assertStatus(201, groupMembershipResponse);
 
-    const listResponse = await client.GET(
-      "/projects/{project_id}/memberships.{format}",
-      {
-        params: { path: { format: "json", project_id: projectIdentifier } },
-      }
-    );
+    const listResponse = await client.GET("/projects/{project_id}/memberships.{format}", {
+      params: { path: { format: "json", project_id: projectIdentifier } },
+    });
     assertStatus(200, listResponse);
     const inheritedMembership = listResponse.data!.memberships.find(
       (membership) => membership.user?.id === groupUserId
     );
-    assert(
-      inheritedMembership,
-      "Expected an inherited membership for the group user"
-    );
+    assert(inheritedMembership, "Expected an inherited membership for the group user");
 
-    const response = await client.DELETE(
-      "/memberships/{membership_id}.{format}",
-      {
-        params: {
-          path: { format: "json", membership_id: inheritedMembership.id },
-        },
-      }
-    );
+    const updated = await client.PATCH("/memberships/{membership_id}.{format}", {
+      params: { path: { format: "json", membership_id: inheritedMembership.id } },
+      body: { membership: { role_ids: [] } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/memberships/{membership_id}.{format}", {
+      params: { path: { format: "json", membership_id: inheritedMembership.id } },
+    });
+    assertStatus(200, current);
+    assert.deepEqual(current.data!.membership.roles, inheritedMembership.roles);
+
+    const response = await client.DELETE("/memberships/{membership_id}.{format}", {
+      params: {
+        path: { format: "json", membership_id: inheritedMembership.id },
+      },
+    });
     assertStatus(422, response);
+  });
+
+  test("PATCH updates membership roles", async () => {
+    const params = { path: { format: "json" as const, membership_id: membershipId } };
+    const before = await client.GET("/memberships/{membership_id}.{format}", { params });
+    assertStatus(200, before);
+    const roles = await client.GET("/roles.{format}", { params: { path: { format: "json" } } });
+    assertStatus(200, roles);
+    const alternative = roles.data!.roles.find(
+      (role) => !before.data!.membership.roles.some((current) => current.id === role.id)
+    );
+    assert(alternative, "Expected an alternative assignable role");
+    const updated = await client.PATCH("/memberships/{membership_id}.{format}", {
+      params,
+      body: { membership: { role_ids: [alternative.id] } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/memberships/{membership_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.deepEqual(
+      current.data!.membership.roles.map((role) => role.id),
+      [alternative.id]
+    );
   });
 
   test("DELETE /memberships/{membership_id}.json", async () => {
@@ -319,4 +344,90 @@ describe("Memberships", () => {
     );
     assertStatus(204, response);
   });
+  test("built-in group memberships use distinct principal keys and can grant anonymous permissions", async () => {
+    const groups = await client.GET("/groups.{format}", {
+      params: { path: { format: "json" }, query: { builtin: "1" } },
+    });
+    assertStatus(200, groups);
+    const anonymous = createTestClient(undefined, { anonymous: true });
+    const memberships: number[] = [];
+    try {
+      for (const builtin of ["anonymous", "non_member"]) {
+        const group = groups.data!.groups.find((g) => g.builtin === builtin);
+        assert(group);
+        const created = await client.POST("/projects/{project_id}/memberships.{format}", {
+          params: { path: { format: "json", project_id: projectId } },
+          body: { membership: { user_id: group.id, role_ids: [await someRoleId()] } },
+        });
+        assertStatus(201, created);
+        memberships.push(created.data!.membership.id);
+        const key = builtin === "anonymous" ? "group_anonymous" : "group_non_member";
+        assert.equal(created.data!.membership[key]?.id, group.id);
+        const detail = await client.GET("/memberships/{membership_id}.{format}", {
+          params: { path: { format: "json", membership_id: created.data!.membership.id } },
+        });
+        assertStatus(200, detail);
+        assert.equal(detail.data!.membership[key]?.id, group.id);
+      }
+      const list = await client.GET("/projects/{project_id}/memberships.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+      });
+      assertStatus(200, list);
+      for (const id of memberships) assert(list.data!.memberships.some((m) => m.id === id));
+      assertStatus(
+        200,
+        await anonymous.GET("/projects/{project_id}.{format}", {
+          params: { path: { format: "json", project_id: projectId } },
+        })
+      );
+      const issue = await anonymous.POST("/issues.{format}", {
+        params: { path: { format: "json" } },
+        body: { issue: { project_id: projectId, subject: "Anonymous permission fixture" } },
+      });
+      assertStatus(201, issue);
+    } finally {
+      await runCleanup(
+        memberships.map(
+          (membership_id) => async () =>
+            assertStatus(
+              204,
+              await client.DELETE("/memberships/{membership_id}.{format}", {
+                params: { path: { format: "json", membership_id } },
+              })
+            )
+        )
+      );
+    }
+  });
+
+  test("membership creation accepts an array of principal IDs", async () => {
+    const ids: number[] = [];
+    try {
+      for (const name of ["member-batch-a", "member-batch-b"]) ids.push(await createTestUser(name));
+      const created = await client.POST("/projects/{project_id}/memberships.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+        body: { membership: { user_ids: ids, role_ids: [await someRoleId()] } },
+      });
+      assertStatus(201, created);
+      assert.equal(created.data!.membership.user?.id, ids[0]);
+      const list = await client.GET("/projects/{project_id}/memberships.{format}", {
+        params: { path: { format: "json", project_id: projectId } },
+      });
+      assertStatus(200, list);
+      for (const id of ids) assert(list.data!.memberships.some((m) => m.user?.id === id));
+    } finally {
+      await runCleanup(
+        ids.map(
+          (user_id) => async () =>
+            assertStatus(
+              204,
+              await client.DELETE("/users/{user_id}.{format}", {
+                params: { path: { format: "json", user_id } },
+              })
+            )
+        )
+      );
+    }
+  });
+
 });

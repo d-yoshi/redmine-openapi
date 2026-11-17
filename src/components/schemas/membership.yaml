@@ -17,3 +17,11 @@ properties:
     type: array
     items:
       $ref: ./membership_role.yaml
+  group_anonymous:
+    description: Anonymous users, represented by the built-in Anonymous group.
+    allOf:
+      - $ref: ./id_name.yaml
+  group_non_member:
+    description: Logged-in users who are not project members, represented by the built-in Non member group.
+    allOf:
+      - $ref: ./id_name.yaml

@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/news_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - News
@@ -6,9 +11,6 @@ get:
   summary: Show news
   operationId: getNews
   parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/news_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: include
       in: query
       description: |-
@@ -45,40 +47,15 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Updating-a-news-item
   summary: Update news
   operationId: updateNews
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/news_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            news:
-              type: object
-              additionalProperties: false
-              properties:
-                title:
-                  type: string
-                summary:
-                  type: string
-                description:
-                  type: string
-                uploads:
-                  $ref: ../components/schemas/request/uploads.yaml
+    $ref: ../components/request_bodies/update_news.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -87,12 +64,25 @@ delete:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Deleting-a-news-item
   summary: Delete news
   operationId: deleteNews
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/news_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     204:
       description: ""
     404:
       description: ""
+patch:
+  tags:
+    - News
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_News#Updating-a-news-item
+  summary: Update news (PATCH)
+  operationId: updateNewsViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_news.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.

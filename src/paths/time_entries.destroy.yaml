@@ -1,0 +1,31 @@
+delete:
+  tags:
+    - Time Entries
+  summary: Delete time entries
+  operationId: deleteTimeEntries
+  description: Deletes the selected time entries. Unknown IDs are ignored if at least one entry is found. The current user must be allowed to delete every found entry.
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: ids[]
+      in: query
+      description: IDs of the records to delete.
+      schema:
+        type: array
+        items:
+          type: integer
+        minItems: 1
+      required: true
+      style: form
+      explode: true
+  responses:
+    "204":
+      description: The entries were deleted.
+    "404":
+      description: None of the selected entries were found.
+    "422":
+      description: The entries could not be deleted.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/errors.yaml

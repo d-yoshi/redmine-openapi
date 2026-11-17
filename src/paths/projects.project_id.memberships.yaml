@@ -13,6 +13,7 @@ get:
     - $ref: ../components/parameters/query/nometa.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - $ref: ../components/parameters/header/x_redmine_nometa.yaml
+    - $ref: ../components/parameters/query/page.yaml
   responses:
     200:
       description: ""
@@ -49,6 +50,7 @@ post:
     - $ref: ../components/parameters/path/project_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -61,7 +63,6 @@ post:
               type: object
               additionalProperties: false
               required:
-                - user_id
                 - role_ids
               properties:
                 user_id:
@@ -70,6 +71,16 @@ post:
                   type: array
                   items:
                     type: integer
+                user_ids:
+                  type: array
+                  items:
+                    type: integer
+              description: Provide `user_id` for one user or group, or `user_ids` for several users or groups. Batch creation returns the first membership. If creating another membership fails, memberships already created can remain.
+              anyOf:
+                - required:
+                    - user_id
+                - required:
+                    - user_ids
   responses:
     201:
       description: ""

@@ -176,7 +176,6 @@ describe("Versions", () => {
   });
 
   test("DELETE /versions/{version_id}.json returns 422 when not deletable", async () => {
-    // A version with issues assigned to it cannot be deleted.
     const versionResponse = await client.POST(
       "/projects/{project_id}/versions.{format}",
       {
@@ -203,6 +202,31 @@ describe("Versions", () => {
       params: { path: { format: "json", version_id: inUseVersionId } },
     });
     assertStatus(422, response);
+  });
+
+  test("version descriptions can be cleared with null", async () => {
+    const update = await client.PUT("/versions/{version_id}.{format}", {
+      params: { path: { format: "json", version_id: versionId } },
+      body: { version: { description: null } },
+    });
+    assertStatus(204, update);
+    const result = await client.GET("/versions/{version_id}.{format}", {
+      params: { path: { format: "json", version_id: versionId } },
+    });
+    assertStatus(200, result);
+    assert.equal(result.data!.version.description, null);
+  });
+
+  test("PATCH updates a version", async () => {
+    const params = { path: { format: "json" as const, version_id: versionId } };
+    const updated = await client.PATCH("/versions/{version_id}.{format}", {
+      params,
+      body: { version: { name: "Version via PATCH" } },
+    });
+    assertStatus(204, updated);
+    const current = await client.GET("/versions/{version_id}.{format}", { params });
+    assertStatus(200, current);
+    assert.equal(current.data!.version.name, "Version via PATCH");
   });
 
   test("DELETE /versions/{version_id}.json", async () => {

@@ -2,7 +2,6 @@ post:
   tags:
     - Repositories
   summary: Add related issue
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: addRelatedIssue
   parameters:
     - $ref: ../components/parameters/path/format.yaml
@@ -11,6 +10,7 @@ post:
     - $ref: ../components/parameters/path/revision.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:

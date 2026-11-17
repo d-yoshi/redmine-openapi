@@ -1,0 +1,5 @@
+name: reassign_to_id
+in: query
+description: Destination issue ID for `todo=reassign`. The destination must not be one of the issues being deleted and must belong to the same project as the time entries being moved.
+schema:
+  type: integer

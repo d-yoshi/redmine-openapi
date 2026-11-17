@@ -2,12 +2,16 @@ get:
   tags:
     - Attachments
   summary: Download attachment file
-  description: "Undocumented: This operation is not listed in the official documentation."
   operationId: downloadAttachmentFile
   parameters:
     - $ref: ../components/parameters/path/attachment_id.yaml
     - $ref: ../components/parameters/path/filename.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: If-None-Match
+      in: header
+      description: ETag from a previous response. Redmine returns 304 with no response body when the tag matches.
+      schema:
+        type: string
   responses:
     200:
       description: ""
@@ -16,8 +20,29 @@ get:
           schema:
             type: string
             format: binary
+      headers:
+        ETag:
+          description: Use this value with `If-None-Match` to make a conditional request.
+          schema:
+            type: string
     404:
       description: Returned as an HTML error page regardless of the Accept header — the route pins the request format to html.
+      content:
+        text/html:
+          schema:
+            type: string
+            format: binary
+    "304":
+      description: The ETag matches; no response body is sent.
+    "302":
+      description: Redirects to the sign-in page when an anonymous request cannot access the attachment.
+      headers:
+        Location:
+          description: Sign-in URL.
+          schema:
+            type: string
+    "403":
+      description: 'HTML access-denied page, including when the request sends `Accept: application/json`.'
       content:
         text/html:
           schema:

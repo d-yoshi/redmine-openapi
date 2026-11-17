@@ -15,3 +15,9 @@ delete:
       description: ""
     404:
       description: ""
+  security:
+    - Basic: []
+    - ApiKey: []
+    - ApiKeyInQuery: []
+    - OAuth2: []
+  description: Requires an administrator. Removing an existing user who is not a member also succeeds. An unknown user or group returns 404.

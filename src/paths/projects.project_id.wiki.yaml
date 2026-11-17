@@ -1,0 +1,46 @@
+get:
+  tags:
+    - Wiki Pages
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page
+  summary: Show wiki start page
+  operationId: getWikiStartPage
+  parameters:
+    - $ref: ../components/parameters/path/format.yaml
+    - $ref: ../components/parameters/path/project_id.yaml
+    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+    - name: include
+      in: query
+      description: |-
+        Comma-separated list of associated data to include in the response.
+        Values: `attachments` (file attachments)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - attachments
+      explode: false
+    - name: version
+      in: query
+      description: Historical content version; an alternative to the versioned page path.
+      schema:
+        type: integer
+  responses:
+    "200":
+      description: ""
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - wiki_page
+            properties:
+              wiki_page:
+                $ref: ../components/schemas/wiki_page.yaml
+    "404":
+      description: ""
+    "302":
+      $ref: ../components/responses.yaml#/WikiRedirect
+  description: Returns the configured start page of the project wiki.

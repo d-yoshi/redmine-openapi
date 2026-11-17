@@ -2,3 +2,4 @@ name: offset
 in: query
 schema:
   type: integer
+description: Number of records to skip. Negative values are treated as 0. Takes precedence over `page`; if neither is supplied, the first page is returned.

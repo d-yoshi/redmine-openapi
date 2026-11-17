@@ -2,7 +2,7 @@ get:
   tags:
     - Attachments
   summary: Download thumbnail
-  description: "Undocumented: This operation is not listed in the official documentation."
+  description: The same thumbnail is available at `/attachments/thumbnail/{attachment_id}/{size}`. The size in the path takes precedence over the query parameter.
   operationId: downloadThumbnail
   parameters:
     - $ref: ../components/parameters/path/attachment_id.yaml
@@ -14,6 +14,11 @@ get:
         If not specified, the configured default thumbnail size is used.
       schema:
         type: integer
+    - name: If-None-Match
+      in: header
+      description: ETag from a previous response. Redmine returns 304 with no response body when the tag matches.
+      schema:
+        type: string
   responses:
     200:
       description: |-
@@ -24,5 +29,43 @@ get:
           schema:
             type: string
             format: binary
-    404:
-      description: The body is empty for clients sending Accept:application/json; browsers (Accept:*/*) receive an HTML error page instead.
+      headers:
+        ETag:
+          description: Use this value with `If-None-Match` to make a conditional request.
+          schema:
+            type: string
+    "404":
+      description: 'If the attachment does not exist, the error format depends on `Accept`: an empty body for JSON or an HTML error page for HTML. If the attachment exists but cannot be thumbnailed, the body is empty.'
+      content:
+        application/json:
+          schema:
+            type: object
+            nullable: true
+            additionalProperties: false
+            description: The response body is empty.
+        text/html:
+          schema:
+            type: string
+            format: binary
+    "304":
+      description: The ETag matches; no response body is sent.
+    "302":
+      description: Redirects to the sign-in page when an anonymous request cannot access the attachment.
+      headers:
+        Location:
+          description: Sign-in URL.
+          schema:
+            type: string
+    "403":
+      description: 'Empty response body for `Accept: application/json`; an HTML access-denied page for browser-style requests.'
+      content:
+        application/json:
+          schema:
+            type: object
+            nullable: true
+            additionalProperties: false
+            description: The response body is empty.
+        text/html:
+          schema:
+            type: string
+            format: binary

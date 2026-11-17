@@ -1,0 +1,14 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        issue_category:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            assigned_to_id:
+              type: integer

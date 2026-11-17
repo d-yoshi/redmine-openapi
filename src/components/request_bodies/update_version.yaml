@@ -1,0 +1,48 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            status:
+              type: string
+              enum:
+                - open
+                - locked
+                - closed
+            sharing:
+              description: |-
+                Version sharing scope.
+                Values: `none` (not shared), `descendants` (with subprojects), `hierarchy` (with ancestors and descendants), `tree` (with entire project tree), `system` (with all projects)
+                `system` requires an administrator. `hierarchy` and `tree` require permission to manage versions in the root project.
+              type: string
+              enum:
+                - none
+                - descendants
+                - hierarchy
+                - tree
+                - system
+            due_date:
+              type: string
+              format: date
+              nullable: true
+            description:
+              type: string
+              nullable: true
+            wiki_page_title:
+              description: Title of a wiki page to associate with this version. Set to null to clear.
+              type: string
+              nullable: true
+            default_project_version:
+              description: Set to true to make this the default target version for new issues in the project.
+              type: boolean
+            custom_fields:
+              $ref: ../schemas/request/custom_fields.yaml
+            custom_field_values:
+              $ref: ../schemas/request/custom_field_values.yaml

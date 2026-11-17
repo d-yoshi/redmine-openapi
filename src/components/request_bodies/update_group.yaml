@@ -1,0 +1,22 @@
+content:
+  application/json:
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        group:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            user_ids:
+              type: array
+              items:
+                type: integer
+            twofa_required:
+              type: boolean
+            custom_fields:
+              $ref: ../schemas/request/custom_fields.yaml
+            custom_field_values:
+              $ref: ../schemas/request/custom_field_values.yaml

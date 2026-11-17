@@ -1,3 +1,8 @@
+parameters:
+  - $ref: ../components/parameters/path/format.yaml
+  - $ref: ../components/parameters/path/issue_category_id.yaml
+  - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
+
 get:
   tags:
     - Issue Categories
@@ -6,10 +11,6 @@ get:
   summary: Show issue category
   description: Reading issue categories is allowed with the View issues permission; the Manage issue categories permission is not required.
   operationId: getIssueCategory
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/issue_category_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   responses:
     200:
       description: ""
@@ -33,36 +34,15 @@ put:
     url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT
   summary: Update issue category
   operationId: updateIssueCategory
-  parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/issue_category_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
-    content:
-      application/json:
-        schema:
-          type: object
-          additionalProperties: false
-          properties:
-            issue_category:
-              type: object
-              additionalProperties: false
-              properties:
-                name:
-                  type: string
-                assigned_to_id:
-                  type: integer
+    $ref: ../components/request_bodies/update_issue_category.yaml
   responses:
-    204:
-      description: ""
-    422:
-      description: ""
-      content:
-        application/json:
-          schema:
-            $ref: ../components/schemas/errors.yaml
-    404:
-      description: ""
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
 
 delete:
   tags:
@@ -72,9 +52,6 @@ delete:
   summary: Delete issue category
   operationId: deleteIssueCategory
   parameters:
-    - $ref: ../components/parameters/path/format.yaml
-    - $ref: ../components/parameters/path/issue_category_id.yaml
-    - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
     - name: reassign_to_id
       in: query
       description: |-
@@ -87,3 +64,20 @@ delete:
       description: ""
     404:
       description: ""
+patch:
+  tags:
+    - Issue Categories
+  externalDocs:
+    url: https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT
+  summary: Update issue category (PATCH)
+  operationId: updateIssueCategoryViaPatch
+  requestBody:
+    $ref: ../components/request_bodies/update_issue_category.yaml
+  responses:
+    "204":
+      $ref: ../components/responses.yaml#/NoContent
+    "404":
+      $ref: ../components/responses.yaml#/ResourceNotFound
+    "422":
+      $ref: ../components/responses.yaml#/ValidationErrors
+  description: Equivalent to PUT on this path, including its permission requirements and request/response behavior.

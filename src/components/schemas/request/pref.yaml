@@ -12,7 +12,11 @@ properties:
       - asc
       - desc
   warn_on_leaving_unsaved:
-    type: boolean
+    description: Show a warning when leaving unsaved changes. Only the string `0` disables the warning; the string `1` enables it.
+    type: string
+    enum:
+      - "0"
+      - "1"
   no_self_notified:
     type: boolean
   notify_about_high_priority_issues:
