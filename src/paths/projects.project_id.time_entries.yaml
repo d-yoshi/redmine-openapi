@@ -115,7 +115,8 @@ get:
       description: |-
         Filter by issue's subject.
         Format: `[operator]value`
-        Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        A value without an operator uses exact matching. A leading `=` is part of the literal value.
+        Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~keyword`, `^prefix`, `$suffix`
       schema:
         type: string
@@ -171,7 +172,8 @@ get:
       description: |-
         Filter by comments.
         Format: `[operator]value`
-        Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+        A value without an operator uses exact matching. A leading `=` is part of the literal value.
+        Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
         Examples: `~keyword`, `^prefix`
       schema:
         type: string
@@ -249,6 +251,7 @@ post:
     - $ref: ../components/parameters/path/project_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:

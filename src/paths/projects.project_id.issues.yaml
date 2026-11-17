@@ -503,6 +503,7 @@ post:
         enum:
           - 1
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -513,6 +514,7 @@ post:
           properties:
             issue:
               type: object
+              description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit.
               additionalProperties: false
               required:
                 - subject
@@ -557,6 +559,7 @@ post:
                       enum:
                         - me
                 parent_issue_id:
+                  description: Parent issue ID. Requires the Manage subtasks permission.
                   type: integer
                   nullable: true
                 custom_fields:
@@ -564,10 +567,12 @@ post:
                 custom_field_values:
                   $ref: ../components/schemas/request/custom_field_values.yaml
                 watcher_user_ids:
+                  description: IDs of users or regular groups to add as watchers. Requires the Add watchers permission.
                   type: array
                   items:
                     type: integer
                 is_private:
+                  description: Requires the Set issues public or private permission, or Set own issues public or private when the current user is the author.
                   type: boolean
                 estimated_hours:
                   description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.

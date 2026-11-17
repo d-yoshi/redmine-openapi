@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-test("only the documented news-summary nullability difference is permitted", (t) => {
+test("permits response-specific descriptions and only the documented news-summary nullability difference", (t) => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "summary-sync-"));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
   const check = (name, summary, detail) => {
@@ -46,6 +46,30 @@ test("only the documented news-summary nullability difference is permitted", (t)
       "other",
       { summary: { type: "string", nullable: true } },
       { summary: { type: "string" } }
+    ),
+    1
+  );
+  assert.equal(
+    check(
+      "other",
+      { name: { type: "string", description: "List label" } },
+      { name: { type: "string", description: "Detail label" } }
+    ),
+    0
+  );
+  assert.equal(
+    check(
+      "other",
+      { name: { type: "string", description: "List label" } },
+      { name: { type: "number", description: "Detail label" } }
+    ),
+    1
+  );
+  assert.equal(
+    check(
+      "other",
+      { record: { type: "object", properties: { description: { type: "string" } } } },
+      { record: { type: "object", properties: { description: { type: "number" } } } }
     ),
     1
   );

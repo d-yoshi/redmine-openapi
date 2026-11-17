@@ -158,6 +158,7 @@ post:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:
@@ -185,11 +186,12 @@ post:
                   nullable: true
                 is_public:
                   type: boolean
+                  description: Non-administrators can set this field only when the default role for new projects grants the Set project public or private permission.
                 parent_id:
                   type: integer
                   nullable: true
                 inherit_members:
-                  description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+                  description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set). Non-administrators can set this field only when the default role for new projects grants the Manage members permission.
                   type: boolean
                 default_assigned_to_id:
                   description: Default assignee for new issues in this project. Set to null to clear.
@@ -211,6 +213,7 @@ post:
                 enabled_module_names:
                   description: |-
                     Enabled module names for this project.
+                    Non-administrators can set this field only when the default role for new projects grants the Select project modules permission.
                     Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
                   type: array
                   items:

@@ -1,7 +1,7 @@
 Basic:
   type: http
   scheme: basic
-  description: Username and password, or an API key as the username with any password. API authentication must be enabled.
+  description: Username and password, or an API key as the username with any password. Password-based Basic authentication is unavailable for accounts using two-factor authentication. API authentication must be enabled.
 
 ApiKey:
   type: apiKey

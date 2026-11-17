@@ -50,6 +50,7 @@ post:
     - $ref: ../components/parameters/path/project_id.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
   requestBody:
+    required: true
     content:
       application/json:
         schema:

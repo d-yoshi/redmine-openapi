@@ -3,7 +3,7 @@ delete:
     - Time Entries
   summary: Delete time entries
   operationId: deleteTimeEntries
-  description: Deletes the selected time entries. The current user must be allowed to delete every selected entry.
+  description: Deletes the selected time entries. Unknown IDs are ignored if at least one entry is found. The current user must be allowed to delete every found entry.
   parameters:
     - $ref: ../components/parameters/path/format.yaml
     - $ref: ../components/parameters/header/x_redmine_switch_user.yaml
@@ -22,7 +22,7 @@ delete:
     "204":
       description: The entries were deleted.
     "404":
-      description: One or more entries were not found.
+      description: None of the selected entries were found.
     "422":
       description: The entries could not be deleted.
       content:

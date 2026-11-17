@@ -1,8 +1,8 @@
 Unauthorized:
-  description: Authentication is required by the operation, installation settings, or resource permissions. Redmine also returns 401 for invalid credentials. API-key and Basic authentication return 403 when REST API authentication is disabled.
+  description: Authentication is required, or Redmine rejected the supplied credentials or authentication method. Operations that allow anonymous access may still succeed without valid credentials.
 
 Forbidden:
-  description: The current user, including an anonymous user, lacks permission for the action or resource.
+  description: Access is forbidden by permissions, installation settings, or account restrictions.
 
 PreconditionFailed:
   description: Invalid X-Redmine-Switch-User header. Returns 412 when the specified user does not exist or is not active. Only applicable to admin users using the X-Redmine-Switch-User header.

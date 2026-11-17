@@ -233,8 +233,10 @@ describe("Shared query parameters", () => {
   test("time-entry filters distinguish equality, substrings, relative dates and descendant boundaries", async () => {
     for (const [query, expected] of [
       [{ comments: marker }, [entryIds[0]]],
+      [{ comments: `=${marker}` }, []],
       [{ comments: `~${marker}` }, entryIds],
       [{ "issue.subject": marker }, [entryIds[0]]],
+      [{ "issue.subject": `=${marker}` }, []],
       [{ "issue.subject": `~${marker}` }, entryIds],
       [{ spent_on: "><t-7" }, [entryIds[0]]],
       [{ spent_on: ">t-7" }, [entryIds[0]]],
@@ -328,5 +330,26 @@ describe("Shared query parameters", () => {
     assertStatus(200, result);
     assert.equal(result.data!.time_entry.comments, null);
     assert(!Object.hasOwn(result.data!.time_entry, "issue"));
+  });
+
+  test("equals-prefixed text filters match a literal leading equals sign", async () => {
+    const literal = `=${marker}`;
+    const issue = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: { issue: { project_id: projectIds[0], subject: literal } },
+    });
+    assertStatus(201, issue);
+    const entry = await client.POST("/time_entries.{format}", {
+      params: { path: { format: "json" } },
+      body: { time_entry: { issue_id: issue.data!.issue.id, hours: 1.5, comments: literal } },
+    });
+    assertStatus(201, entry);
+    for (const query of [{ comments: literal }, { "issue.subject": literal }]) {
+      const result = await client.GET("/time_entries.{format}", {
+        params: { path: { format: "json" }, query: { project_id: String(projectIds[0]), ...query } },
+      });
+      assertStatus(200, result);
+      assert.deepEqual(result.data!.time_entries.map((item) => item.id), [entry.data!.time_entry.id]);
+    }
   });
 });

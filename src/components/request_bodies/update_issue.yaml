@@ -6,6 +6,7 @@ content:
       properties:
         issue:
           type: object
+          description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit, including fields calculated from subtasks or issue status.
           additionalProperties: false
           properties:
             project_id:
@@ -50,6 +51,7 @@ content:
                   enum:
                     - me
             parent_issue_id:
+              description: Parent issue ID. Requires the Manage subtasks permission.
               type: integer
               nullable: true
             custom_fields:
@@ -57,6 +59,7 @@ content:
             custom_field_values:
               $ref: ../schemas/request/custom_field_values.yaml
             is_private:
+              description: Requires the Set issues public or private permission, or Set own issues public or private when the current user is the author.
               type: boolean
             estimated_hours:
               description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
@@ -67,7 +70,7 @@ content:
             notes:
               type: string
             private_notes:
-              description: Mark the notes as private. Private notes are visible to their author and users with the View private notes permission.
+              description: Mark the notes as private. Requires the Set notes as private permission. Private notes are visible to their author and users with the View private notes permission.
               type: boolean
             deleted_attachment_ids:
               description: IDs of existing attachments to remove from this issue.

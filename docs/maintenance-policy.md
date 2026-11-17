@@ -33,11 +33,13 @@ Investigating internal implementation is a way to establish API behavior. Change
 
 Substantiate added or changed API claims using Redmine's source tag for the target version. Official API documentation and representative requests and responses provide additional evidence. Do not attribute unreleased Redmine development-branch behavior to a release.
 
-Identify an existing test that exercises the statement being changed. Share representative tests when source inspection establishes common processing. Add tests for distinct interpretations, exceptions, or conditions that source inspection and existing cases do not resolve adequately. See the test guide for concrete case selection.
+Relate each changed API statement to the relevant source conditions and existing or added tests in the pull request. Share representative tests when source inspection establishes common processing. Add tests for distinct interpretations, exceptions, or conditions that source inspection and existing cases do not resolve adequately. See the test guide for concrete case selection.
 
 State changes in tests should expose the request or response behavior described by the specification. Creating fixtures, reading back an updated attribute, or arranging permissions can be necessary. Exhaustive workflow transitions, combinations of every setting, and checks of internal callbacks or database consistency are outside the suite's purpose.
 
-A successful test run is evidence for the exercised cases. It does not prove every property is always present or that every documented parameter was interpreted.
+Permissions that change whether an input takes effect or a response field appears are within scope. Before removing or consolidating a test, identify the API statement it supports and how that statement will remain covered.
+
+Report source-established behavior, runtime observations, and unverified conditions separately. A successful test run is evidence for the exercised cases. Passing tests and complete operation, response-status, or parameter-name coverage do not establish every property's presence or every documented input's meaning.
 
 ## Request descriptions
 

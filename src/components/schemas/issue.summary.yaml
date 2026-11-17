@@ -99,4 +99,4 @@ properties:
     type: array
     items:
       $ref: ./issue_relation.yaml
-    description: Included with `include=relations`. Detail responses omit this array when the issue has no relations.
+    description: Included with `include=relations`.

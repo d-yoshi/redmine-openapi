@@ -608,6 +608,7 @@ paths:
             enum:
               - 1
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -617,6 +618,7 @@ paths:
               properties:
                 issue:
                   type: object
+                  description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit.
                   required:
                     - project_id
                     - subject
@@ -665,6 +667,7 @@ paths:
                           enum:
                             - me
                     parent_issue_id:
+                      description: Parent issue ID. Requires the Manage subtasks permission.
                       type: integer
                       nullable: true
                     custom_fields:
@@ -672,10 +675,12 @@ paths:
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
                     watcher_user_ids:
+                      description: IDs of users or regular groups to add as watchers. Requires the Add watchers permission.
                       type: array
                       items:
                         type: integer
                     is_private:
+                      description: Requires the Set issues public or private permission, or Set own issues public or private when the current user is the author.
                       type: boolean
                     estimated_hours:
                       description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
@@ -714,7 +719,7 @@ paths:
         - Issues
       summary: Delete issues
       operationId: deleteIssues
-      description: Deletes the selected issues and their subtasks. The current user must be allowed to delete every selected issue.
+      description: Deletes the selected issues and their subtasks. Unknown IDs are ignored if at least one issue is found. The current user must be allowed to delete every found issue.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
@@ -739,7 +744,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: One or more issues were not found or were not visible.
+          description: None of the selected issues were found.
         '412':
           $ref: '#/components/responses/PreconditionFailed'
   /issues/{issue_id}.{format}:
@@ -1370,6 +1375,7 @@ paths:
             enum:
               - 1
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1379,6 +1385,7 @@ paths:
               properties:
                 issue:
                   type: object
+                  description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit.
                   required:
                     - subject
                   properties:
@@ -1422,6 +1429,7 @@ paths:
                           enum:
                             - me
                     parent_issue_id:
+                      description: Parent issue ID. Requires the Manage subtasks permission.
                       type: integer
                       nullable: true
                     custom_fields:
@@ -1429,10 +1437,12 @@ paths:
                     custom_field_values:
                       $ref: '#/components/schemas/custom_field_values'
                     watcher_user_ids:
+                      description: IDs of users or regular groups to add as watchers. Requires the Add watchers permission.
                       type: array
                       items:
                         type: integer
                     is_private:
+                      description: Requires the Set issues public or private permission, or Set own issues public or private when the current user is the author.
                       type: boolean
                     estimated_hours:
                       description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
@@ -1475,7 +1485,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
       summary: Add watcher
-      description: Returns 204 even when the user_id does not exist (the watcher is silently not added). A nonexistent issue yields 403, not 404.
+      description: Adds a user or regular group as a watcher. Unknown IDs are ignored and still return 204. A nonexistent issue returns 403.
       operationId: addWatcher
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1486,11 +1496,25 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - user_id
+              anyOf:
+                - required:
+                    - user_id
+                - required:
+                    - watcher
               properties:
                 user_id:
                   type: integer
+                  description: User or regular group ID. Ignored when `watcher` is present.
+                watcher:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    user_ids:
+                      type: array
+                      items:
+                        type: integer
+                  description: Provide `user_id` for one user or regular group, or `user_ids` for several.
       responses:
         '204':
           description: ''
@@ -1507,6 +1531,7 @@ paths:
       externalDocs:
         url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
       summary: Remove watcher
+      description: Removes the user or regular group identified by `user_id` as a watcher of the issue.
       operationId: removeWatcher
       parameters:
         - $ref: '#/components/parameters/format'
@@ -1689,6 +1714,7 @@ paths:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1714,11 +1740,12 @@ paths:
                       nullable: true
                     is_public:
                       type: boolean
+                      description: Non-administrators can set this field only when the default role for new projects grants the Set project public or private permission.
                     parent_id:
                       type: integer
                       nullable: true
                     inherit_members:
-                      description: Inherit members from the parent project. Only effective for subprojects (parent_id is set).
+                      description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set). Non-administrators can set this field only when the default role for new projects grants the Manage members permission.
                       type: boolean
                     default_assigned_to_id:
                       description: Default assignee for new issues in this project. Set to null to clear.
@@ -1740,6 +1767,7 @@ paths:
                     enabled_module_names:
                       description: |-
                         Enabled module names for this project.
+                        Non-administrators can set this field only when the default role for new projects grants the Select project modules permission.
                         Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
                       type: array
                       items:
@@ -2062,6 +2090,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -2500,6 +2529,7 @@ paths:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -2898,7 +2928,8 @@ paths:
           description: |-
             Filter by issue's subject.
             Format: `[operator]value`
-            Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            A value without an operator uses exact matching. A leading `=` is part of the literal value.
+            Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~keyword`, `^prefix`, `$suffix`
           schema:
             type: string
@@ -2954,7 +2985,8 @@ paths:
           description: |-
             Filter by comments.
             Format: `[operator]value`
-            Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            A value without an operator uses exact matching. A leading `=` is part of the literal value.
+            Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~keyword`, `^prefix`
           schema:
             type: string
@@ -3034,6 +3066,7 @@ paths:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -3313,7 +3346,8 @@ paths:
           description: |-
             Filter by issue's subject.
             Format: `[operator]value`
-            Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            A value without an operator uses exact matching. A leading `=` is part of the literal value.
+            Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~keyword`, `^prefix`, `$suffix`
           schema:
             type: string
@@ -3369,7 +3403,8 @@ paths:
           description: |-
             Filter by comments.
             Format: `[operator]value`
-            Operators: `=` (equality, default), `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
+            A value without an operator uses exact matching. A leading `=` is part of the literal value.
+            Operators: `~` (contains), `*~` (contains any word), `!~` (does not contain), `^` (starts with), `$` (ends with), `*` (any), `!*` (none)
             Examples: `~keyword`, `^prefix`
           schema:
             type: string
@@ -3450,6 +3485,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -3522,6 +3558,7 @@ paths:
         - $ref: '#/components/parameters/issue_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -3810,6 +3847,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -3896,6 +3934,7 @@ paths:
         - $ref: '#/components/parameters/issue_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -4069,6 +4108,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -4841,6 +4881,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -5202,6 +5243,7 @@ paths:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -5889,6 +5931,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -6173,6 +6216,7 @@ paths:
         - $ref: '#/components/parameters/revision'
         - $ref: '#/components/parameters/x_redmine_switch_user'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -6281,7 +6325,7 @@ paths:
         - Watchers
       summary: Add watchers to resources
       operationId: addWatchers
-      description: Adds users as watchers of one or more resources. Requires permission to add watchers for each resource type and access to the selected projects. Unknown user IDs are ignored.
+      description: Adds users or regular groups as watchers of one or more resources. Requires permission to add watchers for each resource type and access to the selected projects. Unknown IDs are ignored.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
@@ -6318,13 +6362,13 @@ paths:
                       type: array
                       items:
                         type: integer
-                  description: Provide `user_id` for one user or `user_ids` for several users.
+                  description: Provide `user_id` for one user or regular group, or `user_ids` for several. When `watcher` is present, Redmine ignores the top-level `user_id`.
                 user_id:
                   type: integer
                   description: Alternative to `watcher.user_id` when `watcher` is omitted.
       responses:
         '204':
-          description: The request was processed; only eligible users were added.
+          description: The request was processed; only eligible users or regular groups were added.
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -6336,7 +6380,7 @@ paths:
         - Watchers
       summary: Remove a watcher from resources
       operationId: removeWatcherFromResources
-      description: Removes a user as a watcher of the selected resources. Requires permission to delete watchers for each resource type and access to the selected projects.
+      description: Removes a user or regular group as a watcher of the selected resources. Requires permission to delete watchers for each resource type and access to the selected projects.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
@@ -6363,7 +6407,7 @@ paths:
           explode: true
         - name: user_id
           in: query
-          description: ID of the user to remove as a watcher.
+          description: ID of the user or regular group to remove as a watcher.
           schema:
             type: integer
           required: true
@@ -6375,7 +6419,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: The user was not found.
+          description: The user or group was not found.
         '412':
           $ref: '#/components/responses/PreconditionFailed'
   /time_entries/destroy.{format}:
@@ -6384,7 +6428,7 @@ paths:
         - Time Entries
       summary: Delete time entries
       operationId: deleteTimeEntries
-      description: Deletes the selected time entries. The current user must be allowed to delete every selected entry.
+      description: Deletes the selected time entries. Unknown IDs are ignored if at least one entry is found. The current user must be allowed to delete every found entry.
       parameters:
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/x_redmine_switch_user'
@@ -6407,7 +6451,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: One or more entries were not found.
+          description: None of the selected entries were found.
         '412':
           $ref: '#/components/responses/PreconditionFailed'
         '422':
@@ -6460,7 +6504,7 @@ components:
     Basic:
       type: http
       scheme: basic
-      description: Username and password, or an API key as the username with any password. API authentication must be enabled.
+      description: Username and password, or an API key as the username with any password. Password-based Basic authentication is unavailable for accounts using two-factor authentication. API authentication must be enabled.
     ApiKey:
       type: apiKey
       in: header
@@ -6511,9 +6555,9 @@ components:
     WikiContentConflict:
       description: The supplied content version conflicts with the current wiki content version.
     Unauthorized:
-      description: Authentication is required by the operation, installation settings, or resource permissions. Redmine also returns 401 for invalid credentials. API-key and Basic authentication return 403 when REST API authentication is disabled.
+      description: Authentication is required, or Redmine rejected the supplied credentials or authentication method. Operations that allow anonymous access may still succeed without valid credentials.
     Forbidden:
-      description: The current user, including an anonymous user, lacks permission for the action or resource.
+      description: Access is forbidden by permissions, installation settings, or account restrictions.
     PreconditionFailed:
       description: Invalid X-Redmine-Switch-User header. Returns 412 when the specified user does not exist or is not active. Only applicable to admin users using the X-Redmine-Switch-User header.
   requestBodies:
@@ -6549,6 +6593,7 @@ components:
             properties:
               issue:
                 type: object
+                description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit, including fields calculated from subtasks or issue status.
                 properties:
                   project_id:
                     oneOf:
@@ -6592,6 +6637,7 @@ components:
                         enum:
                           - me
                   parent_issue_id:
+                    description: Parent issue ID. Requires the Manage subtasks permission.
                     type: integer
                     nullable: true
                   custom_fields:
@@ -6599,6 +6645,7 @@ components:
                   custom_field_values:
                     $ref: '#/components/schemas/custom_field_values'
                   is_private:
+                    description: Requires the Set issues public or private permission, or Set own issues public or private when the current user is the author.
                     type: boolean
                   estimated_hours:
                     description: Duration as decimal hours or a string such as `1:30`, `1h30` or `90m`. Responses return numeric hours.
@@ -6609,7 +6656,7 @@ components:
                   notes:
                     type: string
                   private_notes:
-                    description: Mark the notes as private. Private notes are visible to their author and users with the View private notes permission.
+                    description: Mark the notes as private. Requires the Set notes as private permission. Private notes are visible to their author and users with the View private notes permission.
                     type: boolean
                   deleted_attachment_ids:
                     description: IDs of existing attachments to remove from this issue.
@@ -6640,11 +6687,12 @@ components:
                     nullable: true
                   is_public:
                     type: boolean
+                    description: Requires the Set project public or private permission.
                   parent_id:
                     type: integer
                     nullable: true
                   inherit_members:
-                    description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set).
+                    description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set) and requires the Manage members permission for this project.
                     type: boolean
                   default_assigned_to_id:
                     description: Default assignee for new issues in this project. Set to null to clear.
@@ -6666,6 +6714,7 @@ components:
                   enabled_module_names:
                     description: |-
                       Enabled module names for this project.
+                      Requires the Select project modules permission.
                       Values: `issue_tracking`, `time_tracking`, `news`, `documents`, `files`, `wiki`, `repository`, `boards`, `calendar`, `gantt`
                     type: array
                     items:
@@ -6696,10 +6745,13 @@ components:
                       type: integer
                     description: Replaces the roles that the current user can manage. Inherited roles are preserved. If the update leaves no roles, the membership is removed and the response is 422.
     update_user:
+      required: true
       content:
         application/json:
           schema:
             type: object
+            required:
+              - user
             properties:
               user:
                 type: object
@@ -6863,10 +6915,13 @@ components:
                   custom_field_values:
                     $ref: '#/components/schemas/custom_field_values'
     update_wiki_page:
+      required: true
       content:
         application/json:
           schema:
             type: object
+            required:
+              - wiki_page
             properties:
               wiki_page:
                 type: object
@@ -6951,10 +7006,13 @@ components:
                   custom_field_values:
                     $ref: '#/components/schemas/custom_field_values'
     update_journal:
+      required: true
       content:
         application/json:
           schema:
             type: object
+            required:
+              - journal
             properties:
               journal:
                 type: object
@@ -6964,7 +7022,7 @@ components:
                     nullable: true
                     description: A journal with empty `notes` and no property changes (`details`) remains editable but is omitted from the issue's `include=journals` response until notes are added.
                   private_notes:
-                    description: Mark the notes as private. Private notes are visible to their author and users with the View private notes permission.
+                    description: Mark the notes as private. Requires the Set notes as private permission. Private notes are visible to their author and users with the View private notes permission.
                     type: boolean
   parameters:
     format:
@@ -7405,7 +7463,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/issue_relation'
-          description: Included with `include=relations`. Detail responses omit this array when the issue has no relations.
+          description: Included with `include=relations`.
     errors:
       type: object
       required:
@@ -7590,7 +7648,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/issue_relation'
-          description: Included with `include=relations`. Detail responses omit this array when the issue has no relations.
+          description: Included with `include=relations` when at least one relation to a visible issue exists.
         journals:
           type: array
           items:
@@ -7645,7 +7703,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/id_name'
-          description: Included with `include=watchers` when the current user can view issue watchers.
+          description: Users and regular groups watching the issue. Included with `include=watchers` when the current user can view issue watchers.
         allowed_statuses:
           type: array
           items:
@@ -7859,14 +7917,12 @@ components:
           type: string
         admin:
           type: boolean
-          description: Returned when the current user is an administrator or is viewing their own record.
         firstname:
           type: string
         lastname:
           type: string
         mail:
           type: string
-          description: Returned when the current user is an administrator or the user represented by this record has not hidden their email address.
         created_on:
           type: string
           format: date-time
@@ -7887,12 +7943,10 @@ components:
         twofa_scheme:
           type: string
           nullable: true
-          description: Returned when the current user is an administrator or is viewing their own record.
         status:
           type: integer
-          description: Returned to administrators.
         auth_source:
-          description: Included for administrators when requested and this user has an external authentication source.
+          description: Included when requested and this user has an external authentication source.
           allOf:
             - $ref: '#/components/schemas/id_name'
         custom_fields:

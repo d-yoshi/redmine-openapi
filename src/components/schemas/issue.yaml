@@ -123,7 +123,7 @@ properties:
     type: array
     items:
       $ref: ./issue_relation.yaml
-    description: Included with `include=relations`. Detail responses omit this array when the issue has no relations.
+    description: Included with `include=relations` when at least one relation to a visible issue exists.
   journals:
     type: array
     items:
@@ -180,7 +180,7 @@ properties:
     type: array
     items:
       $ref: ./id_name.yaml
-    description: Included with `include=watchers` when the current user can view issue watchers.
+    description: Users and regular groups watching the issue. Included with `include=watchers` when the current user can view issue watchers.
   allowed_statuses:
     type: array
     items:

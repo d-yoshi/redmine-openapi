@@ -1,8 +1,11 @@
+required: true
 content:
   application/json:
     schema:
       type: object
       additionalProperties: false
+      required:
+        - user
       properties:
         user:
           type: object

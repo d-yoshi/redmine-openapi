@@ -50,7 +50,7 @@ describe("Issue and time-entry batch deletion", () => {
     const issueId = await createIssue();
     const ids = [await createEntry(issueId), await createEntry(issueId)];
     const result = await client.DELETE("/time_entries/destroy.{format}", {
-      params: { path: { format: "json" }, query: { "ids[]": ids } },
+      params: { path: { format: "json" }, query: { "ids[]": [...ids, 999999] } },
       querySerializer: serializeRepeatedArrays,
     });
     assertStatus(204, result);
@@ -70,7 +70,7 @@ describe("Issue and time-entry batch deletion", () => {
     const result = await client.DELETE("/issues.{format}", {
       params: {
         path: { format: "json" },
-        query: { "ids[]": ids, todo: "reassign", reassign_to_id: targetId },
+        query: { "ids[]": [...ids, 999999], todo: "reassign", reassign_to_id: targetId },
       },
       querySerializer: serializeRepeatedArrays,
     });

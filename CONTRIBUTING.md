@@ -44,11 +44,13 @@ Confirm behavior in Redmine's source tag matching the branch's image pin. Redmin
 | Column types | Database migrations |
 | Filters and special values | The relevant Query class and controller parameter handling |
 
+Follow relevant parsing, lookup, authorization, model, and rendering helpers to establish the observable behavior. Resolve the permitted entity types through their models and scopes; names such as `user_id` alone do not establish which types of records are accepted.
+
 Follow these schema conventions:
 
-- Use `*.summary.yaml` for list representations and `*.yaml` for detail representations. Check both when changing a shared field.
+- Use `*.summary.yaml` for list representations and `*.yaml` for detail representations. Check shared fields in both, including response-specific descriptions and omission conditions.
 - Declare `additionalProperties: false` on response object schemas. The strict bundle retains it; the distribution bundle removes it.
-- Assess required properties, `null`, and omission conditions separately, using the maintenance policy's evidence requirements.
+- Assess `requestBody.required`, required wrapper properties, required nested properties, and `nullable` separately. A required property inside a body does not make the body itself required. Use the maintenance policy's evidence requirements for response properties and omission conditions.
 - Declare supported HTTP method aliases as separate operations. Reuse path-level parameters, request bodies under `src/components/request_bodies/`, and shared response definitions for operations with identical contracts.
 - The build plugin supplies default 401, 403, and 412 responses. Declare an operation-specific response only when its representation differs, as with HTML errors on attachment downloads; the plugin preserves explicit declarations.
 - Filters that accept expressions such as `1|5`, `!1`, or `>=2024-01-01` use `type: string`, including ID filters. Verify the parser for the specific parameter. Parameters such as `include`, pagination, and search flags can use different parsing rules.
@@ -74,7 +76,7 @@ You may submit source changes without committing the generated bundle. Review th
 
 ## Describe the pull request
 
-Explain the discrepancy and resulting behavior, the exact Redmine version, the evidence, and the validation performed. Link to the relevant files at Redmine's released source tag and identify the existing or added tests. State any conditions you have not confirmed. For a required property, explain why normal API responses cannot omit it; one response containing the property is not sufficient evidence.
+Explain the discrepancy and resulting behavior and identify the exact Redmine version. For each changed API statement, link to the relevant conditions in Redmine's released source and identify the existing or added tests. Distinguish what the source establishes, what the tests observed, and which conditions remain unverified. For a required response property, explain why normal API responses cannot omit it; one response containing the property is not sufficient evidence.
 
 Maintainers review the evidence and wording, coordinate outstanding checks, and assess backports and release impact. Workflow approval may be needed for fork pull requests. Documentation-only changes may not trigger CI because of its path filters.
 

@@ -16,6 +16,7 @@ OPENAPI_PATH="$SCRIPT_DIR/dist/openapi.strict.yaml"
 # data, so this script only ever operates on a container it starts and destroys
 # itself. There is deliberately no way to point it at an existing Redmine.
 REDMINE_DIR="$SCRIPT_DIR/redmine"
+export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-redmine-openapi-test-$$}"
 
 cleanup() {
   echo "=== Cleaning up ==="
@@ -109,13 +110,30 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     Role.create!(name: 'Manager', permissions: Redmine::AccessControl.permissions.map(&:name))
     Role.create!(name: 'Developer', permissions: [:add_issues, :edit_issues, :view_issues, :manage_issue_relations, :add_issue_notes])
   end
-  # A fixed role for the visibility regressions, independent of image defaults.
-  # view_members is public. 'default' still allows own or assigned private issues.
-  role = Role.find_or_initialize_by(name: 'API visibility viewer')
-  role.permissions = [:view_issues]
-  role.issues_visibility = 'default'
-  role.users_visibility = 'all'
-  role.save!
+  {
+    'API visibility viewer' => [:view_issues],
+    'API note author' => [:view_issues, :add_issue_notes, :edit_own_issue_notes],
+    'API project editor' => [:edit_project, :add_project, :add_subprojects]
+  }.each do |name, permissions|
+    role = Role.find_or_initialize_by(name: name)
+    role.permissions = permissions
+    role.issues_visibility = 'default'
+    role.users_visibility = 'all'
+    role.save!
+  end
+  Setting.new_project_user_role_id = Role.find_by!(name: 'API project editor').id.to_s
+
+  # Two-factor authentication cannot be enabled through the REST API.
+  User.find_or_create_by!(login: 'api-twofa-fixture') do |user|
+    user.firstname = 'API'
+    user.lastname = 'Two-factor fixture'
+    user.mail = 'api-twofa-fixture@example.com'
+    user.password = '$REDMINE_ADMIN_PASSWORD'
+    user.password_confirmation = '$REDMINE_ADMIN_PASSWORD'
+    user.must_change_passwd = false
+    user.twofa_totp_key = ROTP::Base32.random
+    user.twofa_scheme = 'totp'
+  end
 
   # Expose auth_source metadata without authenticating against LDAP.
   ldap = AuthSourceLdap.find_or_create_by!(name: 'API test LDAP') do |source|
@@ -191,8 +209,7 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
   puts 'Setup completed!'
 RUBY
 
-# Kept idempotent: `docker compose up -d` reuses a container that an interrupted
-# run left behind, so this may run against a database that already has the data.
+# Callers that set COMPOSE_PROJECT_NAME may reuse a container from an interrupted run.
 echo "=== Setting up Git repository ==="
 docker exec -i "$REDMINE_CONTAINER" bash -seu -o pipefail <<'BASH'
   if ! command -v git > /dev/null 2>&1; then

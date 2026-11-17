@@ -7,7 +7,6 @@ describe("Watchers", () => {
   let projectId: number;
   let issueId: number;
 
-  // A 204 response does not confirm a watcher change; read the list back.
   const watcherIds = async (targetIssueId = issueId) => {
     const response = await client.GET("/issues/{issue_id}.{format}", {
       params: {
@@ -104,6 +103,40 @@ describe("Watchers", () => {
     );
   });
 
+  test("issue and generic watcher routes accept regular group IDs", async () => {
+    const created = await client.POST("/groups.{format}", {
+      params: { path: { format: "json" } },
+      body: { group: { name: `group-watcher-${Date.now()}` } },
+    });
+    assertStatus(201, created);
+    const groupId = created.data!.group.id;
+    const userId = await currentUserId();
+    try {
+      assert(!(await watcherIds()).includes(userId));
+      const added = await client.POST("/issues/{issue_id}/watchers.{format}", {
+        params: { path: { format: "json", issue_id: issueId } },
+        body: { watcher: { user_ids: [groupId, userId] } },
+      });
+      assertStatus(204, added);
+      const addedIds = await watcherIds();
+      assert(addedIds.includes(groupId));
+      assert(addedIds.includes(userId));
+      const removed = await client.DELETE("/watchers.{format}", {
+        params: {
+          path: { format: "json" },
+          query: { object_type: "issue", "object_id[]": [issueId], user_id: groupId },
+        },
+        querySerializer: serializeRepeatedArrays,
+      });
+      assertStatus(204, removed);
+      assert(!(await watcherIds()).includes(groupId));
+    } finally {
+      assertStatus(204, await client.DELETE("/groups/{group_id}.{format}", {
+        params: { path: { format: "json", group_id: groupId } },
+      }));
+    }
+  });
+
   test("POST /issues/{issue_id}/watchers.json returns 403 for nonexistent issue", async () => {
     const response = await client.POST(
       "/issues/{issue_id}/watchers.{format}",
@@ -134,6 +167,12 @@ describe("Watchers", () => {
     assertStatus(201, second);
     const secondId = second.data!.issue.id;
     const userId = await currentUserId();
+    for (const targetId of [issueId, secondId]) {
+      assertStatus(204, await client.DELETE("/issues/{issue_id}/watchers/{user_id}.{format}", {
+        params: { path: { format: "json", issue_id: targetId, user_id: userId } },
+      }));
+      assert(!(await watcherIds(targetId)).includes(userId));
+    }
     const added = await client.POST("/watchers.{format}", {
       params: { path: { format: "json" } },
       body: {
@@ -166,6 +205,5 @@ describe("Watchers", () => {
     });
     assertStatus(404, result);
   });
-
 
 });

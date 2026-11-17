@@ -178,4 +178,40 @@ describe("Issue visibility", () => {
     assertStatus(200, response);
     assert.deepStrictEqual(response.data!.issue.children, []);
   });
+
+  test("detail relations are omitted when no related issue is visible", async () => {
+    const peer = await client.POST("/issues.{format}", {
+      params: { path: { format: "json" } },
+      body: { issue: { project_id: visibleProjectId, subject: "Private related issue", is_private: true } },
+    });
+    assertStatus(201, peer);
+    const privateRelation = await client.POST("/issues/{issue_id}/relations.{format}", {
+      params: { path: { format: "json", issue_id: parentId } },
+      body: { relation: { issue_to_id: peer.data!.issue.id } },
+    });
+    assertStatus(201, privateRelation);
+    const admin = await client.GET("/issues/{issue_id}.{format}", {
+      params: { path: { format: "json", issue_id: parentId }, query: { include: ["relations"] } },
+    });
+    assertStatus(200, admin);
+    assert.equal(admin.data!.issue.relations?.length, 1);
+    const readAsViewer = () => client.GET("/issues/{issue_id}.{format}", {
+      params: {
+        path: { format: "json", issue_id: parentId },
+        header: { "X-Redmine-Switch-User": viewerLogin },
+        query: { include: ["relations"] },
+      },
+    });
+    const hidden = await readAsViewer();
+    assertStatus(200, hidden);
+    assert(!Object.hasOwn(hidden.data!.issue, "relations"));
+    const visibleRelation = await client.POST("/issues/{issue_id}/relations.{format}", {
+      params: { path: { format: "json", issue_id: parentId } },
+      body: { relation: { issue_to_id: hiddenOnlyParentId } },
+    });
+    assertStatus(201, visibleRelation);
+    const shown = await readAsViewer();
+    assertStatus(200, shown);
+    assert.deepEqual(shown.data!.issue.relations?.map((item) => item.id), [visibleRelation.data!.relation.id]);
+  });
 });
