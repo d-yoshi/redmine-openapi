@@ -1495,26 +1495,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              anyOf:
-                - required:
-                    - user_id
-                - required:
-                    - watcher
-              properties:
-                user_id:
-                  type: integer
-                  description: User or regular group ID. Ignored when `watcher` is present.
-                watcher:
-                  type: object
-                  properties:
-                    user_id:
-                      type: integer
-                    user_ids:
-                      type: array
-                      items:
-                        type: integer
-                  description: Provide `user_id` for one user or regular group, or `user_ids` for several.
+              $ref: '#/components/schemas/add_watcher'
       responses:
         '204':
           description: ''
@@ -2099,26 +2080,7 @@ paths:
                 - membership
               properties:
                 membership:
-                  type: object
-                  required:
-                    - role_ids
-                  properties:
-                    user_id:
-                      type: integer
-                    role_ids:
-                      type: array
-                      items:
-                        type: integer
-                    user_ids:
-                      type: array
-                      items:
-                        type: integer
-                  description: Provide `user_id` for one user or group, or `user_ids` for several users or groups. Batch creation returns the first membership. If creating another membership fails, memberships already created can remain.
-                  anyOf:
-                    - required:
-                        - user_id
-                    - required:
-                        - user_ids
+                  $ref: '#/components/schemas/create_membership'
       responses:
         '201':
           description: ''
@@ -7708,6 +7670,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/issue_status.summary'
+    add_watcher:
+      type: object
+      anyOf:
+        - required:
+            - user_id
+        - required:
+            - watcher
+      properties:
+        user_id:
+          type: integer
+          description: User or regular group ID. Ignored when `watcher` is present.
+        watcher:
+          type: object
+          properties:
+            user_id:
+              type: integer
+            user_ids:
+              type: array
+              items:
+                type: integer
+          description: Provide `user_id` for one user or regular group, or `user_ids` for several.
     project.summary:
       type: object
       required:
@@ -7895,6 +7878,27 @@ components:
           description: Logged-in users who are not project members, represented by the built-in Non member group.
           allOf:
             - $ref: '#/components/schemas/id_name'
+    create_membership:
+      type: object
+      required:
+        - role_ids
+      properties:
+        user_id:
+          type: integer
+        role_ids:
+          type: array
+          items:
+            type: integer
+        user_ids:
+          type: array
+          items:
+            type: integer
+      description: Provide `user_id` for one user or group, or `user_ids` for several users or groups. Batch creation returns the first membership. If creating another membership fails, memberships already created can remain.
+      anyOf:
+        - required:
+            - user_id
+        - required:
+            - user_ids
     user.summary:
       type: object
       required:

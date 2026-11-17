@@ -14,26 +14,7 @@ post:
     content:
       application/json:
         schema:
-          type: object
-          additionalProperties: false
-          anyOf:
-            - required: [user_id]
-            - required: [watcher]
-          properties:
-            user_id:
-              type: integer
-              description: User or regular group ID. Ignored when `watcher` is present.
-            watcher:
-              type: object
-              additionalProperties: false
-              properties:
-                user_id:
-                  type: integer
-                user_ids:
-                  type: array
-                  items:
-                    type: integer
-              description: Provide `user_id` for one user or regular group, or `user_ids` for several.
+          $ref: ../components/schemas/request/add_watcher.yaml
   responses:
     204:
       description: ""

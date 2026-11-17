@@ -19,13 +19,13 @@ If a Redmine plugin adds response properties, declare those properties in your O
 
 ## Prepare the build
 
-The examples below use release `7.0.3-r1` of this specification, Redocly CLI `2.71.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
+The examples below use release `7.0.3-r4` of this specification, Redocly CLI `2.71.0`, and Node.js 24. Replace the release tag with the one for your Redmine version. You can run these commands without cloning this repository.
 
 ```sh
 mkdir redmine-api-custom
 cd redmine-api-custom
 
-REDMINE_SPEC_TAG=7.0.3-r1
+REDMINE_SPEC_TAG=7.0.3-r4
 curl --fail --location \
   "https://github.com/d-yoshi/redmine-openapi/releases/download/${REDMINE_SPEC_TAG}/openapi.yaml" \
   --output openapi.base.yaml
@@ -121,6 +121,31 @@ actions:
 Removing these two `oneOf` constraints leaves both shared value components as `{}`, allowing any JSON value. Generated types depend on the generator and target language; inspect the output before using the generated client.
 
 Other unions in the specification remain unchanged and may need separate adjustments for your generator. Keep a separate specification with the custom-field value constraints intact for response validation.
+
+## Example: a generator cannot handle alternative required inputs
+
+Two request components use `anyOf` to require at least one of two properties:
+
+| Component | Request object | Alternatives |
+| --- | --- | --- |
+| `create_membership` | The `membership` object inside a membership-creation body | `user_id` or `user_ids` |
+| `add_watcher` | The issue-watcher addition body | `user_id` or `watcher` |
+
+Each component contains the object's properties and constraints. An Overlay can replace the whole object schema or adjust its individual properties. If your generator cannot handle these `anyOf` constraints, the following Overlay removes just those constraints:
+
+```yaml
+overlay: 1.1.0
+info:
+  title: Request alternatives for generation
+  version: 1.0.0
+actions:
+  - target: $.components.schemas.create_membership.anyOf
+    remove: true
+  - target: $.components.schemas.add_watcher.anyOf
+    remove: true
+```
+
+The customized specification no longer requires either alternative property. The membership request body, its `membership` wrapper, and `role_ids` remain required. Redmine's input requirements still apply, so keep the `anyOf` constraints in any specification used to validate requests.
 
 ## Build and verify
 

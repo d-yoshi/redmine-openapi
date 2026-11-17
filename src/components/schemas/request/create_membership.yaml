@@ -1,0 +1,21 @@
+type: object
+additionalProperties: false
+required:
+  - role_ids
+properties:
+  user_id:
+    type: integer
+  role_ids:
+    type: array
+    items:
+      type: integer
+  user_ids:
+    type: array
+    items:
+      type: integer
+description: Provide `user_id` for one user or group, or `user_ids` for several users or groups. Batch creation returns the first membership. If creating another membership fails, memberships already created can remain.
+anyOf:
+  - required:
+      - user_id
+  - required:
+      - user_ids
