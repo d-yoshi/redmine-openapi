@@ -621,7 +621,6 @@ paths:
                   description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit.
                   required:
                     - project_id
-                    - subject
                   properties:
                     project_id:
                       oneOf:
@@ -635,6 +634,7 @@ paths:
                       type: integer
                     subject:
                       type: string
+                      description: Required when `copy_from` is omitted. During a copy, Redmine uses the source issue's subject if this field is omitted.
                     description:
                       type: string
                       nullable: true
@@ -1375,7 +1375,7 @@ paths:
             enum:
               - 1
       requestBody:
-        required: true
+        description: Required when `copy_from` is omitted. Omit the body to copy the source issue into this project without overriding fields.
         content:
           application/json:
             schema:
@@ -1386,8 +1386,6 @@ paths:
                 issue:
                   type: object
                   description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit.
-                  required:
-                    - subject
                   properties:
                     tracker_id:
                       type: integer
@@ -1397,6 +1395,7 @@ paths:
                       type: integer
                     subject:
                       type: string
+                      description: Required when `copy_from` is omitted. During a copy, Redmine uses the source issue's subject if this field is omitted.
                     description:
                       type: string
                       nullable: true
@@ -6654,7 +6653,7 @@ components:
                     type: integer
                     nullable: true
                   inherit_members:
-                    description: Inherit members from the parent project. Applies only to subprojects (`parent_id` is set) and requires the Manage members permission for this project.
+                    description: Inherit members from the parent project. Applies to subprojects. The current user needs the Manage members permission for this project and must be able to view its existing parent.
                     type: boolean
                   default_assigned_to_id:
                     description: Default assignee for new issues in this project. Set to null to clear.
@@ -7672,11 +7671,6 @@ components:
             $ref: '#/components/schemas/issue_status.summary'
     add_watcher:
       type: object
-      anyOf:
-        - required:
-            - user_id
-        - required:
-            - watcher
       properties:
         user_id:
           type: integer
@@ -7691,6 +7685,16 @@ components:
               items:
                 type: integer
           description: Provide `user_id` for one user or regular group, or `user_ids` for several.
+      allOf:
+        - anyOf:
+            - required:
+                - user_id
+              properties:
+                user_id: {}
+            - required:
+                - watcher
+              properties:
+                watcher: {}
     project.summary:
       type: object
       required:

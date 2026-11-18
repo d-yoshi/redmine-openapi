@@ -9,6 +9,7 @@ on:
       - ".github/workflows/**"
       - ".github/release-targets.json"
       - ".github/oasdiff-image.txt"
+      - ".github/oasdiff-severity.txt"
       - "scripts/**"
       - "src/**"
       - "redocly/**"
@@ -28,6 +29,7 @@ on:
       - ".github/workflows/**"
       - ".github/release-targets.json"
       - ".github/oasdiff-image.txt"
+      - ".github/oasdiff-severity.txt"
       - "scripts/**"
       - "src/**"
       - "redocly/**"
@@ -124,7 +126,8 @@ jobs:
           {
             echo "## oasdiff changelog vs \`$PREV_TAG\`"
             echo '```'
-            docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo "$OASDIFF_IMAGE" changelog /tmp/previous.yaml /repo/openapi.yaml
+            docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo "$OASDIFF_IMAGE" changelog \
+              --severity-levels /repo/.github/oasdiff-severity.txt /tmp/previous.yaml /repo/openapi.yaml
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 

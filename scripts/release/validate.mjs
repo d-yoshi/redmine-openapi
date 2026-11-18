@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { load } from "js-yaml";
 
 import { digest } from "./github.mjs";
@@ -59,7 +60,16 @@ export function buildRelease({ sourceDir, outputDir, tag, sourceSha, toolingSha,
     fs.mkdirSync(previousDir, { recursive: true });
     fs.writeFileSync(path.join(previousDir, "openapi.yaml"), command("git", ["show", `refs/tags/${previous}:openapi.yaml`], { stdio: "pipe" }));
     const oasdiffImage = fs.readFileSync(new URL("../../.github/oasdiff-image.txt", import.meta.url), "utf8").trim();
-    const diff = (kind) => command("docker", ["run", "--rm", "-v", `${previousDir}:/previous:ro`, "-v", `${output}:/current:ro`, oasdiffImage, kind, "/previous/openapi.yaml", "/current/openapi.yaml", ...(kind === "breaking" ? ["--fail-on", "ERR"] : [])], { stdio: "pipe", encoding: "utf8" });
+    const severityLevels = fileURLToPath(new URL("../../.github/oasdiff-severity.txt", import.meta.url));
+    const diff = (kind) => command("docker", [
+      "run", "--rm",
+      "-v", `${previousDir}:/previous:ro`,
+      "-v", `${output}:/current:ro`,
+      "-v", `${severityLevels}:/severity.txt:ro`,
+      oasdiffImage,
+      kind, "--severity-levels", "/severity.txt", "/previous/openapi.yaml", "/current/openapi.yaml",
+      ...(kind === "breaking" ? ["--fail-on", "ERR"] : []),
+    ], { stdio: "pipe", encoding: "utf8" });
     try { diff("breaking"); } catch (error) {
       if (error.status !== 1) throw error;
       notes.push(`**Breaking corrections compared with ${previous}: regenerated clients or validators may need changes.**`, "");

@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   client,
   assertStatus,
+  createTestClient,
   createTestUser,
   fixtureRoleId,
   runCleanup,
@@ -29,6 +30,7 @@ describe("Project permissions", () => {
             name: `${prefix}-${name}`,
             identifier: `${prefix}-${name}`,
             parent_id: name === "child" ? projectIds[0] : undefined,
+            is_public: name === "parent" ? false : undefined,
             inherit_members: false,
             tracker_ids: [await someTrackerId()],
             enabled_module_names: ["issue_tracking", "time_tracking"],
@@ -176,6 +178,42 @@ describe("Project permissions", () => {
         readback.data!.project.enabled_modules!.map((module) => module.name).sort(),
         login ? ["issue_tracking", "time_tracking"] : []
       );
+    }
+  });
+
+  test("updating inherit_members requires access to the parent project", async () => {
+    const parentId = projectIds[0];
+    const parentParams = { path: { format: "json" as const, project_id: parentId } };
+    const childParams = { path: { format: "json" as const, project_id: projectId } };
+    assertStatus(204, await client.PUT("/projects/{project_id}.{format}", {
+      params: childParams,
+      body: { project: { inherit_members: false } },
+    }));
+
+    const userId = await createTestUser("membership-manager");
+    userIds.push(userId);
+    const user = await client.GET("/users/{user_id}.{format}", { params: { path: { format: "json", user_id: userId } } });
+    assertStatus(200, user);
+    const manager = createTestClient(user.data!.user.login);
+    const roleId = await fixtureRoleId("API membership manager");
+    const addMembership = async (project_id: number) => {
+      assertStatus(201, await client.POST("/projects/{project_id}/memberships.{format}", {
+        params: { path: { format: "json", project_id } },
+        body: { membership: { user_id: userId, role_ids: [roleId] } },
+      }));
+    };
+
+    await addMembership(projectId);
+    for (const canViewParent of [false, true]) {
+      if (canViewParent) await addMembership(parentId);
+      assertStatus(canViewParent ? 200 : 403, await manager.GET("/projects/{project_id}.{format}", { params: parentParams }));
+      assertStatus(204, await manager.PUT("/projects/{project_id}.{format}", {
+        params: childParams,
+        body: { project: { inherit_members: true } },
+      }));
+      const child = await client.GET("/projects/{project_id}.{format}", { params: childParams });
+      assertStatus(200, child);
+      assert.equal(child.data!.project.inherit_members, canViewParent);
     }
   });
 });

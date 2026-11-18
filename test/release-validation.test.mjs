@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { load } from "js-yaml";
 
 import { buildRelease, imagePin } from "../scripts/release/validate.mjs";
@@ -67,7 +68,15 @@ test("release validation packages the tested source, strict schema and site with
   assert(calls.some((entry) => entry.command === "git" && entry.args.includes("refs/tags/9.2.4-r1:openapi.yaml")));
   const oasdiffImage = fs.readFileSync(new URL("../.github/oasdiff-image.txt", import.meta.url), "utf8").trim();
   assert.match(oasdiffImage, /^tufin\/oasdiff:v\d+\.\d+\.\d+@sha256:[a-f0-9]{64}$/);
-  for (const comparison of calls.filter((entry) => entry.command === "docker")) assert(comparison.args.includes(oasdiffImage));
+  const severityLevels = fileURLToPath(new URL("../.github/oasdiff-severity.txt", import.meta.url));
+  const comparisons = calls.filter((entry) => entry.command === "docker");
+  assert.equal(comparisons.length, 2);
+  for (const { args } of comparisons) {
+    assert(args.includes(oasdiffImage));
+    assert(args.includes(`${severityLevels}:/severity.txt:ro`));
+    assert(args.includes("--severity-levels"));
+    assert.equal(args[args.indexOf("--severity-levels") + 1], "/severity.txt");
+  }
   const docs = calls.find((entry) => entry.command === "npm" && entry.args[1] === "docs");
   assert.equal(docs.args.at(-1), "/api");
   const archive = path.join(options.outputDir, "artifact.tar");

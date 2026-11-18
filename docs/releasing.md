@@ -130,6 +130,8 @@ Merging the target-selection PR triggers reconciliation. Without a verified rele
 
 CI's specification comparison and central release validation use the same Docker image version and digest from [oasdiff-image.txt](../.github/oasdiff-image.txt). Update that file when changing oasdiff.
 
+The publisher validates tag ordering using the revision rules above. The oasdiff commands disable `api-version-decreased` through [oasdiff-severity.txt](../.github/oasdiff-severity.txt).
+
 The validation artifact records the specification commit SHA and asset hashes. Publication verifies the artifact's run identity and hashes before creating a tag or publishing assets. These checks also apply to retries.
 
 | Release asset | Purpose |

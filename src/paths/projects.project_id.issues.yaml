@@ -503,7 +503,7 @@ post:
         enum:
           - 1
   requestBody:
-    required: true
+    description: Required when `copy_from` is omitted. Omit the body to copy the source issue into this project without overriding fields.
     content:
       application/json:
         schema:
@@ -516,8 +516,6 @@ post:
               type: object
               description: Accepted fields depend on the tracker, workflow, and current user's permissions. Redmine ignores fields that the current user cannot edit.
               additionalProperties: false
-              required:
-                - subject
               properties:
                 tracker_id:
                   type: integer
@@ -527,6 +525,7 @@ post:
                   type: integer
                 subject:
                   type: string
+                  description: Required when `copy_from` is omitted. During a copy, Redmine uses the source issue's subject if this field is omitted.
                 description:
                   type: string
                   nullable: true

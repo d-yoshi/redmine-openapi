@@ -481,11 +481,10 @@ describe("Issues", () => {
     assertStatus(404, response);
   });
 
-  test("POST /issues.json returns 422 for invalid data", async () => {
+  test("creating an issue without copy_from requires a subject", async () => {
     const response = await client.POST("/issues.{format}", {
       params: { path: { format: "json" } },
       body: {
-        // @ts-expect-error Deliberately omit the required subject field.
         issue: {
           project_id: projectId,
         },
@@ -567,12 +566,11 @@ describe("Issues", () => {
     assertStatus(404, response);
   });
 
-  test("POST /projects/{project_id}/issues.json returns 422 for invalid data", async () => {
+  test("creating a project-scoped issue without copy_from requires a body", async () => {
     const response = await client.POST(
       "/projects/{project_id}/issues.{format}",
       {
         params: { path: { format: "json", project_id: projectId } },
-        body: { issue: { subject: "" } },
       }
     );
     assertStatus(422, response);
@@ -601,7 +599,7 @@ describe("Issues", () => {
     assertStatus(422, response);
   });
 
-  test("copy options preserve attachments and subtasks and link the source", async () => {
+  test("copy options inherit the subject, attachments and subtasks and link the source", async () => {
     const upload = await uploadFile("copy-source.txt", "copy content");
     const source = await client.POST("/issues.{format}", {
       params: { path: { format: "json" } },
@@ -625,9 +623,10 @@ describe("Issues", () => {
         path: { format: "json" },
         query: { copy_from: sourceId, link_copy: 1, copy_attachments: 1, copy_subtasks: 1 },
       },
-      body: { issue: { project_id: projectId, subject: "Copy result" } },
+      body: { issue: { project_id: projectId } },
     });
     assertStatus(201, copy);
+    assert.equal(copy.data!.issue.subject, source.data!.issue.subject);
     const detail = await client.GET("/issues/{issue_id}.{format}", {
       params: {
         path: { format: "json", issue_id: copy.data!.issue.id },
@@ -642,6 +641,24 @@ describe("Issues", () => {
         (r) => r.issue_id === sourceId || r.issue_to_id === sourceId
       )
     );
+  });
+
+  test("project-scoped copies accept an omitted body or an override without a subject", async () => {
+    const params = {
+      path: { format: "json" as const, project_id: projectId },
+      query: { copy_from: parentIssueId },
+    };
+    for (const description of [undefined, "Description override"]) {
+      const copy = await client.POST("/projects/{project_id}/issues.{format}", {
+        params,
+        body: description === undefined ? undefined : { issue: { description } },
+      });
+      assertStatus(201, copy);
+      assert.notEqual(copy.data!.issue.id, parentIssueId);
+      assert.equal(copy.data!.issue.project.id, projectId);
+      assert.equal(copy.data!.issue.subject, "parent");
+      if (description !== undefined) assert.equal(copy.data!.issue.description, description);
+    }
   });
 
   test("PATCH updates an issue", async () => {
