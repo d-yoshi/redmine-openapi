@@ -518,7 +518,6 @@ post:
               additionalProperties: false
               required:
                 - project_id
-                - subject
               properties:
                 project_id:
                   oneOf:
@@ -532,6 +531,7 @@ post:
                   type: integer
                 subject:
                   type: string
+                  description: Required when `copy_from` is omitted. During a copy, Redmine uses the source issue's subject if this field is omitted.
                 description:
                   type: string
                   nullable: true

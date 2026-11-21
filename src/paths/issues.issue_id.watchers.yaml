@@ -16,9 +16,6 @@ post:
         schema:
           type: object
           additionalProperties: false
-          anyOf:
-            - required: [user_id]
-            - required: [watcher]
           properties:
             user_id:
               type: integer
@@ -34,6 +31,15 @@ post:
                   items:
                     type: integer
               description: Provide `user_id` for one user or regular group, or `user_ids` for several.
+          allOf:
+            # Declare each required key as a property so generators can retain the alternatives.
+            - anyOf:
+                - required: [user_id]
+                  properties:
+                    user_id: {}
+                - required: [watcher]
+                  properties:
+                    watcher: {}
   responses:
     204:
       description: ""

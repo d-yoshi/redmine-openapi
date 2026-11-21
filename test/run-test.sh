@@ -114,7 +114,8 @@ docker exec -i "$REDMINE_CONTAINER" rails runner - <<RUBY
     'API visibility viewer' => [:view_issues],
     'API issue relation editor' => [:view_issues, :manage_issue_relations],
     'API note author' => [:view_issues, :add_issue_notes, :edit_own_issue_notes],
-    'API project editor' => [:edit_project, :add_project, :add_subprojects]
+    'API project editor' => [:edit_project, :add_project, :add_subprojects],
+    'API membership manager' => [:edit_project, :manage_members]
   }.each do |name, permissions|
     role = Role.find_or_initialize_by(name: name)
     role.permissions = permissions
