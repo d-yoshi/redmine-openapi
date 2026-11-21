@@ -22,6 +22,11 @@ export function prepareReleaseMetadata({ sourceDir, target, run = execFileSync }
   const git = (...args) => command("git", args, { stdio: "pipe", encoding: "utf8" }).trim();
   assert.equal(fs.realpathSync(git("rev-parse", "--show-toplevel")), root, "Run release preparation from the repository root");
   assert.equal(git("rev-parse", "--is-shallow-repository"), "false", "Release history must not be shallow");
+  try {
+    fs.accessSync(path.join(root, "node_modules", ".bin", "redocly"), fs.constants.X_OK);
+  } catch {
+    throw new Error(`Run npm ci in the specification checkout at ${root} before preparing a release`);
+  }
   const paths = ["src/openapi.yaml", "test/redmine/docker-compose.yaml", "openapi.yaml"];
   const original = new Map(paths.map((name) => [name, fs.readFileSync(path.join(root, name), "utf8")]));
   const selected = target ?? imagePin(load(original.get(paths[1])));

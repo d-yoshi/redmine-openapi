@@ -41,11 +41,13 @@ export async function prepareRequest(github, event, context) {
   } else if (context.eventName === "workflow_dispatch") {
     tag = event.inputs?.tag?.trim() ?? "";
     const sourceRef = event.inputs?.source_ref?.trim() ?? "";
-    assert(!(tag && sourceRef), "Specify source_ref or tag, not both");
     if (sourceRef) {
-      sourceSha = await github.commitSha(sourceRef);
+      assert(tag, "Specify the planned tag with source_ref");
+      tag = parseTag(tag).tag;
+      sourceSha = assertSha(sourceRef);
+      assert.equal(await github.commitSha(sourceSha), sourceSha, "Resolved commit differs from source_ref");
       const file = await github.fileAt("src/openapi.yaml", sourceSha);
-      tag = parseTag(load(file.content.toString("utf8"))?.info?.version).tag;
+      assert.equal(load(file.content.toString("utf8"))?.info?.version, tag, "Planned tag differs from src/info.version");
       const existing = await github.tagSha(tag, { missing: true });
       assert(!existing || existing === sourceSha, "Release tag already identifies a different source");
       createTag = true;

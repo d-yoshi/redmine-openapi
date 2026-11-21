@@ -13,6 +13,9 @@ function fixture(t) {
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   const git = (...args) => execFileSync("git", args, { cwd: sourceDir, encoding: "utf8", stdio: "pipe" }).trim();
   const write = (name, content) => { fs.mkdirSync(path.dirname(path.join(sourceDir, name)), { recursive: true }); fs.writeFileSync(path.join(sourceDir, name), content); };
+  write(".gitignore", "node_modules/\n");
+  write("node_modules/.bin/redocly", "#!/bin/sh\n");
+  fs.chmodSync(path.join(sourceDir, "node_modules", ".bin", "redocly"), 0o755);
   write("src/openapi.yaml", "openapi: 3.0.3\ninfo:\n  description: Unofficial API, tested against Redmine 9.2.4\n  version: 9.2.4-r1\npaths: {}\n");
   write("test/redmine/docker-compose.yaml", "services:\n  redmine:\n    image: ${REDMINE_IMAGE:-redmine:9.2.4}\n");
   fs.copyFileSync(path.join(sourceDir, "src/openapi.yaml"), path.join(sourceDir, "openapi.yaml"));
@@ -57,6 +60,14 @@ test("a new Redmine target updates metadata and pin together and starts at r1", 
   assert.equal(load(value.read("src/openapi.yaml")).info.description, "Unofficial API, tested against Redmine 9.2.5");
   assert.equal(load(value.read("openapi.yaml")).info.version, result.tag);
   assert.match(value.read("test/redmine/docker-compose.yaml"), /redmine:9\.2\.5/);
+});
+
+test("release preparation requires Redocly in the specification checkout before editing files", (t) => {
+  const value = fixture(t);
+  fs.unlinkSync(path.join(value.sourceDir, "node_modules", ".bin", "redocly"));
+  assert.throws(() => prepareReleaseMetadata(value), /npm ci in the specification checkout/);
+  assert.equal(value.git("status", "--porcelain"), "");
+  assert(!value.calls.some(({ command, args }) => command === "npm" || args[0] === "fetch"));
 });
 
 test("release preparation preserves the current specification description when updating a target", (t) => {

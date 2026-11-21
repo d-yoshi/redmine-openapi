@@ -24,19 +24,30 @@ function sourceClient({ existing = null, version = tag } = {}) {
   };
 }
 
-test("source_ref fixes a commit SHA and derives the release tag without writing refs", async () => {
+test("new publication resolves the exact SHA and verifies the planned tag", async () => {
   const github = sourceClient();
-  const result = await prepareRequest(github, { inputs: { source_ref: "maintenance/9.2.5" } }, context);
+  const event = { inputs: { source_ref: sha, tag } };
+  const result = await prepareRequest(github, event, context);
   assert.deepEqual(result, { mode: "publish", tag, sha, create_tag: true, pages_url: "https://example.github.io/api/" });
-  assert.deepEqual(github.reads, ["maintenance/9.2.5"]);
-  assert.equal((await prepareRequest(sourceClient({ existing: sha }), { inputs: { source_ref: "main" } }, context)).sha, sha);
+  assert.deepEqual(github.reads, [sha]);
+  assert.equal((await prepareRequest(sourceClient({ existing: sha }), event, context)).sha, sha);
 });
 
-test("source selection rejects conflicting inputs, existing tags with another source, and invalid metadata", async () => {
-  await assert.rejects(prepareRequest(sourceClient(), { inputs: { source_ref: "main", tag } }, context), /not both/);
-  await assert.rejects(prepareRequest(sourceClient({ existing: "b".repeat(40) }), { inputs: { source_ref: "main" } }, context), /different source/);
-  await assert.rejects(prepareRequest(sourceClient({ version: "invalid" }), { inputs: { source_ref: "main" } }, context), /Invalid release tag/);
-  await assert.rejects(prepareRequest(sourceClient(), { inputs: { source_ref: "main" } }, { ...context, ref: "refs/heads/maintenance/9.2.5" }), /default branch/);
+test("new publication rejects missing or mismatched inputs and conflicting tags", async () => {
+  const event = { inputs: { source_ref: sha, tag } };
+  await assert.rejects(prepareRequest(sourceClient(), { inputs: { source_ref: sha } }, context), /planned tag/);
+  await assert.rejects(prepareRequest(sourceClient(), { inputs: { source_ref: "main", tag } }, context), /Invalid source SHA/);
+  await assert.rejects(prepareRequest(sourceClient(), { inputs: { source_ref: "b".repeat(40), tag } }, context), /differs from source_ref/);
+  await assert.rejects(prepareRequest(sourceClient({ version: "9.2.5-r2" }), event, context), /differs from src\/info\.version/);
+  await assert.rejects(prepareRequest(sourceClient({ existing: "c".repeat(40) }), event, context), /different source/);
+  await assert.rejects(prepareRequest(sourceClient(), event, { ...context, ref: "refs/heads/maintenance/9.2.5" }), /default branch/);
+});
+
+test("a tag alone retries publication and empty inputs reconcile Latest and Pages", async () => {
+  const retry = await prepareRequest(sourceClient({ existing: sha }), { inputs: { tag } }, context);
+  assert.deepEqual(retry, { mode: "publish", tag, sha, create_tag: false, pages_url: "https://example.github.io/api/" });
+  const reconcile = await prepareRequest(sourceClient(), { inputs: {} }, context);
+  assert.deepEqual(reconcile, { mode: "reconcile", tag: "", sha: "", create_tag: false, pages_url: "https://example.github.io/api/" });
 });
 
 test("branch resolution reads metadata by its resolved SHA rather than the moving branch", async () => {

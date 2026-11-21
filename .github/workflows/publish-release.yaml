@@ -1,6 +1,10 @@
 name: Publish release
 
-run-name: ${{ github.event.inputs.source_ref && format('Publish {0}', github.event.inputs.source_ref) || github.event.inputs.tag && format('Publish {0}', github.event.inputs.tag) || github.event.workflow_run.head_branch && format('Publish {0}', github.event.workflow_run.head_branch) || 'Reconcile Latest and Pages' }}
+run-name: >-
+  ${{ github.event.inputs.source_ref && format('Publish {0}', github.event.inputs.tag || github.event.inputs.source_ref) ||
+  github.event.inputs.tag && format('Retry {0}', github.event.inputs.tag) ||
+  github.event.workflow_run.head_branch && format('Publish {0}', github.event.workflow_run.head_branch) ||
+  'Reconcile Latest and Pages' }}
 
 on:
   workflow_run:
@@ -9,11 +13,11 @@ on:
   workflow_dispatch:
     inputs:
       source_ref:
-        description: "Branch or commit to validate, tag, and publish (for example main or a maintenance branch)"
+        description: "Full commit SHA for a new release. Also enter the planned tag."
         type: string
         required: false
       tag:
-        description: "Existing tag to retry; leave both source_ref and tag empty to reconcile Latest and Pages"
+        description: "Planned tag for a new release or existing tag for a retry. Leave both fields empty to reconcile Latest and Pages."
         type: string
         required: false
       bootstrap_latest:

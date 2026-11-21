@@ -78,7 +78,7 @@ Run commands from the repository root:
 
 For API claims, identify an existing test that exercises the changed statement or add a case when needed. Empty arrays and absent optional fields may leave a schema untested. A 200 response alone cannot establish that a filter expression had the documented effect. See the test guide for case selection and known coverage limits.
 
-You may submit source changes without committing the generated bundle. Review the generated diff when possible. Upstream CI uploads the bundle for review when it runs on your pull request. For pushes to upstream branches, successful CI can also commit the generated bundle. Maintainers ensure that bundle is current before publication; the upstream job cannot push an update to your fork.
+Include the regenerated `openapi.yaml` before merging specification changes. CI uploads the generated bundle for review and checks that it matches the committed file. If a pull request starts with source changes only, its author can add the bundle during review.
 
 ## Describe the pull request
 

@@ -6,15 +6,9 @@ The workflow publishes a fixed specification commit from this repository. That c
 
 ## Prerequisites
 
-Run the examples from a tooling checkout on `main`, with `origin` pointing to the upstream repository and GitHub CLI authenticated with the required write permissions. Use the Node.js version in [.tool-versions](../.tool-versions) and install dependencies:
+Use a tooling checkout on `main` with `origin` pointing to the upstream repository. Use the Node.js version in [.tool-versions](../.tool-versions) and install dependencies with `npm ci`. For the CLI examples, authenticate GitHub CLI with the permissions to run workflows.
 
-```sh
-npm ci
-```
-
-A repository administrator must configure Pages to use GitHub Actions, keep the `github-pages` environment available, and enable `Allow GitHub Actions to create and approve pull requests` for generated target proposals. Those PRs may need workflow approval before their checks run; adoption of a publication target requires a reviewed merge.
-
-CI grants write permissions only to its generated-bundle job; repository rules must permit that commit. Keep the legacy release workflow disabled. These are one-time settings, separate from the steps for each release.
+A repository administrator must configure Pages to use GitHub Actions, keep the `github-pages` environment available, and enable `Allow GitHub Actions to create and approve pull requests` for generated target proposals. Those PRs may need workflow approval before their checks run. Keep the legacy release workflow disabled.
 
 ## Versions and branches
 
@@ -31,42 +25,9 @@ The tag must equal `info.version` in [src/openapi.yaml](../src/openapi.yaml) and
 
 Use ordinary maintenance branches retaining their source history, not orphan branches. Keep the current maintenance branch available for pull requests. Release an older specification from its own branch and port shared corrections separately to `main`.
 
-## Prepare release metadata
+## Prepare a release
 
-From the tooling checkout on `main`, prepare another revision for the current image pin:
-
-```sh
-npm run release:prepare
-```
-
-To prepare a newer Redmine target:
-
-```sh
-REDMINE_VERSION='<target-version>'
-npm run release:prepare -- "$REDMINE_VERSION"
-```
-
-The command fetches tags from `origin`, calculates the next revision from the specification checkout's ancestry, updates `info.version`, `info.description`, and the Redmine image pin, then regenerates `openapi.yaml`. It preserves unrelated edits and restores the release files if bundling fails. It leaves the result uncommitted and creates no release tag. Inspect the diff and commit it with the specification changes.
-
-When preparing a new target, review Redmine's source tag for that version and make any needed specification and test corrections. Run the relevant checks; `./test/run-test.sh` includes static checks, API tests, and coverage checks.
-
-CI also builds and lints the bundle. Its `commit-bundle` job can update the committed bundle after successful branch checks. Wait for that job before publishing. Documentation-only commits can be outside CI's path filters; inspect the successful checks for the relevant specification and tooling changes.
-
-## Publish a standard release
-
-Complete review, merge the prepared changes into `main`, and wait for relevant CI and bundle updates. Run `Publish release` on `main` with `source_ref` selecting the specification commit:
-
-```sh
-gh workflow run publish-release.yaml --ref main -f source_ref=main
-```
-
-The workflow resolves `source_ref` to a fixed SHA and reads `info.version` from that specification commit. The validation job tests the commit without publication write permissions. After validation and artifact checks succeed, the publisher creates the tag and publishes the release. A pre-existing tag must identify the same SHA; it is never moved.
-
-A `GITHUB_TOKEN`-created tag does not trigger the tag-push workflow, so this workflow proceeds directly to publication. Confirm `Publish release assets` and `Update Latest and Pages` succeed, and review any proposal from `Propose publication target`.
-
-## Publish a maintenance release
-
-Use an existing maintenance checkout with the appropriate history. If a new target branch is needed, start from the most recent appropriate release tag, normally the preceding maintained patch's release. From the tooling checkout on `main`, one way to create it is:
+Integrate standard changes into `main` and maintenance changes into `maintenance/<target-version>`. For maintenance, check out the branch in a separate clone or worktree. To start a new maintenance target, create a worktree from the previous maintained patch's verified release tag.
 
 ```sh
 SOURCE_CHECKOUT='../redmine-openapi-maintenance'
@@ -76,31 +37,35 @@ git fetch origin --tags
 git worktree add -b "$MAINTENANCE_BRANCH" "$SOURCE_CHECKOUT" "refs/tags/$PREVIOUS_TAG"
 ```
 
-For an existing branch, check it out in a separate clone or worktree instead of creating it again. Make the changes there and install that checkout's dependencies. Invoke the preparation tool from `main` with `--source`; this avoids copying the publishing tools into older branches:
+Maintenance branches have their own CI workflow. Apply the bundle consistency check on each active maintenance branch so its CI detects a stale bundle.
+
+In the standard specification checkout, run `npm run release:prepare`. For maintenance, use the Node.js pin and lockfile in the maintenance checkout to install its dependencies, then run the preparation tool from `main` with `--source`.
 
 ```sh
 SOURCE_CHECKOUT='../redmine-openapi-maintenance'
-REDMINE_VERSION='<target-version>'
 npm --prefix "$SOURCE_CHECKOUT" ci
-npm run release:prepare -- --source "$SOURCE_CHECKOUT" "$REDMINE_VERSION"
+npm run release:prepare -- --source "$SOURCE_CHECKOUT"
 ```
 
-Omit the version argument when preparing another revision for its current pin. Review, test, and commit the changes in the maintenance checkout, then push its branch:
+To update Redmine itself, review its released source, make the necessary specification and test changes, and append the new version to the preparation command. When running the command without `--source`, use `npm run release:prepare -- <target-version>`.
+
+The preparation command fetches tags from `origin`, calculates the next tag from the specification checkout's ancestry, and updates `info.version`, `info.description`, and the Redmine image pin. It uses that checkout's dependencies to regenerate `openapi.yaml` and prints the planned tag. It leaves the changes for you to review and commit, and restores the release files if bundling fails.
+
+For a pull request, include the metadata and bundle with the specification changes. Review the changes and merge after CI confirms the committed bundle matches a fresh build and the tests pass. If repository rules allow a direct push, merge locally, run the preparation command on the result, then commit and push the prepared files.
+
+## Publish a release
+
+After the merge or push, copy the full SHA of the resulting commit and the planned tag printed during preparation. Open **Actions → Publish release → Run workflow**, select `main`, and enter the SHA in `source_ref` and the planned tag in `tag`. The same workflow accepts commits from standard and maintenance branches. To start it from the CLI, use the following command.
 
 ```sh
-SOURCE_CHECKOUT='../redmine-openapi-maintenance'
-MAINTENANCE_BRANCH='maintenance/<target-version>'
-git -C "$SOURCE_CHECKOUT" push -u origin "$MAINTENANCE_BRANCH"
+SOURCE_SHA='<integrated-commit-sha>'
+RELEASE_TAG='<prepared-release-tag>'
+gh workflow run publish-release.yaml --ref main -f source_ref="$SOURCE_SHA" -f tag="$RELEASE_TAG"
 ```
 
-After CI and any bundle update finish, publish from the tooling checkout on `main`:
+The workflow checks the planned tag against `info.version` at that SHA. It uses the specification checkout's test scripts, lockfile, and Node.js pin to verify the bundle and run the API tests. After validation and artifact checks succeed, it creates the tag and publishes the assets. A tag that already exists must point to the same SHA.
 
-```sh
-MAINTENANCE_BRANCH='maintenance/<target-version>'
-gh workflow run publish-release.yaml --ref main -f source_ref="$MAINTENANCE_BRANCH"
-```
-
-The maintenance checkout must include the test entry points, a lockfile, a Node.js pin, and a committed bundle matching its specification source. The central workflow uses that checkout's tests, lockfile, and Node.js version. For manual tag pushes, ensure the maintenance branch contains `Request release` and leave the repository's legacy release workflow disabled.
+Confirm that `Publish release assets` succeeds and the planned tag appears in Releases. For a revision of the selected standard target, check `Update Latest and Pages` as well. Review any pull request from `Propose publication target` to adopt a newer patch.
 
 ## Publication target proposals
 
@@ -122,7 +87,7 @@ Merging the target-selection PR triggers reconciliation. Without a verified rele
 
 | Workflow | Responsibility |
 | --- | --- |
-| [CI](../.github/workflows/ci.yaml) | Build and lint the specification, check tooling and API tests, show a specification diff, and update the generated bundle |
+| [CI](../.github/workflows/ci.yaml) | Build and lint the specification, check the committed bundle, run tooling and API tests, and show a specification diff |
 | [Publish release](../.github/workflows/publish-release.yaml) | Resolve and validate the source, create or verify the tag, publish assets, propose a target update, and reconcile Latest and Pages |
 | [Request release](../.github/workflows/request-release.yaml) | Support requests from manually pushed release tags |
 | [Canary](../.github/workflows/canary.yaml) | Detect newer Redmine versions and test candidates using each target's published specification commit |
@@ -154,14 +119,14 @@ Canary is not required after every release or target update. The publisher alrea
 
 ## Recovery and manual tags
 
-Run `Publish release` on `main`; `source_ref` selects the specification commit separately. To retry an existing tag, including a tag created by an earlier run:
+To retry an existing tag, run `Publish release` on `main` with `tag` set and `source_ref` empty. This also applies to tags created by an earlier run.
 
 ```sh
 RELEASE_TAG='<existing-release-tag>'
 gh workflow run publish-release.yaml --ref main -f tag="$RELEASE_TAG"
 ```
 
-`source_ref` and `tag` are mutually exclusive. An existing-tag retry uses the tagged SHA, even if a branch has advanced. Unpublished Drafts can be rebuilt when their source is verifiable. Resolve conflicting or unverifiable Drafts before retrying. Published Releases are verified and reused; corrections require another revision.
+An existing-tag retry uses the tagged SHA, even if a branch has advanced. Unpublished Drafts can be rebuilt when their source is verifiable. Resolve conflicting or unverifiable Drafts before retrying. The publisher verifies and reuses published Releases. Prepare another revision to publish a correction.
 
 For Latest or Pages recovery only, leave both inputs empty:
 
@@ -171,12 +136,13 @@ gh workflow run publish-release.yaml --ref main
 
 This performs reconciliation without another API test or a new individual Release. `bootstrap_latest=true` is only for an intentional initial selection when no Latest exists.
 
-Manual tagging is an alternative after the source is prepared and verified. For a standard release, fetch the final commit before tagging; for a maintenance release, use its remote branch instead of `origin/main`:
+To publish from a manually pushed tag, ensure the prepared commit contains the `Request release` workflow. Fetch the prepared commit from the upstream repository, then tag its SHA.
 
 ```sh
+SOURCE_SHA='<integrated-commit-sha>'
 RELEASE_TAG='<prepared-release-tag>'
 git fetch origin --tags
-git tag "$RELEASE_TAG" origin/main
+git tag "$RELEASE_TAG" "$SOURCE_SHA"
 git push origin "refs/tags/$RELEASE_TAG"
 ```
 

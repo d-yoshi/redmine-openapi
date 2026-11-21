@@ -12,6 +12,7 @@ on:
       - ".github/oasdiff-severity.txt"
       - "scripts/**"
       - "src/**"
+      - "openapi.yaml"
       - "redocly/**"
       - "test/**"
       - ".tool-versions"
@@ -32,6 +33,7 @@ on:
       - ".github/oasdiff-severity.txt"
       - "scripts/**"
       - "src/**"
+      - "openapi.yaml"
       - "redocly/**"
       - "test/**"
       - ".tool-versions"
@@ -60,13 +62,17 @@ jobs:
           cache: "npm"
       - run: npm ci
       - name: bundle
-        run: npm run bundle
+        run: |
+          git ls-files --error-unmatch -- openapi.yaml
+          npm run bundle
       - name: lint
         run: npm run lint
       - uses: actions/upload-artifact@v7
         with:
           name: openapi
           path: openapi.yaml
+      - name: Check the committed bundle
+        run: git diff --exit-code HEAD -- openapi.yaml
 
   workflow-lint:
     name: Check workflows
@@ -130,26 +136,3 @@ jobs:
               --severity-levels /repo/.github/oasdiff-severity.txt /tmp/previous.yaml /repo/openapi.yaml
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-
-  commit-bundle:
-    name: Update generated specification
-    permissions:
-      contents: write
-    if: github.event_name == 'push'
-    needs:
-      - bundle
-      - workflow-lint
-      - test
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v8
-        with:
-          name: openapi
-      - name: commit & push
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add openapi.yaml
-          git diff-index --quiet HEAD openapi.yaml || (git commit -m "Update bundled file" && git push)
