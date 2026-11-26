@@ -7,6 +7,7 @@ import {
   currentUserId,
   uploadFile,
   createTestUser,
+  deleteTestProject,
   runCleanup,
   someRoleId,
   type IssuesQuery,
@@ -77,10 +78,7 @@ describe("Issue filter representations", () => {
     await runCleanup([
       async () => {
         if (!projectId) return;
-        const response = await client.DELETE("/projects/{project_id}.{format}", {
-          params: { path: { format: "json", project_id: projectId } },
-        });
-        assertStatus(204, response);
+        await deleteTestProject(projectId);
       },
       async () => {
         if (!otherUserId) return;

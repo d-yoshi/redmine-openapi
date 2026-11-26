@@ -7,6 +7,7 @@ import {
   createTestClient,
   createTestUser,
   fixtureRoleId,
+  deleteTestProject,
   runCleanup,
   someTrackerId,
 } from "./helpers.js";
@@ -69,12 +70,7 @@ describe("Project permissions", () => {
 
   after(async () => {
     await runCleanup([
-      ...[...projectIds].reverse().map((id) => async () => {
-        const response = await client.DELETE("/projects/{project_id}.{format}", {
-          params: { path: { format: "json", project_id: id } },
-        });
-        assertStatus(204, response);
-      }),
+      ...[...projectIds].reverse().map((id) => () => deleteTestProject(id)),
       ...userIds.map((id) => async () => {
         const response = await client.DELETE("/users/{user_id}.{format}", {
           params: { path: { format: "json", user_id: id } },

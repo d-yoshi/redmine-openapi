@@ -5,6 +5,7 @@ import {
   client,
   assertStatus,
   createTestUser,
+  deleteTestProject,
   runCleanup,
   fixtureRoleId,
 } from "./helpers.js";
@@ -86,12 +87,7 @@ describe("Membership visibility", () => {
 
   after(async () => {
     await runCleanup([
-      ...[...projectIds].reverse().map((id) => async () => {
-        const response = await client.DELETE("/projects/{project_id}.{format}", {
-          params: { path: { format: "json", project_id: id } },
-        });
-        assertStatus(204, response);
-      }),
+      ...[...projectIds].reverse().map((id) => () => deleteTestProject(id)),
       async () => {
         if (!groupId) return;
         const response = await client.DELETE("/groups/{group_id}.{format}", {

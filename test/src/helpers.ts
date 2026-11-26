@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import assert from "node:assert/strict";
+import { setTimeout as delay } from "node:timers/promises";
 
 import { load } from "js-yaml";
 import type { OpenAPIV3 } from "openapi-types";
@@ -138,6 +139,22 @@ export const assertStatus = (
 const memoize = <T>(fetch: () => Promise<T>) => {
   let cached: Promise<T> | undefined;
   return () => (cached ??= fetch());
+};
+
+export const deleteTestProject = async (projectId: number) => {
+  const path = "/projects/{project_id}.{format}";
+  const params = { path: { format: "json", project_id: projectId } } as const;
+  assertStatus(204, await client.DELETE(path, { params }));
+
+  // Redmine schedules project deletion in the background.
+  const deadline = performance.now() + 5_000;
+  do {
+    const result = await client.GET(path, { params });
+    if (result.response.status === 404) return;
+    assertStatus(200, result);
+    await delay(50);
+  } while (performance.now() < deadline);
+  assert.fail(`Timed out waiting for test project ${projectId} to be deleted`);
 };
 
 /** Attempt every deletion before reporting cleanup failures. */
