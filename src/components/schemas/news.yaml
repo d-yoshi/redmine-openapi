@@ -28,6 +28,7 @@ properties:
     items:
       $ref: ./attachment.yaml
   comments:
+    description: Ordered by creation time, oldest first by default. The current user's `comments_sorting` preference reverses the order when set to `desc`.
     type: array
     items:
       $ref: ./news_comment.yaml

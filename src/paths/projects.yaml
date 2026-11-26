@@ -91,19 +91,21 @@ get:
     - name: created_on
       in: query
       description: |-
-        Filter by creation date.
-        Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
-        Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+        Filter by creation date or timestamp.
+        Format: `[operator]value` or a standalone operator such as `t`
+        Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
+        A timestamp lower bound can also match values less than one second before the specified time.
+        Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
       schema:
         type: string
     - name: updated_on
       in: query
       description: |-
-        Filter by last updated date.
-        Format: `<operator>[value]`
-        Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
-        Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+        Filter by last update date or timestamp.
+        Format: `[operator]value` or a standalone operator such as `t`
+        Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
+        A timestamp lower bound can also match values less than one second before the specified time.
+        Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
       schema:
         type: string
     - $ref: ../components/parameters/query/page.yaml

@@ -107,19 +107,21 @@ get:
     - name: created_on
       in: query
       description: |-
-        Filter by creation date.
-        Format: `[operator]value`
-        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
-        Examples: `>=2024-01-01`, `>t-30`, `lm`
+        Filter by creation date or timestamp.
+        Format: `[operator]value` or a standalone operator such as `t`
+        Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        A timestamp lower bound can also match values less than one second before the specified time.
+        Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `>t-30`, `lm`
       schema:
         type: string
     - name: last_login_on
       in: query
       description: |-
-        Filter by last login date.
-        Format: `[operator]value`
-        Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
-        Examples: `>=2024-01-01`, `>t-30`, `!*`
+        Filter by last login date or timestamp.
+        Format: `[operator]value` or a standalone operator such as `t`
+        Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+        A timestamp lower bound can also match values less than one second before the specified time.
+        Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `>t-30`, `!*`
       schema:
         type: string
     - name: admin

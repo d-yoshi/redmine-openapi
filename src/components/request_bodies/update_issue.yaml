@@ -43,13 +43,14 @@ content:
               type: integer
               nullable: true
             assigned_to_id:
-              description: Assignee ID. The value `me` selects the current user.
+              description: Assignee ID. Use `me` to assign the issue to the current user or `""` to clear the assignee. The value `null` leaves the assignee unchanged.
               oneOf:
                 - type: integer
                   nullable: true
                 - type: string
                   enum:
                     - me
+                    - ""
             parent_issue_id:
               description: Parent issue ID. Requires the Manage subtasks permission.
               type: integer

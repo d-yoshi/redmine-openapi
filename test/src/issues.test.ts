@@ -212,7 +212,8 @@ describe("Issues", () => {
       },
     });
     assertStatus(200, getRes);
-    const attachmentId = getRes.data!.issue.attachments![0].id;
+    const originalAttachment = getRes.data!.issue.attachments?.[0];
+    assert(originalAttachment);
 
     const updateUpload = await uploadFile("update-attachment.txt", "updated content");
     const response = await client.PUT("/issues/{issue_id}.{format}", {
@@ -236,7 +237,7 @@ describe("Issues", () => {
           estimated_hours: 5,
           notes: "note-1",
           private_notes: false,
-          deleted_attachment_ids: [attachmentId],
+          deleted_attachment_ids: [originalAttachment.id],
           custom_fields: [],
           custom_field_values: {},
           uploads: [
@@ -265,8 +266,20 @@ describe("Issues", () => {
     assert.strictEqual(issue.is_private, true);
     assert.strictEqual(issue.estimated_hours, 5);
     assert.strictEqual(issue.done_ratio, 50);
-    assert.deepStrictEqual(issue.attachments!.map((attachment) => attachment.filename), ["update-attachment.txt"]);
-    assert(issue.journals?.some((journal) => journal.notes === "note-1"));
+    assert.equal(issue.attachments?.length, 1);
+    const attachment = issue.attachments?.[0];
+    assert(attachment);
+    assert.equal(attachment.filename, "update-attachment.txt");
+
+    const journal = issue.journals?.find((item) => item.notes === "note-1");
+    assert(journal);
+    const attachmentDetails = journal.details.filter((detail) => detail.property === "attachment");
+    assert(attachmentDetails.some(
+      (detail) => detail.name === String(attachment.id) && detail.new_value === attachment.filename
+    ));
+    assert(attachmentDetails.some(
+      (detail) => detail.name === String(originalAttachment.id) && detail.old_value === originalAttachment.filename
+    ));
   });
 
   test("GET /issues.json", async () => {
@@ -674,6 +687,21 @@ describe("Issues", () => {
     const current = await client.GET("/issues/{issue_id}.{format}", { params });
     assertStatus(200, current);
     assert.equal(current.data!.issue.subject, "Issue updated via PATCH");
+  });
+
+  test("An empty string clears the assignee and null keeps it", async () => {
+    const params = { path: { format: "json" as const, issue_id: issueId } };
+    for (const [assignee, expectedId] of [[null, userId], ["", undefined]] as const) {
+      const update = await client.PUT("/issues/{issue_id}.{format}", {
+        params,
+        body: { issue: { assigned_to_id: assignee } },
+      });
+      assertStatus(204, update);
+
+      const readback = await client.GET("/issues/{issue_id}.{format}", { params });
+      assertStatus(200, readback);
+      assert.equal(readback.data!.issue.assigned_to?.id, expectedId);
+    }
   });
 
   test("DELETE /issues/{issue_id}.json", async () => {
