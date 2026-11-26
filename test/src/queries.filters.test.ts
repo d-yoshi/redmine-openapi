@@ -1,6 +1,6 @@
 import { after, before, describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { assertStatus, client, createTestUser, runCleanup } from "./helpers.js";
+import { assertStatus, client, createTestUser, deleteTestProject, runCleanup } from "./helpers.js";
 
 describe("Shared query parameters", () => {
   const marker = `query${Date.now()}`;
@@ -116,15 +116,7 @@ describe("Shared query parameters", () => {
 
   after(async () =>
     runCleanup([
-      ...projectIds.map(
-        (project_id) => async () =>
-          assertStatus(
-            204,
-            await client.DELETE("/projects/{project_id}.{format}", {
-              params: { path: { format: "json", project_id } },
-            })
-          )
-      ),
+      ...projectIds.map((projectId) => () => deleteTestProject(projectId)),
       ...userIds.map(
         (user_id) => async () =>
           assertStatus(
