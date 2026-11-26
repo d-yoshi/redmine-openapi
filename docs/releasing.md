@@ -8,6 +8,8 @@ The workflow publishes a fixed specification commit from this repository. That c
 
 Use a tooling checkout on `main` with `origin` pointing to the upstream repository. Use the Node.js version in [.tool-versions](../.tool-versions) and install dependencies with `npm ci`. For the CLI examples, authenticate GitHub CLI with the permissions to run workflows.
 
+Use a checkout with full Git history for the specification source so release preparation can find its ancestor release tags.
+
 A repository administrator must configure Pages to use GitHub Actions, keep the `github-pages` environment available, and enable `Allow GitHub Actions to create and approve pull requests` for generated target proposals. Those PRs may need workflow approval before their checks run. Keep the legacy release workflow disabled.
 
 ## Versions and branches
@@ -27,17 +29,23 @@ Use ordinary maintenance branches retaining their source history, not orphan bra
 
 ## Prepare a release
 
-Integrate standard changes into `main` and maintenance changes into `maintenance/<target-version>`. For maintenance, check out the branch in a separate clone or worktree. To start a new maintenance target, create a worktree from the previous maintained patch's verified release tag.
+Integrate standard changes into `main` and maintenance changes into `maintenance/<target-version>`. For maintenance, check out the branch in a separate clone or worktree.
+
+When adopting a newer patch in the current maintenance series, start from the tag for the highest verified revision of the current maintenance target. When the previous standard series moves to maintenance, use the tag for the highest verified revision of its former standard target.
+
+Set `SOURCE_CHECKOUT` to an unused path when creating a worktree.
 
 ```sh
 SOURCE_CHECKOUT='../redmine-openapi-maintenance'
 MAINTENANCE_BRANCH='maintenance/<target-version>'
-PREVIOUS_TAG='<previous-release-tag>'
+BASE_TAG='<verified-base-tag>'
 git fetch origin --tags
-git worktree add -b "$MAINTENANCE_BRANCH" "$SOURCE_CHECKOUT" "refs/tags/$PREVIOUS_TAG"
+git worktree add -b "$MAINTENANCE_BRANCH" "$SOURCE_CHECKOUT" "refs/tags/$BASE_TAG"
 ```
 
-Maintenance branches have their own CI workflow. Apply the bundle consistency check on each active maintenance branch so its CI detects a stale bundle.
+When a new maintenance branch inherits an older workflow from its base tag, update its CI and oasdiff settings to match `main`.
+
+For a correction from an older tag, check the build and test files on the correction branch. The publisher requires `.tool-versions`, `package-lock.json`, `test/check.sh`, `test/run-test.sh`, and the `bundle` and `docs` npm scripts. It reads the strict bundle from `test/dist/openapi.strict.yaml` and packages the reference site from `dist/index.html` and `redocly/assets/`. Add any missing build and test support before preparing the release, and run the API tests against the branch's pinned Redmine version.
 
 In the standard specification checkout, run `npm run release:prepare`. For maintenance, use the Node.js pin and lockfile in the maintenance checkout to install its dependencies, then run the preparation tool from `main` with `--source`.
 
@@ -51,7 +59,7 @@ To update Redmine itself, review its released source, make the necessary specifi
 
 The preparation command fetches tags from `origin`, calculates the next tag from the specification checkout's ancestry, and updates `info.version`, `info.description`, and the Redmine image pin. It uses that checkout's dependencies to regenerate `openapi.yaml` and prints the planned tag. It leaves the changes for you to review and commit, and restores the release files if bundling fails.
 
-For a pull request, include the metadata and bundle with the specification changes. Review the changes and merge after CI confirms the committed bundle matches a fresh build and the tests pass. If repository rules allow a direct push, merge locally, run the preparation command on the result, then commit and push the prepared files.
+For a pull request, include the metadata and regenerated bundle with the specification changes. Review the changes and merge after CI passes for the pull request. If repository rules allow a direct push, merge locally, run the preparation command on the result, then commit and push the prepared files.
 
 ## Publish a release
 
@@ -63,7 +71,7 @@ RELEASE_TAG='<prepared-release-tag>'
 gh workflow run publish-release.yaml --ref main -f source_ref="$SOURCE_SHA" -f tag="$RELEASE_TAG"
 ```
 
-The workflow checks the planned tag against `info.version` at that SHA. It uses the specification checkout's test scripts, lockfile, and Node.js pin to verify the bundle and run the API tests. After validation and artifact checks succeed, it creates the tag and publishes the assets. A tag that already exists must point to the same SHA.
+The workflow checks the planned tag against `info.version` at the requested SHA. For both standard and maintenance releases, it uses the specification checkout's Node.js pin and lockfile. It rebuilds `openapi.yaml`, compares it with the file committed at that SHA, and runs the checkout's API tests. After validation and artifact checks succeed, it creates the tag and publishes the assets. A tag that already exists must point to the same SHA.
 
 Confirm that `Publish release assets` succeeds and the planned tag appears in Releases. For a revision of the selected standard target, check `Update Latest and Pages` as well. Review any pull request from `Propose publication target` to adopt a newer patch.
 
@@ -93,9 +101,9 @@ Merging the target-selection PR triggers reconciliation. Without a verified rele
 | [Canary](../.github/workflows/canary.yaml) | Detect newer Redmine versions and test candidates using each target's published specification commit |
 | [Legacy release](../.github/workflows/release.yaml) | Retired entry point; use the central publisher |
 
-CI's specification comparison and central release validation use the same Docker image version and digest from [oasdiff-image.txt](../.github/oasdiff-image.txt). Update that file when changing oasdiff.
+CI on `main` and the active maintenance branch uses the same pinned oasdiff Docker image as central release validation. When changing oasdiff, update [oasdiff-image.txt](../.github/oasdiff-image.txt) in both branches.
 
-The publisher validates tag ordering using the revision rules above. The oasdiff commands disable `api-version-decreased` through [oasdiff-severity.txt](../.github/oasdiff-severity.txt).
+These comparisons disable `api-version-decreased` through [oasdiff-severity.txt](../.github/oasdiff-severity.txt). The publisher validates tag ordering using the revision rules above.
 
 The validation artifact records the specification commit SHA and asset hashes. Publication verifies the artifact's run identity and hashes before creating a tag or publishing assets. These checks also apply to retries.
 

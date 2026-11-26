@@ -6,7 +6,7 @@ Overlays can define custom-field types for your installation, describe responses
 
 ## Choose a release asset
 
-Choose a [release of this specification](https://github.com/d-yoshi/redmine-openapi/releases) matching your Redmine version. Pin the complete release tag, including the `-rN` revision suffix.
+Choose a [release of this specification](https://github.com/d-yoshi/redmine-openapi/releases) matching your Redmine version and check which files it provides under **Assets**. Pin the complete release tag, including the `-rN` revision suffix.
 
 | Asset                 | Difference                                                                                           | Typical use                                                                                 |
 | --------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -31,7 +31,7 @@ curl --fail --location \
   --output openapi.base.yaml
 ```
 
-To start from the strict asset instead, replace `openapi.yaml` in the download URL with `openapi.strict.yaml`, keeping the local filename `openapi.base.yaml`.
+When the release includes the strict asset, use `openapi.strict.yaml` in the download URL and keep `openapi.base.yaml` as the local filename.
 
 Save the following as `redocly.yaml`:
 
@@ -44,7 +44,11 @@ rules:
 
 Use the standalone configuration above for these examples. The repository's build configuration includes a decorator that removes `additionalProperties: false` for distribution; using the repository configuration could remove constraints you intended to keep.
 
-Choose an example below and save it as `custom.overlay.yaml`. Each example is independent.
+## Check the Overlay targets
+
+The examples use the schema structure of the current standard release. Choose one example. In `openapi.base.yaml`, follow each `target` under `components.schemas` all the way to the selected node. For example, the single-valued custom-field Overlay expects a `oneOf` in `custom_field_response_value_type`. When a target selects several schemas, check the path in each one.
+
+If the paths differ, adapt the Overlay to your downloaded asset. Redocly skips unmatched targets and continues the build. Save the Overlay as `custom.overlay.yaml`.
 
 ## Example: single-valued custom fields
 
@@ -161,7 +165,7 @@ npx --yes @redocly/cli@2.79.0 lint openapi.custom.yaml \
   --config redocly.yaml
 ```
 
-Use `openapi.custom.yaml` as the input to your generator or response validator. Keep `openapi.base.yaml` unchanged so you can compare the customized specification with the downloaded base.
+Compare `openapi.custom.yaml` with `openapi.base.yaml` to verify that the Overlay applied the intended changes. Then use `openapi.custom.yaml` as the input to your generator or response validator.
 
 Redocly's lint command checks the generated OpenAPI specification against configured rules. Linting does not verify that the schemas match responses from your installation or that your generator produces usable client code. Validate representative API responses against the customized schemas, and generate and compile your client with your chosen generator and options.
 
@@ -169,7 +173,6 @@ When writing or combining Overlays:
 
 - Overlay actions run in the listed order. An `update` action merges objects and appends array elements. To replace an entire schema or an array such as `required` or `oneOf`, first remove the existing schema or array, then add the replacement by updating the parent object.
 - Write `target` JSONPath expressions against the bundled OpenAPI specification. Use bracket notation for component names containing a dot, such as `issue.summary`, as shown in the plugin example.
-- If an action's `target` matches no nodes, the action succeeds without making a change. Compare `openapi.custom.yaml` with `openapi.base.yaml` to confirm that the intended changes were applied.
 - When you specify multiple `--overlay` options, Redocly applies the Overlays in that order. Review the combined result, especially if one Overlay narrows a type and another relaxes the same constraint.
 
 ## Update the base specification

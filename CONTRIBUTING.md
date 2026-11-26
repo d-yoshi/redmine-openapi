@@ -34,7 +34,7 @@ Docker and Docker Compose are needed for API tests. ShellCheck is optional local
 
 Edit `src/` for OpenAPI changes and `test/src/` for API tests. The root `openapi.yaml` is generated; use `npm run bundle` to update it.
 
-After editing YAML, run `npm run format:yaml`. Prettier formats YAML under `src/`, `redocly/`, `.github/`, and `test/`, using the repository's EditorConfig settings. Generated bundles and ignored build outputs are excluded.
+If your target branch defines `format:yaml` in `package.json`, run `npm run format:yaml` after editing YAML. Prettier formats YAML under `src/`, `redocly/`, `.github/`, and `test/`, using the repository's EditorConfig settings. Generated bundles and ignored build outputs are excluded.
 
 Separate top-level operations, named definitions, and document or configuration sections with one blank line. Keep top-level attributes of a single schema, parameter, or request body adjacent. Prettier preserves these blank lines but does not add missing ones, so review section spacing when editing YAML.
 
@@ -70,7 +70,7 @@ Run commands from the repository root:
 | `./test/check.sh` | Tool tests, schema checks, strict bundling and linting, TypeScript generation and type checking; no Docker required |
 | `./test/run-test.sh` | The static checks above, then API tests and coverage checks in a disposable Redmine container |
 | `npm run format:yaml` | Format YAML sources and configuration |
-| `npm run format:yaml:check` | Check YAML formatting without changing files; included in `check.sh` |
+| `npm run format:yaml:check` | Check YAML formatting without changing files when the script is available. `check.sh` runs it on `main` |
 | `npm run bundle` | Regenerate the distribution bundle |
 | `npm run lint` | Lint the distribution bundle |
 
@@ -78,7 +78,7 @@ Run commands from the repository root:
 
 For API claims, identify an existing test that exercises the changed statement or add a case when needed. Empty arrays and absent optional fields may leave a schema untested. A 200 response alone cannot establish that a filter expression had the documented effect. See the test guide for case selection and known coverage limits.
 
-Include the regenerated `openapi.yaml` before merging specification changes. CI uploads the generated bundle for review and checks that it matches the committed file. If a pull request starts with source changes only, its author can add the bundle during review.
+Include the regenerated `openapi.yaml` before merging specification changes. CI on `main` and the active maintenance branch uploads the generated bundle for review and compares it with the committed `openapi.yaml`. If a pull request starts with source changes only, its author can add the bundle during review.
 
 ## Describe the pull request
 
