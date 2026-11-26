@@ -1,13 +1,24 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     paths:
       - ".github/workflows/**"
+      - ".github/release-targets.json"
+      - ".github/oasdiff-image.txt"
+      - ".github/oasdiff-severity.txt"
+      - "scripts/**"
       - "src/**"
+      - "openapi.yaml"
       - "redocly/**"
       - "test/**"
       - ".tool-versions"
+      - ".editorconfig"
+      - ".prettierignore"
+      - ".gitignore"
       - "package.json"
       - "package-lock.json"
     tags-ignore:
@@ -17,10 +28,18 @@ on:
   pull_request:
     paths:
       - ".github/workflows/**"
+      - ".github/release-targets.json"
+      - ".github/oasdiff-image.txt"
+      - ".github/oasdiff-severity.txt"
+      - "scripts/**"
       - "src/**"
+      - "openapi.yaml"
       - "redocly/**"
       - "test/**"
       - ".tool-versions"
+      - ".editorconfig"
+      - ".prettierignore"
+      - ".gitignore"
       - "package.json"
       - "package-lock.json"
 
@@ -30,64 +49,75 @@ concurrency:
 
 jobs:
   bundle:
+    name: Build distribution specification
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version-file: .tool-versions
           cache: "npm"
       - run: npm ci
       - name: bundle
-        run: npm run bundle
+        run: |
+          git ls-files --error-unmatch -- openapi.yaml
+          npm run bundle
       - name: lint
         run: npm run lint
       - uses: actions/upload-artifact@v7
         with:
           name: openapi
           path: openapi.yaml
+      - name: Check the committed bundle
+        run: git diff --exit-code HEAD -- openapi.yaml
 
-  # Surface static errors without waiting for Redmine startup.
-  static:
+  workflow-lint:
+    name: Check workflows
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
         with:
-          node-version-file: .tool-versions
-          cache: "npm"
-      - run: npm ci
-      - run: ./test/check.sh
+          persist-credentials: false
+      - name: Lint GitHub Actions workflows
+        run: docker run --rm -v "$PWD:/repo:ro" -w /repo rhysd/actionlint:1.7.12 -color
 
   test:
+    name: Validate specification and API
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version-file: .tool-versions
           cache: "npm"
       - run: npm ci
-      - name: static checks, integration tests and API coverage
+      - name: Check tooling and schemas, then test the Redmine API
         run: ./test/run-test.sh
 
   spec-diff:
+    name: Compare with previous release
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     continue-on-error: true
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version-file: .tool-versions
           cache: "npm"
       - run: npm ci
-      - name: oasdiff changelog against latest release tag
+      - name: Compare with the nearest ancestor release tag
         run: |
           # Nearest release tag among the ancestors of HEAD (branch-aware).
           # The second pattern matches the retired format (transition period)
@@ -96,30 +126,13 @@ jobs:
             echo "No previous release tag found; skipping diff." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          git show "$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
+          git show "refs/tags/$PREV_TAG:openapi.yaml" > /tmp/previous.yaml
           npm run bundle
+          OASDIFF_IMAGE=$(cat .github/oasdiff-image.txt)
           {
             echo "## oasdiff changelog vs \`$PREV_TAG\`"
             echo '```'
-            docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo tufin/oasdiff changelog /tmp/previous.yaml /repo/openapi.yaml || true
+            docker run --rm -v /tmp:/tmp -v "$PWD":/repo -w /repo "$OASDIFF_IMAGE" changelog \
+              --severity-levels /repo/.github/oasdiff-severity.txt /tmp/previous.yaml /repo/openapi.yaml
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-
-  commit-bundle:
-    if: github.event_name == 'push'
-    needs:
-      - bundle
-      - static
-      - test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v8
-        with:
-          name: openapi
-      - name: commit & push
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add openapi.yaml
-          git diff-index --quiet HEAD openapi.yaml || (git commit -m "Update bundled file" && git push)
