@@ -53,8 +53,9 @@ get:
       description: |-
         Filter by subproject.
         Format: `[operator]value[|value2|...]`
-        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (selected project only)
         Examples: `1|2`, `*`, `!*`
+        Available only for a project with subprojects.
       schema:
         type: string
     - name: issue_id
@@ -104,7 +105,7 @@ get:
     - name: issue.category_id
       in: query
       description: |-
-        Filter by issue's category.
+        Filter by the issue's category.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Examples: `1|2`, `!*`

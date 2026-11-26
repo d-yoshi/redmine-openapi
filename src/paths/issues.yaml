@@ -37,7 +37,7 @@ get:
         Filter by issue ID.
         Format: `[operator]value`
         Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-        For equality, separate multiple IDs with commas. A pipe separates range bounds, not IDs in an equality list.
+        For equality, separate multiple IDs with commas.
         Examples: `1`, `1,2`, `>=100`, `><1|100`
       schema:
         type: string
@@ -182,8 +182,9 @@ get:
       description: |-
         Filter by parent issue.
         Format: `[operator]value`
-        Operators: `=` (exact parent ID), `~` (descendant of, subtree search), `*` (any, i.e. is a subtask), `!*` (none, i.e. is a root issue)
-        Examples: `123`, `~123`, `*`, `!*`
+        Operators: `=` (has the specified parent, default), `~` (is a descendant of the specified issue), `*` (any parent), `!*` (no parent)
+        For `=` and `~`, separate multiple IDs with commas.
+        Examples: `123`, `123,456`, `~123,456`, `*`, `!*`
       schema:
         type: string
     - name: child_id
@@ -191,8 +192,9 @@ get:
       description: |-
         Filter by child issue.
         Format: `[operator]value`
-        Operators: `=` (exact child ID), `~` (ancestor of, subtree search), `*` (any, i.e. has subtasks), `!*` (none, i.e. is a leaf issue)
-        Examples: `123`, `~123`, `*`, `!*`
+        Operators: `=` (has the specified child, default), `~` (is an ancestor of the specified issue), `*` (any child), `!*` (no children)
+        For `=`, separate multiple IDs with commas. For `~`, use one ID.
+        Examples: `123`, `123,456`, `~123`, `*`, `!*`
       schema:
         type: string
     - $ref: ../components/parameters/query/custom_filters.yaml

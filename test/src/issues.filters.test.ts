@@ -205,6 +205,43 @@ describe("Issue filter representations", () => {
     }
   }
 
+  test("Issue relationship filters distinguish immediate relatives from subtree matches", async () => {
+    const createChild = async (parentId: number) => {
+      const child = await client.POST("/issues.{format}", {
+        params: { path: { format: "json" } },
+        body: { issue: { project_id: projectId, parent_issue_id: parentId, subject: "Child issue" } },
+      });
+      assertStatus(201, child);
+      return child.data!.issue.id;
+    };
+    const firstChild = await createChild(assignedId);
+    const secondChild = await createChild(datedId);
+    const grandchild = await createChild(firstChild);
+    const parents = [assignedId, datedId];
+    const children = [firstChild, secondChild];
+
+    for (const [filter, expected] of [
+      [{ parent_id: parents.join(",") }, children],
+      [{ parent_id: `~${parents.join(",")}` }, [...children, grandchild]],
+      [{ child_id: children.join(",") }, parents],
+      [{ child_id: `~${grandchild}` }, [assignedId, firstChild]],
+    ] as const) {
+      const query = { status_id: "*", sort: "id:asc", ...filter };
+      const label = JSON.stringify(filter);
+      const global = await client.GET("/issues.{format}", {
+        params: { path: { format: "json" }, query },
+      });
+      assertStatus(200, global);
+      assert.deepEqual(global.data!.issues.map((issue) => issue.id), expected, label);
+
+      const scoped = await client.GET("/projects/{project_id}/issues.{format}", {
+        params: { path: { format: "json", project_id: projectId }, query },
+      });
+      assertStatus(200, scoped);
+      assert.deepEqual(scoped.data!.issues.map((issue) => issue.id), expected, label);
+    }
+  });
+
   test("An unassigned issue exposes nullable values and omits absent associations", async () => {
     const response = await client.GET("/issues/{issue_id}.{format}", {
       params: { path: { format: "json", issue_id: emptyId } },

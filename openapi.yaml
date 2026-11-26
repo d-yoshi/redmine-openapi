@@ -135,7 +135,7 @@ paths:
             Filter by issue ID.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            For equality, separate multiple IDs with commas. A pipe separates range bounds, not IDs in an equality list.
+            For equality, separate multiple IDs with commas.
             Examples: `1`, `1,2`, `>=100`, `><1|100`
           schema:
             type: string
@@ -280,8 +280,9 @@ paths:
           description: |-
             Filter by parent issue.
             Format: `[operator]value`
-            Operators: `=` (exact parent ID), `~` (descendant of, subtree search), `*` (any, i.e. is a subtask), `!*` (none, i.e. is a root issue)
-            Examples: `123`, `~123`, `*`, `!*`
+            Operators: `=` (has the specified parent, default), `~` (is a descendant of the specified issue), `*` (any parent), `!*` (no parent)
+            For `=` and `~`, separate multiple IDs with commas.
+            Examples: `123`, `123,456`, `~123,456`, `*`, `!*`
           schema:
             type: string
         - name: child_id
@@ -289,8 +290,9 @@ paths:
           description: |-
             Filter by child issue.
             Format: `[operator]value`
-            Operators: `=` (exact child ID), `~` (ancestor of, subtree search), `*` (any, i.e. has subtasks), `!*` (none, i.e. is a leaf issue)
-            Examples: `123`, `~123`, `*`, `!*`
+            Operators: `=` (has the specified child, default), `~` (is an ancestor of the specified issue), `*` (any child), `!*` (no children)
+            For `=`, separate multiple IDs with commas. For `~`, use one ID.
+            Examples: `123`, `123,456`, `~123`, `*`, `!*`
           schema:
             type: string
         - $ref: '#/components/parameters/custom_filters'
@@ -906,7 +908,7 @@ paths:
             Filter by issue ID.
             Format: `[operator]value`
             Operators: `=` (default), `>=`, `<=`, `><` (between, pipe-separated), `*` (any), `!*` (none)
-            For equality, separate multiple IDs with commas. A pipe separates range bounds, not IDs in an equality list.
+            For equality, separate multiple IDs with commas.
             Examples: `1`, `1,2`, `>=100`, `><1|100`
           schema:
             type: string
@@ -1046,8 +1048,9 @@ paths:
           description: |-
             Filter by parent issue.
             Format: `[operator]value`
-            Operators: `=` (exact parent ID), `~` (descendant of, subtree search), `*` (any, i.e. is a subtask), `!*` (none, i.e. is a root issue)
-            Examples: `123`, `~123`, `*`, `!*`
+            Operators: `=` (has the specified parent, default), `~` (is a descendant of the specified issue), `*` (any parent), `!*` (no parent)
+            For `=` and `~`, separate multiple IDs with commas.
+            Examples: `123`, `123,456`, `~123,456`, `*`, `!*`
           schema:
             type: string
         - name: child_id
@@ -1055,8 +1058,9 @@ paths:
           description: |-
             Filter by child issue.
             Format: `[operator]value`
-            Operators: `=` (exact child ID), `~` (ancestor of, subtree search), `*` (any, i.e. has subtasks), `!*` (none, i.e. is a leaf issue)
-            Examples: `123`, `~123`, `*`, `!*`
+            Operators: `=` (has the specified child, default), `~` (is an ancestor of the specified issue), `*` (any child), `!*` (no children)
+            For `=`, separate multiple IDs with commas. For `~`, use one ID.
+            Examples: `123`, `123,456`, `~123`, `*`, `!*`
           schema:
             type: string
         - $ref: '#/components/parameters/custom_filters'
@@ -1621,19 +1625,21 @@ paths:
         - name: created_on
           in: query
           description: |-
-            Filter by creation date.
-            Format: `<operator>[value]`
-            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+            Filter by creation date or timestamp.
+            Format: `[operator]value` or a standalone operator such as `t`
+            Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
+            A timestamp lower bound can also match values less than one second before the specified time.
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - name: updated_on
           in: query
           description: |-
-            Filter by last updated date.
-            Format: `<operator>[value]`
-            Operators: `=` (on date), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
+            Filter by last update date or timestamp.
+            Format: `[operator]value` or a standalone operator such as `t`
+            Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `t-` (n days ago), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `*` (any), `!*` (none)
+            A timestamp lower bound can also match values less than one second before the specified time.
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `><2024-01-01|2024-12-31`, `t`, `>t-7`, `lm`
           schema:
             type: string
         - $ref: '#/components/parameters/page'
@@ -2389,19 +2395,21 @@ paths:
         - name: created_on
           in: query
           description: |-
-            Filter by creation date.
-            Format: `[operator]value`
-            Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `>t-30`, `lm`
+            Filter by creation date or timestamp.
+            Format: `[operator]value` or a standalone operator such as `t`
+            Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+            A timestamp lower bound can also match values less than one second before the specified time.
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `>t-30`, `lm`
           schema:
             type: string
         - name: last_login_on
           in: query
           description: |-
-            Filter by last login date.
-            Format: `[operator]value`
-            Operators: `=` (on date), `>=`, `<=`, `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
-            Examples: `>=2024-01-01`, `>t-30`, `!*`
+            Filter by last login date or timestamp.
+            Format: `[operator]value` or a standalone operator such as `t`
+            Operators: `=` (on a date or timestamp, default), `>=` (on or after), `<=` (on or before), `><` (between, pipe-separated), `>t-` (on or after n days ago), `<t-` (on or before n days ago), `><t-` (from n days ago through today), `t-` (n days ago), `t` (today), `ld` (yesterday), `w` (this week), `lw` (last week), `l2w` (last 2 weeks), `m` (this month), `lm` (last month), `y` (this year), `*` (any), `!*` (none)
+            A timestamp lower bound can also match values less than one second before the specified time.
+            Examples: `>=2024-01-01`, `>=2024-01-01T08:00:00Z`, `>t-30`, `!*`
           schema:
             type: string
         - name: admin
@@ -2794,7 +2802,7 @@ paths:
             type: string
         - name: project_id
           in: query
-          description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
+          description: Project ID or identifier that scopes results to a project. Use `subproject_id` to control which subprojects to include. To filter by multiple project IDs or use an operator, omit this parameter and use `f[]`, `op`, and `v`.
           schema:
             type: string
         - name: spent_on
@@ -2827,8 +2835,9 @@ paths:
           description: |-
             Filter by subproject.
             Format: `[operator]value[|value2|...]`
-            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (selected project only)
             Examples: `1|2`, `*`, `!*`
+            Available only when `project_id` selects a project with subprojects.
           schema:
             type: string
         - name: issue_id
@@ -2878,10 +2887,11 @@ paths:
         - name: issue.category_id
           in: query
           description: |-
-            Filter by issue's category.
+            Filter by the issue's category.
             Format: `[operator]value[|value2|...]`
             Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
             Examples: `1|2`, `!*`
+            Available only when `project_id` selects a project.
           schema:
             type: string
         - name: issue.subject
@@ -3245,8 +3255,9 @@ paths:
           description: |-
             Filter by subproject.
             Format: `[operator]value[|value2|...]`
-            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+            Operators: `=` (default), `!` (not equal), `*` (any), `!*` (selected project only)
             Examples: `1|2`, `*`, `!*`
+            Available only for a project with subprojects.
           schema:
             type: string
         - name: issue_id
@@ -3296,7 +3307,7 @@ paths:
         - name: issue.category_id
           in: query
           description: |-
-            Filter by issue's category.
+            Filter by the issue's category.
             Format: `[operator]value[|value2|...]`
             Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
             Examples: `1|2`, `!*`
@@ -6590,13 +6601,14 @@ components:
                     type: integer
                     nullable: true
                   assigned_to_id:
-                    description: Assignee ID. The value `me` selects the current user.
+                    description: Assignee ID. Use `me` to assign the issue to the current user or `""` to clear the assignee. The value `null` leaves the assignee unchanged.
                     oneOf:
                       - type: integer
                         nullable: true
                       - type: string
                         enum:
                           - me
+                          - ''
                   parent_issue_id:
                     description: Parent issue ID. Requires the Manage subtasks permission.
                     type: integer
@@ -7579,6 +7591,7 @@ components:
           format: date-time
           nullable: true
         changesets:
+          description: Ordered by commit time, oldest first by default. The current user's `comments_sorting` preference reverses the order when set to `desc`.
           type: array
           items:
             type: object
@@ -7611,6 +7624,7 @@ components:
             $ref: '#/components/schemas/issue_relation'
           description: Included with `include=relations` when at least one relation to a visible issue exists.
         journals:
+          description: Ordered by creation time, oldest first by default. The current user's `comments_sorting` preference reverses the order when set to `desc`.
           type: array
           items:
             type: object
@@ -7641,6 +7655,9 @@ components:
               private_notes:
                 type: boolean
               details:
+                description: |-
+                  For attachment changes, `property` is `attachment` and `name` is the attachment ID as a string.
+                  The filename appears in `new_value` for additions and in `old_value` for removals.
                 type: array
                 items:
                   type: object
@@ -8230,6 +8247,7 @@ components:
           items:
             $ref: '#/components/schemas/attachment'
         comments:
+          description: Ordered by creation time, oldest first by default. The current user's `comments_sorting` preference reverses the order when set to `desc`.
           type: array
           items:
             $ref: '#/components/schemas/news_comment'

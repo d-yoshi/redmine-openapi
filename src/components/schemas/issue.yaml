@@ -92,6 +92,7 @@ properties:
     format: date-time
     nullable: true
   changesets:
+    description: Ordered by commit time, oldest first by default. The current user's `comments_sorting` preference reverses the order when set to `desc`.
     type: array
     items:
       type: object
@@ -125,6 +126,7 @@ properties:
       $ref: ./issue_relation.yaml
     description: Included with `include=relations` when at least one relation to a visible issue exists.
   journals:
+    description: Ordered by creation time, oldest first by default. The current user's `comments_sorting` preference reverses the order when set to `desc`.
     type: array
     items:
       type: object
@@ -156,6 +158,9 @@ properties:
         private_notes:
           type: boolean
         details:
+          description: |-
+            For attachment changes, `property` is `attachment` and `name` is the attachment ID as a string.
+            The filename appears in `new_value` for additions and in `old_value` for removals.
           type: array
           items:
             type: object

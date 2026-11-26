@@ -24,7 +24,7 @@ get:
         type: string
     - name: project_id
       in: query
-      description: Project ID or identifier selecting the project context, including its subprojects. Query operators and multiple IDs are not accepted here. To select multiple projects, omit this parameter and use explicit `f[]`, `op`, and `v` filters.
+      description: Project ID or identifier that scopes results to a project. Use `subproject_id` to control which subprojects to include. To filter by multiple project IDs or use an operator, omit this parameter and use `f[]`, `op`, and `v`.
       schema:
         type: string
     - name: spent_on
@@ -57,8 +57,9 @@ get:
       description: |-
         Filter by subproject.
         Format: `[operator]value[|value2|...]`
-        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
+        Operators: `=` (default), `!` (not equal), `*` (any), `!*` (selected project only)
         Examples: `1|2`, `*`, `!*`
+        Available only when `project_id` selects a project with subprojects.
       schema:
         type: string
     - name: issue_id
@@ -108,10 +109,11 @@ get:
     - name: issue.category_id
       in: query
       description: |-
-        Filter by issue's category.
+        Filter by the issue's category.
         Format: `[operator]value[|value2|...]`
         Operators: `=` (default), `!` (not equal), `*` (any), `!*` (none)
         Examples: `1|2`, `!*`
+        Available only when `project_id` selects a project.
       schema:
         type: string
     - name: issue.subject
